@@ -19,7 +19,7 @@ impulse.Config.BlacklistEnts = {
 	["item_suitcharger"] = true
 }
 
-impulse.Config.BulkCrateSpawn = Vector(8695.1435546875, 710.25433349609, 358.7184753418)
+impulse.Config.BulkCrateSpawn = Vector(-1219.5023193359, 3037.9973144531, 208.03125)
 
 impulse.Config.SporeClusters = {
 	Vector(-1142.0340576172, -392.09164428711, 249.03125),
