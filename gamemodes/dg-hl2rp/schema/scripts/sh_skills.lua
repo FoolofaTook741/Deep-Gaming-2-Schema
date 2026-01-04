@@ -1,0 +1,12 @@
+impulse.Skills.Define("craft", "Crafting")
+impulse.Skills.Define("strength", "Strength")
+impulse.Skills.Define("lockpick", "Theft")
+impulse.Skills.Define("scrapping", "Scrapping")
+impulse.Skills.Define("medical", "Medical")
+impulse.Skills.Define("metabolism", "Technology")
+impulse.Skills.Define("vitality", "Vitality")
+impulse.Skills.Define("charisma", "Charisma")
+--[[impulse.Skills.Define("hunting", "Hunting")
+impulse.Skills.Define("fishing", "Fishing")
+impulse.Skills.Define("reading", "Reading & Writing")
+]]

@@ -1,0 +1,7 @@
+"dg-impulse"
+{
+	"base"		"sandbox"
+	"title"		"impulse"
+	"author"	"vin"
+	"category"	"rp"
+}

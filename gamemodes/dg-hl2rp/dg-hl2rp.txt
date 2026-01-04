@@ -1,0 +1,6 @@
+"dg-hl2rp"
+{
+	"base"		"dg-impulse"
+	"title"		"impulse: Half Life 2 RP"
+	"author"	"2igames mage.tearz"
+}

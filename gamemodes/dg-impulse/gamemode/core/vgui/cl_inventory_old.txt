@@ -1,0 +1,769 @@
+local PANEL = {}
+
+local speed = 1000
+
+local w, h = ScrW(), ScrH() -- FINISH REDO BY TONIGHT
+local blurDrawPanel = {
+	[1] = function(x, y, w, h)
+		-- Bokeh DOF blur
+		render.UpdateScreenEffectTexture()
+
+		render.SetScissorRect(x, y, x+w, y+h, true)
+		DrawBokehDOF(6, 0, 0)
+		render.SetScissorRect(0, 0, 0, 0, false)
+	end
+}
+
+local function BlurRect(x, y, w, h)
+	blurDrawPanel[1](x,y,w,h)
+end
+function PANEL:Init()
+    self:SetSize(ScrW(), ScrH())
+    self:Center()
+    self:CenterHorizontal()
+    self:SetTitle("")
+    self:ShowCloseButton(false)
+    self:SetDraggable(false)
+    self:SetAlpha(0)
+    self:AlphaTo(255, 0.085, 0)
+    self:MoveToFront()
+
+    local w, h = self:GetSize()
+
+    self.infoName = vgui.Create("DLabel", self)
+    self.infoName:SetPos(15, 40)
+    self.infoName:SetText(LocalPlayer():Nick())
+    self.infoName:SetFont("terminal50")
+    self.infoName:SizeToContents()
+
+    if self.infoName:GetWide() > 245 then
+        self.infoName:SetFont("terminal32")
+    end
+
+    local lpTeam = LocalPlayer():Team()
+    self.infoTeam = vgui.Create("DLabel", self)
+    self.infoTeam:SetPos(15, 84)
+    self.infoTeam:SetText(team.GetName(lpTeam))
+    self.infoTeam:SetFont("terminal32")
+    self.infoTeam:SetColor(team.GetColor(lpTeam))
+    self.infoTeam:SizeToContents()
+
+    local className = LocalPlayer():GetTeamClassName()
+    local rankName = LocalPlayer():GetTeamRankName()
+
+    if className != "Default" then
+        self.infoClassRank = vgui.Create("DLabel", self)
+        self.infoClassRank:SetPos(15, 109)
+        self.infoClassRank:SetFont(HIGH_RES("terminal32", "terminal24"))
+        self.infoClassRank:SetText(className)
+        self.infoClassRank:SetColor(team.GetColor(lpTeam))
+        self.infoClassRank:SizeToContents()
+    end
+
+    local model = LocalPlayer():GetModel()
+    local skin = LocalPlayer():GetSkin()
+
+    self.modelPreview = vgui.Create("impulseModelPanel", self)
+    self.modelPreview:SetPos(HIGH_RES(0, 5), 80)
+    self.modelPreview:SetSize(HIGH_RES(490, 620), h * 1)
+    self.modelPreview:SetModel(model, skin)
+    self.modelPreview:MoveToBack()
+    self.modelPreview:SetCursor("arrow")
+
+    local panelW, panelH = self.modelPreview:GetSize()
+    local baseFOV = 105
+    local referenceH = 324
+    local scaledFOV = baseFOV * (referenceH / panelH)
+    self.modelPreview:SetFOV(scaledFOV)
+
+    function self.modelPreview:LayoutEntity(ent)
+        ent:SetAngles(Angle(-1, 52, 0))
+        ent:SetPos(Vector(0, 0, -1.30))
+        self:RunAnimation()
+
+        if not self.setup then
+            for v,k in pairs(LocalPlayer():GetBodyGroups()) do
+                ent:SetBodygroup(k.id, LocalPlayer():GetBodygroup(k.id))
+            end
+
+            for v,k in pairs(LocalPlayer():GetMaterials()) do
+                local mat = LocalPlayer():GetSubMaterial(v - 1)
+                if mat != k then
+                    ent:SetSubMaterial(v - 1, mat)
+                end
+            end
+
+            hook.Run("SetupInventoryModel", self, ent)
+            self.setup = true
+        end
+    end
+
+    self:SetupVerticalTabs(w, h)
+end
+
+bggrunge = Material("bg-grunge.png")
+
+PANEL.Paint = function(self, w, h)
+	BlurRect(self.x, self.y, w, h)
+
+	surface.SetDrawColor(0, 0, 0, 190)
+	surface.DrawRect(0, 0, w, h)
+
+
+	surface.SetDrawColor(0, 0, 0, 215)
+end
+
+function PANEL:SetupVerticalTabs(w, h)
+    if IsValid(self.tabPanel) then self.tabPanel:Remove() end
+    if IsValid(self.contentPanel) then self.contentPanel:Remove() end
+
+    self.tabPanel = vgui.Create("DPanel", self)
+    local tabX = HIGH_RES(720, 830)
+    self.tabPanel:SetPos(tabX, 40)
+    self.tabPanel:SetSize(110, h - 42)
+    self.tabPanel.Paint = function() end
+
+    self.contentPanel = vgui.Create("DPanel", self)
+    self.contentPanel:SetPos(tabX + self.tabPanel:GetWide(), 40)
+    self.contentPanel:SetSize(w - tabX - self.tabPanel:GetWide(), h - 42)
+    self.contentPanel.Paint = function() end
+
+    local tabIcons = {
+        {name = "Inventory", icon = "impulse/icons/military-backpack-radio-128.png", panelFunc = function() return self:CreateInventoryPanel(self.contentPanel) end},
+        {name = "Skills", icon = "impulse/icons/no-connection-128.png", panelFunc = function() return self:CreateSkillsPanel(self.contentPanel) end},
+        {name = "Character Data", icon = "impulse/icons/decision-256.png", panelFunc = function() return self:CreateCharDataPanel(self.contentPanel) end}
+    }
+
+    if LocalPlayer():Team() == TEAM_VORT then
+        vortSkills = vortSkills or {}
+        vortSkills.Skills = vortSkills.Skills or {}
+        table.insert(tabIcons, {
+            name = "Vort Skills",
+            icon = "impulse/icons/dna-helix-256.png",
+            panelFunc = function()
+                if IsValid(self.vortSkillsPanel) then return self.vortSkillsPanel end
+
+                local vortSkillsPanel = vgui.Create("DPanel", self.contentPanel)
+                vortSkillsPanel:SetSize(self.contentPanel:GetSize())
+                vortSkillsPanel:SetPos(0, 0)
+                vortSkillsPanel.Paint = function(self, w, h)
+                    draw.RoundedBox(8, 0, 0, w, h, Color(40,40,40,240))
+                end
+
+                local skillsScroll = vgui.Create("DScrollPanel", vortSkillsPanel)
+                skillsScroll:Dock(FILL)
+                skillsScroll:DockMargin(0,0,0,10)
+                skillsScroll.Paint = function(self, w, h)
+                    draw.RoundedBox(6, 0, 0, w, h, Color(60,60,60,220))
+                end
+
+                local function rebuildList(parent)
+                    parent:Clear()
+
+                    local pointsPanel = vgui.Create("DPanel", parent)
+                    pointsPanel:Dock(TOP)
+                    pointsPanel:SetTall(50)
+                    pointsPanel:DockMargin(10, 10, 10, 10)
+                    pointsPanel.Paint = function(self, w, h)
+                        draw.RoundedBox(6, 0, 0, w, h, Color(80,80,80,240))
+                        draw.SimpleText("Available Skill Points: " .. (getVortSkillPoints and getVortSkillPoints() or 0), "Impulse-Elements22-Shadow", w/2, h/2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    end
+
+                    local resetButton = vgui.Create("DButton", parent)
+                    resetButton:Dock(TOP)
+                    resetButton:SetTall(40)
+                    resetButton:DockMargin(10, 0, 10, 10)
+                    resetButton:SetFont("Impulse-Elements22-Shadow")
+
+                    local function updateResetButton()
+                        if not IsValid(resetButton) then
+                            timer.Remove("VortResetCountdown")
+                            return
+                        end
+
+                        local invested = 0
+                        for k, lvl in pairs(clientSkillData or {}) do
+                            if k ~= "lastReset" then
+                                invested = invested + lvl
+                            end
+                        end
+                        resetButton:SetToolTip("Refunds " .. invested .. " point(s)")
+
+                        local last = (clientSkillData and clientSkillData.lastReset) or 0
+                        local remaining = 0
+                        if last > 0 then
+                            remaining = math.max(0, (6 * 3600) - (os.time() - last))
+                        end
+                        if remaining > 0 then
+                            local h = math.floor(remaining / 3600)
+                            local m = math.floor((remaining % 3600) / 60)
+                            local s = math.ceil(remaining % 60)
+                            resetButton:SetText(string.format("Reset Skills (%02d:%02d:%02d)", h, m, s))
+                            resetButton:SetEnabled(false)
+                        elseif invested > 0 then
+                            resetButton:SetText("Reset Skills")
+                            resetButton:SetEnabled(true)
+                        else
+                            resetButton:SetText("No points to reset")
+                            resetButton:SetEnabled(false)
+                        end
+                    end
+
+                    resetButton.DoClick = function()
+                        Derma_Query(
+                            "Are you sure you want to reset all your skill points?",
+                            "Confirm Reset",
+                            "Yes", function() net.Start("vortResetSkills") net.SendToServer() end,
+                            "No", function() end
+                        )
+                    end
+
+                    timer.Create("VortResetCountdown", 1, 0, updateResetButton)
+                    updateResetButton()
+
+                    if not next(vortSkills and vortSkills.Skills or {}) then
+                        local noSkillsLabel = vgui.Create("DLabel", parent)
+                        noSkillsLabel:Dock(TOP)
+                        noSkillsLabel:SetTall(50)
+                        noSkillsLabel:SetContentAlignment(5)
+                        noSkillsLabel:SetFont("Impulse-Elements22-Shadow")
+                        noSkillsLabel:SetText("No skills found!")
+                        noSkillsLabel:DockMargin(10, 10, 10, 10)
+                    else
+                        for skillID, data in pairs(vortSkills.Skills) do
+                            local skillPanel = vgui.Create("DPanel", parent)
+                            skillPanel:SetTall(120)
+                            skillPanel:Dock(TOP)
+                            skillPanel:DockMargin(10, 0, 10, 10)
+                            skillPanel.Skill = skillID
+
+                            local currentLevel = clientSkillData and clientSkillData[skillID] or 0
+                            local maxLevel = data.maxLevel or 10
+                            local skillName = data.niceName or skillID
+                            local skillDesc = data.desc or ""
+
+                            skillPanel.Paint = function(self, w, h)
+                                draw.RoundedBox(6, 0, 0, w, h, Color(50,50,50,210))
+                                surface.SetDrawColor(100,100,100,255)
+                                surface.DrawOutlinedRect(0,0,w,h)
+                                draw.SimpleText(skillName, "Impulse-Elements22-Shadow", 20, 10, Color(255,255,255), TEXT_ALIGN_LEFT)
+                                draw.SimpleText("Level " .. currentLevel .. " / " .. maxLevel, "Impulse-Elements22-Shadow", w - 70, 10, Color(255,255,255), TEXT_ALIGN_RIGHT)
+                            end
+
+                            local descLabel = vgui.Create("DLabel", skillPanel)
+                            descLabel:SetFont("Impulse-Elements19-Shadow")
+                            descLabel:SetTextColor(Color(200,200,200))
+                            descLabel:SetText(skillDesc)
+                            descLabel:SetWrap(true)
+                            descLabel:SetAutoStretchVertical(true)
+                            descLabel:Dock(TOP)
+                            descLabel:DockMargin(20, 40, 60, 0)
+
+                            local plusButton = vgui.Create("DButton", skillPanel)
+                            plusButton:SetSize(40,40)
+                            plusButton:SetText("+")
+                            plusButton:SetFont("Impulse-Elements22-Shadow")
+                            plusButton.DoClick = function()
+                                if getVortSkillPoints and getVortSkillPoints() > 0 then
+                                    net.Start("vortSpendSkill")
+                                    net.WriteString(skillID)
+                                    net.SendToServer()
+                                else
+                                    LocalPlayer():Notify("You have no skill points to spend!")
+                                end
+                            end
+
+                            skillPanel.OnSizeChanged = function(self, w, h)
+                                plusButton:SetPos(w - 50, (h - plusButton:GetTall()) * 0.5)
+                            end
+                        end
+                    end
+                end
+
+                rebuildList(skillsScroll)
+
+                net.Receive("vortUpdateSkills", function()
+                    local data = net.ReadTable() or {}
+                    PrintTable(data)
+                    availableSkillPoints = data.availableSkillPoints or 0
+                    clientSkillData = data.skills or {}
+                    clientSkillData.lastReset = data.lastReset or 0
+
+                    vortSkills = vortSkills or {}
+                    vortSkills.Skills = data.skillsTable or {}
+
+                    if IsValid(skillsScroll) then
+                        rebuildList(skillsScroll)
+                        skillsScroll:InvalidateLayout(true)
+                        skillsScroll:PerformLayout()
+                    end
+                end)
+
+                net.Start("vortSkillsTable")
+                net.SendToServer()
+
+                self.vortSkillsPanel = vortSkillsPanel
+                return vortSkillsPanel
+            end
+        })
+    end
+
+    function getVortSkillPoints()
+        return availableSkillPoints
+    end
+
+    self.tabs = {}
+    self.tabLabels = {}
+    self.tabContents = {}
+
+    local selectSound = "ui/hls_ui_select.wav"
+    local hvrSound = "ui/hls_ui_scroll_click.wav"
+    local activeColor = Color(25,255,25)
+
+    local y = 0
+
+    local function DrawRegularOctagonOutline(x, y, w, h, color, alpha, thickness)
+        local cx, cy = x + w / 2, y + h / 2
+        local rOuter = math.min(w, h) / 2 - 2
+        local rInner = rOuter - (thickness or 2)
+        local angleStep = math.pi / 4
+
+        local outer = {}
+        local inner = {}
+        for i = 0, 7 do
+            local ang = angleStep * i - math.pi/2
+            table.insert(outer, {x = cx + math.cos(ang) * rOuter, y = cy + math.sin(ang) * rOuter})
+            table.insert(inner, {x = cx + math.cos(ang) * rInner, y = cy + math.sin(ang) * rInner})
+        end
+
+        surface.SetDrawColor(ColorAlpha(color, alpha or 255))
+        for i = 1, 8 do
+            local ni = (i % 8) + 1
+            surface.DrawPoly({
+                outer[i],
+                outer[ni],
+                inner[ni],
+                inner[i]
+            })
+        end
+    end
+
+
+    local function DrawRegularOctagonFilled(x, y, w, h, color, alpha)
+        local cx, cy = x + w / 2, y + h / 2
+        local r = math.min(w, h) / 2 - 2
+        local angleStep = math.pi / 4
+        local points = {}
+        for i = 0, 7 do
+            local ang = angleStep * i - math.pi/2
+            local px = cx + math.cos(ang) * r
+            local py = cy + math.sin(ang) * r
+            table.insert(points, {x = px, y = py})
+        end
+        surface.SetDrawColor(ColorAlpha(color, alpha or 255))
+        draw.NoTexture()
+        surface.DrawPoly(points)
+    end
+
+    for i, tab in ipairs(tabIcons) do
+        local btn = vgui.Create("DImageButton", self.tabPanel)
+        btn:SetSize(90, 90)
+        btn:SetPos((self.tabPanel:GetWide() - 90) / 2, y)
+        btn.imgMat = Material(tab.icon, "smooth")
+        btn.HoverAlpha = 0
+        btn._wasHovered = false
+
+        btn.Think = function(s)
+            local hovered = s:IsHovered()
+            local target = (hovered or self.activeTab == i) and 80 or 0
+            s.HoverAlpha = Lerp(FrameTime() * 10, s.HoverAlpha, target)
+
+            if hovered and not s._wasHovered then
+                surface.PlaySound(hvrSound)
+                color_select = activeColor
+            end
+
+            if not hovered then
+                color_select = color_white
+            end
+            s._wasHovered = hovered
+        end
+
+        btn.Paint = function(s, w, h)
+            local outlinePad = 4
+            local imagePad = 18
+
+            draw.NoTexture()
+
+            local octW, octH = w - outlinePad * 2, h - outlinePad * 2
+            local octX, octY = outlinePad, outlinePad
+
+            if s.HoverAlpha > 0 then
+                DrawRegularOctagonFilled(octX, octY, octW, octH, Color(120,120,120), math.Clamp(s.HoverAlpha,0,80))
+            end
+
+            -- Determine color per button
+            local isActive = self.activeTab == i
+            local isHovered = s:IsHovered()
+            local color_select = isActive and impulse.Config.MainColour or color_white
+
+            DrawRegularOctagonOutline(octX, octY, octW, octH, color_select, 255, 3)
+
+            local imgSize = math.min(octW, octH) - imagePad * 2
+            local imgX = (w - imgSize) / 2
+            local imgY = (h - imgSize) / 2
+
+            surface.SetDrawColor(255,255,255,255)
+            surface.SetMaterial(s.imgMat)
+            surface.DrawTexturedRect(imgX, imgY, imgSize, imgSize)
+        end
+
+        btn.DoClick = function()
+            self:ShowTab(i)
+            surface.PlaySound(selectSound)
+        end
+        self.tabs[i] = btn
+
+        local lbl = vgui.Create("DLabel", self.tabPanel)
+        lbl:SetText(tab.name)
+        lbl:SetFont("terminal16")
+        lbl:SetColor(Color(220,220,220))
+        lbl:SizeToContents()
+        local labelX = (self.tabPanel:GetWide() - lbl:GetWide()) / 2
+        local labelY = y + 8 + 85
+        lbl:SetPos(labelX, labelY)
+        self.tabLabels[i] = lbl
+
+        y = labelY + lbl:GetTall() + 20
+
+        self.tabContents[i] = tab.panelFunc()
+        self.tabContents[i]:SetVisible(false)
+    end
+
+    self:ShowTab(1)
+end
+
+function PANEL:ShowTab(idx)
+    self.activeTab = idx
+    for i, pnl in ipairs(self.tabContents) do
+        pnl:SetVisible(i == idx)
+    end
+end
+
+function PANEL:SetupItems()
+    if self.itemsPanels then
+        for _, pnl in pairs(self.itemsPanels) do
+            if IsValid(pnl) then pnl:Remove() end
+        end
+    end
+
+    self.items = {}
+    self.itemsPanels = {}
+    local weight = 0
+
+    local w, h = self.contentPanel:GetSize()
+    local invScroll = self.contentPanel:GetChildren()[1]
+
+    if not IsValid(invScroll) then return end
+
+    invScroll:Clear()
+
+    local realInv = impulse.Inventory.Data[0][1]
+    local localInv = table.Copy(impulse.Inventory.Data[0][1]) or {}
+    local reccurTemp = {}
+    local equipTemp = {}
+
+    local shouldSortEq = impulse.GetSetting("inv_sortequippablesattop", true)
+    local sortMethod = impulse.GetSetting("inv_sortweight", "Inventory only")
+    local invertSort = true
+
+    for v,k in pairs(localInv) do
+        k.realKey = v
+        if sortMethod == "Always" or sortMethod == "Inventory only" then
+            reccurTemp[k.id] = (reccurTemp[k.id] or 0) + (impulse.Inventory.Items[k.id].Weight or 0)
+            k.sortWeight = reccurTemp[k.id]
+        else
+            k.sortWeight = impulse.Inventory.Items[k.id].Name
+            invertSort = false
+        end
+    end
+
+    if localInv and table.Count(localInv) > 0 then
+        if shouldSortEq then
+            for v,k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
+                if not k.equipped then continue end
+                local itemX = impulse.Inventory.Items[k.id]
+                local item = invScroll:Add("impulseInventoryItem")
+                item:Dock(TOP)
+                item:DockMargin(0, 0, 15, 5)
+                item:SetItem(k, w)
+                item.InvID = k.realKey
+                item.InvPanel = self
+                self.items[k.id] = item
+                self.itemsPanels[k.realKey] = item
+                weight =  weight + (itemX.Weight or 0)
+            end
+        end
+        for v,k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
+            if shouldSortEq and k.equipped then continue end
+            local otherItem = self.items[k.id]
+            local itemX = impulse.Inventory.Items[k.id]
+            if itemX.CanStack and otherItem then
+                otherItem.Count = (otherItem.Count or 1) + 1
+            else
+                local item = invScroll:Add("impulseInventoryItem")
+                item:Dock(TOP)
+                item:DockMargin(0, 0, 15, 5)
+                item:SetItem(k, w)
+                item.InvID = k.realKey
+                item.InvPanel = self
+                self.items[k.id] = item
+                self.itemsPanels[k.realKey] = item
+            end
+            weight =  weight + (itemX.Weight or 0)
+        end
+    else
+        self.empty = invScroll:Add("DLabel", self)
+        self.empty:SetContentAlignment(5)
+        self.empty:Dock(TOP)
+        self.empty:SetText("Empty")
+        self.empty:SetFont(HIGH_RES("Impulse-Elements19-Shadow", "Impulse-Elements22-Shadow"))
+    end
+
+    self.invWeight = weight
+end
+
+function PANEL:CreateInventoryPanel(parent)
+    local w, h = parent:GetSize()
+    local panel = vgui.Create("DPanel", parent)
+    panel:SetSize(w, h)
+    panel:SetPos(0, 0)
+    panel.Paint = function() end
+
+    local invScroll = vgui.Create("DScrollPanel", panel)
+    invScroll:SetPos(0, 0)
+    invScroll:SetSize(w, h)
+
+    self.items = {}
+    self.itemsPanels = {}
+    local weight = 0
+    local realInv = impulse.Inventory.Data[0][1]
+    local localInv = table.Copy(impulse.Inventory.Data[0][1]) or {}
+    local reccurTemp = {}
+    local equipTemp = {}
+
+    local shouldSortEq = impulse.GetSetting("inv_sortequippablesattop", true)
+    local sortMethod = impulse.GetSetting("inv_sortweight", "Inventory only")
+    local invertSort = true
+
+    for v,k in pairs(localInv) do
+        k.realKey = v
+        if sortMethod == "Always" or sortMethod == "Inventory only" then
+            reccurTemp[k.id] = (reccurTemp[k.id] or 0) + (impulse.Inventory.Items[k.id].Weight or 0)
+            k.sortWeight = reccurTemp[k.id]
+        else
+            k.sortWeight = impulse.Inventory.Items[k.id].Name
+            invertSort = false
+        end
+    end
+
+    if localInv and table.Count(localInv) > 0 then
+        if shouldSortEq then
+            for v,k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
+                if not k.equipped then continue end
+                local itemX = impulse.Inventory.Items[k.id]
+                local item = invScroll:Add("impulseInventoryItem")
+                item:Dock(TOP)
+                item:DockMargin(0, 0, 15, 5)
+                item:SetItem(k, w)
+                item.InvID = k.realKey
+                item.InvPanel = self
+                self.items[k.id] = item
+                self.itemsPanels[k.realKey] = item
+                weight =  weight + (itemX.Weight or 0)
+            end
+        end
+        for v,k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
+            if shouldSortEq and k.equipped then continue end
+            local otherItem = self.items[k.id]
+            local itemX = impulse.Inventory.Items[k.id]
+            if itemX.CanStack and otherItem then
+                otherItem.Count = (otherItem.Count or 1) + 1
+            else
+                local item = invScroll:Add("impulseInventoryItem")
+                item:Dock(TOP)
+                item:DockMargin(0, 0, 15, 5)
+                item:SetItem(k, w)
+                item.InvID = k.realKey
+                item.InvPanel = self
+                self.items[k.id] = item
+                self.itemsPanels[k.realKey] = item
+            end
+            weight =  weight + (itemX.Weight or 0)
+        end
+    else
+        self.empty = invScroll:Add("DLabel", self)
+        self.empty:SetContentAlignment(5)
+        self.empty:Dock(TOP)
+        self.empty:SetText("Empty")
+        self.empty:SetFont(HIGH_RES("Impulse-Elements19-Shadow", "Impulse-Elements22-Shadow"))
+    end
+
+    self.invWeight = weight
+    panel:SetVisible(false)
+    return panel
+end
+
+local bodyCol = Color(0, 0, 0, 210)
+function PANEL:CreateSkillsPanel(parent)
+    local w, h = parent:GetSize()
+    local panel = vgui.Create("DPanel", parent)
+    panel:SetSize(w, h)
+    panel:SetPos(0, 0)
+    panel.Paint = function() end
+
+    local skillScroll = vgui.Create("DScrollPanel", panel)
+    skillScroll:SetPos(0, 0)
+    skillScroll:SetSize(w, h)
+
+    for v,k in pairs(impulse.Skills.Skills) do
+        local skillBg = skillScroll:Add("DPanel")
+        skillBg:SetTall(80)
+        skillBg:Dock(TOP)
+        skillBg:DockMargin(0, 0, 15, 5)
+        skillBg.Skill = v
+
+        local level = LocalPlayer():GetSkillLevel(v)
+        local xp = LocalPlayer():GetSkillXP(v)
+
+        function skillBg:Paint(w, h)
+            surface.SetDrawColor(bodyCol)
+            surface.DrawRect(0, 0, w, h)
+            surface.SetDrawColor(color_white)
+            surface.DrawOutlinedRect(0,0,w,h,1)
+            local skill = self.Skill
+            local skillName = impulse.Skills.GetNiceName(skill)
+            draw.DrawText(skillName.." - Level "..level, "terminal24", 5, 3, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText("Total skill: "..xp.."XP", "terminal16", w - 5, 7, color_white, TEXT_ALIGN_RIGHT)
+            return true
+        end
+
+        local lastXp = impulse.Skills.GetLevelXPRequirement(level - 1)
+        local nextXp = impulse.Skills.GetLevelXPRequirement(level)
+        local perc = (xp - lastXp) / (nextXp - lastXp)
+
+        local bar = vgui.Create("DProgress", skillBg)
+        bar:SetPos(20, 30)
+        bar:SetSize(skillScroll:GetWide() - 73, 40)
+
+        if level == 20 then
+            bar:SetFraction(1)
+            bar.BarCol = Color(25, 150, 25)
+        elseif level >= 10 then
+            bar:SetFraction(perc)
+            bar.BarCol = Color(218, 165, 32)
+        else
+            bar:SetFraction(perc)
+        end
+
+        function bar:PaintOver(w, h)
+            if level != 20 then
+                draw.DrawText(math.Round(perc * 100, 1).."% to next level", "terminal18", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
+            else
+                draw.DrawText("Mastered", "terminal18", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
+            end
+            draw.DrawText(lastXp.."XP", "terminal16", 10, 10, color_white)
+            draw.DrawText(nextXp.."XP", "terminal16", w - 10, 10, color_white, TEXT_ALIGN_RIGHT)
+        end
+    end
+
+    panel:SetVisible(false)
+    return panel
+end
+
+function PANEL:CreateCharDataPanel(parent)
+    local w, h = parent:GetSize()
+    local panel = vgui.Create("DPanel", parent)
+    panel:SetSize(w, h)
+    panel:SetPos(0, 0)
+    panel.Paint = function() end
+
+    local languages = "English"
+    local gender = "Male"
+    local money = "Wallet: C" .. LocalPlayer():GetMoney() .. " | " .. "Bank: C" ..LocalPlayer():GetBankMoney()
+    local langstrings = {"Spanish", "Italian", "German", "Russian", "Chinese", "Japanese", "French", "Arabic"}
+
+    if LocalPlayer():Team() == TEAM_VORT then
+        languages = languages .. ", Vortigese"
+    elseif LocalPlayer():Team() == TEAM_ZOMBIE then
+        languages = "None"
+    end
+
+    if LocalPlayer():GetSyncVar(SYNC_LANGUAGE) and LocalPlayer():GetSyncVar(SYNC_LANGUAGE) != 0 and LocalPlayer():Team() != TEAM_ZOMBIE then
+        languages = languages .. ", " .. langstrings[LocalPlayer():GetSyncVar(SYNC_LANGUAGE)]
+    end
+
+    local name = LocalPlayer():Nick() or "Error"
+    local steamname = " (" .. LocalPlayer():SteamName() .. ")" or "Error"
+    local xp = LocalPlayer():GetXP() or "Error"
+
+    local function addLabel(text, font)
+        local lbl = vgui.Create("DLabel", panel)
+        lbl:SetContentAlignment(1)
+        lbl:Dock(TOP)
+        lbl:SetText(text)
+        lbl:SetFont(font)
+        return lbl
+    end
+
+    addLabel("Character Name: ", "terminal24")
+    addLabel(name .. steamname, "terminal18")
+    addLabel("", "terminal18")
+    addLabel("XP: ", "terminal24")
+    addLabel(xp, "terminal18")
+    addLabel("", "terminal18")
+    addLabel("Money: ", "terminal24")
+    addLabel(money, "terminal18")
+    addLabel("", "terminal18")
+    addLabel("Known Languages:", "terminal24")
+    addLabel(languages, "terminal18")
+    addLabel("", "terminal18")
+    addLabel("Primary Skill:", "terminal24")
+    addLabel("None", "terminal18")
+
+    panel:SetVisible(false)
+    return panel
+end
+
+function PANEL:FindItemPanelByID(id)
+    return self.itemsPanels[id]
+end
+
+local grey = Color(209, 209, 209)
+
+function PANEL:PaintOver(w, h)
+    local modelPanel = self.modelPreview
+    if IsValid(modelPanel) then
+        local mpX, mpY = modelPanel:GetPos()
+        local mpW, mpH = modelPanel:GetSize()
+        local maxWeight = impulse.Config.InventoryMaxWeight
+        if LocalPlayer():GetNWBool("HasBackpack", false) then
+            maxWeight = maxWeight + 10
+        end
+        local text = self.invWeight.."kg/"..maxWeight.."kg"
+        local font = HIGH_RES("terminal24", "terminal32")
+        local textW, textH = surface.GetTextSize(text)
+        surface.SetFont(font)
+        draw.SimpleText(
+            text,
+            font,
+            mpX + mpW + 16,
+            mpY - 10,
+            grey,
+            TEXT_ALIGN_LEFT,
+            TEXT_ALIGN_TOP
+        )
+    end
+end
+
+vgui.Register("impulseInventory", PANEL, "DFrame")

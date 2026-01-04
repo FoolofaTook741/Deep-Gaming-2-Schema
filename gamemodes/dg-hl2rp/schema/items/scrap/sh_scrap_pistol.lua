@@ -1,0 +1,89 @@
+local ITEM = {}
+
+ITEM.UniqueID = "scrap_pistol"
+ITEM.Name = "Damaged USP-9"
+ITEM.Desc =  "A lightweight semi-automatic pistol that fires 9mm rounds."
+ITEM.Category = "Scrap"
+ITEM.Model = Model("models/weapons/w_pistol.mdl")
+ITEM.FOV = 24.190544412607
+ITEM.CamPos = Vector(-16.045845031738, 17.191976547241, 3.4383955001831)
+ITEM.NoCenter = true
+ITEM.Weight = 0.5
+
+ITEM.Droppable = true
+ITEM.DropOnDeath = true
+
+ITEM.DropIfRestricted = false
+ITEM.DropOnDeathIfRestricted = true
+ITEM.CraftIfRestricted = false
+
+ITEM.Illegal = true
+ITEM.CanStack = false
+
+ITEM.CraftSound = "metal"
+ITEM.CraftTime = 0.5
+
+
+ITEM.UseName = "Dismantle"
+ITEM.UseWorkBarTime = 5
+ITEM.UseWorkBarName = "Dismantle..."
+ITEM.UseWorkBarFreeze = false
+ITEM.UseWorkBarSound = "physics/cardboard/cardboard_box_break2.wav"
+
+function ITEM:OnUse(ply)
+    local scrapSkill = ply:GetSkillLevel("scrapping") or 1
+    local baseAmount = math.random(1, 4)
+    local itemMultiplier = 1 + math.floor(scrapSkill / 5)
+    local bonusChance = math.min(0.05 * scrapSkill, 0.5)
+    local itemNames = {
+        ["util_pipe"] = "Pipe",
+        ["util_plastic"] = "Plastic",
+        ["util_metalplate"] = "Metal Plate"
+    }
+    local itemsGiven = {}
+    local function addItem(item, quantity)
+        for i = 1, quantity do
+            if ply:GiveInventoryItem(item, 1) then
+                itemsGiven[#itemsGiven + 1] = itemNames[item] or item
+            end
+        end
+    end
+    if baseAmount == 1 then
+        addItem("util_pipe", itemMultiplier)
+        addItem("util_plastic", itemMultiplier)
+    elseif baseAmount == 2 then
+        addItem("util_metalplate", itemMultiplier * 3)
+        addItem("util_plastic", itemMultiplier)
+    elseif baseAmount == 3 then
+        addItem("util_pipe", itemMultiplier)
+        addItem("util_metalplate", itemMultiplier * 2)
+    else
+        addItem("util_metalplate", itemMultiplier)
+        addItem("util_plastic", itemMultiplier)
+    end
+    if math.random() < bonusChance then
+        addItem("util_metalplate", 1)
+    end
+    local xpGain = math.random(2, 5) + math.floor(scrapSkill / 3)
+    ply:AddSkillXP("scrapping", xpGain)
+    local scrapTime = math.max(0.5, 2 - 0.05 * scrapSkill)
+    ply:Lock()
+    timer.Simple(scrapTime, function()
+        if IsValid(ply) then
+            ply:UnLock()
+            local itemCounts = {}
+            for _, item in ipairs(itemsGiven) do
+                itemCounts[item] = (itemCounts[item] or 0) + 1
+            end
+            local itemList = {}
+            for item, count in pairs(itemCounts) do
+                itemList[#itemList + 1] = string.format("%d %s", count, item)
+            end
+            local notifyText = #itemList > 0 and table.concat(itemList, ", ") or "nothing"
+            ply:Notify("You have dismantled the USP-9, yielding: " .. notifyText .. ".")
+        end
+    end)
+    return true
+end
+
+impulse.RegisterItem(ITEM)

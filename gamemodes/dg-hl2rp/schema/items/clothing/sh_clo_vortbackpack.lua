@@ -1,0 +1,53 @@
+local ITEM = {}
+
+ITEM.UniqueID = "clo_vortbackpack"
+ITEM.Name = "Vort Backpack"
+ITEM.Desc =  "Useful for carrying more items. This item allows you to carry an additional 10 lbs of weight."
+ITEM.Category = "Clothing Items"
+ITEM.Model = Model("models/willardnetworks/clothingitems/backpack.mdl")
+ITEM.FOV = 12.213467048711
+ITEM.CamPos = Vector(46.418338775635, 20.630373001099, 32.091690063477)
+ITEM.NoCenter = true
+ITEM.Weight = 0.4
+
+ITEM.Droppable = true
+ITEM.DropOnDeath = true
+
+ITEM.Illegal = false
+ITEM.Equipable = true
+ITEM.EquipGroup = "back"
+ITEM.CanStack = true   
+
+function ITEM:CanEquip(ply)
+	return ply:Team() == TEAM_VORT 
+end
+
+function ITEM:OnEquip(ply)
+    ply:SetBodygroup(6, 1)
+    ply.HasBackpack = true
+    ply:SetNWBool("HasBackpack", true)
+    local timerName = ply:SteamID() .. "BackpackSpeedSet"
+    timer.Create(timerName, 3, 0, function()
+        if IsValid(ply) then
+            if ply.HasBackpack == false then
+                timer.Remove(timerName)
+            elseif ply:Alive() then
+                ply:SetRunSpeed(180)
+            end
+        else
+            timer.Remove(timerName)
+        end
+    end)
+    ply:Notify("You are now incumbered, you move at a slower rate.")
+end
+
+function ITEM:UnEquip(ply)
+    local timerName = ply:SteamID() .. "BackpackSpeedSet"
+	ply:SetBodygroup(6, 0)
+    ply.HasBackpack = false
+    ply:SetNWBool("HasBackpack", false)
+	timer.Remove(timerName)
+	ply:SetRunSpeed(impulse.Config.JogSpeed)
+end
+
+impulse.RegisterItem(ITEM)

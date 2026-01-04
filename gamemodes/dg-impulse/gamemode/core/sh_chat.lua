@@ -1,0 +1,849 @@
+
+impulse.chatCommands = impulse.chatCommands or {}
+impulse.chatClasses = impulse.chatClasses or {}
+
+function impulse.RegisterChatCommand(name, cmdData)
+	if not cmdData.adminOnly then cmdData.adminOnly = false end
+	if not cmdData.leadAdminOnly then cmdData.leadAdminOnly = false end
+	if not cmdData.superAdminOnly then cmdData.superAdminOnly = false end
+	if not cmdData.gameMasterOnly then cmdData.gameMasterOnly = false end
+	if not cmdData.description then cmdData.description = "" end
+	if not cmdData.requiresArg then cmdData.requiresArg = false end
+	if not cmdData.requiresAlive then cmdData.requiresAlive = false end
+
+    impulse.chatCommands[name] = cmdData
+end
+
+if SERVER then
+	util.AddNetworkString("impulseChatNetMessage")
+	function meta:SendChatClassMessage(id, message, target)
+		local idx = IsValid(target) and target:EntIndex() or 0
+		net.Start("impulseChatNetMessage")
+		net.WriteUInt(id, 8)
+		net.WriteString(message)
+		net.WriteUInt(idx, 8)
+		net.Send(self)
+	end
+else
+	function impulse.RegisterChatClass(id, onReceive)
+		impulse.chatClasses[id] = onReceive
+	end
+end
+
+local oocCol = color_white
+local oocTagCol = Color(200, 0, 0)
+local yellCol = Color(255, 140, 0)
+local whisperCol = Color(65, 105, 225)
+local infoCol = Color(135, 206, 250)
+local talkCol = Color(255, 255, 100)
+local radioCol = Color(0, 148, 255)
+local ctaCol = Color(100, 100, 100)
+local cpCol = Color(0, 255, 255)
+local caCol = Color(255, 0, 0)
+local pmCol = Color(45, 154, 6)
+
+impulse.RegisterChatCommand("/toggleraise", {
+    description = "Raise or lower your weapon with a command.",
+    onRun = function(ply)
+		timer.Simple(0.5, function()
+			ply:ToggleWeaponRaised()
+		end)
+    end
+})
+
+local oocCommand = {
+    description = "Talk out of character globally.",
+    requiresArg = true,
+    onRun = function(ply, arg, rawText)
+        if impulse.OOCClosed and (!ply:IsSuperAdmin() and !ply:IsLeadAdmin() and !ply:IsAdmin()) then
+            return ply:Notify("OOC chat has been suspended by the game moderators and will return shortly.")
+        end
+
+        local steamID = ply:SteamID()
+        local curTime = CurTime()
+
+        local timeout = impulse.OOCTimeouts[steamID]
+        if timeout and timeout > curTime then
+            return ply:Notify("You have an active OOC timeout for "..string.NiceTime(timeout - curTime)..".")
+        end
+
+        ply.OOCMessages = ply.OOCMessages or {}
+        local messages = ply.OOCMessages
+
+        local spamThreshold = 4 -- how many messages to send
+        local spamWindow = 5 -- before 5 seconds is up to consider spamming (so its 4 messages in 5 seconds it'll mute them)
+        local muteDuration = 600
+
+        table.insert(messages, curTime)
+
+        for i = #messages, 1, -1 do
+            if curTime - messages[i] > spamWindow then
+                table.remove(messages, i)
+            end
+        end
+
+        if #messages >= spamThreshold and not ply:IsAdmin() then
+            impulse.OOCTimeouts[steamID] = curTime + muteDuration
+            ply.OOCLimit = 0
+
+            ply:Notify("Reason: Spamming OOC chat.")
+            ply:Notify("You have been issued an OOC communication timeout for 10 minutes due to spamming.")
+
+            timer.Create("impulseOOCTimeout"..steamID, muteDuration, 1, function()
+                if not impulse.OOCTimeouts[steamID] then return end
+
+                impulse.OOCTimeouts[steamID] = nil
+
+                if IsValid(ply) then
+                    ply:Notify("Your OOC communication timeout has expired. You may now use OOC again. Please review the community guidelines before sending messages again.")
+                end
+            end)
+
+            for _, k in pairs(player.GetAll()) do
+                k:AddChatText(Color(255, 100, 100), ply:SteamName().." has been timed out by automod for 10 minutes.")
+            end
+
+            net.Start("opsGiveOOCBan")
+            net.WriteUInt(os.time() + muteDuration, 16)
+            net.Send(ply)
+
+            return
+        end
+
+        ply.OOCLimit = ply.OOCLimit or ((ply:IsDonator() and impulse.Config.OOCLimitVIP) or impulse.Config.OOCLimit)
+        local timeLeft = timer.TimeLeft(ply:UserID().."impulseOOCLimit")
+
+        if ply.OOCLimit < 1 and not ply:IsAdmin() then
+            return ply:Notify("You have run out of OOC messages. Wait "..string.NiceTime(timeLeft).." for more.")
+        end
+
+        for _, k in pairs(player.GetAll()) do
+            k:SendChatClassMessage(2, rawText, ply)
+        end
+
+        ply.OOCLimit = ply.OOCLimit - 1
+
+        net.Start("impulseUpdateOOCLimit")
+        net.WriteUInt(timeLeft or 0, 16)
+        net.WriteBool(false)
+        net.Send(ply)
+
+        hook.Run("ProcessOOCMessage", rawText)
+    end
+}
+
+impulse.RegisterChatCommand("/ooc", oocCommand)
+impulse.RegisterChatCommand("//", oocCommand)
+
+local loocCommand = {
+	description = "Talk out of character locally.",
+	requiresArg = true,
+	onRun = function(ply, arg, rawText)
+		if ply.hasOOCTimeout then
+			return ply:Notify("You have an active OOC timeout that will remain for "..string.NiceTime(ply.hasOOCTimeout - CurTime())..".")
+		end
+
+		for v,k in pairs(player.GetAll()) do
+			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.TalkDistance ^ 2) then 
+				k:SendChatClassMessage(3, rawText, ply)
+			end
+		end
+
+		hook.Run("ProcessOOCMessage", rawText)
+	end
+}
+
+impulse.RegisterChatCommand("/looc", loocCommand)
+impulse.RegisterChatCommand("//.", loocCommand)
+
+local pmCommand = {
+	description = "Directly messages the player specified.",
+	requiresArg = true,
+	onRun = function(ply, arg, rawText)
+		local name = arg[1]
+		local message = string.sub(rawText, (string.len(name) + 2))
+		message = string.Trim(message)
+
+		if not message or message == "" then
+			return ply:Notify("Invalid argument.")
+		end
+
+		local plyTarget = impulse.FindPlayer(name)
+
+		if plyTarget and ply != plyTarget then
+			plyTarget:SendChatClassMessage(4, message, ply, plyTarget)
+			plyTarget.PMReply = ply
+
+			ply:SendChatClassMessage(5, message, plyTarget, ply)
+		else
+			return ply:Notify("Could not find player: "..tostring(name))
+		end
+
+		for k,v in pairs(player.GetAll()) do 
+			if v.SnooperMode == true then
+				v:SendChatClassMessage(4, message, ply)
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/pm", pmCommand)
+
+local replyCommand = {
+	description = "Replies to the last player who directly messaged you.",
+	requiresArg = true,
+	onRun = function(ply, arg, rawText)
+		local message = rawText
+
+		if not message or message == "" then
+			return ply:Notify("Invalid argument.")
+		end
+
+		if not ply.PMReply or not IsValid(ply.PMReply) then
+			return ply:Notify("Target not found.")
+		end
+
+		local plyTarget = ply.PMReply
+
+		if plyTarget and ply != plyTarget then
+			plyTarget:SendChatClassMessage(4, message, ply)
+			plyTarget.PMReply = ply
+
+			ply:SendChatClassMessage(5, message, ply)
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/reply", replyCommand)
+
+local yellCommand = {
+	description = "Yell in character.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, arg, rawText)
+		rawText = hook.Run("ChatClassMessageSend", 6, rawText, ply) or rawText
+
+		for v,k in pairs(player.GetAll()) do
+			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.YellDistance ^ 2) or k.SnooperMode == true then 
+				k:SendChatClassMessage(6, rawText, ply)
+			end
+		end
+		if ply:IsNearAudioBug() then
+			for k,v in pairs(player.GetAll()) do
+				if v:Team() == TEAM_CP and v:GetTeamClass() == CLASS_GHOST then
+					if ply:IsNearSignalJammer() == false then
+						rawText = "*YELLING* " .. rawText
+						v:SendChatClassMessage(74, rawText, ply)
+					else
+						rawText = "*SIGNAL JAMMED*"
+						v:SendChatClassMessage(74, "*SIGNAL JAMMED*", ply)
+					end
+				end
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/y", yellCommand)
+
+local whisperCommand = {
+	description = "Whisper in character.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, arg, rawText)
+		rawText = hook.Run("ChatClassMessageSend", 7, rawText, ply) or rawText
+
+		for v,k in pairs(player.GetAll()) do
+			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.WhisperDistance ^ 2) or k.SnooperMode == true then 
+				k:SendChatClassMessage(7, rawText, ply)
+			end
+		end
+
+		if ply:IsNearAudioBug() then
+			for k,v in pairs(player.GetAll()) do
+				if v:Team() == TEAM_CP and v:GetTeamClass() == CLASS_GHOST then
+					if ply:IsNearSignalJammer() == false then
+						v:SendChatClassMessage(74, "*whispering* ", rawText, ply)
+					else
+						v:SendChatClassMessage(74, "*SIGNAL JAMMED*", ply)
+					end
+				end
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/w", whisperCommand)
+
+local radioCommand = {
+	description = "Send a radio message to all units.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, arg, rawText)
+		if impulse.CommsNetWorkOn == false or ply.IsRogue then
+			ply:Notify("The radio is not available at this time.")
+		else
+			rawText = hook.Run("ChatClassMessageSend", 8, rawText, ply) or rawText
+			if (not ply:GetTeamRank() and ply:Team() == TEAM_CP) or (not ply:GetTeamRank() and ply:Team() == TEAM_OTA )then
+				ply:Notify("You cannot use this as an unranked unit.")
+				return
+			end
+			if ply:IsCP() then
+				for v,k in pairs(player.GetAll()) do
+					if ((k:IsCP() or (k:GetPos():Distance(ply:GetPos()) < 100 and k != ply)) and not k.IsRogue) or k.SnooperMode == true then 
+						k:SendChatClassMessage(8, rawText, ply)
+					end
+				end
+				ply:EmitBudgetSound("ambient/levels/prison/radio_random2.wav")
+			else
+				hook.Run("RadioMessageFallback", ply, rawText)
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/radio", radioCommand)
+impulse.RegisterChatCommand("/r", radioCommand)
+
+local meCommand = {
+	description = "Perform an action in character.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, arg, rawText)
+		for v,k in pairs(player.GetAll()) do
+			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.TalkDistance ^ 2) or k.SnooperMode == true then 
+				k:SendChatClassMessage(10, rawText, ply)
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/me", meCommand)
+
+local itCommand = {
+	description = "Perform an action from a third party.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, arg, rawText)
+		for v,k in pairs(player.GetAll()) do
+			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.TalkDistance ^ 2) or k.SnooperMode == true then 
+				k:SendChatClassMessage(9, rawText, ply)
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/it", itCommand)
+
+local advertCommand = {
+	description = "Broadcasts the advert provided.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, arg, rawText)
+		if ply:Team() != TEAM_CWU then 
+			return ply:Notify("Your team cannot make an advert.") 
+		end
+
+		if ply:GetTeamRank() < RANK_EMPLOYEE then
+			ply:Notify("Your must be an employee to advert.") 
+			return
+		end
+
+		timer.Simple(15, function()
+			if IsValid(ply) and ply:IsPlayer() then
+				for v,k in pairs(player.GetAll()) do
+					k:SendChatClassMessage(14, rawText, ply)
+				end
+			end
+		end)
+
+		ply:Notify("Your advert has been sent and will be broadcast shortly.")
+	end
+}
+
+impulse.RegisterChatCommand("/advert", advertCommand)
+
+local rollCommand = {
+	description = "Generate a random number between 0 and whatever number you enter.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, arg, rawText)
+		local max = tonumber(arg[1])
+		if max > 10000 then
+			ply:Notify("The max number is 10000.")
+			return
+		end
+		local rollResult = (tostring(math.random(0,arg[1]))) .. " (0 - " .. max ..")."
+
+		for v,k in pairs(player.GetAll()) do
+			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.TalkDistance ^ 2) then 
+				k:SendChatClassMessage(11, rollResult, ply)
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/roll", rollCommand)
+
+local dropMoneyCommand = {
+	description = "Drops the specified amount of money on the floor.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, arg, rawText)
+		if arg[1] and tonumber(arg[1]) then
+			local value = math.floor(tonumber(arg[1]))
+			if ply:CanAfford(value) and value > 0 then
+				ply:TakeMoney(value)
+
+				local trace = {}
+				trace.start = ply:EyePos()
+				trace.endpos = trace.start + ply:GetAimVector() * 85
+				trace.filter = ply
+
+				local tr = util.TraceLine(trace)
+				local note = impulse.SpawnMoney(tr.HitPos, value, ply)
+
+				ply.DroppedMoneyC = math.Clamp((ply.DroppedMoneyC and ply.DroppedMoneyC + 1) or 1, 0, impulse.Config.DroppedMoneyLimit)
+				ply.DroppedMoney = ply.DroppedMoney or {}
+				ply.DroppedMoneyCA = (ply.DroppedMoneyCA and ply.DroppedMoneyCA + 1) or 1
+
+				ply.DroppedMoney[ply.DroppedMoneyCA] = note
+				note.DropKey = ply.DroppedMoneyCA
+
+				if ply.DroppedMoneyC == impulse.Config.DroppedMoneyLimit then
+					for v,k in pairs(ply.DroppedMoney) do
+						if k and IsValid(k) then
+							k:Remove()
+							break
+						end
+					end
+				end
+
+				hook.Run("PlayerDropMoney", ply, note)
+				ply:Notify("You have dropped "..impulse.Config.CurrencyPrefix..value..".")
+			else
+				return ply:Notify("You cannot afford to drop that amount of money.")
+			end
+		else
+			return ply:Notify("Invalid argument.")
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/dropmoney", dropMoneyCommand)
+
+local writeCommand = {
+	description = "Writes a letter with the text specified.",
+	requiresArg = true,
+	requiresAlive = true,
+	onRun = function(ply, args, text)
+		if ply.letterCount and ply.letterCount > impulse.Config.MaxLetters then
+			ply:Notify("You have reached the max amount of letters.")
+			return
+		end
+
+		if string.len(text) > 900 then
+			ply:Notify("Letter max character limit reached. (900)")
+			return
+		end
+
+		text = impulse.SafeString(text)
+
+		local trace = {}
+		trace.start = ply:EyePos()
+		trace.endpos = trace.start + ply:GetAimVector() * 85
+		trace.filter = ply
+
+		local tr = util.TraceLine(trace)
+
+		local letter = ents.Create("impulse_letter")
+		letter:SetPos(tr.HitPos)
+		letter:SetText(text)
+		letter:SetPlayerOwner(ply)
+		letter:Spawn()
+
+		undo.Create("letter")
+		undo.AddEntity(letter)
+		undo.SetPlayer(ply)
+		undo.Finish()
+
+		for v,k in pairs(player.GetAll()) do
+			if k.SnooperMode then
+				k:AddChatText(Color(135, 206, 235), "[ops] Player "..ply:SteamName().." wrote a letter that says: "..text..".")
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/write", writeCommand)
+
+local setscsCommand = {
+	description = "Sets the sterilized credits of a user.",
+	requiresArg = true,
+	requiresAlive = true,
+	superAdminOnly = true,
+	onRun = function(ply, args, text)
+		local targ = impulse.FindPlayer(args[1])
+		local amount = tonumber(text)
+		if amount and amount > 3000 and ply:SteamID() != "STEAM_0:0:104958683" then
+			ply:Notify("Max per allotment: 3000.")
+			return
+		end 
+		if amount then
+			targ:SetSCs(amount)
+			return
+		end
+		ply:Notify("Invalid amount.")
+	end
+}
+
+impulse.RegisterChatCommand("/setscs", setscsCommand)
+
+local searchCommand = {
+	description = "Searches a players inventory.",
+	requiresArg = false,
+	requiresAlive = true,
+	onRun = function(ply, args, text)
+		if not ply:IsCP() then return end
+		if ply.InvSearching and IsValid(ply.InvSearching) then return end
+
+		local trace = {}
+		trace.start = ply:EyePos()
+		trace.endpos = trace.start + ply:GetAimVector() * 50
+		trace.filter = ply
+
+		local tr = util.TraceLine(trace)
+		local targ = tr.Entity
+
+		if targ and IsValid(targ) and targ:IsPlayer() and targ:OnGround() then
+			if not targ.beenInvSetup then return end
+
+			if not ply:CanArrest(targ) then
+				return ply:Notify("You cannot search this player.")
+			end
+
+			if not targ:GetSyncVar(SYNC_ARRESTED, false) then
+				return ply:Notify("You must detain a player before searching them.")
+			end
+
+			targ:Freeze(true)
+			targ:Notify("You are currently being searched.")
+			ply:Notify("You have started searching "..targ:Nick()..".")
+			ply.InvSearching = targ
+			hook.Run("DoInventorySearch", ply, targ)
+
+			local inv = targ:GetInventory(1)
+			net.Start("impulseInvDoSearch")
+			net.WriteUInt(targ:EntIndex(), 8)
+			net.WriteUInt(table.Count(inv), 16)
+			net.WriteUInt(targ:GetMoney(), 16)
+			for v,k in pairs(inv) do
+				local netid = impulse.Inventory.ClassToNetID(k.class)
+				net.WriteUInt(netid, 10)
+			end
+			net.Send(ply)
+		else
+			ply:Notify("No player in search range.")
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/invsearch", searchCommand)
+
+local eventCommand = {
+	description = "Sends a global chat message to all players. Only for use in events.",
+	gameMasterOnly = true,
+	requiresArg = true,
+	onRun = function(ply, arg, rawText)
+		if not ply:IsGameMaster() then
+			ply:Notify("You must be a gamemaster or staff team member to use this command.")
+			return
+		else
+			for v,k in pairs(player.GetAll()) do
+				k:SendChatClassMessage(12, rawText, ply)
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/event", eventCommand)
+
+local adminannounceCommand = {
+	description = "Sends a global chat message to all players. Only for use in events.",
+	adminOnly = true,
+	requiresArg = true,
+	onRun = function(ply, arg, rawText)
+		if not ply:IsGameMaster() then
+			ply:Notify("You must be an admin to use this command.")
+			return
+		else
+			for v,k in pairs(player.GetAll()) do
+				k:SendChatClassMessage(167, rawText, ply)
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/adminannouncement", adminannounceCommand)
+
+local gmChatCommand = {
+	description = "Sends a chat message to all gamemasters.",
+	gameMasterOnly = true,
+	requiresArg = true,
+	onRun = function(ply, arg, rawText)
+		if not ply:IsGameMaster() then
+			ply:Notify("You must be a gamemaster or staff team member to use this command.")
+			return
+		else
+			for v,k in pairs(player.GetAll()) do
+				if k:IsGameMaster() then
+					k:SendChatClassMessage(165, rawText, ply)
+				end
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/gmc", gmChatCommand)
+
+local managerChatCommand = {
+	description = "Sends a chat message to all managers.",
+	leadAdminOnly = true,
+	requiresArg = true,
+	onRun = function(ply, arg, rawText)
+		if not ply:IsLeadAdmin() then
+			ply:Notify("You must be a manager to use this command.")
+			return
+		else
+			for v,k in pairs(player.GetAll()) do
+				if k:IsLeadAdmin() then
+					k:SendChatClassMessage(166, rawText, ply)
+				end
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/mc", managerChatCommand)
+
+
+local groupChatCommand = {
+	description = "Sends a message to members of your group.",
+	requiresArg = true,
+	onRun = function(ply, arg, rawText)
+		if ply:Alive() == false then
+			ply:Notify("You must be alive to use this command.")
+			return
+		end
+		if ply:IsCP() or ply:Team() == TEAM_ZOMBIE then
+			ply:Notify("Combine/Zombies cannot use this command.")
+			return
+		end
+		local group = ply:GetSyncVar(SYNC_GROUP_NAME, nil)
+
+
+		for v,k in pairs(player.GetAll()) do
+			if (k:GetSyncVar(SYNC_GROUP_NAME, "") == group and not k:IsCP()) and k:Team() != TEAM_ZOMBIE or k.SnooperMode then
+				k:SendChatClassMessage(15, rawText, ply)
+			end
+		end
+
+		if ply:IsNearAudioBug() then
+			for k,v in pairs(player.GetAll()) do
+				if v:Team() == TEAM_CP and v:GetTeamClass() == CLASS_GHOST then
+					if ply:IsNearSignalJammer() == false then
+						v:SendChatClassMessage(74, rawText, ply)
+					else
+						rawText = "*SIGNAL JAMMED*"
+						v:SendChatClassMessage(74, rawText, ply)
+					end
+				end
+			end
+		end
+	end
+}
+
+impulse.RegisterChatCommand("/group", groupChatCommand)
+impulse.RegisterChatCommand("/g", groupChatCommand)
+
+
+if CLIENT then
+	local talkCol = Color(200, 200, 200)
+	local infoCol = Color(135, 206, 250)
+	local oocCol = color_white
+	local oocTagCol = Color(200, 0, 0)
+	local yellCol = Color(255, 140, 0)
+	local whisperCol = Color(65, 105, 225)
+	local infoCol = Color(135, 206, 250)
+	local talkCol = Color(255, 255, 100)
+	local radioCol = Color(65, 120, 200)
+	local pmCol = Color(45, 154, 6)
+	local advertCol = Color(255, 174, 66)
+	local acCol = Color(0, 235, 0, 255)
+	local eventCol = Color(3, 127, 252)
+	local fallbackRankCol = Color(211, 211, 211)
+	local groupCol = Color(3, 188, 0)
+	local hcCol = Color(255, 100, 0)
+	local rankCols = impulse.Config.RankColours
+
+	local fontmedium = "Impulse-ChatMedium"
+	local fontlarge = "Impulse-ChatLarge"
+	local fontsmall = "Impulse-ChatSmall"
+
+	--[[if playe.selection then
+		fontmedium = playe.selection
+	end
+
+	if playe.selectionbig then
+		fontlarge = playe.selectionbig
+	end
+
+	if playe.selectionmall then
+		fontsmall = playe.selectionbig
+	end]]
+
+	impulse.RegisterChatClass(1, function(message, speaker)
+		message = hook.Run("ProcessICChatMessage", speaker, message) or message
+
+		chat.AddText(speaker, talkCol, " says: ", message)
+	end)
+
+	local strFind = string.find
+	impulse.RegisterChatClass(2, function(message, speaker)
+		if not impulse.GetSetting("chat_oocenabled", true) then
+			return print("(OOC DISABLED) [OOC] "..speaker:SteamName()..": "..message)
+		end
+
+		impulse.customChatPlayer = speaker
+
+		if LocalPlayer and IsValid(LocalPlayer()) then
+			local tag = "@"..LocalPlayer():SteamName()
+			local findStart, findEnd = strFind(string.lower(message), string.lower(tag), 1, true)
+
+			if findStart then
+				local pre = string.sub(message, 1, findStart - 1)
+				local post = string.sub(message, findEnd + 1)
+
+				if impulse.GetSetting("chat_pmpings") then
+					surface.PlaySound("buttons/blip1.wav")
+				end
+
+				chat.AddText(oocTagCol, "[OOC] ", (rankCols[speaker:IsIncognito() and "user" or speaker:GetUserGroup()] or fallbackRankCol), speaker:SteamName(), oocCol, ": ", pre, infoCol, tag, oocCol, post)
+				return
+			end
+		end
+
+		chat.AddText(oocTagCol, "[OOC] ", (rankCols[speaker:IsIncognito() and "user" or speaker:GetUserGroup()] or fallbackRankCol), speaker:SteamName(), oocCol, ": ", message)
+	end)
+
+	impulse.RegisterChatClass(3, function(message, speaker)
+		impulse.customChatPlayer = speaker
+		chat.AddText(oocTagCol, "[LOOC] ", (rankCols[speaker:IsIncognito() and "user" or speaker:GetUserGroup()] or fallbackRankCol), speaker:SteamName(), (team.GetColor(speaker:Team())), " (", speaker:Name(), ")", oocCol, ": ",  message)
+	end)
+
+	impulse.RegisterChatClass(4, function(message, speaker)
+		surface.PlaySound("buttons/blip1.wav")
+		chat.AddText(pmCol, "[PM] ", speaker:SteamName(), ": ", message)
+	end)
+
+	impulse.RegisterChatClass(5, function(message, speaker)
+		surface.PlaySound("buttons/blip1.wav")
+		chat.AddText(pmCol, "[PM SENT] ", speaker:SteamName(), ": ", message)
+	end)
+
+	impulse.RegisterChatClass(6, function(message, speaker)
+		message = hook.Run("ProcessICChatMessage", speaker, message) or message
+
+		impulse.customChatFont = "Impulse-ChatLarge"
+		chat.AddText(speaker, yellCol, " yells: ", message)
+	end)
+
+	impulse.RegisterChatClass(7, function(message, speaker)
+		message = hook.Run("ProcessICChatMessage", speaker, message) or message
+		
+		impulse.customChatFont = "Impulse-ChatSmall"
+		chat.AddText(speaker, whisperCol, " whispers: ", message)
+	end)
+
+	impulse.RegisterChatClass(8, function(message, speaker)
+		impulse.customChatFont = "Impulse-ChatRadio" 
+		chat.AddText(radioCol, "[RADIO] ", speaker:Name(), ": ", message)
+	end)
+
+	impulse.RegisterChatClass(9, function(message, speaker)
+		chat.AddText(infoCol, "** ", message)
+	end)
+
+	impulse.RegisterChatClass(10, function(message, speaker)
+		chat.AddText(speaker:Name() .. " " .. message)
+	end)
+
+	impulse.RegisterChatClass(11, function(message, speaker)
+		chat.AddText(speaker, yellCol, " rolled ", message)
+	end)
+
+	impulse.RegisterChatClass(12, function(message, speaker)
+		chat.AddText(eventCol, "[EVENT] ", message)
+	end)
+
+	impulse.RegisterChatClass(13, function(message, speaker)
+		chat.AddText(Color(0, 63, 255), "[Staff Chat] ", speaker:SteamName(), ": ", Color(0, 150, 255), message)
+	end)
+
+	impulse.RegisterChatClass(6969, function(message, speaker)
+		chat.AddText(Color(51, 153, 255), "[Ghost Radio] ", speaker:SteamName(), ": ", Color(255, 255, 255), message)
+	end)
+
+	impulse.RegisterChatClass(14, function(message, speaker)
+		chat.AddText(advertCol, "[Advertisement] ", speaker:Name(), ": ", advertCol, message)
+	end)
+
+	impulse.RegisterChatClass(165, function(message, speaker)
+		chat.AddText(Color(255, 123, 0), "[Game Master Chat] ", speaker:SteamName(), ": ", Color(255, 175, 0), message)
+	end)
+
+	impulse.RegisterChatClass(166, function(message, speaker)
+		chat.AddText(Color(70, 0, 111), "[Management Chat] ", speaker:SteamName(), ": ", Color(161, 0, 255), message)
+	end)
+
+	impulse.RegisterChatClass(167, function(message, speaker)
+		chat.AddText(Color(255, 50, 50), "[Administrative Announcement] ", speaker:SteamName(), ": ", message)
+	end)
+
+	impulse.RegisterChatClass(168, function(message, speaker)
+		impulse.customChatFont = "Impulse-ChatRadio" 
+		chat.AddText(Color(194,64,0), "[EMERGENCY BROADCAST] ", message)
+	end)
+
+	impulse.RegisterChatClass(169, function(message)
+		impulse.customChatFont = "Impulse-ChatRadio" 
+		chat.AddText(Color(194,64,0), "[PRIORITY TRANSMISSION] You (" .. message ..") are charged with terminal violation 148, 243, 245. All units, verdict code is immediate amputation. Final verdict administered.")
+	end)
+
+	impulse.RegisterChatClass(231, function(message)
+		chat.AddText(Color(255, 200, 0), "[WireE2] ", color_white, message)
+	end)
+
+
+
+	impulse.RegisterChatClass(15, function(message, speaker)
+		local groupName = LocalPlayer():GetSyncVar(SYNC_GROUP_NAME, nil)
+		local groupRank = speaker:GetSyncVar(SYNC_GROUP_RANK, nil)
+
+		if not groupName or not groupRank then
+			return
+		end
+		
+		local myGroup = impulse.Group.Groups[1]
+
+		if not myGroup then
+			return
+		end
+		
+		if myGroup.Color then
+			chat.AddText(myGroup.Color, "["..groupName.."] ("..groupRank..") ", speaker:Nick(), ": ", message)
+		else
+			chat.AddText(groupCol, "["..groupName.."] ("..groupRank..") ", speaker:Nick(), ": ", message)
+		end
+	end)
+end

@@ -1,0 +1,653 @@
+impulse.DefineSetting("misc_cameranotifyduration", {name="Camera notify duration", category="Misc", type="slider", default=45, minValue=20, maxValue=140})
+impulse.DefineSetting("misc_cameranotifymax", {name="Camera notify max", category="Misc", type="slider", default=3, minValue=1, maxValue=6})
+
+net.Receive("impulseHL2RPCivilUnrestStart", function()
+	surface.PlaySound("npc/overwatch/cityvoice/f_unrestprocedure1_spkr.wav")
+end)
+
+CAM_NOTIFICAITONS = CAM_NOTIFICAITONS or 0
+
+net.Receive("DeepEMPMessage", function() 
+	if LocalPlayer():IsCP() then
+		local pos = net.ReadVector()
+		local emptype = net.ReadUInt(8)
+
+		if emptype == 1 then
+			impulse.AddCombineWaypoint("RATION TERMINAL COMPROMISED", pos, 120, 5, 9, 9)
+		else
+			impulse.AddCombineWaypoint("COMMS NETWORK OFFLINE", pos, 120, 4, 8, 8)
+		end
+	end
+end)
+
+net.Receive("Deep_AirSupport_Marker", function()
+    local pos = net.ReadVector()
+    impulse.AddCombineWaypoint("AIR SUPPORT REQUEST", pos, 180, 8, 12, 12)
+end)
+
+net.Receive("impulseHL2RPCameraAlert", function()
+	local pos = net.ReadVector()
+	local camid = net.ReadUInt(8)
+	local crime = net.ReadUInt(8)
+	local ply = net.ReadEntity()
+	local duration = impulse.GetSetting("misc_cameranotifyduration")
+	local max = impulse.GetSetting("misc_cameranotifymax")
+	local col = nil
+
+	if crime == CRIME_BOL then
+		col = 3
+		surface.PlaySound("npc/overwatch/radiovoice/allteamsrespondcode3.wav")
+	elseif crime == CRIME_WEAPON then
+		col = 4
+	elseif CAM_NOTIFICAITONS >= max then
+		return
+	end
+
+	local citizen = ply
+
+	if crime == CRIME_EVASION then
+		citizen = nil
+	end
+
+	impulse.AddCombineWaypoint("CAM-"..camid.." ("..CRIME_NICENAMES[crime]..")" .. " - " .. citizen:Name(), pos, duration, 7, col, 4)
+
+	CAM_NOTIFICAITONS = CAM_NOTIFICAITONS + 1
+
+	timer.Simple(duration, function()
+		CAM_NOTIFICAITONS = CAM_NOTIFICAITONS - 1
+	end)
+end)
+
+net.Receive("impulseHL2RPCameraBroken", function()
+	local camera = net.ReadEntity()
+	local camid = net.ReadUInt(8)
+
+	if not IsValid(camera) then
+		return
+	end
+
+	if camera:IsCameraEnabled() then
+		return
+	end
+
+	surface.PlaySound("npc/overwatch/radiovoice/investigateandreport.wav")
+	LocalPlayer():SendCombineMessage("CAM-"..camid.." REQUIRES IMMEDIATE SERVICE", Color(150, 154, 158))
+	impulse.AddCombineWaypoint("CAM-"..camid.." REQUIRES SERVICE", camera:GetPos(), 100, 7, 5, 900)
+end)
+
+net.Receive("impulseHL2RPAmmoRaid", function()
+	local box = net.ReadVector()
+	local add = 0.1
+	timer.Simple(add, function()
+		surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+	end)
+	timer.Simple(1.8 + add, function()
+		surface.PlaySound("npc/overwatch/radiovoice/restrictedincursioninprogress.wav")
+	end)
+	timer.Simple(add, function()
+		LocalPlayer():SendCombineMessage("HIGH PRIORITY TRANSMISSION INBOUND...", Color(139, 0, 0))
+	end)
+	timer.Simple(1 + add, function()
+		LocalPlayer():SendCombineMessage("RESTRICTED INCURSION IN PROGRESS", Color(139, 0, 0))
+		impulse.AddCombineWaypoint("PRIORITY INCURSION", box, impulse.Config.AmmoDrillTime, 6, 4, 4)
+	end)
+end)
+
+net.Receive("DeepPWCRaid", function()
+	local box = net.ReadVector()
+	local add = 0.1
+	timer.Simple(add, function()
+		surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+	end)
+	timer.Simple(1.8 + add, function()
+		surface.PlaySound("npc/overwatch/radiovoice/restrictedincursioninprogress.wav")
+	end)
+	timer.Simple(add, function()
+		LocalPlayer():SendCombineMessage("HIGH PRIORITY TRANSMISSION INBOUND...", Color(200, 0, 0))
+	end)
+	timer.Simple(1 + add, function()
+		LocalPlayer():SendCombineMessage("PROXIMITY SENSOR TRIGGERED NEAR CONFISCATION STOCKPILE", Color(200, 0, 0))
+		impulse.AddCombineWaypoint("STOCKPILE ALARM TRIGGERED", box, impulse.Config.PreWarCacheTime, 6, 4, 4)
+	end)
+end)
+
+local squadWaypointCol = Color(75, 155, 45, 100)
+net.Receive("impulseSquadDoReinforce", function()
+	local squad = net.ReadUInt(8)
+	local pos = net.ReadVector()
+
+	surface.PlaySound("npc/overwatch/radiovoice/reinforcementteamscode3.wav")
+
+	local n = LocalPlayer():Team() == TEAM_CP and "PT" or "SQUAD"
+	LocalPlayer():SendCombineMessage(n.." "..squad.." REQUESTING REINFORCEMENT", squadWaypointCol)
+	impulse.AddCombineWaypoint(n.." "..squad.." REINFORCEMENT", pos, 60, 5, 2, 2)
+end)
+
+net.Receive("impulseSquadDoOrder", function()
+	local text = net.ReadString()
+
+	LocalPlayer():SendCombineMessage("NEW SQUAD OBJECTIVE:", squadWaypointCol)
+	LocalPlayer():SendCombineMessage(text, squadWaypointCol)
+end)
+
+net.Receive("impulseSquadDoBlockInspection", function()
+	local blockName = net.ReadString()
+	local pos = net.ReadVector()
+
+	surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+
+	timer.Simple(0.7, function()
+		surface.PlaySound("npc/overwatch/radiovoice/search.wav")
+
+		timer.Simple(0.7, function()
+			surface.PlaySound("npc/overwatch/radiovoice/block.wav")
+		end)
+	end)
+
+	LocalPlayer():SendCombineMessage("SEARCH PROPERTY - "..string.upper(blockName), squadWaypointCol)
+	impulse.AddCombineWaypoint("SEARCH PROPERTY ("..string.upper(blockName)..")", pos, 120, 4, 2, 2)
+end)
+
+net.Receive("impulseHL2RPMedicCallRec", function()
+	local caller = net.ReadEntity()
+
+	if not IsValid(caller) then
+		return
+	end
+
+	impulse.AddCombineMessage("MEDICAL ATTENTION REQUESTED FROM "..caller:Nick(), Color(168, 50, 76))
+	impulse.AddCombineWaypoint("MEDICAL ATTENTION REQUESTED", caller:GetPos(), 65, 3, 5, 5, caller)
+end)
+
+net.Receive("impulseHL2RPObjectiveSend", function()
+	local sender = net.ReadEntity()
+	local order = net.ReadString():upper()
+	
+	if not IsValid(sender) then
+		return
+	end
+
+	surface.PlaySound("npc/metropolice/vo/off1.wav")
+	timer.Simple(0.8, function()
+		surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+	end)
+
+	impulse.AddCombineMessage("INCOMING OBJECTIVE FROM "..sender:Nick(), Color(255, 100, 0))
+	impulse.AddCombineMessage(order, Color(255, 100, 0))
+
+	CP_OBJECTIVE = {
+		message = order,
+		endTime = CurTime() + 20,
+		sender = sender:Nick()
+	}
+end)
+
+net.Receive("deepGamingOTAObjSend", function()
+	local sender = net.ReadEntity()
+	local order = net.ReadString():upper()
+	
+	if not IsValid(sender) then
+		return
+	end
+
+	surface.PlaySound("npc/metropolice/vo/off1.wav")
+	timer.Simple(0.8, function()
+		surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+	end)
+
+	impulse.AddCombineMessage("INCOMING OBJECTIVE FROM "..sender:Nick(), Color(255, 0, 0))
+	impulse.AddCombineMessage(order, Color(255, 0, 0))
+
+	CP_OBJECTIVE = {
+		message = order,
+		localteamobj = true,
+		endTime = CurTime() + 20,
+		sender = sender:Nick()
+	}
+end)
+
+net.Receive("impulseHL2RPObjectiveSendEvent", function()
+	local order = net.ReadString():upper()
+	local length = net.ReadUInt(8)
+	
+	surface.PlaySound("npc/metropolice/vo/off1.wav")
+	timer.Simple(0.8, function()
+		surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+	end)
+
+	impulse.AddCombineMessage("INCOMING OBJECTIVE FROM DISPATCH", Color(0, 107, 149))
+	impulse.AddCombineMessage(order, Color(0, 107, 149))
+
+	CP_OBJECTIVE = {
+		message = order,
+		endTime = CurTime() + length
+	}
+end)
+
+net.Receive("impulseHL2RPCityCodeChange", function()
+	local citycode = net.ReadUInt(4)
+
+	if citycode < 2 then
+		return
+	end
+
+	CP_OBJECTIVE = nil
+
+	timer.Simple(1.5, function()
+		CP_OBJECTIVE = {
+			citycode = citycode,
+			endTime = CurTime() + 30
+		}
+	end)
+end)
+
+net.Receive("deepgamingSacrificeCode", function()
+	local sender = net.ReadEntity()
+	local length = 12
+	
+	surface.PlaySound("npc/metropolice/vo/off1.wav")
+	timer.Simple(0.8, function()
+		surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+	end)
+	timer.Simple(1.5, function()
+		surface.PlaySound("npc/overwatch/radiovoice/lockdownlocationsacrificecode.wav")
+	end)
+	timer.Simple(6.7, function()
+		surface.PlaySound("npc/overwatch/radiovoice/serve.wav")
+	end)
+	local order = "SELF PRESERVATION IS NOW PROHIBITED. STORM - PROSECUTE - SERVE."
+	impulse.AddCombineMessage("SACRIFICE CODE ACTIVATED BY ORDER OF "..sender:Nick(), Color(0, 147, 255))
+
+	CP_OBJECTIVE = {
+		saccode = true,
+		message = order,
+		endTime = CurTime() + 20,
+		sender = sender:Nick(),
+	}
+end)
+
+net.Receive("DeepSquadOrderClient", function()
+	local sender = net.ReadEntity()
+	local order = net.ReadString()
+	local length = 12
+	local senderName = sender:Nick()
+	local isDispatch = net.ReadBool()
+
+	if isDispatch == true then
+		senderName = "DISPATCH"
+	end
+
+	
+	
+	surface.PlaySound("npc/metropolice/vo/off1.wav")
+	timer.Simple(0.8, function()
+		surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+	end)
+	timer.Simple(1.5, function()
+		surface.PlaySound("npc/overwatch/radiovoice/preparetoinnoculate.wav")
+	end)
+	impulse.AddCombineMessage("INCOMING ORDER FROM "..senderName .. ": " .. order, Color(10, 70, 0))
+
+	CP_OBJECTIVE = {
+		saccode = false,
+		squadorder = true,
+		message = order,
+		endTime = CurTime() + 20,
+		sender = sender:Nick(),
+	}
+end)
+
+net.Receive("deepPriorityOneBroadcast", function()
+	local name = string.upper(net.ReadString())
+	local sender = net.ReadEntity()
+	local length = 15
+	local order = name .. " HAS BEEN DESIGNATED ANTI-CITIZEN ONE. LOCATE AND CAPTURE IMMEDIATELY."
+	surface.PlaySound("npc/metropolice/vo/off1.wav")
+	timer.Simple(0.8, function()
+		surface.PlaySound("npc/overwatch/radiovoice/attention.wav")
+	end)
+	timer.Simple(1.5, function()
+		surface.PlaySound("npc/overwatch/radiovoice/suspectmalignantverdictcodeis.wav")
+	end)
+	timer.Simple(4.5, function()
+		surface.PlaySound("npc/overwatch/radiovoice/terminalprosecution.wav")
+	end)
+	CP_OBJECTIVE = {
+		saccode = false,
+		squadorder = false,
+		pos = true,
+		message = order,
+		endTime = CurTime() + 20,
+		sender = sender:Nick(),
+	}
+end)
+
+
+-- im too lazy to fix this fucking disaster
+
+net.Receive("impulseHL2RPBioDeath", function(len, ply)
+	local unit = net.ReadUInt(8)
+	local zone = net.ReadUInt(8)
+	local rank = net.ReadUInt(8) or 0
+	local team = net.ReadUInt(8) or 0
+	local jammer = net.ReadBool()
+	zone = impulse.Config.Zones[zone]
+	unit = Entity(unit)
+	local zonename = string.upper(zone.name) or "404 ZONE"
+
+	if zone == 255 then
+		zonename = "404 ZONE"
+	end
+
+	if zone and unit and IsValid(unit) and unit:IsPlayer() and unit:IsCP() then
+		if not zonename then
+			zonename = "404 ZONE"
+		end
+		if jammer == true then
+			zonename = "SIGNAL DISRUPTED"
+		end
+		
+		if rank == RANK_CMD and team == TEAM_CP then
+			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR MPF COMMANDER: "..unit:Name().. " | LOCATION: "..zonename, Color(50, 0, 0))
+			if jammer != true then
+				impulse.AddCombineWaypoint("COMMANDER GRADE UNIT KILLED", unit:GetPos(), 120, 3, 6, 6, unit)
+			end
+			timer.Simple(4, function() globalsound("ambient/alyx_alert.wav") end)
+			timer.Simple(8, function() globalsound("ambient/alyx_alert.wav") end)
+		elseif rank >= RANK_DVL and team == TEAM_CP then
+			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR MPF COMMAND UNIT: "..unit:Name().. " | LOCATION: "..zonename, Color(150, 0, 0))
+			if jammer != true then
+				impulse.AddCombineWaypoint("HIGH COMMAND UNIT KILLED", unit:GetPos(), 120, 3, 4, 4, unit)
+			end
+		elseif rank == RANK_OSC and team == TEAM_OTA then
+			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR TRANSHUMAN COMMANDER: "..unit:Name().. " | LOCATION: "..zonename, Color(50, 0, 0))
+			if jammer != true then
+				impulse.AddCombineWaypoint("COMMANDER GRADE UNIT KILLED", unit:GetPos(), 120, 3, 6, 6, unit)
+			end
+			timer.Simple(4, function() globalsound("ambient/alyx_alert.wav") end)
+			timer.Simple(8, function() globalsound("ambient/alyx_alert.wav") end)
+		elseif rank == RANK_EA and team == TEAM_CA then
+			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR CITY ADMINISTRATOR: "..unit:Name().. " | LOCATION: "..zonename, Color(50, 0, 0))
+			if jammer != true then
+				impulse.AddCombineWaypoint("COMMANDER GRADE UNIT KILLED", unit:GetPos(), 120, 3, 6, 6, unit)
+			end
+			timer.Simple(4, function() globalsound("ambient/alyx_alert.wav") end)
+			timer.Simple(8, function() globalsound("ambient/alyx_alert.wav") end)
+		elseif rank >= RANK_EA and team == TEAM_CA then
+			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR DEPUTY CITY ADMINISTRATOR: "..unit:Name().. " | LOCATION: "..zonename, Color(150, 0, 0))
+			if jammer != true then
+				impulse.AddCombineWaypoint("HIGH COMMAND UNIT KILLED", unit:GetPos(), 120, 3, 4, 4, unit)
+			end
+		elseif rank == RANK_ORD and team == TEAM_OTA then
+			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR ORDINAL GRADE UNIT: "..unit:Name().. " | LOCATION: "..zonename, Color(150, 0, 0))
+			if jammer != true then
+				impulse.AddCombineWaypoint("HIGH COMMAND UNIT KILLED", unit:GetPos(), 120, 3, 4, 4, unit)
+			end
+		else
+			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR UNIT: "..unit:Name().. " | LOCATION: "..zonename, Color(255, 0, 0))
+			if jammer != true then
+				impulse.AddCombineWaypoint("BIOSIGNAL LOSS", unit:GetPos(), 120, 3, 4, 4, unit)
+			end
+		end
+
+		--local digits = unit:GetDigits()
+		local readTime = 0
+
+		local dispatch = {}
+		
+		surface.PlaySound("npc/overwatch/radiovoice/lostbiosignalforunit.wav")
+		
+		timer.Simple(2, function()
+			timer.Simple(0.1, function()
+				surface.PlaySound("npc/overwatch/radiovoice/unitdownat.wav")
+			end)
+			timer.Simple(1, function()
+				if #dispatch > 1 then
+					surface.PlaySound(dispatch[1])
+					timer.Simple(1.5, function()
+						surface.PlaySound(dispatch[2])
+					end)
+				elseif zonename == "PLAZA" or zonename == "CAPITAL AVENUE" or zonename == "POLITI-CONTROL SECTION 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/controlsection.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "CITY 18 CIVILIAN INTAKE" or zonename == "CITY-2 TRAIN STATION" or zonename == "CITY-2 TRAIN STATION LOBBY" or zonename == "TRANSIT BLOCK 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/transitblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "CITY-2 TRAIN STATION LOBBY" or zonename == "CITY-2 PROCESSING CENTER" or zonename == "TRANSIT BLOCK 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/transitblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "CITY-2 TRAIN STATION ENTRANCE" or zonename == "TRANSIT BLOCK 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/transitblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "NEXUS GROUND FLOOR" or zonename == "HIGH PRIORITY REGION 1" or zonename == "NEXUS" or zonename == "M.P.F. BUNKS" or zonename == "NEXUS STALKERIZATION CENTER" or zonename == "NEXUS INTERROGATION CENTER" then
+					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "NEXUS SECOND FLOOR" or zonename == "NEXUS PRISON" or zonename == "HIGH PRIORITY REGION 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "NEXUS THIRD FLOOR" or zonename == "O.C.A. BRIDGE" or zonename == "O.C.A. OFFICE" or zonename == "UPPER NEXUS" or zonename == "HIGH PRIORITY REGION 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "HIGH PRIORITY REGION 4" then
+					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
+					end)
+				elseif zonename == "HIGH PRIORITY REGION 5" then
+					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/five.wav")
+					end)
+				elseif zonename == "NEXUS TOP FLOOR" or zonename == "C.T.A. ARMORY" or zonename == "NEXUS REAR CATWALK" or zonename == "HIGH PRIORITY REGION 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
+					end)
+				elseif zonename == "LABOR STREET" or zonename == "POLITI-CONTROL SECTION 4" then
+					surface.PlaySound("npc/overwatch/radiovoice/controlsection.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
+					end)
+				elseif zonename == "LABOR ROAD" or zonename == "POLITI-CONTROL SECTION 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/controlsection.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "KADYROV STREET" or zonename == "MAIN STREET" or zonename == "POLITI-CONTROL SECTION 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/controlsection.wav")
+					timer.Simple(1.5, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "ROKOSSOVSKY STREET" or zonename == "INDUSTRIAL DISTRICT" or zonename == "PRODUCTION BLOCK 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "VOLGOGRAD ROAD" or zonename == "PRODUCTION BLOCK 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "SECRETARIAT ROAD" or zonename == "PRODUCTION BLOCK 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "LAUNDROMAT" or zonename == "PRODUCTION BLOCK 4" then
+					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
+					end)
+				elseif zonename == "PRODUCTION BLOCK 5" then
+					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/five.wav")
+					end)
+				elseif zonename == "PRODUCTION BLOCK 6" then
+					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/five.wav")
+					end)
+				elseif zonename == "CENTRAL WORKFORCE HUB" or zonename == "WORKFORCE INTAKE HUB" then
+					surface.PlaySound("npc/overwatch/radiovoice/workforceintake.wav")
+				elseif zonename == "SLUMS" or zonename == "DISTRIBUTIONS BLOCK 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/distributionblock.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "ALLEY" or zonename == "DISTRIBUTIONS BLOCK 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/distributionblock.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "TIMOSHENKO BRIDGE" or zonename == "DISTRIBUTIONS BLOCK 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/distributionblock.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "THE FAT NARGODIAN" or zonename == "REPURPOSED AREA 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/repurposedarea.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "HOSPITAL" or zonename == "REPURPOSED AREA 4" then
+					surface.PlaySound("npc/overwatch/radiovoice/repurposedarea.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
+					end)
+				elseif zonename == "TERMINAL THEATER" or zonename == "REPURPOSED AREA 2"then
+					surface.PlaySound("npc/overwatch/radiovoice/repurposedarea.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "COMMAND POINT" or zonename == "CONDEMNED ZONE 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/condemnedzone.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "45TH APARTMENT COMPLEX" or zonename == "RUNDOWN DISTRICT" or zonename == "RESIDENTIAL BLOCK 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/residentialblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "COMMUNAL DISTRICT" or zonename == "RESIDENTIAL BLOCK 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/residentialblock.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "NEXUS UNDERPASS" or zonename == "NOVA TUNNEL" or zonename == "REPURPOSED AREA 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/repurposedarea.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "ABANDONED TRAIN STATION" or zonename == "OUTLANDS ENTRANCE" or zonename == "RESTRICTED BLOCK 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/restrictedblock.wav")
+					timer.Simple(1.1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "SEWER SYSTEM ZONE 1" or zonename == "SEWER SYSTEM" or zonename == "STORM SYSTEM 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/stormsystem.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "SEWER SYSTEM ZONE 2" or zonename == "COMMUNAL DISTRICT" or zonename == "STORM SYSTEM 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/stormsystem.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "SEWER SYSTEM ZONE 3" or zonename == "STORM SYSTEM 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/stormsystem.wav")
+					timer.Simple(1, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "SEWER SYSTEM ENTRANCE" or zonename == "NON PATROL REGION 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/nonpatrolregion.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "TRAIN STATION SEWER ENTRANCE" or zonename == "SUBWAY TRACKS" or zonename == "NON PATROL REGION 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/nonpatrolregion.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "WASTE DUMP" or zonename == "NON PATROL REGION 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/nonpatrolregion.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "OUTLAND ZONE 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/outlandzone.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "OUTLAND ZONE 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/outlandzone.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "OUTLAND ZONE 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/outlandzone.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "OUTLAND ZONE 4" then
+					surface.PlaySound("npc/overwatch/radiovoice/outlandzone.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "CANAL BLOCK 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/canalblock.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "CANAL BLOCK 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/canalblock.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "CANAL BLOCK 3" then
+					surface.PlaySound("npc/overwatch/radiovoice/canalblock.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
+					end)
+				elseif zonename == "CANAL BLOCK 4" then
+					surface.PlaySound("npc/overwatch/radiovoice/canalblock.wav")
+					timer.Simple(1.2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
+					end)
+				elseif zonename == "STABILIZATION JURISDICTION 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/stabilizationjurisdiction.wav")
+					timer.Simple(2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				elseif zonename == "STABILIZATION JURISDICTION 2" then
+					surface.PlaySound("npc/overwatch/radiovoice/stabilizationjurisdiction.wav")
+					timer.Simple(2, function()
+						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
+					end)
+				elseif zonename == "EXTERNAL JURISDICTION 1" then
+					surface.PlaySound("npc/overwatch/radiovoice/externaljurisdiction.wav")
+					timer.Simple(1.6, function()
+						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
+					end)
+				else
+					surface.PlaySound("npc/overwatch/radiovoice/404zone.wav")
+				end
+			end)
+		end)
+	end
+end)

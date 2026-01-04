@@ -1,0 +1,47 @@
+local ITEM = {}
+
+ITEM.UniqueID = "item_portablehpcharger"
+ITEM.Name = "Portable Biogel Injection Station"
+ITEM.Desc =  "Deploy a biogel injection station to your hardpoint for your teammates to use."
+ITEM.Category = "Combine Tools"
+ITEM.Model = Model("models/Items/HealthKit.mdl")
+ITEM.FOV = 60.379656160458
+ITEM.CamPos = Vector(-57.306591033936, -25.21489906311, 8.5959882736206)
+ITEM.NoCenter = true
+ITEM.Weight = 3.5
+
+ITEM.Droppable = true
+ITEM.DropOnDeath = false
+
+ITEM.Illegal = false
+ITEM.CanStack = true
+
+ITEM.DropIfRestricted = false
+ITEM.DropOnDeathIfRestricted = false
+ITEM.CraftIfRestricted = false
+
+ITEM.UseName = "Deploy"
+ITEM.UseWorkBarTime = 6
+ITEM.UseWorkBarName = "Deploying..."
+ITEM.UseWorkBarFreeze = true
+
+function ITEM:OnUse(ply)
+	local pos = ply:GetPos()
+
+	for k,v in pairs(ents.FindByClass("deep_portablehpcharger")) do
+		if v:GetOwner() == ply then
+        	v:Remove()
+		end
+    end
+
+    local charger = ents.Create("deep_portablehpcharger")
+	charger:SetModel("models/Items/HealthKit.mdl")
+    charger:CPPISetOwner(ply)
+	charger:SetPos(pos + Vector(0, 50, 0))
+	charger:Spawn()
+	ply:Notify("You have deployed a Portable Biogel Injection Station.")
+	return true
+end
+
+impulse.RegisterItem(ITEM)
+
