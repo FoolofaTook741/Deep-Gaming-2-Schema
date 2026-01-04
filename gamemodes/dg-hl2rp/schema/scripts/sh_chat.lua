@@ -2973,56 +2973,6 @@ end
 
 hook.Add("RadioMessageFallback", "impulseStationaryRadio", StationaryRadioCommand)
 
-if SERVER then
-    local vortBlueprintsCommand = {
-        description = "Check unlocked Vortigaunt blueprints (Admin only)",
-        requiresAlive = false,
-        onRun = function(ply, arg, rawText)
-            if not ply:IsAdmin() then
-                ply:Notify("You must be an admin to use this command.")
-                return
-            end
-
-            ply:Notify("=== Unlocked Vortigaunt Blueprints ===")
-            local count = 0
-
-            for name, unlocked in pairs(impulse.VortBlueprints) do
-                if unlocked then
-                    ply:PrintMessage(HUD_PRINTCONSOLE, "• " .. name)
-                    count = count + 1
-                end
-            end
-
-            ply:Notify("Total: " .. count .. " blueprints unlocked")
-            ply:Notify("Check console for full list.")
-        end
-    }
-
-    impulse.RegisterChatCommand("/vortblueprints", vortBlueprintsCommand)
-
-    local vortUnlockCommand = {
-        description = "Unlock a Vortigaunt blueprint (Admin only)",
-        requiresAlive = false,
-        onRun = function(ply, arg, rawText)
-            if not ply:IsAdmin() then
-                ply:Notify("You must be an admin to use this command.")
-                return
-            end
-
-            local blueprintName = arg
-            if not blueprintName or blueprintName == "" then
-                ply:Notify("Usage: /vortunlock <blueprint_name>")
-                return
-            end
-
-            impulse.UnlockVortBlueprint(blueprintName)
-            ply:Notify("Unlocked blueprint: " .. blueprintName)
-        end
-    }
-
-    impulse.RegisterChatCommand("/vortunlock", vortUnlockCommand)
-end
-
 local cpMassDemoteCommand = {
     description = "(Superadmin only) Mass demotes all CP whitelist level 3 and 4 members to level 2.",
     requiresArg = false,
