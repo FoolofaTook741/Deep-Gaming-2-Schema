@@ -55,7 +55,7 @@ function ITEM:OnUse(ply, door)
     ply.UsedVortessence = true
     ply:SetSkin(1)
 	
-    local vortSkillData = ply.vortComputedSkills
+    local vortSkillData = ply:vortSkillCalculate()
     local enduringMultiplier = vortSkillData.enduring_essence or 1
     local vortessenceTime = impulse.Config.VortessenceTime * enduringMultiplier
 

@@ -91,6 +91,7 @@ if SERVER then
         
         ply.impulseData.vort_skills.skills = storedSkills
         ply:SaveData()
+        local ply.vortComputedSkills = ply:vortSkillCalculate()
     end)
 
     net.Receive("vortSkillsTable", function(len, ply)
