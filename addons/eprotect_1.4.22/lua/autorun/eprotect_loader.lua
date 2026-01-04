@@ -1,0 +1,2 @@
+if slib and slib.loadFolder then slib.loadFolder("e_protect/", true, {{"e_protect/", "sh_config.lua"}}) end
+hook.Add("slib:loadedUtils", "eP:Initialize", function() slib.loadFolder("e_protect/", true, {{"e_protect/", "sh_config.lua"}}) end)

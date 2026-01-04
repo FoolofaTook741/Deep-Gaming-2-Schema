@@ -1,0 +1,27 @@
+{
+  "title": "[LVS] - Half-Life 2",
+  "type": "vehicle",
+  "tags": [
+    "fun",
+    "roleplay",
+    "scenic"
+  ],
+  "ignore": [
+    "*.vmf",
+    "*.vmx",
+    "*.qc",
+    "*.qci",
+    "*.smd",
+    "*.txt",
+    "*.backup",
+    "*.log",
+    "*.prt",
+    "*.vta",
+    "*.vrd",
+    "*.gitattributes",
+    "*.tga",
+    "*.7z",
+    "*.jpg",
+    "*.py"
+  ]
+}

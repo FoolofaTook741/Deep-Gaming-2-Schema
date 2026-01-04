@@ -1,0 +1,7 @@
+VertexLitGeneric
+{
+	"$baseTexture" "models\weapons\v_models\twink92\sherped"
+	"$envmap" "env_cubemap"
+	"$bumpmap" "models\weapons\v_models\twink92\sherped_normal"
+	"$normalmapalphaenvmapmask" "1"
+}

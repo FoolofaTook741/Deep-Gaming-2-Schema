@@ -1,0 +1,11 @@
+"AddonInfo"
+{
+    "name"              "LeyScreenCap"
+    "version"           "3"
+    "up_date"           ""
+    "author_name"       "Leystryku"
+    "author_email"      "Leystryku@gmail.com"
+    "author_url"        ""
+    "info"              "Allows you to take screenshots & stream players screens at a low speed"
+    "override"          "0"
+}

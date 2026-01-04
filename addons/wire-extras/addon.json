@@ -1,0 +1,19 @@
+{
+	"title"		:	"Wiremod Unofficial Extras",
+	"type"		:	"tool",
+	"tags"		:	[ "build", "fun" ],
+	"description":	"This is a collection of experimental community created wire addons.",
+	"ignore"	:
+	[
+		"*.psd",
+		"*.vcproj",
+		"*.txt",
+		"*.xcf",
+		".git*",
+		"*.md",
+		".travis.yml",
+		"git-hooks-pre-commit",
+		"LICENSE",
+		"wire_extras_icon.*"
+	]
+}

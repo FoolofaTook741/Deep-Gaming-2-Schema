@@ -1,0 +1,34 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"Metal/metalwall077a"
+	"%keywords"		"combine"
+	"$envmap"		"env_cubemap"
+	"$envmaptint"		"[ .56 .67 .75 ]"
+	"$envmapcontrast"		"1"
+	"$envmapsaturation"		"1"
+	"$reflectivity"		"[.23 .31 .31 ]"
+	"LightmappedGeneric_DX9"
+	{
+		"$bumpmap"		"metal/metalwall077a_normal"
+		"$normalmapalphaenvmapmask"		"1"
+		"$envmaptint"		"[ .09 .1 .12]"
+	}
+	"LightmappedGeneric_DX8"
+	{
+		"$bumpmap"		"metal/metalwall077a_normal"
+		"$nodiffusebumplighting"		"1"
+		"$normalmapalphaenvmapmask"		"1"
+	}
+	"LightmappedGeneric_NoBump_DX8"
+	{
+		"$basetexture"		"metal/citadel_metalwall077a"
+		"$basealphaenvmapmask"		"1"
+	}
+	"LightmappedGeneric_hdr_dx9"
+	{
+		"$bumpmap"		"metal/metalwall077a_normal"
+		"$normalmapalphaenvmapmask"		"1"
+		"$envmaptint"		"[ .09 .1 .12]"
+	}
+	"$model"		"1"
+}

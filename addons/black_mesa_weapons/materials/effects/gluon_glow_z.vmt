@@ -1,0 +1,10 @@
+"UnlitGeneric"
+{
+	$additive 1
+	$basetexture "particle\Particle_Ring_Wave_8"
+	$selfillum 1
+	$translucent 1
+	$vertexcolor 1
+	$vertexalpha 1
+	%keywords "bms"
+}

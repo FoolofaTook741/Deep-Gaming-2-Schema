@@ -1,0 +1,16 @@
+
+╦ runtime = 9.9543830000002
+╠ func    = function: 0x80887b77cc99f9ba	-- [lua/includes/extensions/string.lua]: 87-104
+╠ info:   
+║       ╦ currentline     = 103
+║       ╠ isvararg        = false
+║       ╠ lastlinedefined = 104
+║       ╠ linedefined     = 87
+║       ╠ name            = "Explode"
+║       ╠ namewhat        = "field"
+║       ╠ nparams         = 3
+║       ╠ nups            = 4
+║       ╠ short_src       = "lua/includes/extensions/string.lua"
+║       ╠ source          = "@lua/includes/extensions/string.lua"
+║       ╠ what            = "Lua"
+║       ╚ func            = function: 0x80887b77cc99f9ba	-- [lua/includes/extensions/string.lua]: 87-104

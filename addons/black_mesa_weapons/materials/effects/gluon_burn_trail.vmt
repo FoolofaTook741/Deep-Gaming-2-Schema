@@ -1,0 +1,17 @@
+"UnlitGeneric"
+{
+	//$additive 1
+	//"$basetexture" "effects/gluon_beam"
+	"$basetexture" "sprites/tp_beam001"
+	"$selfillum" "1"
+	"$translucent" "1"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+
+	"$dtrail_life"		"5"
+	"$dtrail_width"		"16"
+	"$dtrail_textile"	"0.01"
+	"$dtrail_fade"		"1"
+	"$dtrail_shrink"	"0"
+	"$dtrail_color"		"[0 0 0.2]"
+}

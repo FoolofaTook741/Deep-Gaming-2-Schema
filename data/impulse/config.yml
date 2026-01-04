@@ -1,0 +1,6 @@
+db:
+  ip: "172.18.0.1"
+  username: "u5_aemM2VjGvl"
+  password: "LqX!o6La5^0bPjcg28oOu.3E"
+  port: "3306"
+  database: "s5_impulse"

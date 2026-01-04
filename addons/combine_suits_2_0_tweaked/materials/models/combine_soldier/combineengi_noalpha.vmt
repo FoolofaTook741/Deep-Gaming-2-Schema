@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models/Combine_soldier/combineengi_noalpha"
+
+	"$halflambert" 1
+	"$model" "1"
+}

@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Weapons/w_flame/w_smg2"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "Models/weapons/w_flame/w_smg2specularmask"
+	"$selfillum" "1"
+}

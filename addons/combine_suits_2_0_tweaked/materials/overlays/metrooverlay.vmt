@@ -1,0 +1,9 @@
+"UnlitGeneric"
+
+{ "$basetexture" "overlays/metrooverlay" 
+  
+  "$translucent" 1
+ 
+
+
+} 

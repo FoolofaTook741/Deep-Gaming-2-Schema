@@ -1,0 +1,20 @@
+{
+	"title"		:	"Advanced Duplicator 2",
+	"type"		:	"tool",
+	"tags"		:	[ "build" ],
+	"description":	"Ground up rewrite meant to make up for some of the shortcomings of the first iteration of AdvDupe.",
+	"ignore"	:
+	[
+		"*.psd",
+		"*.vcproj",
+		"*.txt",
+		"*.tga",
+		"*.xcf",
+		".git*",
+		"*.md",
+		".travis.yml",
+		"git-hooks-pre-commit",
+		"advdupe2icon.*",
+		"LICENSE"
+	]
+}

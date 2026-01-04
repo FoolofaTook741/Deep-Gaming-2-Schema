@@ -1,0 +1,21 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models\world_models\w_gaussammo"
+	"$bumpmap" "models\world_models\w_gaussammo_normal"
+
+    	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.10 0.10 0.10]"
+    	"$normalmapalphaenvmapmask" "1"
+	"$selfillum" "1"
+	"$selfillumtint" "[.022 .022 .022]"
+	"$selfillummask" "models\world_models\w_gaussammo_selfillum"
+
+	"$phong" "1"
+	"$phongboost" "3"
+	"$phongexponent" "35"
+	"$phongfresnelranges" "[0.3 2 5]"
+
+	"$rimlight" "1"
+	"$rimlightexponent" "5"
+	"$rimlightboost" "1"
+}

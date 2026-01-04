@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Weapons/w_flame/smg_crosshair"
+	"$additive" 1
+	"$selfillum" 1
+}

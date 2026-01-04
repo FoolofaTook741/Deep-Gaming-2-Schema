@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+    "$basetexture" "effects/lvs_hl2/spark"
+    "$brightness" "effects/lvs_hl2/spark_brightness"
+    "$additive" 1
+    "$vertexcolor" 1
+}

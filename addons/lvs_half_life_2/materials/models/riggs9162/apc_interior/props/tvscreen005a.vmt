@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"props/tvscreen005a"
+	"$selfillum"		"1"
+	"$model"		"1"
+}

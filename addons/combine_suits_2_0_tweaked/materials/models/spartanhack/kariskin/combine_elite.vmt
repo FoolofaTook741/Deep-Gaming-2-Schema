@@ -1,0 +1,18 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" 	"Models\spartanhack\KariSkin\Combine_elite"
+	"$envmap" "env_cubemap"	
+	"$bumpmap" "models\spartanhack\KariSkin\combine_elite_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$selfillum" 0
+	//"$halflambert" 1
+	"$model" 1
+//	"$phong" "1"
+//	"$phongexponent" "25"
+//	"$phongboost" "2"		
+//	"$phongfresnelranges"	"[0 .5 1]"
+}
+
+
+

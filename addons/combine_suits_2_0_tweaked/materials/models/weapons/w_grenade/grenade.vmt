@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$bumpmap" "models/weapons/v_grenade/grenade_normal"
+	"$baseTexture" "Models/Weapons/V_grenade/grenade"
+}

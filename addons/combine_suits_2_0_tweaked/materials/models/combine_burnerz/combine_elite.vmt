@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" 	"Models/Combine_Burnerz/Combine_elite"	
+	"$bumpmap" "models/Combine_Burnerz/combine_elite_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$model" 1
+	"$selfillum" 1
+}
+
+
+

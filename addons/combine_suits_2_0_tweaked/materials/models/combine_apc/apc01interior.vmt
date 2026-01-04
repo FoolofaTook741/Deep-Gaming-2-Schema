@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$baseTexture"	"models/combine_apc/apc01interior"
+	"$surfaceprop" "metal"
+	//"$envmap" "env_cubemap"
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" 1
+	//"$envmaptint" "[ .75 .9 1]"
+	//"$basealphaenvmapmask" 1
+
+
+	
+}
+

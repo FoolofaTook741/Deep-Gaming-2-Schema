@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/characters/neoheavy/mhm_torso_0"
+	"$nodecal" "1"
+	"$bumpmap" "models/characters/neoheavy/mhm_torso_0_normal"
+	"$surfaceprop" "flesh"
+
+//	"$selfillum" 1
+
+
+}

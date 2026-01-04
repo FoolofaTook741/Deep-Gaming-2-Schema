@@ -1,0 +1,25 @@
+SDK_VertexLitGeneric
+
+{
+
+
+
+	"$baseTexture" "models/combine_apc/glass"
+
+	"$translucent" 1
+
+	"$alpha" 1
+
+	"$envmapmask"	"models/combine_apc/glass_spec"
+
+	"$envmap" "env_cubemap"
+
+	"$envmaptint" "[ .75 .75 1]"
+
+	"$envmapcontrast" 1
+
+	"$envmapsaturation" 1
+	//"$nocull" 1
+
+}
+

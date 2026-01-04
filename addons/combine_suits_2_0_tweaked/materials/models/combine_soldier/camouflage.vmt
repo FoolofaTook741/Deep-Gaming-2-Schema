@@ -1,0 +1,12 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models/Combine_soldier/camouflage"
+	"$bumpmap" "models/Combine_soldier/camouflage_normal"
+
+	"$halflambert" 1
+	"$translucent" 1
+	"$alpha" 1
+	"$model" 1
+	"$nocull" 1
+
+}

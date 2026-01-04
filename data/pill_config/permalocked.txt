@@ -1,0 +1,4 @@
+"permalocked"
+{
+	"STEAM_0:1:229489963"		"bird_crow"
+}

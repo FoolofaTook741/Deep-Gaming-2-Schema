@@ -1,0 +1,8 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models/Combine_soldier/Combine_sniper"
+	"$bumpmap" "models/Combine_soldier/Combine_sniper_normal"
+
+	"$halflambert" 1
+	"$model" "1"
+}

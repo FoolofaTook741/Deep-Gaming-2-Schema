@@ -1,0 +1,11 @@
+VertexLitGeneric
+{
+"$baseTexture" "models\shenesis\flashbang\M84Diffuse"
+"$bumpmap" "models\shenesis\flashbang\M84Normal"
+"$normalmapalphaphongmask"    "1"
+"$phong" "1"
+"$phongexponent" "10"
+"$phongboost" "1"
+"$phongfresnelranges"	"[1 6 3]"
+"$phongalbedotint" "1"
+}
