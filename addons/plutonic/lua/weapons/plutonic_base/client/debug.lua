@@ -316,17 +316,24 @@ function SWEP:DrawHUD()
 		surface.DrawText(showWorldModelESP and "ENABLED" or "DISABLED")
 	end
 
-	if self.Attachments then
-		local hasScope = false
-		for att, _ in pairs(self.EquippedAttachments) do
+	if not self or not self.Attachments or not self.EquippedAttachments then
+		return
+	end
+
+	local hasScope = false
+	local attachment
+
+	for att, _ in pairs(self.EquippedAttachments) do
+		if self.Attachments[att] then
 			if self.Attachments[att].Behaviour == "sniper_sight" then
 				hasScope = true
 				attachment = att
+				break -- Stop checking once found
 			end
 		end
-
-		if not hasScope then return end
 	end
+
+	if not hasScope then return end
 
 	if not self:GetIronsights() then
 		ironFade = 0

@@ -4,24 +4,93 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 util.AddNetworkString("PinnaclePurchaseVehicle")
-net.Receive("PinnaclePurchaseVehicle", function()
-	local cost = net.ReadInt(16)
-	local ent_class = net.ReadString()
-	local spawn_vec = net.ReadVector()
-	local ply = net.ReadPlayer()
 
-	if OCAAB_CUR_FUNDS < cost then return ply:Notify("You do not have enough OCAAB for this.") end
-	OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS - cost
+local Vehicles = {
+    ["lvs_wheeldrive_hl2_combine_apc_armed"] = {
+        Cost = 2000,
+        class = CLASS_NOMAD,
+        faction = TEAM_OTA,
+        spawnVec = Vector(-3899.2036, -9463.1563, -429.787)
+    },
+    ["lvs_helicopter_hl2_combine_dropship_bypass"] = {
+        Cost = 18000,
+        class = CLASS_NOMAD,
+        faction = TEAM_OTA,
+        spawnVec = Vector(-906.7811, -9445.0107, -458.9027)
+    },
+    ["lvs_helicopter_hl2_combine_hunter"] = {
+        Cost = 25000,
+        class = CLASS_NOMAD,
+        faction = TEAM_OTA,
+        spawnVec = Vector(-3899.2036, -9463.1563, -429.787)
+    }
+}
 
-	ply:Notify("You have spawned the vehicle!")
+local ExploitAttempts = ExploitAttempts or {}
+
+local function LogExploitAttempt(ply, reason, vehicleID)
+    if not IsValid(ply) then return end
+
+    ExploitAttempts[ply] = (ExploitAttempts[ply] or 0) + 1
+
+    local msg = string.format(
+        "[VEHICLE-REQ BLOCKED] %s (%s | %s) | Vehicle: %s | Reason: %s | Attempts: %d",
+        ply:Nick(),
+        ply:SteamID(),
+        ply:SteamID64(),
+        tostring(vehicleID),
+        reason,
+        ExploitAttempts[ply]
+    )
+
+
+	if ExploitAttempts[ply] >= 5 then
+		print("[VEHICLE-REQ] WARNING: Repeated exploit attempts by " .. ply:Nick())
+		print("[VEHICLE-REQ] Taking action against " .. ply:SteamID())
+	end
+
+    print(msg)
+end
+
+net.Receive("PinnaclePurchaseVehicle", function(_, ply)
+    local vehicleID = net.ReadString()
+    local data = Vehicles[vehicleID]
+
+    if not data then
+        LogExploitAttempt(ply, "Invalid vehicle ID", vehicleID)
+        return
+    end
+
+    if ply:Team() ~= data.faction then
+        LogExploitAttempt(ply, "Wrong faction", vehicleID)
+        return ply:Notify("You are not in the correct faction.")
+    end
+
+    if ply:GetTeamClass() ~= data.class then
+        LogExploitAttempt(ply, "Wrong class", vehicleID)
+        return ply:Notify("You are not the correct class.")
+    end
+
+    if OCAAB_CUR_FUNDS < data.Cost then
+        LogExploitAttempt(ply, "Insufficient funds", vehicleID)
+        return ply:Notify("You do not have enough OCAAB.")
+    end
+
+    ExploitAttempts[ply] = nil
+
+    OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS - data.Cost
 
     net.Start("DeepAdjustFunds")
-    net.WriteInt(OCAAB_CUR_FUNDS, 16)
+        net.WriteInt(OCAAB_CUR_FUNDS, 16)
     net.Broadcast()
 
-	local ent = ents.Create(ent_class)
-	ent:SetPos(spawn_vec) 
-	ent:Spawn()
+    local ent = ents.Create(vehicleID)
+    if not IsValid(ent) then return end
+
+    ent:SetPos(data.spawnVec)
+    ent:Spawn()
+
+    ply:Notify("Vehicle requisition approved.")
 end)
 
 function ENT:Initialize()

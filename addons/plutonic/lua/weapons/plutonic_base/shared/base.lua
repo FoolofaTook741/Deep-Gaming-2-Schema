@@ -576,12 +576,20 @@ function SWEP:HolsterThink()
 end
 
 function SWEP:Holster(wep)
-	if IsValid(wep) then
-		if wep:GetClass() == "plutonic_golden357" or wep:GetClass() == "plutonic_goldenak47" then
-			self:GetOwner():GetViewModel():SetMaterial("")
-		end
-	end
-	return true
+    if not IsValid(self) then return true end
+    if not IsValid(wep) then return true end
+    
+    local owner = self:GetOwner()
+    if not IsValid(owner) then return true end
+    
+    if wep:GetClass() == "plutonic_golden357" or wep:GetClass() == "plutonic_goldenak47" then
+        local vm = owner:GetViewModel()
+        if IsValid(vm) then
+            vm:SetMaterial("")
+        end
+    end
+    
+    return true
 end
 
 function SWEP:OnRemove()

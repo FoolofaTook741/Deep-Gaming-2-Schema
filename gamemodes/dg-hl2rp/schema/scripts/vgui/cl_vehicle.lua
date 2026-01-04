@@ -122,22 +122,20 @@ function PANEL:Init()
             surface.DrawOutlinedRect(0, 0, w, h)
         end
 
-        -- Increment counter on click
         AddBtn.DoClick = function()
-            if LocalPlayer():GetTeamClass() != v.class and LocalPlayer():Team() != v.faction  then LocalPlayer():Notify("You are the incorrect class for this!") parent:Remove() return 0 end
-            local cost = v.Cost
-            local vec = v.spawnVec
+            if LocalPlayer():GetTeamClass() ~= v.class or LocalPlayer():Team() ~= v.faction then
+                LocalPlayer():Notify("You are the incorrect class for this!")
+                parent:Remove()
+                return
+            end
+
             net.Start("PinnaclePurchaseVehicle")
-                net.WriteInt(cost, 16)
-                net.WriteString(k)
-                net.WriteVector(vec)
-                net.WritePlayer(LocalPlayer())
+            net.WriteString(k)
             net.SendToServer()
+
             parent:Remove()
             surface.PlaySound("ui/hls_ui_scroll_click.wav")
         end
-        
-       
     end
 end
 
