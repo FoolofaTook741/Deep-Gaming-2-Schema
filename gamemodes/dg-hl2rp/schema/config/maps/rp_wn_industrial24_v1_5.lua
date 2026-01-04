@@ -27,6 +27,17 @@ impulse.Config.BlacklistEnts = {
 	["item_suitcharger"] = true
 }
 
+impulse.Config.TrashSpawns {
+	Vector(304.29629516602, 2783.9064941406, 136.03125),
+	Vector(327.79919433594, 2330.0576171875, 128.03125),
+	Vector(3501.7392578125, 1761.4069824219, 136.03125),
+	Vector(3833.9353027344, 5195.4267578125, 328.03125),
+	Vector(739.79364013672, 4675.3891601562, 136.03125),
+	Vector(2350.9865722656, 1964.5738525391, 136.03125),
+	Vector(2394.0307617188, 3209.3955078125, 136.03125),
+	Vector(2512.7282714844, 5083.9892578125, 328.03125)
+}
+
 impulse.Config.SporeClusters = {
 	Vector(6469.130859375, 3088.8254394531, 223.61917114258),
 	Vector(4240.03125, 2308.4914550781, 200.03125),
@@ -649,3 +660,84 @@ impulse.RegisterChatCommand("/combinegate", {
 		end)
 	end
 })
+
+if SERVER then
+	resource.AddWorkshop( "3465221427" ) -- Deep Gaming 2 - Content Pack #2
+	resource.AddWorkshop( "2853989986" ) -- Half-Life Alyx: Hazmat male and female
+	resource.AddWorkshop( "2685051966" ) -- Image Tool - Your pictures in the world!
+	resource.AddWorkshop( "2905875154" ) -- Project: Synapse - Props Pack
+	resource.AddWorkshop( "2942500044" ) -- Project: Synapse - Resource Pack
+	resource.AddWorkshop( "2979382377" ) -- Project: Synapse - Sound Pack
+	resource.AddWorkshop( "1562056573" ) -- Large Sci-Fi Generator / Reactor
+	resource.AddWorkshop( "3490155976" ) -- HL Alyx Combine Animated Prop [discontinued]
+	resource.AddWorkshop( "635535045" ) -- Handheld Radio
+	resource.AddWorkshop( "3303394137" ) -- undefined
+	resource.AddWorkshop( "104491619" ) -- Metropolice Pack
+	resource.AddWorkshop( "104603291" ) -- Extended Spawnmenu
+	resource.AddWorkshop( "105042805" ) -- Combine Administrators v2
+	resource.AddWorkshop( "108024198" ) -- Food and Household items
+	resource.AddWorkshop( "121412995" ) -- Combine AR3 Machine Gun
+	resource.AddWorkshop( "173482196" ) -- SProps Workshop Edition
+	resource.AddWorkshop( "206166550" ) -- Sabre-aN's Headcrab Zombie Mod
+	resource.AddWorkshop( "282312812" ) -- HL2RP ID Cards
+	resource.AddWorkshop( "411141331" ) -- PPSh-41 [CW2.0]
+	resource.AddWorkshop( "744901224" ) -- 4K Templar Sword
+	resource.AddWorkshop( "1574676244" ) -- Half-Life 2 Building Kit
+	resource.AddWorkshop( "1651398810" ) -- impulse framework content
+	resource.AddWorkshop( "1689357640" ) -- impulse: Half-Life 2 Roleplay Content
+	resource.AddWorkshop( "1784911999" ) -- LED screens
+	resource.AddWorkshop( "1929148608" ) -- impulse: Christmas Content
+	resource.AddWorkshop( "1931077830" ) -- impulse: Half-Life 2 Roleplay Content 2
+	resource.AddWorkshop( "1967574455" ) -- impulse: Half-Life 2 Roleplay Content 3
+	resource.AddWorkshop( "1996672418" ) -- [TFA] Half-Life: Alyx - Shotgun
+	resource.AddWorkshop( "2035519790" ) -- HL:Alyx Combine Grunt
+	resource.AddWorkshop( "2037241085" ) -- HL:Alyx Combine Suppressor
+	resource.AddWorkshop( "2043900984" ) -- [Half Life: Alyx] Infestation Control props
+	resource.AddWorkshop( "2085971768" ) -- impulse: Half-Life 2 Roleplay Content 4
+	resource.AddWorkshop( "2109019567" ) -- [Half Life: Alyx] Combine Workers (Player, NPC, Ragdoll)
+	resource.AddWorkshop( "2117238555" ) -- impulse: Half-Life 2 Roleplay Content 5
+	resource.AddWorkshop( "2131228609" ) -- [ArcCW] M2 Browning
+	resource.AddWorkshop( "2160883169" ) -- [TFA] BAR M1918 - Service Model
+	resource.AddWorkshop( "2228994615" ) -- [Half Life: Alyx] Xen Pack (Props)
+	resource.AddWorkshop( "2230543274" ) -- Willard Combine Upgrades
+	resource.AddWorkshop( "2473879362" ) -- Willard 2.0 Combine Pack
+	resource.AddWorkshop( "2521715069" ) -- [TFA] Combine-Modified SMG
+	resource.AddWorkshop( "2630235485" ) -- [TFA] AK47 and Type 56 (Call of Duty Black Ops: Cold War)
+	resource.AddWorkshop( "2631194512" ) -- Nemez Combine Soldier Remake Pack
+	resource.AddWorkshop( "2653493568" ) -- Combine Suits 2.0 - Tweaked
+	resource.AddWorkshop( "2665902404" ) -- [TFA] [AT] Project HL2 MMod Pack
+	resource.AddWorkshop( "2774420106" ) -- [HALF-LIFE: ALYX] Infestation Control models.
+	resource.AddWorkshop( "2797830728" ) -- TFA HL:A Weapons
+	resource.AddWorkshop( "2866027579" ) -- AmmoWorkbench
+	resource.AddWorkshop( "2891252709" ) -- Half Life 2 Props Extended
+	resource.AddWorkshop( "2920724950" ) -- Willard Networks V1 Models
+	resource.AddWorkshop( "2926909009" ) -- Willard Networks V1 Playermodels
+	resource.AddWorkshop( "2941435647" ) -- Fast Zombie With Headcrab Playermodel
+	resource.AddWorkshop( "2965143123" ) -- [TFA] PTRS-41
+	resource.AddWorkshop( "2980005772" ) -- Deep Gaming Materials Pack
+	resource.AddWorkshop( "3032450089" ) -- DGH Asset Pack A
+	resource.AddWorkshop( "3035353556" ) -- DGH Asset Pack B
+	resource.AddWorkshop( "3096690838" ) -- Deep Gaming music pack
+
+	resource.AddWorkshop( "3159278363" ) -- DGH Asset Pack C
+	resource.AddWorkshop( "3222165323" ) -- Deep Gaming HL2RP - Content Pack #1
+	resource.AddWorkshop( "2452057425" ) -- Soviet Lab Electronics Prop Pack from Snowdrop Escape
+	resource.AddWorkshop( "1909557607" ) -- [TTT/Sandbox] Combine Sniper
+	resource.AddWorkshop( "3028357706" ) -- [LVS] - Half-Life 2 - Pack
+	resource.AddWorkshop( "2912816023" ) -- [LVS] - Framework
+	resource.AddWorkshop( "3027255911" ) -- [LVS] - Military - Pack
+	resource.AddWorkshop( "2922255746" ) -- [LVS] - Helicopters - Pack
+	resource.AddWorkshop( "2840031720" ) -- TFA Base
+	resource.AddWorkshop( "2216838577" ) -- [Half Life: Alyx] Consumables Misc (Props)
+	resource.AddWorkshop( "3490004161" ) -- Pinnacle Gaming Content #2
+	resource.AddWorkshop( "1744257891" ) -- i17 v3 Content
+	resource.AddWorkshop( "2041528484" ) -- HL:Alyx Vanilla Combine
+	resource.AddWorkshop( "2892681669" ) -- [NPC] VALKYRIA Civil Protection maskless
+	resource.AddWorkshop( "771487490" ) -- [simfphys] LUA Vehicles - Base
+	resource.AddWorkshop( "831680603" ) -- [simfphys] - Armed
+	resource.AddWorkshop( "2892682541" ) -- [MATERIALS] VALKYRIA Civil Protection maskless
+	resource.AddWorkshop( "417428923" ) -- Episodic Pill Pack
+	resource.AddWorkshop( "950845673" ) -- Parakeet's Pill Pack
+	resource.AddWorkshop( "3616199913" ) -- Fallout 76 – Workstation Props (REUPLOAD)
+	resource.AddWorkshop( "3130877181" ) -- rp_wn_industrial24_v1_5
+end
