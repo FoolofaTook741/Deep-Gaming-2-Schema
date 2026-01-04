@@ -567,6 +567,42 @@ impulse.Config.LoadScript = function()
 			end
 		end
 	end
+
+			local autoLockDoors = {
+			1882, 
+			2063,
+			2307,
+			4032,
+			4794,
+			2739,
+			2935,
+			2936,
+			2937,
+			2128
+		}
+
+	if timer.Exists("impulseI24AutoDoorShutter") then
+		timer.Remove("impulseI24AutoDoorShutter")
+	end
+
+	timer.Create("impulseI24AutoDoorShutter", 50, 0, function()
+		for v,k in pairs(autoLockDoors) do
+			local door = ents.GetMapCreatedEntity(k)
+
+			if not IsValid(door) or not door:IsDoor() then
+				continue
+			end
+			
+			door:Fire("unlock")
+			door:Fire("close")
+
+			timer.Simple(2, function()
+				if IsValid(door) then
+					door:Fire("lock")
+				end
+			end)
+		end
+	end)
 end
 
 impulse.Config.CPSpawnLocations = {Vector(2020.302734375, 3417.7314453125, -543.96875),
