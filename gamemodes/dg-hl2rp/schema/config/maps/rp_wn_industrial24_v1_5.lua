@@ -27,7 +27,7 @@ impulse.Config.BlacklistEnts = {
 	["item_suitcharger"] = true
 }
 
-impulse.Config.TrashSpawns {
+impulse.Config.TrashSpawns = {
 	Vector(304.29629516602, 2783.9064941406, 136.03125),
 	Vector(327.79919433594, 2330.0576171875, 128.03125),
 	Vector(3501.7392578125, 1761.4069824219, 136.03125),
