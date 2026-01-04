@@ -56,7 +56,7 @@ impulse.Business.Define("Bullet Press", {
     end
 })
 
---[[
+
 impulse.Business.Define("De-biolinking Machine", {
     entity = "deep_blremovalstation",
     model = "models/props_c17/TrapPropeller_Engine.mdl",
@@ -85,7 +85,6 @@ impulse.Business.Define("De-biolinking Machine", {
     	end
     end
 })
-]]
 
 impulse.Business.Define("Camera Viewer", {
     entity = "pinnacle_portable_cam_viewer",

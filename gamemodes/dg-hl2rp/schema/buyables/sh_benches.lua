@@ -52,7 +52,7 @@ impulse.Business.Define("Tinker Workbench", {
 		end
     end
 })
-
+--[[
 impulse.Business.Define("Biolink Removal Station", {
 	bench = "blremover",
 	model = "models/props_c17/TrapPropeller_Engine.mdl",
@@ -66,7 +66,8 @@ impulse.Business.Define("Biolink Removal Station", {
 			return false
 		end
     end
-})
+}
+--]]
 
 impulse.Business.Define("Weaponry Workbench", {
 	bench = "weapon",
