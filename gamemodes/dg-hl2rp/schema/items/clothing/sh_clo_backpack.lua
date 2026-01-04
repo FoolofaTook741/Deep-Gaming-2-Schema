@@ -19,7 +19,7 @@ ITEM.EquipGroup = "back"
 ITEM.CanStack = true   
 
 function ITEM:CanEquip(ply)
-	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU
+	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_CP
 end
 
 function ITEM:OnEquip(ply)
