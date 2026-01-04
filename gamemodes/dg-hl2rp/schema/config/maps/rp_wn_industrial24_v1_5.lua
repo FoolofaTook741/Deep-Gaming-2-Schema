@@ -541,3 +541,111 @@ Vector(2527.6389160156, 4432.1484375, -303.96875),
 Vector(3103.8054199219, 4575.0546875, -303.96875),
 Vector(3065.1179199219, 4532.9594726563, 1408.03125),
 }
+
+local gates = {
+	["SHELL BEACH GATE"] = {
+		near = Vector(3776, 5654, 400),
+		doorName = "outerbulkhead"
+	},
+	["OUTLANDS GATE"] = {
+		near = Vector(-1246.000000, 3520.010010, 220.000000),
+		doorName = "canaldoor"
+	},
+	["GARAGE"] = {
+		near = Vector(1448.000000, 4115.000000, 288.000000),
+		doorName = "nexus_garagedoor1"
+	},
+}
+
+local cooldowns = {}
+local howCloseYouNeedToBe = 300^2
+local doorCloseEnough = 512^2
+
+local function distToSqr2D(a, b)
+	local dx = a.x - b.x
+	local dy = a.y - b.y
+	return dx*dx + dy*dy
+end
+
+impulse.RegisterChatCommand("/combinegate", {
+	description = "Opens the closest Combine Bulkhead. (Combine only)",
+	requiesAlive = true,
+	onRun = function(ply)
+		if not ((ply:Team() == TEAM_OTA) or (ply:Team() == TEAM_CP and ply:GetTeamRank() >= RANK_OFC)) then
+			ply:Notify("You must be a member of the OTA or CP RL+ to use this.")
+			return
+		end
+
+		local gateName, gateData
+		local bestDist = math.huge
+		local plyPos = ply:GetPos()
+
+		for name, data in pairs(gates) do
+			local dist = distToSqr2D(data.near, plyPos) -- 2D selection
+			if dist < howCloseYouNeedToBe and dist < bestDist then
+				bestDist = dist
+				gateName = name
+				gateData = data
+			end
+		end
+
+		if not gateData then
+			ply:Notify("You aren't near a large Combine door.")
+			return
+		end
+
+		local cooldown = cooldowns[gateName] or 0
+		if CurTime() < cooldown then
+			ply:Notify(("This gate can open in %i seconds."):format(math.floor(cooldown - CurTime())))
+			return
+		end
+
+		local opened = {}
+
+		if gateData.doorName then
+			for _, door in ipairs(ents.FindByClass("func_door")) do
+				if door:GetName() == gateData.doorName then
+					door:Fire("unlock", "", 0.6)
+					door:Fire("open", "", 0.6)
+					opened[#opened + 1] = door
+				end
+			end
+			for _, door in ipairs(ents.FindByClass("func_door_rotating")) do
+				if door:GetName() == gateData.doorName then
+					door:Fire("open", "", 0.6)
+					opened[#opened + 1] = door
+				end
+			end
+		end
+
+		if #opened == 0 then
+			ply:Notify("Couldn't find any doors for that gate.")
+			return
+		end
+
+		local time = (gateName == "STORMSYSTEM GATE") and 40 or 20
+
+		timer.Simple(time, function()
+			for _, door in ipairs(opened) do
+				if IsValid(door) then door:Fire("close", "", 0.6) end
+			end
+		end)
+
+		cooldowns[gateName] = CurTime() + time + 10
+		ply:Notify("You have opened the gate.")
+		for _, combine in pairs(player.GetAll()) do
+			if combine:IsCP() then
+				combine:SendCombineMessage(ply:Name() .. " HAS OPENED THE "..gateName..".", Color(0, 100, 0))
+			end
+		end
+		timer.Simple(time, function()
+			if not IsValid( door ) then return end
+			door:Fire("close", "", .6)
+			for _, combine in pairs(player.GetAll()) do
+				if combine:IsCP() then
+					combine:SendCombineMessage("THE "..gateName.." HAS CLOSED.", Color(0, 100, 0))
+				end
+			end
+		end)
+	end
+})
