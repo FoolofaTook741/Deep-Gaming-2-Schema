@@ -253,12 +253,38 @@ end
 function SWEP:ShootBullet(damage, num_bullets, aimcone, override_src, override_dir)
 	if self.UseBallistics then
 		if Plutonic.IsClient then return end
-		local bulllet = ents.Create("plutonic_ballistic")
-		bulllet:SetPos(self:GetOwner():GetShootPos())
-		bulllet:SetAngles(self:GetOwner():GetAimVector():Angle())
-		bulllet:SetOwner(self:GetOwner())
-		bulllet:Spawn()
-		bulllet:Launch()
+		local bullet = ents.Create("plutonic_ballistic")
+		bullet:SetPos(self:GetOwner():GetShootPos())
+		bullet:SetAngles(self:GetOwner():GetAimVector():Angle())
+		bullet:SetOwner(self:GetOwner())
+		
+		if self.DamageFalloff then
+			bullet.BaseDamage = damage
+			bullet.MinDistance = self.MinDistance or 0
+			bullet.MaxDistance = self.MaxDistance or 10000
+			bullet.MinDamageMultiplier = self.MinDamageMultiplier or 0.1
+			
+			bullet.CalculateDamage = function(self, hitPos)
+				local shooter = self:GetOwner()
+				if not IsValid(shooter) then return self.BaseDamage end
+				
+				local distance = self:GetPos():Distance(hitPos)
+				local falloffRange = self.MaxDistance - self.MinDistance
+				
+				if distance > self.MinDistance then
+					local falloffFactor = math.Clamp((distance - self.MinDistance) / falloffRange, 0, 1)
+					local damageMultiplier = Lerp(falloffFactor, 1, self.MinDamageMultiplier)
+					return self.BaseDamage * damageMultiplier
+				end
+				
+				return self.BaseDamage
+			end
+		else
+			bullet.BaseDamage = damage
+		end
+		
+		bullet:Spawn()
+		bullet:Launch()
 
 		return
 	end
@@ -268,6 +294,7 @@ function SWEP:ShootBullet(damage, num_bullets, aimcone, override_src, override_d
 	bullet.Src = override_src or self:GetOwner():GetShootPos() -- Source
 	bullet.Dir = override_dir or self:GetOwner():GetAimVector() -- Dir of bullet
 	bullet.Spread = Vector(aimcone, aimcone, 0) -- Aim Cone
+	
 	if self.Primary.Tracer then
 		bullet.TracerName = "tracer"
 		--bullet.TracerName = self.Primary.Tracer
@@ -283,6 +310,40 @@ function SWEP:ShootBullet(damage, num_bullets, aimcone, override_src, override_d
 	bullet.Force = 1 -- Amount of force to give to phys objects
 	bullet.Damage = damage
 	bullet.AmmoType = "Pistol"
+	
+	-- Add damage falloff callback for regular bullets from volatility
+	if self.DamageFalloff then
+		bullet.Callback = function(attacker, tr, dmginfo)
+			-- Server-side damage falloff calculation
+			if SERVER and self.DamageFalloff then
+				local distance = tr.StartPos:Distance(tr.HitPos)
+				local falloffRange = self.MaxDistance - self.MinDistance
+				
+				if distance > self.MinDistance then
+					-- Calculate damage multiplier based on distance
+					local falloffFactor = math.Clamp((distance - self.MinDistance) / falloffRange, 0, 1)
+					local damageMultiplier = Lerp(falloffFactor, 1, self.MinDamageMultiplier)
+					dmginfo:SetDamage(damage * damageMultiplier)
+					
+					-- Uncomment for debugging damage values
+					-- print(string.format("Distance: %.0f | Damage: %.1f (%.0f%%)", 
+					--     distance, dmginfo:GetDamage(), damageMultiplier * 100))
+				end
+			end
+			
+			-- Client-side debug visualization
+			if CLIENT and self.DrawBulletImpacts then
+				debugoverlay.Cross(tr.HitPos, 2, 3, Color(255, 0, 0), true)
+				
+				-- Optional: Draw falloff ranges when debugging
+				if self.DrawFalloffRanges and IsFirstTimePredicted() then
+					debugoverlay.Sphere(owner:GetShootPos(), self.MinDistance, 0.1, Color(0, 255, 0, 50), true)
+					debugoverlay.Sphere(owner:GetShootPos(), self.MaxDistance, 0.1, Color(255, 0, 0, 50), true)
+				end
+			end
+		end
+	end
+	
 	Plutonic.Framework.FireBullets(self, bullet)
 	self:ShootEffects()
 end
