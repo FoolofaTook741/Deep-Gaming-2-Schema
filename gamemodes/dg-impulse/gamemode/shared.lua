@@ -163,7 +163,7 @@ end
 
 function impulse.debugPrint(message, ...)
     if not GetConVar("impulse_ispreview"):GetBool() then
-        return
+        --return
     end
     
     local debugInfo = debug.getinfo(2, "nSl")
