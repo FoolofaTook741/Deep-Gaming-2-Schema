@@ -58,10 +58,9 @@ SWEP.Primary.Delay = RPM(90)
 SWEP.Primary.PenetrationScale = 1
 
 SWEP.DamageFalloff = true
-SWEP.MinDistance = 500          -- 12.7 meters in waypoint data stuff (full damage)
-SWEP.MaxDistance = 4724         -- 120 meters
-SWEP.MinDamageMultiplier = 0.7917  -- 47.5 base damage (95 headshot) at 120m
--- all the meters to hammer units is done by waypoint stuff, its the same logic
+SWEP.MinDistance = 50 * 39.37
+SWEP.MaxDistance = 50 * 39.37 -- 50 meters i fucking hate this
+SWEP.MinDamageMultiplier = 0.7917
 
 SWEP.Primary.Ammo = "357"
 SWEP.Primary.Automatic = false
