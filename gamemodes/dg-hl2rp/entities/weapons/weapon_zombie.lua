@@ -64,30 +64,36 @@ function SWEP:UpdateNextIdle()
 
 end
 
-function SWEP:PrimaryAttack( right )
+function SWEP:PrimaryAttack(right)
+    local ply = self:GetOwner()
+    if not IsValid(ply) then return end
 
-	self.Owner:SetAnimation( PLAYER_ATTACK1 )
-	if !timer.Exists("zombsoundstackprot") then
-		self.Owner:EmitSound("npc/zombie/zo_attack" .. math.random(1,2).. ".wav")
-		timer.Create("zombsoundstackprot", 0.2, 0, function() timer.Remove("zombsoundstackprot") end)
-	end
-	local anim = "fists_left"
-	if ( right ) then anim = "fists_right" end
-	if ( self:GetCombo() >= 2 ) then
-		anim = "fists_uppercut"
-	end
-	
-	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+    ply:SetAnimation(PLAYER_ATTACK1)
 
-	self:EmitSound( SwingSound )
+    ply._ZombieSoundCooldown = ply._ZombieSoundCooldown or 0
+    if ply._ZombieSoundCooldown < CurTime() then
+        ply:EmitSound("npc/zombie/zo_attack" .. math.random(1, 2) .. ".wav")
+        ply._ZombieSoundCooldown = CurTime() + 0.2
+    end
 
-	self:UpdateNextIdle()
-	self:SetNextMeleeAttack( CurTime() + 0.2 )
+    if self:GetCombo() >= 2 then
+        self:SendWeaponAnim(ACT_VM_HITCENTER)
+    else
+        self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+    end
 
-	self:SetNextPrimaryFire( CurTime() + 0.9 )
-	self:SetNextSecondaryFire( CurTime() + 0.9 )
-	self.Owner:AddSkillXP("strength", 1)
+    self:EmitSound(SwingSound)
+    self:UpdateNextIdle()
 
+    self:SetNextMeleeAttack(CurTime() + 0.2)
+    self:SetNextPrimaryFire(CurTime() + 0.9)
+    self:SetNextSecondaryFire(CurTime() + 0.9)
+
+    if ply.AddSkillXP then
+        ply:AddSkillXP("strength", 1)
+    elseif ply.GetSkillXP and ply.SetSkillXP then
+        ply:SetSkillXP("strength", (ply:GetSkillXP("strength") or 0) + 1)
+    end
 end
 
 function SWEP:SecondaryAttack()
