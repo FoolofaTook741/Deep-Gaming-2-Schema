@@ -94,13 +94,57 @@ util.AddNetworkString("impulseHL2RPLoyalistTierReturn")
 util.AddNetworkString("impulseHL2RPOCABUpdate")
 util.AddNetworkString("impulseHL2RPOCABReturn")
 
-net.Receive("impulseHL2RPOCABUpdate", function(len, ply)
-    local broadcast= net.ReadString()
-    local speaker = ply
-    
+local MAX_BULLETIN_LENGTH = 500
+local OCAB_ExploitAttempts = {}
+
+local function LogOCABExploit(ply, reason)
+    if not IsValid(ply) then return end
+
+    OCAB_ExploitAttempts[ply] = (OCAB_ExploitAttempts[ply] or 0) + 1
+
+    print(string.format(
+        "[OCAB BLOCKED] %s (%s | %s) | Reason: %s | Attempts: %d",
+        ply:Nick(),
+        ply:SteamID(),
+        ply:SteamID64(),
+        reason,
+        OCAB_ExploitAttempts[ply]
+    ))
+end
+
+net.Receive("impulseHL2RPOCABUpdate", function(_, ply)
+    local text = net.ReadString()
+
+    if ply:Team() ~= TEAM_CA then
+        LogOCABExploit(ply, "Wrong team")
+        return
+    end
+
+    if ply:GetTeamRank() < RANK_REPRESENTATIVE then
+        LogOCABExploit(ply, "Insufficient rank")
+        return
+    end
+
+    if not isstring(text) or text == "" then
+        LogOCABExploit(ply, "Invalid or empty text")
+        return
+    end
+
+    if #text > MAX_BULLETIN_LENGTH then
+        LogOCABExploit(ply, "Text too long")
+        return
+    end
+
+    text = string.Trim(text)
+
+    -- reset exploit counter if there is no exploit xdxdxd
+    OCAB_ExploitAttempts[ply] = nil
+
+    print("[OCAB UPDATE] Bulletin updated by", ply:Nick(), ply:SteamID())
+
     net.Start("impulseHL2RPOCABReturn")
-        net.WriteString(broadcast)
-        net.WriteEntity(speaker)
+    net.WriteString(text)
+    net.WriteEntity(ply)
     net.Broadcast()
 end)
 

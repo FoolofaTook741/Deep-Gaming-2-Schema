@@ -337,10 +337,39 @@ ENT.Menus['LoyalistTier'] = {
 
 local curBulletin
 
-net.Receive("impulseHL2RPOCABReturn", function(len, ply)
-	curBulletin = net.ReadString()
-	local updater = net.ReadEntity()
- 	chat.AddText(Color(128,0,128), "[OCA BROADCAST] ", updater, " has updated the O.C.A Bulletin. Please view the civic terminal for more information.", talkCol, message)
+local MAX_BULLETIN_LENGTH = 500
+
+local function LogOCABExploit(reason, data)
+    print(string.format(
+        "[OCAB CLIENT BLOCKED] Reason: %s | Data: %s",
+        reason,
+        tostring(data)
+    ))
+end
+
+net.Receive("impulseHL2RPOCABReturn", function()
+    local text = net.ReadString()
+    local updater = net.ReadEntity()
+
+    if not isstring(text) or text == "" then
+        LogOCABExploit("Invalid or empty bulletin text", text)
+        return
+    end
+
+    if #text > MAX_BULLETIN_LENGTH then
+        LogOCABExploit("Bulletin text too long", #text)
+        return
+    end
+
+    if not IsValid(updater) or not updater:IsPlayer() then
+        LogOCABExploit("Invalid updater entity", updater)
+        return
+    end
+
+    text = string.Trim(text)
+    curBulletin = text
+
+    chat.AddText(Color(128, 0, 128),"[OCA BROADCAST] "..updater.." has updated the O.C.A Bulletin. Please view the civic terminal for more information.")
 end)
 
 local function WrapText(text, maxWidth)
@@ -420,7 +449,6 @@ ENT.Menus['OCAB'] = {
         surface.DrawLine(-525, 300, 500, 300)
     end
 }
-
 
 ENT.Menus['Commerce'] = {
     buttons = {
