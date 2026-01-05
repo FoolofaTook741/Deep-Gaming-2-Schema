@@ -67,10 +67,10 @@ SWEP.Primary.Sound = Sound("LS2.AR15.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.AR15.Inside")
 
 SWEP.Primary.Recoil = 0.03 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 10
+SWEP.Primary.Damage = 15
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.01
-SWEP.Primary.Delay = RPM(900)
+SWEP.Primary.Delay = RPM(675)
 SWEP.UseIronsightsRecoil = false
 
 SWEP.Primary.Ammo = "SniperRound"

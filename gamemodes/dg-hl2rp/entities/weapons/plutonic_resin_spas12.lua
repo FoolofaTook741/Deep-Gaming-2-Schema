@@ -57,7 +57,7 @@ SWEP.Primary.ReloadSpeed = 0.6
 
 SWEP.Primary.Sound = Sound("CUST.SPAS12.Single")
 SWEP.Primary.Recoil = 10 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 7
+SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 9
 SWEP.Primary.Cone = 0.04
 SWEP.Primary.Delay = RPM(90)

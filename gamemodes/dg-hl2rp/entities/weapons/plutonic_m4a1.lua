@@ -61,10 +61,10 @@ SWEP.ReloadSound = "weapons/ar2/ar2_reload.wav"
 SWEP.EmptySound = "weapons/clipempty_pistol.wav"
 
 SWEP.Primary.Recoil = 1 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 11
+SWEP.Primary.Damage = 19
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0015
-SWEP.Primary.Delay = RPM(900)
+SWEP.Primary.Delay = RPM(800)
 
 SWEP.Primary.Ammo = "Rifle"
 SWEP.Primary.Automatic = true
@@ -79,7 +79,7 @@ SWEP.Secondary.DefaultClip = -1
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
 SWEP.Spread.Max = 0.4
-SWEP.Spread.IronsightsMod = 0.01 -- multiply
+SWEP.Spread.IronsightsMod = 0.8 -- multiply
 SWEP.Spread.CrouchMod = 0.2 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 1.5 -- how does if the player is in the air effect spread (multiply)
 SWEP.Spread.RecoilMod = 0.09 -- how does the recoil effect the spread (sustained fire) (additional)

@@ -53,7 +53,7 @@ SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.25
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(1800)
+SWEP.Primary.Delay = RPM(1300)
 SWEP.SpeedReduction = 150
 
 SWEP.UseIronsightsRecoil = false

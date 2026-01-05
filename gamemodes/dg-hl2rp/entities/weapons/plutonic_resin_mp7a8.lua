@@ -43,7 +43,7 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("CUST.MP7A8.Single")
 SWEP.Primary.Recoil = 0.3 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 9
+SWEP.Primary.Damage = 10
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.007
 SWEP.Primary.Delay = RPM(900)

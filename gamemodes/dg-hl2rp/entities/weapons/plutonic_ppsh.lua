@@ -60,8 +60,8 @@ SWEP.UseIronsightsRecoil = false
 
 SWEP.Primary.Ammo = "SMG1"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 45
-SWEP.Primary.DefaultClip = 45
+SWEP.Primary.ClipSize = 71
+SWEP.Primary.DefaultClip = 71
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false

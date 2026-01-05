@@ -50,9 +50,9 @@ sound.Add({
 SWEP.Primary.Sound = Sound("CUST.PTRS.Single")
 SWEP.Primary.Inside_Sound = Sound("CUST.PTRS.Inside")
 
-SWEP.Primary.Recoil = 100 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 49
-SWEP.Primary.PenetrationScale = 1.25
+SWEP.Primary.Recoil = 70 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 60
+SWEP.Primary.PenetrationScale = 1.5
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.002
 SWEP.SpeedReduction = 130
