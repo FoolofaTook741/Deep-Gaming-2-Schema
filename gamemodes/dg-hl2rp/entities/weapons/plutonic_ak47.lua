@@ -61,8 +61,8 @@ sound.Add({
 SWEP.Primary.Sound = Sound("LS2.AK47.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.AK47.Inside")
 
-SWEP.Primary.Recoil = 2.8 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 11
+SWEP.Primary.Recoil = 3.1 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 12
 SWEP.Primary.PenetrationScale = 1.5
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.015
@@ -79,14 +79,14 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 
 SWEP.Spread = {}
-SWEP.Spread.Min = 0
-SWEP.Spread.Max = 1
-SWEP.Spread.IronsightsMod = 0.55 -- multiply
+SWEP.Spread.Min = 0.005
+SWEP.Spread.Max = 0.3
+SWEP.Spread.IronsightsMod = 0.75
 SWEP.Spread.CrouchMod = 0.5 -- crouch effect (multiply)
-SWEP.Spread.AirMod = 1.7 -- how does if the player is in the air effect spread (multiply)
-SWEP.Spread.RecoilMod = 0.015 -- how does the recoil effect the spread (sustained fire) (additional)
+SWEP.Spread.AirMod = 1.9
+SWEP.Spread.RecoilMod = 0.02 -- how does the recoil effect the spread (sustained fire) (additional)
 SWEP.Spread.RecoilAcceleration = 1
-SWEP.Spread.VelocityMod = 1.2 -- movement speed effect on spread (additonal)
+SWEP.Spread.VelocityMod = 1.35
 
 SWEP.IronsightsPos = Vector(-3.883, 0, 0.769)
 SWEP.IronsightsAng = Angle(0.28, 0, 0)
@@ -176,7 +176,7 @@ SWEP.Attachments = {
 			e.Primary.Recoil = 1.25
 		end,
 		ModCleanup = function(e)
-			e.Primary.Recoil = 2.3
+			e.Primary.Recoil = copyrecoil
 		end,
 		Behaviour = "foregrip"
 	},
@@ -217,7 +217,7 @@ SWEP.Attachments = {
 }
 
 sound.Add({
-	name = "Weapon_iAK47.Single",
+	name = "Weapon_iAK47.Single", 
 	sound = "impulse/ak47_fire.wav",
 	channel = CHAN_WEAPON,
 	level = SNDLVL_150dB,

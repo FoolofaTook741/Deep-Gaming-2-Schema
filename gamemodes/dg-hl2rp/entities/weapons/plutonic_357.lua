@@ -58,8 +58,8 @@ SWEP.Primary.Delay = RPM(90)
 SWEP.Primary.PenetrationScale = 1
 
 SWEP.DamageFalloff = true
-SWEP.MinDistance = 50 * 39.37
-SWEP.MaxDistance = 50 * 39.37 -- 50 meters i fucking hate this
+SWEP.MinDistance = 35 * 39.37
+SWEP.MaxDistance = 35 * 39.37 -- 50 meters i fucking hate this
 SWEP.MinDamageMultiplier = 0.7917
 
 SWEP.Primary.Ammo = "357"
