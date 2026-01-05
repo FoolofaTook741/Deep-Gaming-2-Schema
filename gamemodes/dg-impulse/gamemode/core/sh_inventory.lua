@@ -30,10 +30,10 @@ function impulse.RegisterItem(item)
 
 	if class then
 		function item:OnEquip(ply, itemclass, uid)
-			if item.CombineWeapon == true and !ply:IsCP() then
+			--if item.CombineWeapon == true and !ply:IsCP() then
 				ply:Notify("The Combine Biolink prevents you from using this weapon.")
 				return
-			end
+			--end BIO LOCK CODE FOR WEAPONS
 
 			local wep = ply:Give(class)
 
@@ -65,9 +65,9 @@ function impulse.RegisterItem(item)
 		end
 	elseif attClass then
 		function item:CanEquip(ply)
-			if item.CombineWeapon == true and !ply:IsCP() then
-				return false
-			end
+			--if item.CombineWeapon == true and !ply:IsCP() then
+			--	return false
+			--end BIO LOCK CODE
 
 			if ply.doForcedInvEquip then
 				ply.doForcedInvEquip = nil
