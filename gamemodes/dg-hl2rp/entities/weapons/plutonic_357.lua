@@ -57,6 +57,11 @@ SWEP.Primary.Cone = 0.0002
 SWEP.Primary.Delay = RPM(90)
 SWEP.Primary.PenetrationScale = 1.25
 
+SWEP.DamageFalloff = true
+SWEP.MinDistance = 500  -- Full damage up to 500 hammer units
+SWEP.MaxDistance = 3000 -- Minimum damage at 3000 hammer units  
+SWEP.MinDamageMultiplier = 0.2  -- 20% damage at max range
+
 SWEP.Primary.Ammo = "357"
 SWEP.Primary.Automatic = false
 SWEP.Primary.ClipSize = 6

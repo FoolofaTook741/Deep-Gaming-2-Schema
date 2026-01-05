@@ -252,7 +252,7 @@ function PANEL:Init()
         if LocalPlayer():Team() != TEAM_CWU then LocalPlayer():Notify("You must be a member of the CWU to do this!") parent:Remove() return 0 end
 
         net.Start("impulseBulkOrder")
-            net.WriteTable(orderTable)
+        net.WriteTable(orderTable)
         net.SendToServer()
         surface.PlaySound("ui/hls_ui_scroll_click.wav")
         parent:Remove()

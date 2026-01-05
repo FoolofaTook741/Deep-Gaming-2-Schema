@@ -187,46 +187,109 @@ net.Receive("impulseFabricatorPurchase", function(len, ply)
 	end)
 end)
 
-net.Receive("impulseBulkOrder", function(len, ply)
-    local itemCounts = net.ReadTable()
-    PrintTable(itemCounts)
-	if not ply:Team() == TEAM_CWU then return ply:Notify("You must be a member of the CW to use this function!") end
+local CWU_Items = {
+    food_apple = { cost = 30 },
+    food_banana = { cost = 30 },
+    food_orange = { cost = 30 },
+    food_pineapple = { cost = 50 },
+    util_cookingoil = { cost = 15 },
+    util_meat = { cost = 30 },
+    util_yeast = { cost = 40 },
+    ing_sugar = { cost = 25 },
+    util_chicken = { cost = 40 },
+    util_salt = { cost = 25 },
+    ing_grapes = { cost = 25 },
+    util_coffeegrounds = { cost = 20 },
+    food_carrot = { cost = 25 },
+    food_tomato = { cost = 25 },
+    ing_milk = { cost = 25 },
+    food_waterspecial = { cost = 20 },
+    food_water = { cost = 15 },
+    util_potato = { cost = 20 }
+}
+
+local BulkExploitAttempts = BulkExploitAttempts or {}
+local function LogBulkExploit(ply, reason, data)
+    BulkExploitAttempts[ply] = (BulkExploitAttempts[ply] or 0) + 1
+
+    print(string.format(
+        "[CWU-BULK BLOCKED] %s (%s) | Reason: %s | Attempts: %d",
+        ply:Nick(),
+        ply:SteamID(),
+        reason,
+        BulkExploitAttempts[ply]
+    ))
+
+    if data then
+        PrintTable(data)
+    end
+end
+
+net.Receive("impulseBulkOrder", function(_, ply)
+    local clientTable = net.ReadTable()
+
+    if ply:Team() ~= TEAM_CWU then
+        LogBulkExploit(ply, "Wrong team", clientTable)
+        return ply:Notify("You must be a member of the CWU.")
+    end
+
+    local finalOrder = {}
     local totalCost = 0
     local hasItems = false
-    for item, data in pairs(itemCounts) do
-        if data.count and data.cost then
-            totalCost = totalCost + (data.count * data.cost)
-            if data.count > 0 then
-                hasItems = true
-            end
+
+    for itemID, data in pairs(clientTable) do
+        local itemData = CWU_Items[itemID]
+
+        if not itemData then
+            LogBulkExploit(ply, "Invalid item ID: " .. tostring(itemID), clientTable)
+            return
+        end
+
+        local count = tonumber(data.count) or 0
+
+        if count < 0 or count > 20 then
+            LogBulkExploit(ply, "Invalid item count", clientTable)
+            return
+        end
+
+        if count > 0 then
+            hasItems = true
+            finalOrder[itemID] = count
+            totalCost = totalCost + (count * itemData.cost)
         end
     end
 
     if not hasItems then
-        return ply:Notify("You must order at least one item!")
+        return ply:Notify("You must order at least one item.")
     end
 
     totalCost = totalCost / 2
-    if not ply:CanAfford(totalCost) then return ply:Notify("You cannot afford this!") end
+
+    if not ply:CanAfford(totalCost) then
+        return ply:Notify("You cannot afford this.")
+    end
+
+    BulkExploitAttempts[ply] = nil
 
     ply:TakeMoney(totalCost)
 
-  local crate = ents.Create("pinnacle_supplycrate")
-	if not IsValid(crate) then return end
+    local crate = ents.Create("pinnacle_supplycrate")
+    if not IsValid(crate) then return end
 
-	crate:SetPos(impulse.Config.BulkCrateSpawn)
-	crate:Spawn()
+    crate:SetPos(impulse.Config.BulkCrateSpawn)
+    crate:Spawn()
 
-	crate.CrateContents = itemCounts
+    crate.CrateContents = finalOrder
 
-	if crate.SetContents then
-		crate:SetContents(itemCounts)
-	end
+    if crate.SetContents then
+        crate:SetContents(finalOrder)
+    end
 
-	crate:SetNWString("CrateDisplayName", ply:Nick())
+    crate:SetNWString("CrateDisplayName", ply:Nick())
 
-	ply:Notify("Your supply crate has been delivered! Pick it up at the Civic Workforce Factory.")
+    ply:Notify("Your supply crate has been delivered!")
 end)
+
 
 net.Receive("ImpulseHL2RPPurchaseDistPermit", function()
 	local ply = net.ReadPlayer()
