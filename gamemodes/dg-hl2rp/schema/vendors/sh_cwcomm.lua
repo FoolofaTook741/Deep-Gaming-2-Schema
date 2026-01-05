@@ -121,6 +121,9 @@ VENDOR.Sell = {
 }
 
 VENDOR.Buy = {
+	["food_wine"] = {
+		Cost = 175 -- half of the moonshine amount
+	},
 }
 
 function VENDOR:CanUse(ply)
