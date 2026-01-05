@@ -27,7 +27,9 @@ end
 function ENT:Use(activator, caller)
     if not IsValid(activator) or not activator:IsPlayer() then return end
 	local displayName = self:GetNWString("CrateDisplayName", "Order Crate")
-	if not activator:Nick() == displayName then return activator:Notify("This is not your supply crate!") end
+	if activator:Nick() ~= displayName then
+		return activator:Notify("This is not your supply crate!")
+	end
     local contents = self:GetContents()
     for item, data in pairs(contents) do
         if data.count and data.count > 0 then

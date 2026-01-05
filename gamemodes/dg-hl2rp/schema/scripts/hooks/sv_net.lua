@@ -254,7 +254,7 @@ net.Receive("impulseBulkOrder", function(_, ply)
 
         if count > 0 then
             hasItems = true
-            finalOrder[itemID] = count
+            finalOrder[itemID] = { count = count }
             totalCost = totalCost + (count * itemData.cost)
         end
     end
