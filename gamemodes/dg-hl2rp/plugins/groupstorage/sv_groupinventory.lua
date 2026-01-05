@@ -184,7 +184,7 @@ function meta:MoveInventoryItemGroup(invid, from, to)
 
     local entry = srcTbl[invid]
     if not entry then
-        print("invalid slot:", invid)
+        impulse.debugPrint("invalid slot:", invid)
         return
     end
 

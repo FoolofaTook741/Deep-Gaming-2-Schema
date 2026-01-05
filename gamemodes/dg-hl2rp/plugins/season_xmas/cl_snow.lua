@@ -249,7 +249,7 @@ local mapData = {
 
 local function SnowMapLoad()
 	if not mapData[game.GetMap()] then
-		return print("[impulse] [snow] No snow map texture data found for "..game.GetMap().."!")
+		return impulse.debugPrint("[impulse] [snow] No snow map texture data found for "..game.GetMap().."!")
 	end
 	
 	for v,k in pairs(mapData[game.GetMap()]) do

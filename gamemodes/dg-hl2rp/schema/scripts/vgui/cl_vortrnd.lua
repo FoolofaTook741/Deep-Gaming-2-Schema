@@ -13,16 +13,16 @@ local blurDrawPanel = {
 }
 
 concommand.Add("debug_blueprints", function()
-    print("=== Blueprint Status Debug ===")
-    print("BlueprintUnlocked_AK:", BlueprintUnlocked_AK)
-    print("BlueprintUnlocked_P90:", BlueprintUnlocked_P90)
-    print("BlueprintUnlocked_SCARH:", BlueprintUnlocked_SCARH)
-    print("BlueprintUnlocked_SPAS12:", BlueprintUnlocked_SPAS12)
-    print("BlueprintUnlocked_FAMAS:", BlueprintUnlocked_FAMAS)
-    print("BlueprintUnlocked_TAU:", BlueprintUnlocked_TAU)
-    print("BlueprintUnlocked_Scanners:", BlueprintUnlocked_Scanners)
-    print("BlueprintUnlocked_Cameras:", BlueprintUnlocked_Cameras)
-    print("BlueprintUnlocked_BodyArmor:", BlueprintUnlocked_BodyArmor)
+    impulse.debugPrint("=== Blueprint Status Debug ===")
+    impulse.debugPrint("BlueprintUnlocked_AK:", BlueprintUnlocked_AK)
+    impulse.debugPrint("BlueprintUnlocked_P90:", BlueprintUnlocked_P90)
+    impulse.debugPrint("BlueprintUnlocked_SCARH:", BlueprintUnlocked_SCARH)
+    impulse.debugPrint("BlueprintUnlocked_SPAS12:", BlueprintUnlocked_SPAS12)
+    impulse.debugPrint("BlueprintUnlocked_FAMAS:", BlueprintUnlocked_FAMAS)
+    impulse.debugPrint("BlueprintUnlocked_TAU:", BlueprintUnlocked_TAU)
+    impulse.debugPrint("BlueprintUnlocked_Scanners:", BlueprintUnlocked_Scanners)
+    impulse.debugPrint("BlueprintUnlocked_Cameras:", BlueprintUnlocked_Cameras)
+    impulse.debugPrint("BlueprintUnlocked_BodyArmor:", BlueprintUnlocked_BodyArmor)
 end)
 
 local function BlurRect(x, y, w, h)
@@ -157,7 +157,7 @@ net.Receive("VortSkillLearned", function()
             
             if blueprintMappings[skillName] then
                 blueprintMappings[skillName]()
-                print("Blueprint unlocked: " .. skillName) -- Debug output
+                impulse.debugPrint("Blueprint unlocked: " .. skillName) -- Debug output
             end
         
             if skill.onLearn then

@@ -1,1 +1,1 @@
--- print("Lol")
+-- impulse.debugPrint("Lol")

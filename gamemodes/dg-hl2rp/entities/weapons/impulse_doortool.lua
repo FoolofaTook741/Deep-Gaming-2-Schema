@@ -44,12 +44,12 @@ if CLIENT then
 	function SWEP:Initialize()
 		self.DoorGroup = 1 
 		if impulse and impulse.Config and impulse.Config.DoorGroups then
-			print("Client DoorGroups:", table.Count(impulse.Config.DoorGroups))
+			impulse.debugPrint("Client DoorGroups:", table.Count(impulse.Config.DoorGroups))
 			for k, v in pairs(impulse.Config.DoorGroups) do
-				print("  Group "..k..": "..tostring(v))
+				impulse.debugPrint("  Group "..k..": "..tostring(v))
 			end
 		else
-			print("Client: impulse.Config.DoorGroups is nil or invalid")
+			impulse.debugPrint("Client: impulse.Config.DoorGroups is nil or invalid")
 		end
 	end
 
@@ -63,7 +63,7 @@ if CLIENT then
 				lp:ChatPrint("Invalid group: "..tostring(self.DoorGroup))
 				return
 			end
-			print("Applying group "..self.DoorGroup.." ("..tostring(impulse.Config.DoorGroups[self.DoorGroup])..") to door")
+			impulse.debugPrint("Applying group "..self.DoorGroup.." ("..tostring(impulse.Config.DoorGroups[self.DoorGroup])..") to door")
 			RunConsoleCommand("impulse_door_setgroup", self.DoorGroup)
 		end
 	end
@@ -82,7 +82,7 @@ if CLIENT then
 		end
 		local groupName = tostring(impulse.Config.DoorGroups[self.DoorGroup] or "Invalid group")
 		self.Owner:ChatPrint("Selected group: "..groupName)
-		print("Cycled to group "..self.DoorGroup.." ("..groupName..")")
+		impulse.debugPrint("Cycled to group "..self.DoorGroup.." ("..groupName..")")
 	end
 
 	function SWEP:Reload()

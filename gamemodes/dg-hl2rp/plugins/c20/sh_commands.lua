@@ -16,7 +16,7 @@ local outlandsgateCommand = {
 				for v,k in pairs(ents.FindByClass("func_button")) do
 					if k:GetPos():Distance(Vector(3723.40625, -5597.3125, 301.0625)) < 10 then
 						buttons = buttons + 1
-						--print("HIT")
+						--impulse.debugPrint("HIT")
 						k:Fire("use")
 						--timer.Simple(20, function() k:Fire("use") end)
 						for k, v in pairs(player.GetAll()) do
@@ -63,7 +63,7 @@ local outlandsbaseCommand = {
 				for v,k in pairs(ents.FindByClass("func_button")) do
 					if k:GetPos():Distance(Vector(10139.6875, -1569.90625, 8289.5)) < 10 then
 						buttons = buttons + 1
-						--print("HIT")
+						--impulse.debugPrint("HIT")
 						k:Fire("use")
 						timer.Simple(20, function() k:Fire("use") end)
 					end

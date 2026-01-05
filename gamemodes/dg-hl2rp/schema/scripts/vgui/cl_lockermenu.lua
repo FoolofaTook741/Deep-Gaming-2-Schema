@@ -49,7 +49,7 @@ function PANEL:Init()
 
     self.suitType.OnSelect = function(_, i, val)
 		if not IsValid(self.modelPreview.Entity) then
-			print("Error: Model preview entity is invalid")
+			impulse.debugPrint("Error: Model preview entity is invalid")
 			return
 		end
 

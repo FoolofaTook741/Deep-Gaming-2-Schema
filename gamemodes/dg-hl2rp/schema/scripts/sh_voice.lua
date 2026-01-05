@@ -4005,11 +4005,11 @@ impulse.Voice.Register("stalker", "BREATHE", "*Breathes Heavily*", "npc/stalker/
 if CLIENT then
 	concommand.Add("impulse_hl2rp_printvcs", function(ply, cmd, args)
 		if not args[1] then
-			return print("Enter class as argument 1. (E.G. 'metrocop', 'overwatch', 'vort', 'ordinal', 'citizen_male', 'citizen_female', 'wallhammer', 'scar', 'apf', 'grunt', 'hunter')")
+			return impulse.debugPrint("Enter class as argument 1. (E.G. 'metrocop', 'overwatch', 'vort', 'ordinal', 'citizen_male', 'citizen_female', 'wallhammer', 'scar', 'apf', 'grunt', 'hunter')")
 		end
 
 		if not impulse.Voice.List[args[1]] then
-			return print("Class invalid.")
+			return impulse.debugPrint("Class invalid.")
 		end
 
 		for v,k in pairs(impulse.Voice.List[args[1]]) do

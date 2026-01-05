@@ -21,7 +21,7 @@ if SERVER then
 	util.AddNetworkString("impulseHL2RPTerminalRequest")
 
 	net.Receive("impulseHL2RPTerminalRequest", function()
-		print("Hello World")
+		impulse.debugPrint("Hello World")
 		local recipFilter = RecipientFilter()
 		local ply = net.ReadUInt(8)
 		local rawText = net.ReadString()

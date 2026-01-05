@@ -1424,7 +1424,7 @@ local researchWhitelistCommand = {
 							query:Where("team", teamName)
 							query:Update("level", level)
 							query:Execute()
-							--print("1")
+							--impulse.debugPrint("1")
 							ply:Notify(steamid.." has been given the Research Team whitelist.")
 						end
 					else
@@ -1434,7 +1434,7 @@ local researchWhitelistCommand = {
 							query:Insert("team", teamName)
 							query:Insert("steamid", steamid)
 							query:Execute()
-							--print("2")
+							--impulse.debugPrint("2")
 							ply:Notify(steamid.." has been given the Research whitelist.")
 						end
 					end

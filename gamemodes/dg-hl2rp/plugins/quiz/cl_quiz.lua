@@ -2,7 +2,7 @@ if CLIENT then
     QuizFrame = nil
 
     net.Receive("dgQuizOpen", function()
-        print("received dgQuizOpen")
+        impulse.debugPrint("received dgQuizOpen")
         local team = net.ReadUInt(8)
         QuizFrame = vgui.Create("dgQuiz")
         QuizFrame:SetTeam(team)

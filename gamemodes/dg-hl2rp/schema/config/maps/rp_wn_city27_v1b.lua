@@ -293,7 +293,7 @@ impulse.Config.LoadScript = function()
 				local hammerID = ent:MapCreationID()
 				if lockDoors[hammerID] then
 					ent:Fire("Lock", "", 0)
-					print("Locked door with Hammer ID:", hammerID)
+					impulse.debugPrint("Locked door with Hammer ID:", hammerID)
 				end
 			end
 		end

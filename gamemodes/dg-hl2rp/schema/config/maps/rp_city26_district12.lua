@@ -236,7 +236,7 @@ impulse.Config.LoadScript = function()
                 local hammerID = ent:MapCreationID()
                 if not excludedDoors[hammerID] then
                     ent:Fire("Unlock", "", 0)
-					print("Unlocked door with Hammer ID:", hammerID)
+					impulse.debugPrint("Unlocked door with Hammer ID:", hammerID)
                 end
             end
         end

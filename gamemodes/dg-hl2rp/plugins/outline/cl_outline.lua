@@ -12,7 +12,7 @@ local ScrW = ScrW
 local ScrH = ScrH
 local IsValid = IsValid
 local surface = surface
-print("Loaded outline.Add")
+impulse.debugPrint("Loaded outline.Add")
 
 outline = {}
 

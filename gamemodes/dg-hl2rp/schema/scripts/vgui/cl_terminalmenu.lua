@@ -255,9 +255,9 @@ function PANEL:SetupUI()
 
 			print(index .. "  " .. CODE_AJ)
 			if ply:IsCommander() == true then
-				print("T")
+				impulse.debugPrint("T")
 			else
-				print("F")
+				impulse.debugPrint("F")
 			end
 
 			if index > 0 then

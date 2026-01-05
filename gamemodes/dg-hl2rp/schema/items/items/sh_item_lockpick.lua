@@ -58,7 +58,7 @@ function ITEM:OnUse(ply, door)
 
 	if door:GetClass() == "deep_evidencelocker" and (not ply:IsCP() or ply.IsRogue == true or AUTHEDROGGUES[ply:SteamID()]) then
 		if chance < (75 + ((skill * 1.5) * 1.4)) then
-			print("Raid Evidence Locker")
+			impulse.debugPrint("Raid Evidence Locker")
 			door:RaidLocker(ply)
 		else
 			ply:EmitSound("weapons/357/357_reload3.wav")

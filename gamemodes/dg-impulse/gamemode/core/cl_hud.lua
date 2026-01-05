@@ -461,6 +461,25 @@ local function DrawRagdollInfo(target, alpha)
     end
 end
 
+local function DrawButtonInfo(target, alpha)	
+	local pos = target.LocalToWorld(target, target:OBBCenter()):ToScreen()
+	local scrW = ScrW()
+	local scrH = ScrH()
+	local buttonId = impulse_ActiveButtons[target:EntIndex()]
+	local hudCol = impulse.Config.InteractColour
+	local buttonData = impulse.Config.Buttons[buttonId]
+
+	if not buttonData then
+		return
+	end
+
+	if not buttonData.desc then
+		return
+	end
+
+	draw.DrawText(buttonData.desc, HIGH_RES("Impulse-Elements18-Shadow", "Impulse-Elements20A-Shadow"), pos.x, pos.y + 20, ColorAlpha(hudCol, alpha), 1)
+end
+
 function meta:GetKnownHealth()
 	local h = self.Health(self)
 	if h < 10 then
@@ -1538,6 +1557,8 @@ function GM:HUDPaintBackground()
 						DrawDoorInfo(entTarg, alpha)
 					elseif entTarg:IsRagdoll() then
 						DrawRagdollInfo(entTarg, alpha)
+					elseif impulse_ActiveButtons[entTarg.EntIndex(entTarg)] then
+						DrawButtonInfo(entTarg, alpha)
 					end
 				end
 			end

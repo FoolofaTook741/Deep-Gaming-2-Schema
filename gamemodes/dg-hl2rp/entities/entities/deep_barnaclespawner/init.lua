@@ -77,7 +77,7 @@ function ENT:Think()
                 barnacle:Spawn()
                 barnacle:Activate()
                 barnacle.SpawnedBySpore = id
-                print("Teleport: setpos " .. spawnPos.x .. " " .. spawnPos.y .. " " .. spawnPos.z)
+                impulse.debugPrint("Teleport: setpos " .. spawnPos.x .. " " .. spawnPos.y .. " " .. spawnPos.z)
                 barnacle:SetRenderMode(RENDERMODE_GLOW)
                 barnacle:SetColor(Color(255, 255, 0, 255))
                 timer.Simple(30, function()

@@ -45,8 +45,8 @@ local function LogExploitAttempt(ply, reason, vehicleID)
 
 
 	if ExploitAttempts[ply] >= 5 then
-		print("[VEHICLE-REQ] WARNING: Repeated exploit attempts by " .. ply:Nick())
-		print("[VEHICLE-REQ] Taking action against " .. ply:SteamID())
+		impulse.debugPrint("[VEHICLE-REQ] WARNING: Repeated exploit attempts by " .. ply:Nick())
+		impulse.debugPrint("[VEHICLE-REQ] Taking action against " .. ply:SteamID())
 	end
 
     print(msg)

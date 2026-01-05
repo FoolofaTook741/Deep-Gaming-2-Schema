@@ -161,11 +161,11 @@ hook.Add("PlayerUse", "buttontest", function(ply, ent)
     end
     if GetConVarNumber("buttondebugmode") == 1 then
         if ent:GetClass() == "func_button" then
-            print("Button - Index: " .. ent:EntIndex())
-            print("Debug mode enabled, to disable use 'buttondebugmode 0' in the server's console.")
+            impulse.debugPrint("Button - Index: " .. ent:EntIndex())
+            impulse.debugPrint("Debug mode enabled, to disable use 'buttondebugmode 0' in the server's console.")
         else
-            print("Not a valid Button")
-            print("Debug mode enabled, to disable use 'buttondebugmode 0' in the server's console.")
+            impulse.debugPrint("Not a valid Button")
+            impulse.debugPrint("Debug mode enabled, to disable use 'buttondebugmode 0' in the server's console.")
         end
     end
 end) 

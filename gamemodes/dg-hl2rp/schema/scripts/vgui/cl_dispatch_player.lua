@@ -284,7 +284,7 @@ local applications = {
 			end
 
 			assignLeaderBtn.DoClick = function()
-				if not selectedMember then print("No member or PT selected") return end
+				if not selectedMember then impulse.debugPrint("No member or PT selected") return end
 				net.Start("impulseDISPSquadMake")
 					net.WritePlayer(selectedMember)
 				net.SendToServer()

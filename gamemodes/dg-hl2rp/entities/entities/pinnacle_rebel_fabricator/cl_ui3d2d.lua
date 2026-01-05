@@ -134,7 +134,7 @@ do
         local end3d2d = cam.End3D2D
         function ui3d2d.endDraw() --Safely ends the 3d2d ui rendering context
             if not isRendering then
-                print("[ui3d2d] Attempted to end a non-existant 3d2d ui rendering context.")
+                impulse.debugPrint("[ui3d2d] Attempted to end a non-existant 3d2d ui rendering context.")
                 return
             end
 

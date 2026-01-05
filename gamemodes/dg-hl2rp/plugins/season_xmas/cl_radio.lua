@@ -45,7 +45,7 @@ function PLUGIN:Think()
 				loadingStream = false
 
 				if errorid then
-					print("[impulse] [xmas radio] Error code: "..errorid.." | Error name: "..errorname)
+					impulse.debugPrint("[impulse] [xmas radio] Error code: "..errorid.." | Error name: "..errorname)
 					return
 				end
 
@@ -76,8 +76,8 @@ end
 concommand.Add("impulse_xmas_radioreload", function()
 	if IsValid(xmasStream) then
 		xmasStream:Stop()
-		print("[impulse] [xmas radio] Stopped radio stream...")
+		impulse.debugPrint("[impulse] [xmas radio] Stopped radio stream...")
 	else
-		print("[impulse] [xmas radio] Found no radio stream")
+		impulse.debugPrint("[impulse] [xmas radio] Found no radio stream")
 	end
 end)

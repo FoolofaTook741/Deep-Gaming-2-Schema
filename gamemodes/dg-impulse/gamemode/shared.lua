@@ -161,5 +161,39 @@ function impulse.reloadPlugins()
     end
 end
 
+function impulse.debugPrint(message, ...)
+    if not GetConVar("impulse_ispreview"):GetBool() then
+        return
+    end
+    
+    local debugInfo = debug.getinfo(2, "nSl")
+    local source = ""
+    
+    if debugInfo then
+        local filename = debugInfo.source:match("[^/\\]+%.lua$") or debugInfo.short_src or debugInfo.source
+        
+        if debugInfo.name then
+            source = string.format("%s() @ %s:%d", debugInfo.name, filename, debugInfo.currentline or 0)
+        else
+            source = string.format("%s:%d", filename, debugInfo.currentline or 0)
+        end
+    else
+        source = "Unknown"
+    end
+    
+    local formattedMessage = message
+    if select('#', ...) > 0 then
+        formattedMessage = string.format(message, ...)
+    end
+    
+    MsgC(
+        Color(83, 143, 239),
+        "[impulse] [debugprint] ",
+        Color(34, 202, 34),
+        "[" .. source .. "] ",
+        Color(160, 160, 160),
+        tostring(formattedMessage) .. "\n"
+    )
+end
 
 MsgC( Color( 0, 255, 0 ), "[impulse] Completeing shared load...\n" )

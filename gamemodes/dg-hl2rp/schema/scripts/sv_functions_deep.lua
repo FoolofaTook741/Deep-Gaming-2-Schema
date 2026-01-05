@@ -95,7 +95,7 @@ local hostname   = GetConVar("hostname"):GetString()
 function ReqwestLog(embeddedmessages, webhook)
 
     if not webhook then
-        print("Discord webhooks disabled on development servers")
+        impulse.debugPrint("Discord webhooks disabled on development servers")
         return
     end
 
@@ -138,7 +138,7 @@ function ReqwestLogMessage(message, webhook)
     if true then return end
 
     if not webhook then
-        print("Discord webhooks disabled on development servers")
+        impulse.debugPrint("Discord webhooks disabled on development servers")
         return
     end
     reqwest({

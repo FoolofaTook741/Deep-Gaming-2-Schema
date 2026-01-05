@@ -40,7 +40,7 @@ function PLUGIN:Think()
 	end
 
 	if not strikePoses[game.GetMap()] then
-		return print("[impulse] Halloween lightning strike positions NOT SETUP!!!! PANIC (goto sv_storm.lua and set them up please)")
+		return impulse.debugPrint("[impulse] Halloween lightning strike positions NOT SETUP!!!! PANIC (goto sv_storm.lua and set them up please)")
 	end
 
 	if math.random(1, 10) > 7 then

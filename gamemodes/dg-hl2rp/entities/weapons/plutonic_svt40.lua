@@ -115,7 +115,7 @@ SWEP.Attachments = {
 		ModSetup = function(e)
 			e.IronsightsFOV = 0.15
 			if CLIENT then 
-				print("equipped")
+				impulse.debugPrint("equipped")
 				local copyScopeSens = impulse.GetSetting("scope_sens")
 				e.IronsightsSensitivity = copyScopeSens
 			end

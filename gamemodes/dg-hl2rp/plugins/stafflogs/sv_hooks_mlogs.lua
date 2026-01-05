@@ -81,7 +81,7 @@ hook.Add("PlayerContainerTake", "noclipInventory", function(ply, item, source, d
             end,
 
             failed = function(err)
-                print("[noclipInventory] Discord error:", err)
+                impulse.debugPrint("[noclipInventory] Discord error:", err)
             end,
         })
     end

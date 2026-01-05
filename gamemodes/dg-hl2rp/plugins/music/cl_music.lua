@@ -9,7 +9,7 @@ CreateClientConVar("impulse_music_debug", "0", false, false, "Prints details abo
 
 local function DebugPrint(msg)
 	if GetConVar("impulse_music_debug"):GetBool() then
-		print("[impulse] [musicdebug] "..msg)
+		impulse.debugPrint("[impulse] [musicdebug] "..msg)
 	end
 end
 
@@ -91,7 +91,7 @@ local function ReadMusicKit(name)
 
 	CUSTOM_MUSICKITS[json.Name] = comp
 
-	print("[impulse] [musickits] Loaded "..json.Name.." ("..name..") music kit.")
+	impulse.debugPrint("[impulse] [musickits] Loaded "..json.Name.." ("..name..") music kit.")
 end
 
 local function GetMusicKits()
@@ -102,7 +102,7 @@ local function GetMusicKits()
 		local err = ReadMusicKit(k)
 
 		if err then
-			print("[impulse] [musickits] Failed to load "..k.." | "..err)
+			impulse.debugPrint("[impulse] [musickits] Failed to load "..k.." | "..err)
 			impulse.MenuMessage.Add("musickit-error", "Music Kit Error", "Error when loading '"..k.."' music kit.\nError: "..err, Color(255, 0, 0), "https://impulse-community.com/threads/music-kit-creation-guide.2379/", "Read the music kit guide")
 			continue
 		end
@@ -119,7 +119,7 @@ end
 impulse.DefineSetting("music_kit", {name="Music kit", category="Music", type="dropdown", default="Default", options=names})
 
 concommand.Add("impulse_reloadmusickits", function()
-	print("[impulse] Reloading music kits...")
+	impulse.debugPrint("[impulse] Reloading music kits...")
 	CUSTOM_MUSICKITS = {}
 
 	impulse.MenuMessage.Remove("musickit-error")

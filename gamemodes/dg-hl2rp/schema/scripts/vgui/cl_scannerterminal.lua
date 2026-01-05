@@ -27,7 +27,7 @@ function PANEL:Init()
 end
 
 function PANEL:SetupUI()
-	print("hi")
+	impulse.debugPrint("hi")
 	self.menu = vgui.Create("DColumnSheet", self)
 	self.menu:Dock(FILL)
 	self.menu.Navigation:SetWidth(120)
@@ -209,9 +209,9 @@ function PANEL:SetupUI()
 
 			print(index .. "  " .. CODE_AJ)
 			if ply:IsCommander() == true then
-				print("T")
+				impulse.debugPrint("T")
 			else
-				print("F")
+				impulse.debugPrint("F")
 			end
 
 			if index > 0 then
@@ -319,7 +319,7 @@ function PANEL:SetupUI()
 			dispatchBtn.Announcement = v
 
 			function dispatchBtn:DoClick()
-				print("hi")
+				impulse.debugPrint("hi")
 				net.Start("impulseHL2RPDispatchAnnounce")
 				net.WriteUInt(self.Announcement, 8)
 				net.SendToServer()

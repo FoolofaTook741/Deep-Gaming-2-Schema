@@ -675,7 +675,7 @@ net.Receive("DeepFundingOperation", function(len,ply)
                     v:SendCombineMessage("O.C.A.A.B. TREASURY HAS BEEN LIQUIDATED AND DISTRIBUTED TO ALL COMBINE PERSONNEL", Color(0, 150, 0))
                 end
             end 
-            timer.Create("OCABuyout", 3600 * 12, 1, function() print("meeman") end)
+            timer.Create("OCABuyout", 3600 * 12, 1, function() impulse.debugPrint("meeman") end)
         else
             ply:Notify("This ability is currently on cooldown, please wait until the upgrade expires.")
         end
@@ -1549,11 +1549,11 @@ local function CanPlayerChangeTeam(ply, toTeam)
     if TEAM_COOLDOWN_BYPASS[toTeam] then return true end
 
     if (toTeam == TEAM_CP) and ply.MPFNLR and ply.MPFNLR > CurTime() then
-		--print("Attempting to join team "..toTeam)
+		--impulse.debugPrint("Attempting to join team "..toTeam)
 		ply:Notify("You have recently died on MPF, you can return to this team in " .. string.NiceTime(ply.MPFNLR - CurTime()))
 		return false
     elseif (toTeam == TEAM_OTA) and ply.CTANLR and ply.CTANLR > CurTime() then
-        --print("Attempting to join team "..toTeam)
+        --impulse.debugPrint("Attempting to join team "..toTeam)
         ply:Notify("You have recently died on OTA, you can return to this team in " .. string.NiceTime(ply.CTANLR - CurTime()))
         return false
 	end

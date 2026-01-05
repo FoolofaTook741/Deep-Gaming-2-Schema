@@ -239,7 +239,7 @@ hook.Add("GroupDataLoaded", "SyncPlayerGroupStorage", function(ply,name,rank)
     local groupid = impulse.Group.Groups[name].ID
     if groupid then
         SyncGroupStorageForGroup(groupid, ply)
-		print("Synced group storage for player: " .. ply:Nick().. " Group ID: "..groupid.." Group Name "..name)
+		impulse.debugPrint("Synced group storage for player: " .. ply:Nick().. " Group ID: "..groupid.." Group Name "..name)
         ply:calcGroupStorageWeight()
     end
 end)

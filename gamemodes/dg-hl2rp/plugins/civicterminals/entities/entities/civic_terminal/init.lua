@@ -140,7 +140,7 @@ net.Receive("impulseHL2RPOCABUpdate", function(_, ply)
     -- reset exploit counter if there is no exploit xdxdxd
     OCAB_ExploitAttempts[ply] = nil
 
-    print("[OCAB UPDATE] Bulletin updated by", ply:Nick(), ply:SteamID())
+    impulse.debugPrint("[OCAB UPDATE] Bulletin updated by", ply:Nick(), ply:SteamID())
 
     net.Start("impulseHL2RPOCABReturn")
     net.WriteString(text)

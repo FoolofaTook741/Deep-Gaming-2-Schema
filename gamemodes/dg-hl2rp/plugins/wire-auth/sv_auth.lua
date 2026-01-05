@@ -8,12 +8,12 @@ concommand.Add("add_e2_donator", function(ply, cmd, args)
 
 	local steam64 = args[1]
 	if not steam64 or steam64 == "" then
-		print("Usage: add_e2_donator <steam64>")
+		impulse.debugPrint("Usage: add_e2_donator <steam64>")
 		return
 	end
 
 	E2Donators[steam64] = true
-	print("Added E2 Donator: " .. steam64)
+	impulse.debugPrint("Added E2 Donator: " .. steam64)
 
 	local target = player.GetBySteamID64(steam64)
 	if IsValid(target) then
@@ -29,12 +29,12 @@ concommand.Add("remove_e2_donator", function(ply, cmd, args)
 
 	local steam64 = args[1]
 	if not steam64 or steam64 == "" then
-		print("Usage: remove_e2_donator <steam64>")
+		impulse.debugPrint("Usage: remove_e2_donator <steam64>")
 		return
 	end
 
 	E2Donators[steam64] = nil
-	print("Removed E2 Donator: " .. steam64)
+	impulse.debugPrint("Removed E2 Donator: " .. steam64)
 
 	local target = player.GetBySteamID64(steam64)
 	if IsValid(target) then

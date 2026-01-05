@@ -41,11 +41,11 @@ if SERVER then
 
     if file.Exists(authFile, "DATA") then
         authorized = util.JSONToTable(file.Read(authFile, "DATA")) or {}
-        print("[WireE2] Loaded "..table.Count(authorized).." approved scripts")
+        impulse.debugPrint("[WireE2] Loaded "..table.Count(authorized).." approved scripts")
     end
     local function saveAuth()
         file.Write(authFile, util.TableToJSON(authorized, true))
-        print("[WireE2] Saved "..table.Count(authorized).." approvals")
+        impulse.debugPrint("[WireE2] Saved "..table.Count(authorized).." approvals")
     end
 
     local function notifyAdmins(msgType, ...)
@@ -70,7 +70,7 @@ if SERVER then
         for i,h in ipairs(pendingOrder) do
             if h==hash then table.remove(pendingOrder,i); break end
         end
-        print("[WireE2] Pending timeout expired for "..hash)
+        impulse.debugPrint("[WireE2] Pending timeout expired for "..hash)
         notifyAdmins("wire_e2_removed", hash)
     end
 
@@ -112,7 +112,7 @@ if SERVER then
 
             local hash = util.SHA256(code)
             self._WireE2Hash = hash
-            print("[WireE2] New submission by "..plyName.." → "..hash)
+            impulse.debugPrint("[WireE2] New submission by "..plyName.." → "..hash)
 
             -- 3) already pending?
             if pending[hash] then
@@ -129,13 +129,13 @@ if SERVER then
                 if #pendingOrder >= MAX_PENDING then
                     local old = table.remove(pendingOrder,1)
                     pending[old] = nil
-                    print("[WireE2] Dropped oldest pending entry "..old)
+                    impulse.debugPrint("[WireE2] Dropped oldest pending entry "..old)
                     notifyAdmins("wire_e2_removed", old)
                 end
 
                 pending[hash] = { player=ply, ent=self, code=code, time=now }
                 table.insert(pendingOrder, hash)
-                print("[WireE2] Pending approval: "..hash)
+                impulse.debugPrint("[WireE2] Pending approval: "..hash)
 
                 local recipients = {}
                 for _, p in ipairs(player.GetAll()) do if p:IsLeadAdmin() then recipients[#recipients+1]=p end end
@@ -159,13 +159,13 @@ if SERVER then
 
                     success = function(statusCode, body, headers)
                         if statusCode ~= 200 then
-                          print("[WireE2] HTTP error "..statusCode.." for "..hash)
+                          impulse.debugPrint("[WireE2] HTTP error "..statusCode.." for "..hash)
                           return
                         end
 
                         local ok, res = pcall(util.JSONToTable, body)
                         if not ok or type(res)~="table" or res.score==nil then
-                          print("[WireE2] Invalid AI response for "..hash)
+                          impulse.debugPrint("[WireE2] Invalid AI response for "..hash)
                           return
                         end
 
@@ -190,7 +190,7 @@ if SERVER then
                     end,
 
                     failed = function(err)
-                        print("[WireE2] AI HTTP error for "..hash..": "..tostring(err))
+                        impulse.debugPrint("[WireE2] AI HTTP error for "..hash..": "..tostring(err))
                     end,
                 })
 
@@ -247,7 +247,7 @@ if SERVER then
         for i,h in ipairs(pendingOrder) do if h==hash then table.remove(pendingOrder,i) break end end
 
         LogE2ApprovalToDiscord(hash, ply, "Approved")
-        print("[WireE2] "..ply:Nick().." approved "..hash)
+        impulse.debugPrint("[WireE2] "..ply:Nick().." approved "..hash)
         if IsValid(data.player) then
             net.Start("wire_e2_user_approved")
             net.WriteString(ply:SteamName())
@@ -274,7 +274,7 @@ if SERVER then
         pending[hash] = nil
         for i,h in ipairs(pendingOrder) do if h==hash then table.remove(pendingOrder,i) break end end
 
-        print("[WireE2] "..ply:Nick().." denied "..hash.." ("..reason..")")
+        impulse.debugPrint("[WireE2] "..ply:Nick().." denied "..hash.." ("..reason..")")
         notifyAdmins("wire_e2_removed", hash)
     end)
 

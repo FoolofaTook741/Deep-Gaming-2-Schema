@@ -731,9 +731,9 @@ local apcgarageCommand = {
             else
                 local buttons = 0
                 for _, k in pairs(ents.FindByClass("func_button")) do
-                    print("Checking button at:", k:GetPos())
+                    impulse.debugPrint("Checking button at:", k:GetPos())
                     if k:GetPos():Distance(Vector(1360.140015, 4130.000000, 178.000000)) < 3 then
-                        print("Button found and triggered.")
+                        impulse.debugPrint("Button found and triggered.")
                         buttons = buttons + 1
                         k:Fire("use")
                         timer.Simple(20, function() k:Fire("use") end)

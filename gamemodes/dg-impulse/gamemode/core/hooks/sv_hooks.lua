@@ -922,29 +922,65 @@ function GM:KeyPress(ply, key)
 end
 
 function GM:PlayerUse(ply, entity)
-	if (ply.useNext or 0) > CurTime() then return false end
-	ply.useNext = CurTime() + 0.3
-
-	local btnKey = entity.ButtonCheck
-
-	if btnKey and impulse.Config.Buttons[btnKey] then
-		local btnData = impulse.Config.Buttons[btnKey]
-
-		if btnData.customCheck and not btnData.customCheck(ply, entity) then
-			ply.useNext = CurTime() + 1
-			return false
-		end
-
-		if btnData.doorgroup then
-			local teamDoorGroups = ply.DoorGroups
-
-			if not teamDoorGroups or not table.HasValue(teamDoorGroups, btnData.doorgroup) then
-				ply.useNext = CurTime() + 1
-				ply:Notify("You don't have access to use this button.")
-				return false
-			end
-		end
-	end
+    impulse.debugPrint("PlayerUse called")
+    impulse.debugPrint("Player: %s (%s)", ply:Nick(), ply:SteamID())
+    impulse.debugPrint("Entity: %s, Class: %s", entity, entity:GetClass())
+    
+    if (ply.useNext or 0) > CurTime() then 
+        impulse.debugPrint("Use cooldown active. Time remaining: %.2f seconds", (ply.useNext or 0) - CurTime())
+        return false 
+    end
+    
+    ply.useNext = CurTime() + 0.3
+    impulse.debugPrint("Setting useNext to: %.2f", ply.useNext)
+    
+    local btnKey = entity.ButtonCheck
+    impulse.debugPrint("ButtonCheck value: %s", tostring(btnKey))
+    
+    if btnKey and impulse.Config.Buttons[btnKey] then
+        impulse.debugPrint("Button key found in config: %s", btnKey)
+        local btnData = impulse.Config.Buttons[btnKey]
+        
+        impulse.debugPrint("Button data - DoorGroup: %s", tostring(btnData.doorgroup))
+        
+        if btnData.customCheck and not btnData.customCheck(ply, entity) then
+            impulse.debugPrint("customCheck failed for button: %s", btnKey)
+            ply.useNext = CurTime() + 1
+            impulse.debugPrint("Setting extended cooldown (1 second)")
+            return false
+        else
+            impulse.debugPrint("customCheck passed or not defined")
+        end
+        
+        if btnData.doorgroup then
+            impulse.debugPrint("Button requires door group: %s", btnData.doorgroup)
+            local teamDoorGroups = ply.DoorGroups
+            
+            if teamDoorGroups then
+                impulse.debugPrint("Player has %d door groups", #teamDoorGroups)
+                impulse.debugPrint("Player door groups: %s", table.concat(teamDoorGroups, ", "))
+            else
+                impulse.debugPrint("Player has no door groups (nil)")
+            end
+            
+            if not teamDoorGroups or not table.HasValue(teamDoorGroups, btnData.doorgroup) then
+                impulse.debugPrint("Access DENIED - Player lacks required door group")
+                ply.useNext = CurTime() + 1
+                impulse.debugPrint("Setting extended cooldown (1 second)")
+                ply:Notify("You don't have access to use this button.")
+                return false
+            else
+                impulse.debugPrint("Access GRANTED - Player has required door group")
+            end
+        else
+            impulse.debugPrint("No door group requirement for this button")
+        end
+    else
+        impulse.debugPrint("No button config found or no ButtonCheck")
+    end
+    
+    impulse.debugPrint("Use allowed - returning true (default)")
+    return true
 end
 
 function GM:KeyRelease(ply, key)
@@ -954,70 +990,158 @@ function GM:KeyRelease(ply, key)
 end
 
 impulse.ActiveButtons = {}
+
 local function LoadButtons()
-	for a,button in pairs(ents.FindByClass("func_button")) do
-		if button.ButtonCheck then
-			button.ButtonCheck = nil
-		end
-	end
-
-	if not impulse.Config.Button then
-		return
-	end
-	
-	for a,button in pairs(ents.FindByClass("func_button")) do
-		if button.ButtonCheck then
-			continue
-		end
-		
-		for v,k in pairs(impulse.Config.Buttons) do
-			if k.pos:DistToSqr(button:GetPos()) < (9 ^ 2) then -- getpos client/server innaccuracy
-				button.ButtonCheck = v
-				impulse.ActiveButtons[button:EntIndex()] = v
-
-				if k.init then
-					k.init(button)
-				end
-			end
-		end
-	end
+    impulse.debugPrint("LoadButtons", "LoadButtons called")
+    
+    -- First, clear all ButtonCheck properties
+    impulse.debugPrint("LoadButtons", "Clearing existing ButtonCheck properties from all func_button entities")
+    local buttonCount = 0
+    for a,button in pairs(ents.FindByClass("func_button")) do
+        if button.ButtonCheck then
+            impulse.debugPrint("LoadButtons", "Clearing ButtonCheck from button #%d at %s", button:EntIndex(), tostring(button:GetPos()))
+            button.ButtonCheck = nil
+            buttonCount = buttonCount + 1
+        end
+    end
+    impulse.debugPrint("LoadButtons", "Cleared ButtonCheck from %d buttons", buttonCount)
+    
+    -- Check if impulse.Config.Buttons exists
+    if not impulse.Config.Buttons then
+        impulse.debugPrint("LoadButtons", "impulse.Config.Buttons is nil or empty, skipping button assignment")
+        return
+    end
+    
+    impulse.debugPrint("LoadButtons", "impulse.Config.Buttons contains %d button configurations", table.Count(impulse.Config.Buttons))
+    
+    -- Print all button configs for debugging
+    impulse.debugPrint("LoadButtons", "Available button configurations:")
+    for v,k in pairs(impulse.Config.Buttons) do
+        impulse.debugPrint("LoadButtons", "Button ID: %s, Position: %s, DoorGroup: %s", tostring(v), tostring(k.pos), tostring(k.doorgroup))
+    end
+    
+    -- Assign button configurations to physical buttons
+    impulse.debugPrint("LoadButtons", "Searching for func_button entities to assign configurations...")
+    local assignedCount = 0
+    local totalButtons = 0
+    
+    for a,button in pairs(ents.FindByClass("func_button")) do
+        totalButtons = totalButtons + 1
+        
+        -- Skip if already assigned
+        if button.ButtonCheck then
+            impulse.debugPrint("LoadButtons", "Button #%d already has ButtonCheck: %s", button:EntIndex(), button.ButtonCheck)
+            continue
+        end
+        
+        local buttonPos = button:GetPos()
+        local assigned = false
+        
+        -- Try to match this button with a configuration
+        for v,k in pairs(impulse.Config.Buttons) do
+            if k.pos and k.pos:DistToSqr(buttonPos) < (9 ^ 2) then -- 81 unit squared radius
+                button.ButtonCheck = v
+                impulse.ActiveButtons[button:EntIndex()] = v
+                assigned = true
+                assignedCount = assignedCount + 1
+                
+                impulse.debugPrint("LoadButtons", "✓ Matched button #%d at %s with config '%s' at %s (distance: %.2f units)", 
+                    button:EntIndex(), tostring(buttonPos), v, tostring(k.pos), math.sqrt(k.pos:DistToSqr(buttonPos)))
+                
+                -- Run init function if defined
+                if k.init then
+                    impulse.debugPrint("LoadButtons", "Running init function for button '%s'", v)
+                    k.init(button)
+                end
+                
+                break -- Found a match, stop searching
+            end
+        end
+        
+        if not assigned then
+            impulse.debugPrint("LoadButtons", "✗ Button #%d at %s has no matching configuration", button:EntIndex(), tostring(buttonPos))
+        end
+    end
+    
+    impulse.debugPrint("LoadButtons", "Button assignment complete:")
+    impulse.debugPrint("LoadButtons", "Total func_button entities: %d", totalButtons)
+    impulse.debugPrint("LoadButtons", "Successfully assigned: %d", assignedCount)
+    impulse.debugPrint("LoadButtons", "impulse.ActiveButtons count: %d", table.Count(impulse.ActiveButtons))
+    
+    -- Debug: Print all active buttons
+    impulse.debugPrint("LoadButtons", "Active buttons mapping:")
+    for buttonID, configID in pairs(impulse.ActiveButtons) do
+        local button = ents.GetByIndex(buttonID)
+        if IsValid(button) then
+            impulse.debugPrint("LoadButtons", "Button #%d -> Config '%s' at %s", buttonID, configID, tostring(button:GetPos()))
+        else
+            impulse.debugPrint("LoadButtons", "Button #%d (INVALID) -> Config '%s'", buttonID, configID)
+        end
+    end
 end
 
 function GM:InitPostEntity()
-	impulse.Doors.Load()
-
-	for v,k in pairs(ents.GetAll()) do
-		if k.impulseSaveEnt or k.IsZoneTrigger then
-			k:Remove()
-		end
-	end
-
-	if impulse.Config.LoadScript then
-		impulse.Config.LoadScript()
-	end
-
-	if impulse.Config.Zones then
-		for v,k in pairs(impulse.Config.Zones) do
-			local zone = ents.Create("impulse_zone")
-			zone:SetBounds(k.pos1, k.pos2)
-			zone.Zone = v
-		end
-	end
-
-	if impulse.Config.BlacklistEnts then
-		for v,k in pairs(ents.GetAll()) do
-			if impulse.Config.BlacklistEnts[k:GetClass()] then
-	            k:Remove()
-	        end
-	    end
-	end
-
-	LoadSaveEnts()
-	LoadButtons()
-
-	hook.Run("PostInitPostEntity")
+    impulse.debugPrint("GM:InitPostEntity", "GM:InitPostEntity called")
+    
+    impulse.Doors.Load()
+    impulse.debugPrint("GM:InitPostEntity", "Doors loaded")
+    
+    -- Clean up old entities
+    impulse.debugPrint("GM:InitPostEntity", "Cleaning up old impulse entities...")
+    local removedCount = 0
+    for v,k in pairs(ents.GetAll()) do
+        if k.impulseSaveEnt or k.IsZoneTrigger then
+            k:Remove()
+            removedCount = removedCount + 1
+        end
+    end
+    impulse.debugPrint("GM:InitPostEntity", "Removed %d old impulse entities", removedCount)
+    
+    -- Run config load script if exists
+    if impulse.Config.LoadScript then
+        impulse.debugPrint("GM:InitPostEntity", "Running impulse.Config.LoadScript")
+        impulse.Config.LoadScript()
+    end
+    
+    -- Create zone triggers
+    if impulse.Config.Zones then
+        impulse.debugPrint("GM:InitPostEntity", "Creating zone triggers...")
+        local zoneCount = 0
+        for v,k in pairs(impulse.Config.Zones) do
+            impulse.debugPrint("GM:InitPostEntity", "Creating zone: %s", tostring(v))
+            local zone = ents.Create("impulse_zone")
+            zone:SetBounds(k.pos1, k.pos2)
+            zone.Zone = v
+            zoneCount = zoneCount + 1
+        end
+        impulse.debugPrint("GM:InitPostEntity", "Created %d zone triggers", zoneCount)
+    end
+    
+    -- Remove blacklisted entities
+    if impulse.Config.BlacklistEnts then
+        impulse.debugPrint("GM:InitPostEntity", "Removing blacklisted entities...")
+        local blacklistCount = 0
+        for v,k in pairs(ents.GetAll()) do
+            if impulse.Config.BlacklistEnts[k:GetClass()] then
+                k:Remove()
+                blacklistCount = blacklistCount + 1
+            end
+        end
+        impulse.debugPrint("GM:InitPostEntity", "Removed %d blacklisted entities", blacklistCount)
+    end
+    
+    LoadSaveEnts()
+    impulse.debugPrint("GM:InitPostEntity", "Save entities loaded")
+    
+    LoadButtons()
+    impulse.debugPrint("GM:InitPostEntity", "Buttons loaded")
+    
+    hook.Run("PostInitPostEntity")
+    impulse.debugPrint("GM:InitPostEntity", "GM:InitPostEntity complete")
 end
 
+-- Initial call to LoadButtons
+impulse.debugPrint("Initial", "Initial call to LoadButtons")
 LoadButtons()
 
 function GM:PostCleanupMap()

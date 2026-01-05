@@ -147,12 +147,12 @@ function PLUGIN:PlayerButtonDown(ply,btn)
                     scanner.NextMineDrop = CurTime() + 300
     
                     timer.Simple(1, function()
-                        if not IsValid(scanner) then print("Scanner no longer valid") return end
+                        if not IsValid(scanner) then impulse.debugPrint("Scanner no longer valid") return end
                         local attach = scanner:LookupAttachment("claw")
-                        print("Attachment ID: ", attach)
+                        impulse.debugPrint("Attachment ID: ", attach)
                         mine = ents.Create("combine_mine")
                         local angpos = scanner:GetAttachment(attach)
-                        print("Mine position: ", angpos and angpos.Pos)
+                        impulse.debugPrint("Mine position: ", angpos and angpos.Pos)
                         mine:SetPos(angpos.Pos)
                         mine:SetAngles(angpos.Ang)
                         mine:SetParent(scanner)
@@ -163,26 +163,26 @@ function PLUGIN:PlayerButtonDown(ply,btn)
                     end)
     
                     timer.Simple(3, function()
-                        if not IsValid(scanner) then print("Scanner no longer valid") return end
+                        if not IsValid(scanner) then impulse.debugPrint("Scanner no longer valid") return end
                     
                         scanner:ScannerAnim("CloseUp", true)
 
-                        if not IsValid(mine) then print("Mine no longer valid") return end
+                        if not IsValid(mine) then impulse.debugPrint("Mine no longer valid") return end
                         mine:SetParent(nil)
                         mine:PhysicsInit(SOLID_VPHYSICS)
                         local phys = mine:GetPhysicsObject()
                     
                         if (phys:IsValid()) then
-                            print("Mine physics activated")
+                            impulse.debugPrint("Mine physics activated")
                             phys:Wake()
                         else
-                            print("Mine physics invalid")
+                            impulse.debugPrint("Mine physics invalid")
                         end
                     
                         scanner:EmitSound("npc/scanner/combat_scan" .. math.random(1,5) .. ".wav")
                     
                         timer.Simple(2, function()
-                            if not IsValid(scanner) then print("Scanner no longer valid") return end
+                            if not IsValid(scanner) then impulse.debugPrint("Scanner no longer valid") return end
                             scanner:EmitSound("npc/scanner/combat_scan" .. math.random(1,5) .. ".wav")
                             scanner:ScannerAnim("HoverClosed", true)
                         end)
@@ -195,7 +195,7 @@ function PLUGIN:PlayerButtonDown(ply,btn)
                         end
                     end)
                 else
-                    print("Sequence mismatch, skipping mine drop")
+                    impulse.debugPrint("Sequence mismatch, skipping mine drop")
                 end
             end
         end

@@ -96,7 +96,7 @@ function ENT:FinishScavenge()
         local lootItem = pool[num]
 
         ply:Notify("You found " .. lootNiceName[num] .. " in the trash.", 5)
-        --print("Scavenged item: " .. lootNiceName[num])
+        --impulse.debugPrint("Scavenged item: " .. lootNiceName[num])
         --print(lootItem)
         if lootItem then ply:GiveInventoryItem(lootItem) end
         self.ScavengeItemsLeft = self.ScavengeItemsLeft - 1

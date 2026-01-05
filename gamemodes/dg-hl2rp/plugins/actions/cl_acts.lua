@@ -8,7 +8,7 @@ end)
 net.Receive("impulseListActions", function()
     local actlist = net.ReadTable()
 
-    print("\nGetting Actions for your current team...")
+    impulse.debugPrint("\nGetting Actions for your current team...")
 
     timer.Simple(1, function()
         for v,k in pairs(actlist) do

@@ -678,7 +678,7 @@ net.Receive("impulseHL2RPDemoteCP", function(len, ply)
 
 	if not IsValid(ply.Terminal) then
 		if not ply:IsScanner() and not ply:IsCP() and not ply:GetTeamRank() >= RANK_OFC then
-			print("Terminal is not valid, and player is not a scanner.")
+			impulse.debugPrint("Terminal is not valid, and player is not a scanner.")
 			return
 		end
 	end
@@ -837,7 +837,7 @@ concommand.Add("inv_count_items", function(ply, cmd, args)
         if IsValid(ply) then
             ply:ChatPrint("Usage: inv_count_items <item_class>")
         else
-            print("Usage: inv_count_items <item_class>")
+            impulse.debugPrint("Usage: inv_count_items <item_class>")
         end
         return
     end

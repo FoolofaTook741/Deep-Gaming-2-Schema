@@ -131,8 +131,8 @@ local function GenerateLootFromPool(pool, ply)
         ANTICRASH_ATTEMPTS = ANTICRASH_ATTEMPTS + 1
 
         if ANTICRASH_ATTEMPTS > 32 then
-            print("[impulse] HIGH LOOT GENERATION ATTEMPTS WARNING! ("..pool..") ("..ANTICRASH_ATTEMPTS..")")
-            print("Please make sure this lootpool is NOT impossible to compute!")    
+            impulse.debugPrint("[impulse] HIGH LOOT GENERATION ATTEMPTS WARNING! ("..pool..") ("..ANTICRASH_ATTEMPTS..")")
+            impulse.debugPrint("Please make sure this lootpool is NOT impossible to compute!")    
         end
 
         return GenerateLootFromPool(pool, ply)
@@ -183,7 +183,7 @@ local function GenerateScrapLootForPlayer(ply, lootType)
 
     local scrapWeaponsTable = impulse.RagdollContainer.ScrapWeapons[lootType]
     if not scrapWeaponsTable then
-        print("Error: Scrap weapons table '" .. lootType .. "' not found.")
+        impulse.debugPrint("Error: Scrap weapons table '" .. lootType .. "' not found.")
         return loot, count
     end
 
@@ -202,7 +202,7 @@ local function GenerateScrapLootForPlayer(ply, lootType)
                     loot[scrapClass] = (loot[scrapClass] and loot[scrapClass] + 1) or 1
                 end
             else
-                print("Warning: Scrap data not found for weapon '" .. playerItem.class .. "'.")
+                impulse.debugPrint("Warning: Scrap data not found for weapon '" .. playerItem.class .. "'.")
             end
         end
     end
@@ -312,12 +312,12 @@ local function GenerateAmmoLootForPlayer(ply)
 
     -- Debug prints
     if totalCount > 0 then
-       -- print("Generated ammo loot for player:")
+       -- impulse.debugPrint("Generated ammo loot for player:")
         for itemName, itemCount in pairs(allAmmoLoot) do
-          --  print("Generated", itemCount, "of", itemName)
+          --  impulse.debugPrint("Generated", itemCount, "of", itemName)
         end
     else
-      --  print("No ammo loot generated for player.")
+      --  impulse.debugPrint("No ammo loot generated for player.")
     end
 
     return allAmmoLoot, totalCount
@@ -377,11 +377,11 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
                     local amount = k
         
                     if not netid then
-                        print("Error: ClassToNetID returned nil for item:", v)
+                        impulse.debugPrint("Error: ClassToNetID returned nil for item:", v)
                     end
         
                     if not amount or type(amount) ~= "number" then
-                        print("Error: Invalid amount for item:", v, "amount:", amount)
+                        impulse.debugPrint("Error: Invalid amount for item:", v, "amount:", amount)
                     end
         
                     net.WriteUInt(netid, 10)

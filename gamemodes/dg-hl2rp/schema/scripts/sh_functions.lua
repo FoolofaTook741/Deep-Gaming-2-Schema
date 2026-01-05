@@ -250,7 +250,7 @@ function impulse.CanNexusRaid()
 	end
 
 	if modCount == 0 then
-		print("no mods?")
+		impulse.debugPrint("no mods?")
 		return false
 	end
 

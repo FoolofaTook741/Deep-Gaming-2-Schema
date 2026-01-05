@@ -86,7 +86,7 @@ function ITEM:OnUse(ply, door)
 				end
 			end
 			
-			print("[IED TRACKING] IED detonation attempt blocked! Placer: " .. placerInfo .. " | Frequency: " .. (self.Freq or "Unknown") .. " | Position: " .. tostring(self:GetPos()))
+			impulse.debugPrint("[IED TRACKING] IED detonation attempt blocked! Placer: " .. placerInfo .. " | Frequency: " .. (self.Freq or "Unknown") .. " | Position: " .. tostring(self:GetPos()))
 			
 			self:EmitSound("weapons/c4/c4_beep1.wav", 90)
 			table.RemoveByValue(impulse.IEDS, self)

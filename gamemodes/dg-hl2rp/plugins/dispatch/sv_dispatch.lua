@@ -94,7 +94,7 @@ net.Receive("impulseHL2RPDispatchAnnounce", function(len, ply)
 
 	if not IsValid(ply.Terminal) then
 		if not ply:IsScanner() and not ply:IsCP() and not ply:GetTeamRank() >= RANK_OFC then
-			print("Terminal is not valid, and player is not a scanner.")
+			impulse.debugPrint("Terminal is not valid, and player is not a scanner.")
 			return
 		end
 	end
@@ -122,7 +122,7 @@ net.Receive("impulseHL2RPDispatchCityCode", function(len, ply)
 
 	if not IsValid(ply.Terminal) then
 		if not ply:IsScanner() and not ply:IsCP() and not ply:GetTeamRank() >= RANK_OFC then
-			print("Terminal is not valid, and player is not a scanner.")
+			impulse.debugPrint("Terminal is not valid, and player is not a scanner.")
 			return
 		end
 	end

@@ -236,13 +236,13 @@ function imgui.ExpandRenderBoundsFromRect(x, y, w, h)
 
 		ent:SetRenderBoundsWS(minrb, maxrb)
 		if _devMode then
-			print("[IMGUI] Updated renderbounds of ", ent, " to ", minrb, "x", maxrb)
+			impulse.debugPrint("[IMGUI] Updated renderbounds of ", ent, " to ", minrb, "x", maxrb)
 		end
 
 		ent._imguiRBExpansion = {x, y, w, h}
 	else
 		if _devMode then
-			print("[IMGUI] Attempted to update renderbounds when entity is not valid!! ", debug.traceback())
+			impulse.debugPrint("[IMGUI] Attempted to update renderbounds when entity is not valid!! ", debug.traceback())
 		end
 	end
 end
