@@ -97,9 +97,7 @@ function SWEP:PrimaryAttack(right)
 end
 
 function SWEP:SecondaryAttack()
-
-	self:PrimaryAttack( true )
-	self.Owner:AddSkillXP("strength", 1)
+    self:PrimaryAttack(true)
 end
 
 local phys_pushscale = GetConVar( "phys_pushscale" )
