@@ -51,16 +51,17 @@ SWEP.ReloadSound = Sound("Weapon_357.Reload")
 SWEP.EmptySound = Sound("Weapon_357.Empty")
 
 SWEP.Primary.Recoil = 20 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 50
+SWEP.Primary.Damage = 60
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0002
 SWEP.Primary.Delay = RPM(90)
-SWEP.Primary.PenetrationScale = 1.25
+SWEP.Primary.PenetrationScale = 1
 
 SWEP.DamageFalloff = true
-SWEP.MinDistance = 500  -- Full damage up to 500 hammer units
-SWEP.MaxDistance = 3000 -- Minimum damage at 3000 hammer units  
-SWEP.MinDamageMultiplier = 0.2  -- 20% damage at max range
+SWEP.MinDistance = 500          -- 12.7 meters in waypoint data stuff (full damage)
+SWEP.MaxDistance = 4724         -- 120 meters
+SWEP.MinDamageMultiplier = 0.7917  -- 47.5 base damage (95 headshot) at 120m
+-- all the meters to hammer units is done by waypoint stuff, its the same logic
 
 SWEP.Primary.Ammo = "357"
 SWEP.Primary.Automatic = false
