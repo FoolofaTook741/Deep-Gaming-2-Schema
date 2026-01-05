@@ -152,9 +152,7 @@ function ENT:StartDrill(jammer)
     end
 
     timer.Simple(impulse.Config.AmmoDrillTime + 1, function()
-        if not IsValid(self) then
-            return
-        end
+        if not IsValid(self) then return end
 
         self:StopSound("vehicles/digger_grinder_loop1.wav")
         self:SetDrillEndTime(0)
@@ -166,34 +164,46 @@ function ENT:StartDrill(jammer)
         local items, count = impulse.Loot.GenerateFromPool("hardpointammobox")
         local total = count * 0.9
         local x = 0.5
-        local f, r, u = self:GetForward(), self:GetRight(), self:GetUp()
         local pos = self:GetPos() + Vector(0, 0, 19)
 
-        for v,k in pairs(items) do
-        	for i=1, k do
-        		timer.Simple(x, function()
-        			if not IsValid(self) then
-        				return
-        			end
+        local droppedItemsLog = {}
 
-        			local e = impulse.Inventory.SpawnItem(v, pos, nil, 300)
-        		end)
+        for itemID, quantity in pairs(items) do
+            local ITEM = impulse.Inventory.GetItem(itemID)
+            local itemName = ITEM and ITEM.Name or itemID
 
-        		x = x + 0.9
-        	end
+            table.insert(droppedItemsLog, itemName .. " x" .. quantity)
+
+            for i = 1, quantity do
+                timer.Simple(x, function()
+                    if not IsValid(self) then return end
+                    impulse.Inventory.SpawnItem(itemID, pos, nil, 300)
+                end)
+                x = x + 0.9
+            end
         end
-        
+
+        local embeds = {{
+            title = "Hardpoint AmmoBox Looted",
+            description = "A hardpoint ammobox has been opened and items dropped.",
+            url = "https://www.deepgaming.xyz",
+            color = 10181046,
+            fields = {
+                {
+                    name = "Items Dropped:",
+                    value = table.concat(droppedItemsLog, "\n")
+                }
+            }
+        }}
+        ReqwestLog(embeds, DG_OPS)
 
         timer.Simple(total, function()
-            if not IsValid(self) then
-                return
-            end
-
+            if not IsValid(self) then return end
             self:ResetSequence(0)
             self.LastRaided = CurTime() + 600
         end)
 
         local spawnpos = self:GetPos() + Vector(0,0,25)
-		impulse.Inventory.SpawnItem("item_drill", spawnpos, nil, 300)
+        impulse.Inventory.SpawnItem("item_drill", spawnpos, nil, 300)
     end)
 end
