@@ -580,12 +580,6 @@ impulse.Config.LoadScript = function()
 			2937,
 			2128
 		}
-
-	if timer.Exists("impulseI24AutoDoorShutter") then
-		timer.Remove("impulseI24AutoDoorShutter")
-	end
-
-	timer.Create("impulseI24AutoDoorShutter", 50, 0, function()
 		for v,k in pairs(autoLockDoors) do
 			local door = ents.GetMapCreatedEntity(k)
 
@@ -602,7 +596,6 @@ impulse.Config.LoadScript = function()
 				end
 			end)
 		end
-	end)
 end
 
 impulse.Config.CPSpawnLocations = {Vector(2020.302734375, 3417.7314453125, -543.96875),
