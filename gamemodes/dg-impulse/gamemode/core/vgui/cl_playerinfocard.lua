@@ -190,35 +190,6 @@ function PANEL:Init()
 		self:SetTitle("Player Information")
 		self:MakePopup()
 
-		-- 3d model
-		self.characterPreview = vgui.Create("impulseModelPanel", self)
-		self.characterPreview:SetSize(600,400)
-		self.characterPreview:SetPos(200,30)
-		self.characterPreview:SetFOV(80)
-		self.characterPreview:SetModel(self.Player:GetModel(), self.Player:GetSkin())
-		self.characterPreview:MoveToBack()
-		self.characterPreview:SetCursor("arrow")
-		--local charPreview = self.characterPreview
-		function self.characterPreview:LayoutEntity(ent)
-			--ent:SetSequence(ent:LookupSequence("idle"))
-			ent:SetAngles(Angle(0,40,0))
-			--charPreview:RunAnimation()
-		end
-
-		timer.Simple(0, function()
-			if not IsValid(self.characterPreview) then
-				return
-			end
-
-			local ent = self.characterPreview.Entity
-
-			if IsValid(ent) and IsValid(self.Player) then
-				for v,k in pairs(self.Player:GetBodyGroups()) do
-					ent:SetBodygroup(k.id, self.Player:GetBodygroup(k.id))
-				end
-			end
-		end)
-
 		self.profileImage = vgui.Create("AvatarImage", self)
 		self.profileImage:SetSize(70, 70)
 		self.profileImage:SetPos(10, 30)
