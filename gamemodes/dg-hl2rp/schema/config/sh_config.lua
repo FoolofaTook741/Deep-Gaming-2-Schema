@@ -249,7 +249,7 @@ impulse.Config.Achievements = {
 		OnJoin = true,
 		Check = function(ply)
 			for v,k in pairs(impulse.Skills.Skills) do
-				if ply:GetSkillXP(v) < 19000 then
+				if ply:GetSkillXP(v) < 5500 then
 					return false
 				end
 			end

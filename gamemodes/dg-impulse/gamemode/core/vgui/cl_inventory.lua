@@ -234,7 +234,7 @@ function PANEL:SetupSkills(w, h)
  		bar:SetPos(20, 30)
  		bar:SetSize(self.skillScroll:GetWide() - 73, 40)
 
- 		if level == 20 then
+ 		if level == 10 then
  			bar:SetFraction(1)
  			bar.BarCol = Color(218, 165, 32)
  		else
@@ -242,7 +242,7 @@ function PANEL:SetupSkills(w, h)
  		end
 
  		function bar:PaintOver(w, h)
- 			if level != 20 then
+ 			if level != 10 then
  				draw.DrawText(math.Round(perc * 100, 1).."% to next level", "Impulse-Elements18-Shadow", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
  			else
  				draw.DrawText("Mastered", "Impulse-Elements18-Shadow", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
