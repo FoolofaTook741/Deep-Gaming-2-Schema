@@ -45,7 +45,7 @@ function SWEP:PrePrimaryAttack()
 
     if seq > 0 then
         vm:SendViewModelMatchingSequence(seq)
-        self.NextIdle = CurTime() + vm:SequenceDuration(seq)
+        self:SetNextIdle(CurTime() + vm:SequenceDuration(seq))
     end
 end
 
@@ -72,4 +72,92 @@ function SWEP:PrimaryAttack()
     end
 
     self:GetOwner():SetAnimation(PLAYER_ATTACK1)
+end
+
+function SWEP:ClubAttack()
+	local trace = {}
+	trace.start = self:GetOwner():GetShootPos()
+	trace.endpos = trace.start + self:GetOwner():GetAimVector() * (self.Primary.Range or 85)
+	trace.filter = self:GetOwner()
+	trace.mask = MASK_SHOT_HULL
+
+	local boxSize = self.Primary.HullSize or 6
+	trace.mins = Vector(-boxSize, -boxSize, -boxSize)
+	trace.maxs = Vector(boxSize, boxSize, boxSize)
+
+	self:GetOwner():LagCompensation(true)
+	local tr = util.TraceHull(trace)
+	self:GetOwner():LagCompensation(false)
+
+	if CLIENT then
+		debugoverlay.BoxAngles(tr.HitPos, trace.mins, trace.maxs, self:GetOwner():EyeAngles(), 5, Color(200, 0, 0, 100))
+	end
+
+	if SERVER and tr.Hit then
+
+		hook.Run("LongswordMeleeHit", self:GetOwner())
+
+		if self.Primary.ImpactSound and not self.Primary.ImpactSoundWorldOnly then
+			self:GetOwner():EmitSound(self.Primary.ImpactSound)
+		end
+
+		if self.Primary.ImpactEffect then
+			local effect = EffectData()
+			effect:SetStart(tr.HitPos)
+			effect:SetNormal(tr.HitNormal)
+			effect:SetOrigin(tr.HitPos)
+			util.Effect(self.Primary.ImpactEffect, effect, true, true)
+		end
+
+		local ent = tr.Entity
+		if IsValid(ent) then
+			local newdmg = hook.Run("LongswordCalculateMeleeDamage", self:GetOwner(), self.Primary.Damage, ent)
+			hook.Run("LongswordHitEntity", self:GetOwner(), ent)
+
+			local dmg = DamageInfo()
+			dmg:SetAttacker(self:GetOwner())
+			dmg:SetInflictor(self)
+			dmg:SetDamage(newdmg or self.Primary.Damage)
+			dmg:SetDamageType(DMG_CLUB)
+			dmg:SetDamagePosition(tr.HitPos)
+
+			if ent:GetClass() ~= "prop_ragdoll" then
+				dmg:SetDamageForce(self:GetOwner():GetAimVector() * 10000)
+			end
+
+			ent:DispatchTraceAttack(dmg, trace.start, trace.endpos)
+
+			if ent:IsPlayer() then
+				if self.Primary.FlashTime and self.Primary.FlashTime > 0 then
+					ent:ScreenFade(SCREENFADE.IN, self.Primary.FlashColor or color_white, self.Primary.FlashTime, 0)
+					ent.StunTime = CurTime() + self.Primary.FlashTime
+					ent.StunStartTime = CurTime()
+				elseif self.Primary.StunTime then
+					ent.StunTime = CurTime() + self.Primary.StunTime
+					ent.StunStartTime = CurTime()
+				end
+			end
+
+			if tr.MatType == MAT_FLESH then
+				ent:EmitSound("Flesh.ImpactHard")
+				local effect = EffectData()
+				effect:SetStart(tr.HitPos)
+				effect:SetNormal(tr.HitNormal)
+				effect:SetOrigin(tr.HitPos)
+				util.Effect("BloodImpact", effect, true, true)
+			elseif tr.MatType == MAT_WOOD then
+				ent:EmitSound("Wood.ImpactHard")
+			elseif tr.MatType == MAT_CONCRETE then
+				ent:EmitSound("Concrete.ImpactHard")
+			elseif self.Primary.ImpactSoundWorldOnly then
+				self:GetOwner():EmitSound(self.Primary.ImpactSound)
+			end
+		elseif self.MeleeHitFallback and self:MeleeHitFallback(tr) then
+			return
+		elseif self.Primary.ImpactSoundWorldOnly then
+			self:GetOwner():EmitSound(self.Primary.ImpactSound)
+		end
+
+		-- miss case (no anim)
+	end
 end
