@@ -580,7 +580,7 @@ function SWEP:DoWalkBob(pos, ang)
 		pos1, ang1 = Plutonic.Framework.RotateAroundPoint(pos, ang, Vector(-9, -2, -3), Vector(-0, sn1 * -.39 + (sn2 * -1.2 * mv), sz3 * mv - (mv * .5)), Angle((cs2 * 2.75 * mv) + (cs2 * -3.39 * mv), sn2 * -5.2 * mv, ب));
 	end
 
-	local interp = Plutonic.Ease.InOutQuart(self.VMSprint);
+	local interp = Plutonic.Ease.InOutQuart(self.VMSprint or 0);
 	pos, ang = lerpVector(interp, pos1, pos0), lerpAngle(interp, ang1, ang0);
 	if not self:IsSprinting() then
 		ang:RotateAroundAxis(ang:Forward(), cos(rt * 16.8) * mv * .1);
