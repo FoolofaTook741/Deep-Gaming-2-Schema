@@ -1045,8 +1045,8 @@ local function LoadButtons()
                 assigned = true
                 assignedCount = assignedCount + 1
                 
-                --impulse.debugPrint("LoadButtons", "✓ Matched button #%d at %s with config '%s' at %s (distance: %.2f units)", 
-                    button:EntIndex(), tostring(buttonPos), v, tostring(k.pos), math.sqrt(k.pos:DistToSqr(buttonPos)))
+                --impulse.debugPrint("✓ Matched button #%d at %s with config '%s' at %s (distance: %.2f units)", 
+                --    button:EntIndex(), tostring(buttonPos), v, tostring(k.pos), math.sqrt(k.pos:DistToSqr(buttonPos)))
                 
                 -- Run init function if defined
                 if k.init then
