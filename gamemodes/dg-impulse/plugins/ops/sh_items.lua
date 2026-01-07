@@ -99,6 +99,7 @@ local giveItemCommand = {
 
         local steamid = arg[1]
         local item = arg[2]
+        local restricted = tobool(arg[3] or "false")
 
         if not item then
             return ply:Notify("No item uniqueID supplied.")
@@ -127,7 +128,7 @@ local giveItemCommand = {
             local target = player.GetBySteamID(steamid)
             local nameValue = "Offline Player ("..steamid..")"
             if target and IsValid(target) then
-                target:GiveInventoryItem(item)
+                target:GiveInventoryItem(item, 1, restricted)
                 nameValue = target:SteamName().." ("..steamid..")"
             end
             local embeds = {{
@@ -150,12 +151,16 @@ local giveItemCommand = {
                     },
                 }
             }}
-            ReqwestLog(embeds, DG_SENT)
+            
             if target and IsValid(target) then
+                ReqwestLog(embeds, DG_SENT)
                 return ply:Notify("You have given "..target:Nick().." a "..item..".")
             end
             local impulseID = result[1].id
-
+            if restricted then
+                return ply:Notify("You cannot give offline players restricted items.")
+            end
+            ReqwestLog(embeds, DG_SENT)
             impulse.Inventory.DBAddItem(impulseID, item, nil, ply)
             ply:Notify("Offline player ("..steamid..") has been given a "..item..".")
         end)
