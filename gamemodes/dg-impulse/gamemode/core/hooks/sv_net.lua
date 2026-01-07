@@ -1524,28 +1524,39 @@ net.Receive("impulseVendorBuy", function(len, ply)
 
 	if sellData.BuyMax then
 		ply.VendorBuyMax = ply.VendorBuyMax or {}
-		local tMax = ply.VendorBuyMax[itemclass] or { Count = 0, Cooldown = nil }
-		ply.VendorBuyMax[itemclass] = tMax
+		local tMax = ply.VendorBuyMax[itemclass]
+		if not tMax then
+			tMax = { Count = 0, Cooldown = nil }
+			ply.VendorBuyMax[itemclass] = tMax
+		end
 
-		-- Reset expired cooldown
-		if tMax.Cooldown and tMax.Cooldown <= CurTime() then
+		local now = CurTime()
+		local cdLen = sellData.TempCooldown or sellData.Cooldown or 600
+
+		if tMax.Cooldown and tMax.Cooldown <= now then
 			tMax.Count = 0
 			tMax.Cooldown = nil
 		end
 
 		-- Block purchase if cooldown active
-		if tMax.Cooldown and tMax.Cooldown > CurTime() then
-			return ply:Notify("This vendor has no more of this item to give you. Come back in " .. string.NiceTime(tMax.Cooldown - CurTime()) .. " for more.")
+		if tMax.Cooldown and tMax.Cooldown > now then
+			return ply:Notify("This vendor has no more of this item to give you. Come back in " ..
+				string.NiceTime(tMax.Cooldown - now) .. " for more.")
 		end
 
-		-- Apply cooldown if BuyMax reached
-		if tMax.Count >= sellData.BuyMax then
-			tMax.Cooldown = CurTime() + (sellData.TempCooldown or sellData.Cooldown or 600)
-			return ply:Notify("This vendor has no more of this item to give you. Come back in " .. string.NiceTime(tMax.Cooldown - CurTime()) .. " for more.")
+		if (tMax.Count or 0) >= sellData.BuyMax then
+			tMax.Cooldown = tMax.Cooldown or (now + cdLen)
+			return ply:Notify("This vendor has no more of this item to give you. Come back in " ..
+				string.NiceTime(tMax.Cooldown - now) .. " for more.")
 		end
 
 		tMax.Count = (tMax.Count or 0) + 1
+
+		if tMax.Count == sellData.BuyMax then
+			tMax.Cooldown = now + cdLen
+		end
 	end
+
 
 	local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemclass)]
 	local vendorid = vendor.Vendor.UniqueID
