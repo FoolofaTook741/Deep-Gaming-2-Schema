@@ -364,23 +364,38 @@ local advertCommand = {
 impulse.RegisterChatCommand("/advert", advertCommand)
 
 local rollCommand = {
-	description = "Generate a random number between 0 and whatever number you enter.",
-	requiresArg = true,
-	requiresAlive = true,
-	onRun = function(ply, arg, rawText)
-		local max = tonumber(arg[1])
-		if max > 10000 then
-			ply:Notify("The max number is 10000.")
-			return
-		end
-		local rollResult = (tostring(math.random(0,arg[1]))) .. " (0 - " .. max ..")."
+    description = "Generate a random number between 0 and whatever number you enter.",
+    requiresArg = true,
+    requiresAlive = true,
+    onRun = function(ply, arg, rawText)
+        local s = tostring(arg[1] or ""):Trim()
 
-		for v,k in pairs(player.GetAll()) do
-			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.TalkDistance ^ 2) then 
-				k:SendChatClassMessage(11, rollResult, ply)
-			end
-		end
-	end
+        if not s:match("^%d+$") then
+            ply:Notify("Usage: /roll <number> (Digits only, max 10000).")
+            return
+        end
+
+        local max = tonumber(s)
+        if not max then
+            ply:Notify("Invalid number.")
+            return
+        end
+
+        if max > 10000 then
+            ply:Notify("The max number is 10000.")
+            return
+        end
+
+        local result = math.random(0, max)
+        local rollResult = tostring(result) .. " (0 - " .. max .. ")."
+
+        local distSqr = impulse.Config.TalkDistance ^ 2
+        for _, k in ipairs(player.GetAll()) do
+            if (ply:GetPos() - k:GetPos()):LengthSqr() <= distSqr then
+                k:SendChatClassMessage(11, rollResult, ply)
+            end
+        end
+    end
 }
 
 impulse.RegisterChatCommand("/roll", rollCommand)
