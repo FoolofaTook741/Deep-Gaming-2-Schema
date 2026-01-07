@@ -136,6 +136,10 @@ function ITEM:ShouldTraceUse(ply, ent)
     if ent:IsPlayer() and ent:GetModel() == "models/willardnetworks/vortigaunt.mdl" then
     	return true
     end
+	
+	if ent:GetClass() == "func_door" then
+		return false
+	end
 
 	if not ent:IsDoor() then
 		return false
