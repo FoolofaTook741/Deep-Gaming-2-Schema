@@ -135,8 +135,6 @@ end
 
 function ReqwestLogMessage(message, webhook)
 
-    if true then return end
-
     if not webhook then
         impulse.debugPrint("Discord webhooks disabled on development servers")
         return
