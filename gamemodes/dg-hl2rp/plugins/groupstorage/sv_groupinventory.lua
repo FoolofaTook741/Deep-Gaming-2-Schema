@@ -231,12 +231,16 @@ function meta:MoveInventoryItemGroup(invid, from, to)
     end
 
     local w = tonumber(impulse.Inventory.Items[entry.id].Weight) or 0
+    local groupName = self:GetSyncVar(SYNC_GROUP_NAME, nil)
     if to == 1 then
         self.InventoryWeight = self.InventoryWeight + w
+        LogWithdrawal(groupName, self, 1, "Withdraw: " .. entry.class)
     elseif to == 3 then
         self.InventoryWeight = self.InventoryWeight - w
+        LogDeposit(groupName, self, 1, "Deposit: " .. entry.class)
     end
 
+    
     net.Start("deepGroupinvMove")
 	net.WriteUInt(1, 8)
 	net.WriteEntity(self)
@@ -342,7 +346,12 @@ function meta:MoveInventoryItemGroupMass(itemclass, from, to, amount)
     end
 
     self:calcGroupStorageWeight()
-
+    local groupName = self:GetSyncVar(SYNC_GROUP_NAME, nil)
+    if to == 1 then
+        LogWithdrawal(groupName, self, #delta, "Withdrawal: " .. itemclass)
+    elseif to == 3 then
+        LogDeposit(groupName, self, #delta, "Deposit: " .. itemclass)
+    end
 	net.Start("deepGroupinvMove")
 	net.WriteUInt(#delta, 8)
 

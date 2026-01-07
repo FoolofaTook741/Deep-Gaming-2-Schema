@@ -157,7 +157,7 @@ net.Receive("deepGroupInvContainerDoMoveMass", function(len, ply)
 end)
     
 local logRequestCooldown = {}
-local cooldown = 30
+local cooldown = 5
 
 net.Receive("deepGroupLogsRequest", function(len, ply)
     local currentTime = CurTime()
