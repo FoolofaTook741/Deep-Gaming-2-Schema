@@ -69,7 +69,7 @@ function ITEM:OnUse(ply, door)
 		return
 	end
 
-		if door:GetClass() == "deep_resinlocker" and not ply:IsCP() then
+		if door:GetClass() == "deep_resinstorage" and not ply:IsCP() then
 			if chance < (75 + ((skill * 1.5) * 1.4)) then
 				door:RaidStorage(ply)
 			else
