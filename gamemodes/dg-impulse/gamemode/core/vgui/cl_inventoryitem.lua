@@ -4,7 +4,7 @@ function PANEL:Init()
 	self.model = vgui.Create("DModelPanel", self)
 	self.model:SetPaintBackground(false)
 	self:SetMouseInputEnabled(true)
-	self:SetTall(64)
+	self:SetTall(72)
 
 	self:SetCursor("hand")
 end
@@ -23,10 +23,12 @@ function PANEL:SetItem(netitem, wide)
 	self.Count = 1
 
 	local panel = self
-	self.model:SetPos(0, 0)
+
+	self.model:SetPos(12, 0)
 	self.model:SetSize(64, 64)
 	self.model:SetMouseInputEnabled(true)
 	self.model:SetModel(item.Model)
+	self.model:SetSkin(item.Skin or 0)
 	self.model:SetFOV(item.FOV or 35)
 
 	if self.Item.ItemColour then
@@ -42,10 +44,6 @@ function PANEL:SetItem(netitem, wide)
 
 		if not item.NoCenter then
 			self:SetLookAt(Vector(0, 0, 0))
-		end
-
-		if panel.Item.Skin then
-			ent:SetSkin(panel.Item.Skin)
 		end
 	end
 
@@ -71,7 +69,7 @@ function PANEL:SetItem(netitem, wide)
 	self.model:SetLookAt((max + min) / 2)
 
 	self.desc = vgui.Create("DLabel", self)
-	self.desc:SetPos(65, 30)
+	self.desc:SetPos(79, 30)
 
 	if self.Basic then
 		self.desc:SetSize(270, 30)
@@ -80,9 +78,9 @@ function PANEL:SetItem(netitem, wide)
 	end
 
 	if wide < 800 then -- small resolutions have trouble with 16
-		self.desc:SetFont("Impulse-Elements14")
+		self.desc:SetFont("terminal14")
 	else
-		self.desc:SetFont("Impulse-Elements16")
+		self.desc:SetFont("terminal16")
 	end
 
 	self.desc:SetText(item.Desc or "")
@@ -99,7 +97,7 @@ function PANEL:SetItem(netitem, wide)
 
 	self.count:SetText("")
 	self.count:SetTextColor(impulse.Config.MainColour)
-	self.count:SetFont("Impulse-Elements19-Shadow")
+	self.count:SetFont("terminal18")
 	self.count:SetSize(36, 20)
 
 	function self.count:Think()
@@ -180,7 +178,7 @@ function PANEL:OnMousePressed(keycode)
 
 				if self.Count < amount then
 					return
-				end
+				end 
 
 				net.Start("impulseInvDoMoveMass")
 				net.WriteUInt(impulse.Inventory.ClassToNetID(self.Item.UniqueID), 10)
@@ -208,6 +206,12 @@ function PANEL:OnMousePressed(keycode)
 				opt = m:AddOption("Move 15", moveItems)
 				opt.Moving = 15
 				opt:SetIcon("icon16/arrow_right.png")
+			end
+
+			if ( count >= 2 ) then
+					opt2 = m:AddOption("Move All", moveItems)
+				opt2.Moving = count
+				opt2:SetIcon("icon16/arrow_right.png") 
 			end
 
 			m:Open()
@@ -243,6 +247,7 @@ function PANEL:OnMousePressed(keycode)
 			end
 		end
 
+		
 		if shouldUse then
 			popup:AddOption(self.Item.UseName or "Use", function()
 				if self.Item.ShouldTraceUse then
@@ -311,10 +316,46 @@ function PANEL:OnMousePressed(keycode)
 		end
 	end
 
-	if (not self.IsRestricted and not self.Item.DropIfRestricted) then
-		popup:AddOption("Drop", function()
+	local allowDrop = (not self.IsRestricted) or self.Item.DropIfRestricted
+	if allowDrop and not self.IsEquipped then
+		popup:AddOption("Drop 1", function()
 			net.Start("impulseInvDoDrop")
 			net.WriteUInt(self.InvID, 16)
+			net.SendToServer()
+		end)
+	end
+
+	if allowDrop and not self.IsEquipped and self.Count >= 3 then
+		popup:AddOption("Drop 3", function()
+			net.Start("DeepMultiDrop")
+			net.WriteString(self.Item.UniqueID)
+			net.WriteUInt(3, 6)
+			net.SendToServer()
+		end)
+	end
+
+	if allowDrop and not self.IsEquipped and self.Count >= 5 then
+		popup:AddOption("Drop 5", function()
+			net.Start("DeepMultiDrop")
+			net.WriteString(self.Item.UniqueID)
+			net.WriteUInt(5, 6)
+			net.SendToServer()
+		end)
+	end
+
+	if allowDrop and not self.IsEquipped and self.Count >= 7 then
+		popup:AddOption("Drop 7", function()
+			net.Start("DeepMultiDrop")
+			net.WriteString(self.Item.UniqueID)
+			net.WriteUInt(7, 6)
+			net.SendToServer()
+		end)
+	end
+
+	if (not self.IsRestricted and not self.Item.DropIfRestricted and self.IsEquipped) and self.Item.WeaponClass then
+		popup:AddOption("Unload Ammo", function()
+			net.Start("DeepUnloadAmmo")
+			net.WriteString(self.Item.WeaponClass)
 			net.SendToServer()
 		end)
 	end
@@ -328,7 +369,7 @@ function PANEL:OnMousePressed(keycode)
 	popup:Open()
 end
 
-local bodyCol = Color(50, 50, 50, 210)
+local bodyCol = Color(0, 0, 0, 200)
 local restrictedCol = Color(255, 223, 0, 255)
 local illegalCol = Color(255, 0, 0, 255)
 local equippedCol =  Color(0, 220, 0, 140)
@@ -341,17 +382,20 @@ function PANEL:Paint(w, h)
 	local item = self.Item
 	if item then
 		surface.SetTextColor(item.Colour or color_white)
-		surface.SetFont("Impulse-Elements19-Shadow")
-		surface.SetTextPos(65, 10)
+		surface.SetFont("terminal18")
+		surface.SetTextPos(79, 10)
 		surface.DrawText(item.Name)
 
-		draw.SimpleText(self.Weight.."kg", "Impulse-Elements16", w - 10, 10, color_white, TEXT_ALIGN_RIGHT)
+		draw.SimpleText(self.Weight.."kg", "terminal16", w - 10, 10, color_white, TEXT_ALIGN_RIGHT)
 
 		if self.Basic then return end
 
 		if self.IsEquipped then -- if equipped
-			surface.SetDrawColor(equippedCol)
-			surface.DrawRect(0, 0, 5, h)
+			surface.SetDrawColor(Color(0, 220, 0, 140))
+			surface.DrawOutlinedRect(0, 0, w, h)
+		else
+			surface.SetDrawColor(color_white)
+			surface.DrawOutlinedRect(0, 0, w, h)
 		end
 	end
 end
