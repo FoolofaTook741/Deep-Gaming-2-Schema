@@ -220,18 +220,10 @@ if CLIENT then
 			end
 		end
 		
-        local tr,cuff = GetTrace( ply )
-
-        if not (tr and IsValid(cuff)
-                and cuff.GetCuffBroken
-                and cuff.GetRopeLength
-                and cuff.GetKidnapper
-                and cuff.GetCanBlind
-                and cuff.GetIsBlind
-                and cuff.GetCanGag
-                and cuff.GetIsGagged) then
-            return
-        end
+		local tr,cuff = GetTrace( ply )
+		if not (tr and IsValid(cuff)) then
+			return
+		end
 		
 		
 		surface.SetDrawColor( Col.BoxOutline )
@@ -295,91 +287,67 @@ if CLIENT then
 	
 	//
 	// Bind hooks
-    hook.Add("PlayerBindPress", "Cuffs CuffedInteract", function(ply, bind, pressed)
-        if ply ~= LocalPlayer() then return end
-        if not pressed then return end
-
-        bind = bind:lower()
-
-        local function SafeTraceAndCuffs()
-            local tr, cuffs = GetTrace(ply)
-            if not tr then return end
-            if not IsValid(cuffs) then return end
-            if not (cuffs.GetCanBlind and cuffs.GetCanGag and cuffs.GetRopeLength and cuffs.GetKidnapper) then return end
-            return tr, cuffs
-        end
-
-        if bind == "+attack" then
-            if ply:KeyDown(IN_USE) then
-                local isDragging = false
-                for _, c in ipairs(ents.FindByClass("weapon_handcuffed")) do
-                    if IsValid(c) and c.GetRopeLength and c.GetKidnapper and c:GetRopeLength() > 0 and c:GetKidnapper() == ply then
-                        isDragging = true
-                        break
-                    end
-                end
-
-                if isDragging then
-                    net.Start("Cuffs_TiePlayers")
-                    net.SendToServer()
-                    return true
-                end
-            end
-
-            local tr, cuffs = SafeTraceAndCuffs()
-            if tr and cuffs:GetCanGag() then
-                local wep = ply:GetActiveWeapon()
-                if not (IsValid(wep) and (wep.IsDarkRPArrestStick or wep.IsDarkRPUnarrestStick)) then
-                    net.Start("Cuffs_GagPlayer")
-                        net.WriteEntity(tr.Entity)
-                        net.WriteBool(not cuffs:GetIsGagged())
-                    net.SendToServer()
-                    return true
-                end
-            end
-
-        elseif bind == "+attack2" then
-            local tr, cuffs = SafeTraceAndCuffs()
-            if tr and cuffs:GetCanBlind() then
-                net.Start("cuffsDoSearch")
-                    net.WriteEntity(tr.Entity)
-                net.SendToServer()
-                return true
-            end
-
-        elseif bind == "+reload" then
-            -- drag
-            local tr, cuffs = SafeTraceAndCuffs()
-            if tr and cuffs:GetRopeLength() > 0 then
-                net.Start("Cuffs_DragPlayer")
-                    net.WriteEntity(tr.Entity)
-                    net.WriteBool(LocalPlayer() ~= cuffs:GetKidnapper())
-                net.SendToServer()
-                return true
-            end
-
-        elseif bind == "+use" then
-            local tr, cuffs = SafeTraceAndCuffs()
-            if tr then
-                net.Start("Cuffs_FreePlayer")
-                    net.WriteEntity(tr.Entity)
-                net.SendToServer()
-                return true
-            else
-                local tr2 = util.TraceLine({
-                    start = ply:EyePos(),
-                    endpos = ply:EyePos() + (ply:GetAimVector() * 100),
-                    filter = ply
-                })
-
-                if IsValid(tr2.Entity) and tr2.Entity:GetNWBool("Cuffs_TieHook") then
-                    net.Start("Cuffs_UntiePlayers")
-                    net.SendToServer()
-                    return true
-                end
-            end
-        end
-    end)
+	hook.Add( "PlayerBindPress", "Cuffs CuffedInteract", function(ply, bind, pressed)
+		if ply~=LocalPlayer() then return end
+		
+		if bind:lower()=="+attack" and pressed then
+			if ply:KeyDown( IN_USE ) then
+				local isDragging = false
+				for _,c in pairs(ents.FindByClass("weapon_handcuffed")) do
+					if c.GetRopeLength and c.GetKidnapper and c:GetRopeLength()>0 and c:GetKidnapper()==ply then
+						isDragging=true
+						break
+					end
+				end
+				if isDragging then
+					net.Start("Cuffs_TiePlayers") net.SendToServer()
+					return true
+				end
+			end
+			local tr,cuffs = GetTrace( ply )
+			if tr and cuffs:GetCanGag() then
+				local wep = ply:GetActiveWeapon()
+				if not (IsValid(wep) and (wep.IsDarkRPArrestStick or wep.IsDarkRPUnarrestStick)) then
+					net.Start( "Cuffs_GagPlayer" )
+						net.WriteEntity( tr.Entity )
+						net.WriteBit( not cuffs:GetIsGagged() )
+					net.SendToServer()
+					return true
+				end
+			end
+		elseif bind:lower()=="+attack2" and pressed then
+			local tr,cuffs = GetTrace( ply )
+			if tr and cuffs:GetCanBlind() then
+				local targ = tr.Entity
+				net.Start("cuffsDoSearch")
+				net.WriteEntity(targ, 8)
+				net.SendToServer(ply)
+				return true
+			end
+		elseif bind:lower()=="+reload" and pressed then
+			local tr,cuffs = GetTrace( ply )
+			if tr and cuffs:GetRopeLength()>0 then
+				net.Start( "Cuffs_DragPlayer" )
+					net.WriteEntity( tr.Entity )
+					net.WriteBit( LocalPlayer()~=cuffs:GetKidnapper() )
+				net.SendToServer()
+				return true
+			end
+		elseif bind:lower()=="+use" and pressed then
+			local tr,cuffs = GetTrace( ply )
+			if tr then
+				net.Start( "Cuffs_FreePlayer" )
+					net.WriteEntity( tr.Entity )
+				net.SendToServer()
+				return true
+			else
+				local tr = util.TraceLine( {start=ply:EyePos(), endpos=ply:EyePos()+(ply:GetAimVector()*100), filter=ply} )
+				if IsValid(tr.Entity) and tr.Entity:GetNWBool("Cuffs_TieHook") then
+					net.Start("Cuffs_UntiePlayers") net.SendToServer()
+				end
+			end
+		end
+	end)
 	
 	//
 	// Render

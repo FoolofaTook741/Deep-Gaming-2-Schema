@@ -23,7 +23,7 @@ local function GetTrace( ply )
 	local tr = util.TraceLine( {start=ply:EyePos(), endpos=ply:EyePos()+(ply:GetAimVector()*100), filter=ply} )
 	if IsValid(tr.Entity) and tr.Entity:IsPlayer() then
 		local cuffed,wep = tr.Entity:IsHandcuffed()
-		if cuffed and IsValid(wep) then return tr,wep end
+		if cuffed then return tr,wep end
 	end
 end
 
@@ -48,13 +48,13 @@ hook.Add( "PlayerCanSeePlayersChat", "Cuffs ChatGag", function( _,_,_, ply )
 	if not IsValid(ply) then return end
 	
 	local cuffed,wep = ply:IsHandcuffed()
-	if cuffed and IsValid(wep) and wep:GetIsGagged() then return false end
+	if cuffed and wep:GetIsGagged() then return false end
 end)
 hook.Add( "PlayerCanHearPlayersVoice", "Cuffs VoiceGag", function( _, ply )
 	if not IsValid(ply) then return end
 	
 	local cuffed,wep = ply:IsHandcuffed()
-	if cuffed and IsValid(wep) and wep:GetIsGagged() then return false end
+	if cuffed and wep:GetIsGagged() then return false end
 end)
 
 // Sandbox //
@@ -69,13 +69,13 @@ end)
 hook.Add( "canRequestWarrant", "Cuffs PreventWarrant", function( crim, cop, reason ) if cvars.Bool("cuffs_restrictwarrant") and cop:IsHandcuffed() then return false,"You can't issue warrants when restrained!" end end)
 hook.Add( "canWanted", "Cuffs PreventWarrant", function( crim, cop, reason ) if cvars.Bool("cuffs_restrictwarrant") and cop:IsHandcuffed() then return false,"You can't issue warrants when restrained!" end end)
 
-hook.Add( "canArrest", "Cuffs RestrictArrest", function( cop, crim )
+hook.Add( "canArrest", "Cuffs RestrictArrest", function( cop, crim ) // DarkRP Arrest hook
 	if IsValid(crim) and cvars.Bool("cuffs_restrictarrest") then
 		local cuffed, wep = crim:IsHandcuffed()
 		
 		if not cuffed then
 			return false,"You must handcuff a suspect to arrest them!"
-		elseif not IsValid(wep) or not wep.CuffsArrestable then
+		elseif not wep.CuffsArrestable then
 			return false,"These are not police handcuffs! You must handcuff a suspect to arrest them."
 		end
 	end

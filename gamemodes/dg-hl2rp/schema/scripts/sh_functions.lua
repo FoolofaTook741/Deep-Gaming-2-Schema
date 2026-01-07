@@ -10,10 +10,6 @@ function GetSporeCount()
     return spores
 end
 
-function meta:IsHandcuffed()
-	return self:GetSyncVar(SYNC_ARRESTED, false)
-end
-
 function meta:IsICT()
 	if self:Team() == TEAM_CWU and self:GetTeamClass() == CLASS_ICT then
 		return true
