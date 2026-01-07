@@ -68,10 +68,9 @@ function plogs.Log(type, str, copy)
 		Copy = copy
 	})
 
-	--[[if (#plogs.data[type] > plogs.cfg.LogLimit) then
+	if (#plogs.data[type] > plogs.cfg.LogLimit) then
 		table.remove(plogs.data[type])
-	end]]-- 
-	-- Lets see how it goes :)
+	end
 end
 
 function plogs.PlayerLog(pl, type, str, copy)
