@@ -45,23 +45,69 @@ if CLIENT then
         restrictedBox:SetPos( 460, 35 )
 
         local scroll = vgui.Create("DScrollPanel", panel)
-        scroll:SetPos(5, 60)
-        scroll:SetSize(595, 740)
+        scroll:SetPos(5, 90)
+        scroll:SetSize(595, 710)
+
+        -- Search bar
+        local search = vgui.Create("DTextEntry", panel)
+        search:SetPos(5, 60)
+        search:SetSize(595, 24)
+        search:SetUpdateOnType(true)
+        search:SetPlaceholderText("Search items (name / uniqueID / category)...")
 
         local cats = {}
+        local catPanels = {}
+        local allButtons = {}
 
-        for v,k in pairs(impulse.Inventory.Items) do
-            if not cats[k.Category or "Unknown"] then
+        -- Filter function
+        local function ApplyFilter()
+            local q = string.lower(string.Trim(search:GetValue() or ""))
+
+            for _, entry in ipairs(allButtons) do
+                local item = entry.item
+                local hay = string.lower((item.Name or "") .. " " .. (item.UniqueID or "") .. " " .. (item.Category or "Unknown"))
+                local show = (q == "") or (string.find(hay, q, 1, true) ~= nil)
+
+                entry.btn:SetVisible(show)
+                entry.btn:InvalidateLayout(true)
+            end
+
+            -- hide empty categories
+            for catName, list in pairs(cats) do
+                local anyVisible = false
+                for _, pnl in ipairs(list:GetItems() or {}) do
+                    if IsValid(pnl) and pnl:IsVisible() then
+                        anyVisible = true
+                        break
+                    end
+                end
+
+                if IsValid(catPanels[catName]) then
+                    catPanels[catName]:SetVisible(anyVisible)
+                    catPanels[catName]:InvalidateLayout(true)
+                end
+            end
+
+            scroll:InvalidateLayout(true)
+        end
+
+        search.OnValueChange = ApplyFilter
+
+        for _, k in pairs(impulse.Inventory.Items) do
+            local catName = k.Category or "Unknown"
+            if not cats[catName] then
                 local cat = scroll:Add("DCollapsibleCategory")
                 cat:Dock(TOP)
-                cat:SetLabel(k.Category or "Unknown")
-                cat:SetExpanded( false )
+                cat:SetLabel(catName)
+                cat:SetExpanded(false)
 
-                cats[k.Category or "Unknown"] = vgui.Create("DPanelList", panel)
-                local list =  cats[k.Category or "Unknown"]
+                catPanels[catName] = cat
+
+                local list = vgui.Create("DPanelList", panel)
                 list:Dock(FILL)
                 list:SetSpacing(5)
                 cat:SetContents(list)
+                cats[catName] = list
             end
 
             local btn = vgui.Create("DButton")
@@ -81,7 +127,10 @@ if CLIENT then
             end
 
             cats[k.Category or "Unknown"]:AddItem(btn)
+            table.insert(allButtons, { btn = btn, item = k, cat = catName })
         end
+
+        ApplyFilter()
     end)
 else
     util.AddNetworkString("impulseOpsItemSpawner")

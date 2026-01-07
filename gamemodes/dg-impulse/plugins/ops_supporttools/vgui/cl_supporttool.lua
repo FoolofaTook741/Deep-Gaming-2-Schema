@@ -13,128 +13,186 @@ function PANEL:Init()
 	b:Dock(FILL)
 	b.Paint = function() end
 
-	local lbl = vgui.Create("DLabel", b)
+	local header = vgui.Create("DPanel", b)
+	header:Dock(TOP)
+	header:SetTall(110)
+	header.Paint = function() end
+
+	local lbl = vgui.Create("DLabel", header)
 	lbl:SetText("Target (Steam64 ID):")
 	lbl:SetFont("Impulse-Elements18")
-	lbl:Dock(TOP)
+	lbl:SetPos(0, 0)
+	lbl:SizeToContents()
 
-	local s64 = vgui.Create("DTextEntry", b)
-	s64:SetFont("ChatFont")
+	local s64 = vgui.Create("DTextEntry", header)
+	s64:SetFont("Impulse-Elements18")
 	s64:SetPos(0, 20)
 	s64:SetSize(900, 30)
 	s64:SetPlaceholderText("Steam64 ID")
 
-	local lbl = vgui.Create("DLabel", b)
-	lbl:SetText("")
-	lbl:SetFont("Impulse-Elements18")
-	lbl:Dock(TOP)
+	local lblRefund = vgui.Create("DLabel", header)
+	lblRefund:SetText("Refund:")
+	lblRefund:SetFont("Impulse-Elements18")
+	lblRefund:SetPos(0, 80)
+	lblRefund:SizeToContents()
 
-	local lbl = vgui.Create("DLabel", b)
-	lbl:SetText("")
-	lbl:SetFont("Impulse-Elements18")
-	lbl:Dock(TOP)
+	local search = vgui.Create("DTextEntry", header)
+	search:SetFont("Impulse-Elements18")
+	search:SetPos(0, 55)
+	search:SetSize(900, 24)
+	search:SetUpdateOnType(true)
+	search:SetPlaceholderText("Search items (name / uniqueID / category)...")
 
-	local lbl = vgui.Create("DLabel", b)
-	lbl:SetText("Refund:")
-	lbl:SetFont("Impulse-Elements18")
-	lbl:Dock(TOP)
+	local scroll = vgui.Create("DScrollPanel", b)
+	scroll:Dock(TOP)
+	scroll:SetTall(500)
 
-    local scroll = vgui.Create("DScrollPanel", b)
-    scroll:SetTall(500)
-    scroll:Dock(TOP)
+	local refund = {}
+	local refund2 = {}
+	local cats = {}
 
-    local refund = {}
-    local refund2 = {}
-    local cats = {}
+	local catPanels = {}
+	local allButtons = {}
 
-    for v,k in pairs(impulse.Inventory.Items) do
-        if not cats[k.Category or "Unknown"] then 
-            local cat = scroll:Add("DCollapsibleCategory")
-            cat:Dock(TOP)
-            cat:SetLabel(k.Category or "Unknown")
-            cat:SetExpanded(false)
-            
-            cats[k.Category or "Unknown"] = vgui.Create("DPanelList", panel)
-            local list =  cats[k.Category or "Unknown"]
-            list:Dock(FILL)
-            list:SetSpacing(5)
-            cat:SetContents(list)
-        end
+	local function ApplyFilter()
+		local q = string.lower(string.Trim(search:GetValue() or ""))
 
-        local btn = vgui.Create("DButton")
-        btn:SetText("  "..k.Name.." ("..k.UniqueID..")")
-        btn:SetContentAlignment(4)
-        btn:Dock(TOP)
-        btn:SetFont("Impulse-Elements18")
-        btn:DockMargin(0, 0, 0, 5)
-        btn.ItemClass = k.UniqueID
+		for _, entry in ipairs(allButtons) do
+			local item = entry.item
+			local hay = string.lower((item.Name or "") .. " " .. (item.UniqueID or "") .. " " .. (item.Category or "Unknown"))
+			local show = (q == "") or (string.find(hay, q, 1, true) ~= nil)
 
-        function btn:DoClick()
-        	Derma_StringRequest("impulse", "Amount of "..k.Name.." to refund", "1", function(val)
-        		if not tonumber(val) then
-        			return LocalPlayer():Notify("Not a number.")
-        		end
-
-        		local val = math.Clamp(math.floor(val), 0, 30)
-
-        		if val == 0 then
-        			refund[self.ItemClass] = nil
-
-        			for v,k in pairs(refund2) do
-        				if k[1] == self.ItemClass then
-        					refund2[v] = nil
-        				end
-        			end
-
-        			return LocalPlayer():Notify("Removed "..self.ItemClass)
-        		end
-
-        	    for v,k in pairs(refund2) do
-        			if k[1] == self.ItemClass then
-        				refund2[v] = nil
-        			end
-        		end
-        		
-        		refund[self.ItemClass] = val
-        		table.insert(refund2, {self.ItemClass, val})
-
-        		LocalPlayer():Notify("Selected "..k.Name.." x"..val..".")
-        	end)
-        end
-
-        cats[k.Category or "Unknown"]:AddItem(btn)
-    end
-
-   	local lbl = vgui.Create("DLabel", b)
-	lbl:SetText("")
-	lbl:SetFont("Impulse-Elements18")
-	lbl:Dock(TOP)
-
-	local lbl = vgui.Create("DLabel", b)
-	lbl:SetText("Total:")
-	lbl:SetFont("Impulse-Elements18")
-	lbl:Dock(TOP)
-
-	local lbl = vgui.Create("DLabel", b)
-	lbl:SetText("Nothing")
-	lbl:SetFont("Impulse-Elements18")
-	lbl:Dock(TOP)
-	lbl:SetContentAlignment(7)
-	lbl:SetWrap(true)
-	lbl:SetTall(70)
-
-	function lbl:Think()
-		local t = ""
-		for v,k in pairs(refund2) do
-			t = t..k[1].." x"..k[2]..", "
+			entry.btn:SetVisible(show)
+			entry.btn:InvalidateLayout(true)
 		end
 
-		self:SetText(t)
+		for catName, list in pairs(cats) do
+			local anyVisible = false
+			for _, pnl in ipairs(list:GetItems() or {}) do
+				if IsValid(pnl) and pnl:IsVisible() then
+					anyVisible = true
+					break
+				end
+			end
+
+			local cat = catPanels[catName]
+			if IsValid(cat) then
+				cat:SetVisible(anyVisible)
+				cat:InvalidateLayout(true)
+			end
+		end
+
+		scroll:InvalidateLayout(true)
+
+		timer.Simple(0, function()
+			if not IsValid(scroll) then return end
+			local vbar = scroll:GetVBar()
+			if IsValid(vbar) then
+				vbar:SetScroll(0)
+			end
+		end)
 	end
 
-	local confirm = vgui.Create("DButton", b)
-	confirm:SetPos(0, 700)
-	confirm:SetSize(600, 60)
+	search.OnValueChange = ApplyFilter
+
+	for _, k in pairs(impulse.Inventory.Items) do
+		local catName = k.Category or "Unknown"
+
+		if not cats[catName] then
+			local cat = scroll:Add("DCollapsibleCategory")
+			cat:Dock(TOP)
+			cat:SetLabel(catName)
+			cat:SetExpanded(false)
+
+			catPanels[catName] = cat
+
+			local list = vgui.Create("DPanelList", cat)
+			list:Dock(FILL)
+			list:SetSpacing(5)
+
+			cat:SetContents(list)
+			cats[catName] = list
+		end
+
+		local btn = vgui.Create("DButton")
+		btn:SetText("  "..k.Name.." ("..k.UniqueID..")")
+		btn:SetContentAlignment(4)
+		btn:Dock(TOP)
+		btn:SetFont("Impulse-Elements18")
+		btn:DockMargin(0, 0, 0, 5)
+		btn.ItemClass = k.UniqueID
+
+		table.insert(allButtons, { btn = btn, item = k })
+
+		function btn:DoClick()
+			Derma_StringRequest("impulse", "Amount of "..k.Name.." to refund", "1", function(val)
+				if not tonumber(val) then
+					return LocalPlayer():Notify("Not a number.")
+				end
+
+				val = math.Clamp(math.floor(val), 0, 30)
+
+				if val == 0 then
+					refund[self.ItemClass] = nil
+
+					for i, t in pairs(refund2) do
+						if t[1] == self.ItemClass then
+							refund2[i] = nil
+						end
+					end
+
+					return LocalPlayer():Notify("Removed "..self.ItemClass)
+				end
+
+				for i, t in pairs(refund2) do
+					if t[1] == self.ItemClass then
+						refund2[i] = nil
+					end
+				end
+
+				refund[self.ItemClass] = val
+				table.insert(refund2, { self.ItemClass, val })
+
+				LocalPlayer():Notify("Selected "..k.Name.." x"..val..".")
+			end)
+		end
+
+		cats[catName]:AddItem(btn)
+	end
+
+	ApplyFilter()
+
+	local bottom = vgui.Create("DPanel", b)
+	bottom:Dock(FILL)
+	bottom.Paint = function() end
+	bottom:DockMargin(0, 8, 0, 0)
+
+	local totalTitle = vgui.Create("DLabel", bottom)
+	totalTitle:Dock(TOP)
+	totalTitle:SetFont("Impulse-Elements18")
+	totalTitle:SetText("Total:")
+	totalTitle:DockMargin(0, 0, 0, 4)
+
+	local totalLbl = vgui.Create("DLabel", bottom)
+	totalLbl:Dock(TOP)
+	totalLbl:SetFont("Impulse-Elements18")
+	totalLbl:SetText("Nothing")
+	totalLbl:SetContentAlignment(7)
+	totalLbl:SetWrap(true)
+	totalLbl:SetTall(70)
+
+	function totalLbl:Think()
+		local t = ""
+		for _, it in pairs(refund2) do
+			t = t .. it[1] .. " x" .. it[2] .. ", "
+		end
+		self:SetText(t ~= "" and t or "Nothing")
+	end
+
+	local confirm = vgui.Create("DButton", bottom)
+	confirm:Dock(TOP)
+	confirm:SetTall(60)
+	confirm:DockMargin(0, 6, 0, 0)
 	confirm:SetText("Issue Refund")
 
 	function confirm:DoClick()
@@ -159,9 +217,15 @@ function PANEL:Init()
 
 	sheet:AddSheet("Refunder", b, "icon16/bricks.png")
 
+
 	local b = vgui.Create("DPanel", sheet)
 	b:Dock(FILL)
 	b.Paint = function() end
+
+	local header = vgui.Create("DPanel", b)
+	header:Dock(TOP)
+	header:SetTall(120)
+	header.Paint = function() end
 
 	local btn = vgui.Create("DButton", b)
 	btn:Dock(TOP)
