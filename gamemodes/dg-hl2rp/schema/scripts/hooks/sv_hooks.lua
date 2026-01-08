@@ -363,6 +363,8 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			dmginfo:ScaleDamage(0.75)
 		elseif ply:Team() == TEAM_VORT and ply.HasVortArmor == true then
 			dmginfo:ScaleDamage(0.8)
+		elseif ply.winebuffed then
+			dmginfo:ScaleDamage(0.9)
 		else
 			dmginfo:ScaleDamage(1)
 		end
