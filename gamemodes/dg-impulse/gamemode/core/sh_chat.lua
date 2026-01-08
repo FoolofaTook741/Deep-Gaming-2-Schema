@@ -699,7 +699,17 @@ if CLIENT then
 	local fallbackRankCol = Color(211, 211, 211)
 	local groupCol = Color(3, 188, 0)
 	local hcCol = Color(255, 100, 0)
+	
 	local rankCols = impulse.Config.RankColours
+
+	local ghostRadioCol = Color(51, 153, 255)
+	local gmChatCol = Color(255, 123, 0)
+	local gmChatMessageCol = Color(255, 175, 0)
+	local managerChatCol = Color(111, 0, 0)
+	local managerChatMessageCol = Color(255, 0, 21)
+	local adminAnnounceCol = Color(255, 50, 50)
+	local emergencyCol = Color(194,64,0)
+	local wireE2Col = Color(255, 200, 0)
 
 	local fontmedium = "Impulse-ChatMedium"
 	local fontlarge = "Impulse-ChatLarge"
@@ -790,7 +800,7 @@ if CLIENT then
 	end)
 
 	impulse.RegisterChatClass(10, function(message, speaker)
-		chat.AddText(speaker:Name() .. " " .. message)
+		chat.AddText(yellCol, "**" .. speaker:Name() .. " " .. message .. "**")
 	end)
 
 	impulse.RegisterChatClass(11, function(message, speaker)
@@ -802,11 +812,11 @@ if CLIENT then
 	end)
 
 	impulse.RegisterChatClass(13, function(message, speaker)
-		chat.AddText(Color(0, 63, 255), "[Staff Chat] ", speaker:SteamName(), ": ", Color(0, 150, 255), message)
+		chat.AddText(acCol, "[Admin Chat] ", speaker:SteamName(), ": ", acCol, message)
 	end)
 
 	impulse.RegisterChatClass(6969, function(message, speaker)
-		chat.AddText(Color(51, 153, 255), "[Ghost Radio] ", speaker:SteamName(), ": ", Color(255, 255, 255), message)
+		chat.AddText(ghostRadioCol, "[Ghost Radio] ", speaker:SteamName(), ": ", color_white, message)
 	end)
 
 	impulse.RegisterChatClass(14, function(message, speaker)
@@ -814,32 +824,30 @@ if CLIENT then
 	end)
 
 	impulse.RegisterChatClass(165, function(message, speaker)
-		chat.AddText(Color(255, 123, 0), "[Game Master Chat] ", speaker:SteamName(), ": ", Color(255, 175, 0), message)
+		chat.AddText(gmChatCol, "[Game Master Chat] ", speaker:SteamName(), ": ", gmChatMessageCol, message)
 	end)
 
 	impulse.RegisterChatClass(166, function(message, speaker)
-		chat.AddText(Color(70, 0, 111), "[Management Chat] ", speaker:SteamName(), ": ", Color(161, 0, 255), message)
+		chat.AddText(managerChatCol, "[Management Chat] ", speaker:SteamName(), ": ", managerChatMessageCol, message)
 	end)
 
 	impulse.RegisterChatClass(167, function(message, speaker)
-		chat.AddText(Color(255, 50, 50), "[Administrative Announcement] ", speaker:SteamName(), ": ", message)
+		chat.AddText(adminAnnounceCol, "[Administrative Announcement] ", speaker:SteamName(), ": ", message)
 	end)
 
 	impulse.RegisterChatClass(168, function(message, speaker)
 		impulse.customChatFont = "Impulse-ChatRadio" 
-		chat.AddText(Color(194,64,0), "[EMERGENCY BROADCAST] ", message)
+		chat.AddText(emergencyCol, "[EMERGENCY BROADCAST] ", message)
 	end)
 
 	impulse.RegisterChatClass(169, function(message)
 		impulse.customChatFont = "Impulse-ChatRadio" 
-		chat.AddText(Color(194,64,0), "[PRIORITY TRANSMISSION] You (" .. message ..") are charged with terminal violation 148, 243, 245. All units, verdict code is immediate amputation. Final verdict administered.")
+		chat.AddText(emergencyCol, "[PRIORITY TRANSMISSION] You (" .. message ..") are charged with terminal violation 148, 243, 245. All units, verdict code is immediate amputation. Final verdict administered.")
 	end)
 
 	impulse.RegisterChatClass(231, function(message)
-		chat.AddText(Color(255, 200, 0), "[WireE2] ", color_white, message)
+		chat.AddText(wireE2Col, "[WireE2] ", color_white, message)
 	end)
-
-
 
 	impulse.RegisterChatClass(15, function(message, speaker)
 		local groupName = LocalPlayer():GetSyncVar(SYNC_GROUP_NAME, nil)
