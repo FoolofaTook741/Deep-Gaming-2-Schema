@@ -29,24 +29,31 @@ end
 local e2ViewerCommand = {
     description = "Opens the E2 viewer tool.",
     adminOnly = true,
-    onRun = function(ply, arg, rawText)
-    	local e2s = ents.FindByClass("gmod_wire_expression2")
+    onRun = function(ply)
+        local chips = ents.FindByClass("gmod_wire_expression2")
+        local out = {}
+
+        for _, chip in ipairs(chips) do
+            if IsValid(chip) then
+                local data = chip.GetOverlayData and chip:GetOverlayData() or nil
+
+                out[#out + 1] = {
+                    ent  = chip,
+                    name = (data and data.txt) or "(no overlay data)",
+                    perf = (data and data.timebench) or 0
+                }
+            end
+        end
 
         net.Start("opsE2Viewer")
-        net.WriteUInt(table.Count(e2s), 8)
-		for _, k in pairs(e2s) do
-			local data = k:GetOverlayData()
-			local owner = k:CPPIGetOwner()
-		
-			if owner and data then
-				net.WriteEntity(k)
-				net.WriteString(data.txt)
-				net.WriteFloat(data.timebench)
-			end
-		end
+            net.WriteUInt(#out, 16)
+            for _, v in ipairs(out) do
+                net.WriteEntity(v.ent)
+                net.WriteString(v.name)
+                net.WriteFloat(v.perf)
+            end
         net.Send(ply)
     end
 }
-
 impulse.RegisterChatCommand("/e2viewer", e2ViewerCommand)
 
