@@ -9,8 +9,8 @@ ITEM.FOV = 17.929799426934
 ITEM.CamPos = Vector(33.237823486328, 25, 9)
 ITEM.Weight = 3
 
-ITEM.Droppable = false
-ITEM.DropOnDeath = false
+ITEM.Droppable = true
+ITEM.DropOnDeath = true
 
 ITEM.DropIfRestricted = false
 ITEM.DropOnDeathIfRestricted = false

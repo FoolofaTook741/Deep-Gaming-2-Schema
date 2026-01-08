@@ -674,33 +674,30 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 	local inventoryOnDeath = deadPlayer:GetInventory()
 	local inventoryOnDeathDrop = {}
  
-	for v,k in pairs(inventoryOnDeath) do
-		if ply:IsCP() and ply:Team() != TEAM_CA then
- 			local itemclass = impulse.Inventory.ClassToNetID(k.class)
-			local item = impulse.Inventory.Items[itemclass]
+	for v, k in pairs(inventoryOnDeath) do
+		if k.restricted then continue end
 
-			if not k.restricted then
-				table.insert(inventoryOnDeathDrop, k.class)
-			end
+		local itemclass = impulse.Inventory.ClassToNetID(k.class)
+		local item = impulse.Inventory.Items[itemclass]
+		if not item then continue end
 
-			--[[if item.DropOnDeath and not k.restricted then
-				local pos = ply:GetPos()
-				local ent = impulse.Inventory.SpawnItem(k.class, pos)
+		local isWeapon = item.WeaponClass ~= nil
+		local isEquipped = k.equipped == true
+		local dropOnDeath = item.DropOnDeath == true
+
+		if isWeapon and isEquipped then
+			local pos = ply:GetPos()
+			local ent = impulse.Inventory.SpawnItem(k.class, pos)
+
+			if IsValid(ent) then
 				ent.ItemClip = k.clip
-
-				dropped = dropped + 1
-
-				if dropped > 4 then
-					break
-				end
-			end]]
-		elseif ply:Team() != TEAM_ZOMBIE and ply:Team() != TEAM_STALKER then
-			local itemclass = impulse.Inventory.ClassToNetID(k.class)
-			local item = impulse.Inventory.Items[itemclass]
-
-			if not k.restricted then
-				table.insert(inventoryOnDeathDrop, k.class)
 			end
+
+		elseif isWeapon and not isEquipped then
+			table.insert(inventoryOnDeathDrop, k.class)
+
+		elseif not isWeapon and dropOnDeath then
+			table.insert(inventoryOnDeathDrop, k.class)
 		end
 	end
 
