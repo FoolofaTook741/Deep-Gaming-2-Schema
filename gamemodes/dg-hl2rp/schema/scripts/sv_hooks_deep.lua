@@ -360,13 +360,14 @@ local function canHearCheck(listener, allPlayers) -- based on darkrps voice chat
         end
     end
 end
-
+--[[
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
 	if not speaker:Alive() then return false end
 
 	local canHear = listener.CanHear and listener.CanHear[speaker]
 	return canHear, true
 end
+--]]
 
 timer.Create("impulse_hunger_tick", 0.25, 0, function()
     local ctime = CurTime()
@@ -409,7 +410,6 @@ timer.Create("impulse_hunger_tick", 0.25, 0, function()
         end
     end
 end)
-
 --[[
 timer.Create("impulse_canhear_tick", 0.65, 0, function()
     local allPlayers = player.GetAll()
@@ -418,6 +418,7 @@ timer.Create("impulse_canhear_tick", 0.65, 0, function()
     end
 end)
 --]]
+
 timer.Create("impulse_drag_tick", 0.2, 0, function()
     for dragged, _ in pairs(impulse.Arrest.Dragged) do
         if not IsValid(dragged) then
