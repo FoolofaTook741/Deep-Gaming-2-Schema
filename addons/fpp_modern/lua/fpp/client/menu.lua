@@ -46,7 +46,7 @@ hook.Add("InitPostEntity", "FPP_Menu", updatePrivs)
 
 local function nickSortedPlayers()
     local plys = player.GetAll()
-    table.sort(plys, function(a,b) return a:SteamName() < b:SteamName() end)
+    table.sort(plys, function(a,b) return a:Nick() < b:Nick() end)
     return plys
 end
 
@@ -223,7 +223,7 @@ function FPP.AdminMenu(Panel)
         if not IsValid(v) then continue end
         areplayers = true
         local rm = general:Add("DButton")
-        rm:SetText(v:SteamName())
+        rm:SetText(v:Nick())
         rm:SetConsoleCommand("FPP_Cleanup", v:UserID())
         rm:SetDisabled(not canCleanup)
     end
@@ -587,7 +587,7 @@ function FPP.AdminMenu(Panel)
 
         for _, b in ipairs(player.GetAll()) do
             if not IsValid(b) then continue end
-            menu:AddOption(b:SteamName(), function()
+            menu:AddOption(b:Nick(), function()
                 RunConsoleCommand("FPP_SetPlayerGroup", b:UserID(), GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue())
                 PressLoadFirst:SetText("List might be corrupted, reload is recommended")
             end)
@@ -620,7 +620,7 @@ function FPP.AdminMenu(Panel)
             local name = "Unknown"
             for _, ply in ipairs(player.GetAll()) do
                 if ply:SteamID() == k then
-                    name = ply:SteamName()
+                    name = ply:Nick()
                     break
                 end
             end
@@ -756,7 +756,7 @@ RetrieveRestrictedTool = function(um)
 
         for _, v in ipairs(player.GetAll()) do
             if not IsValid(v) then continue end
-            local submenu = menu:AddSubMenu(v:SteamName())
+            local submenu = menu:AddSubMenu(v:Nick())
 
 
             submenu:AddOption( "Default", function()
@@ -1012,7 +1012,7 @@ function FPP.BuddiesMenu(Panel)
 
     Panel:AddControl("Label", {Text = "\nAdd buddy:"})
     local AvailablePlayers = false
-    for _, v in SortedPairs(player.GetAll(), function(a, b) return a:SteamName() > b:SteamName() end) do
+    for _, v in SortedPairs(player.GetAll(), function(a, b) return a:Nick() > b:Nick() end) do
         if not IsValid(v) then continue end
         local cantadd = false
         if v == LocalPlayer() then cantadd = true end
@@ -1025,9 +1025,9 @@ function FPP.BuddiesMenu(Panel)
 
         if not cantadd then
             local add = vgui.Create("DButton")
-            add:SetText(v:SteamName())
+            add:SetText(v:Nick())
             add.DoClick = function()
-                FPP.SetBuddyMenu(v:SteamID(), v:SteamName())
+                FPP.SetBuddyMenu(v:SteamID(), v:Nick())
             end
             BuddiesPanel:AddPanel(add)
             AvailablePlayers = true
@@ -1127,7 +1127,7 @@ function FPP.PrivateSettings(Panel)
 
     for _, v in ipairs(player.GetAll()) do
         if v == LocalPlayer() then continue end
-        fallbackChoice:AddChoice(v:SteamName(), v:UserID(), PrivateSettingsPanel.FallbackSelected == v:UserID())
+        fallbackChoice:AddChoice(v:Nick(), v:UserID(), PrivateSettingsPanel.FallbackSelected == v:UserID())
     end
 
     fallbackChoice.OnSelect = function(_, _, nick, uid)
@@ -1171,7 +1171,7 @@ function FPP.SharedMenu(um)
         if isstring(name) then
             box:SetText(name .. " share this entity")
         elseif name:IsPlayer() and name:IsValid() then
-            box:SetText(name:SteamName() .. " can touch this")
+            box:SetText(name:Nick() .. " can touch this")
         else
             return
         end

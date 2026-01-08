@@ -33,6 +33,7 @@ function ITEM:OnUse(ply)
     timer.Create(timerName, 120, 1, function() 
 		if IsValid(ply) then
 			ply.winebuffed = false
+			ply:Notify("Your slight buzz from wine has worn off.")
 		end
     end)
     ply:Notify("The wine gives you a slight buzz, impacts feel less painful. [10% reduction of damage].")

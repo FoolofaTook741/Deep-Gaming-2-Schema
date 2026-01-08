@@ -91,14 +91,13 @@ function meta:IsCombineHighCommand()
     end
 end
 
-local hostname   = GetConVar("hostname"):GetString()
 function ReqwestLog(embeddedmessages, webhook)
-
+    local hostname   = GetConVar("hostname"):GetString()
+    
     if not webhook then
         impulse.debugPrint("Discord webhooks disabled on development servers")
         return
     end
-
     local serverName = (hostname == "Deep Gaming 2 | Half Life 2 Roleplay | discord.gg/deepgaming") and "Main" or "Dev"
 
     for _, embed in ipairs(embeddedmessages) do

@@ -274,17 +274,17 @@ net.Receive("opsUnderInvestigation", function()
 end)
 
 net.Receive("opsE2Viewer", function()
-	local count = net.ReadUInt(8)
-	local e2s = {}
+    local count = net.ReadUInt(16)
+    local e2s = {}
 
-	for i=1, count do
-		local e2 = net.ReadEntity()
-		local name = net.ReadString()
-		local perf = net.ReadFloat()
+    for i = 1, count do
+        local e2   = net.ReadEntity()
+        local name = net.ReadString()
+        local perf = net.ReadFloat()
 
-		table.insert(e2s, {ent = e2, name = name, perf = perf})
-	end
+        e2s[#e2s + 1] = { ent = e2, name = name, perf = perf }
+    end
 
-	local pnl = vgui.Create("impulseE2Viewer")
-	pnl:SetupE2S(e2s)
+    local pnl = vgui.Create("impulseE2Viewer")
+    pnl:SetupE2S(e2s)
 end)

@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "cos_constructionhelmet"
 ITEM.Name = "Construction Helmet"
-ITEM.Desc =  "A bright yellow helmet that protects you from falling objects, it can also (very poorly) protect you from light munitions. Offers 5% protection."
+ITEM.Desc =  "A bright yellow helmet that protects you from falling objects, it can also (very poorly) protect you from light munitions. Offers 10% protection."
 ITEM.Category = "Clothing"
 ITEM.Model = Model("models/willardnetworks/update_items/workercap_item.mdl")
 ITEM.FOV = 17.929799426934
