@@ -1,0 +1,18 @@
+{ 
+"title"		:	"LUA - SLibrary", 
+"type"		:	"tool", 
+"ignore"	: 
+    [ 
+        "*.psd*", 
+        "*.vcproj*", 
+        "*.svn*",
+        "*.git*",
+        "*LICENSE*",
+        "*.md*",
+        "*.code-workspace*",
+        "README.md",
+        ".git*",
+        ".vscode*",
+        "version.txt"
+    ] 
+} 
