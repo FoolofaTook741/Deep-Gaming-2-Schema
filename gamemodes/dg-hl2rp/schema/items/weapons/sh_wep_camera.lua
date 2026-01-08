@@ -23,13 +23,4 @@ ITEM.CanStack = false
 
 ITEM.WeaponClass = "rt_camswep"
 
-function ITEM:OnEquip(ply)
-    ply:Say("/me equips a " .. ITEM.Name .. ".")
-end
-
-function ITEM:UnEquip(ply)
-	ply:Say("/me unequips a " .. ITEM.Name .. ".")
-end
-
-
 impulse.RegisterItem(ITEM)

@@ -28,13 +28,9 @@ ITEM.UnEquipTime = 3
 
 ITEM.WeaponClass = "plutonic_xm1014"
 
-function ITEM:OnEquip(ply)
-    ply:Say("/me equips an " .. ITEM.Name .. ".")
-end
 
-function ITEM:UnEquip(ply)
-	ply:Say("/me unequips an " .. ITEM.Name .. ".")
-end
+
+
 
 function ITEM:CanEquip(ply)
 	return ply:Team() ~= TEAM_VORT

@@ -24,13 +24,9 @@ ITEM.CanStack = true
 
 ITEM.WeaponClass = "plutonic_w_stunstick"
 
-function ITEM:OnEquip(ply)
-    ply:Say("/me equips a " .. ITEM.Name .. ".")
-end
 
-function ITEM:UnEquip(ply)
-	ply:Say("/me unequips a " .. ITEM.Name .. ".")
-end
+
+
 
 function ITEM:CanEquip(ply)
 	return ply:Team() ~= TEAM_VORT

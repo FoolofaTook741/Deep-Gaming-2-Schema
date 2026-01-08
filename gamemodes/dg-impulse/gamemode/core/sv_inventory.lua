@@ -557,6 +557,8 @@ function meta:SetInventoryItemEquipped(itemid, state)
 	if not onEquip then return end
 	local itemclass = impulse.Inventory.Items[id]
 	local isAlive = self:Alive()
+	
+	local isNoclipping = self:GetMoveType() == MOVETYPE_NOCLIP
 
 	if itemclass.CanEquip and not itemclass.CanEquip(item, self) then
 		return
@@ -580,13 +582,27 @@ function meta:SetInventoryItemEquipped(itemid, state)
 			self.InventoryEquipGroups[itemclass.EquipGroup] = itemid
 		end
 		onEquip(item, self, itemclass, itemid)
-		if isAlive then self:EmitSound("impulse/equip.wav") end
+		if isAlive then 
+			self:EmitSound("impulse/equip.wav") 
+			
+			if not isNoclipping and not itemclass.NoOnEquipMessage then
+				local message = item.EquipMessage or "/me equips " .. itemclass.Name .. "."
+				self:Say(message)
+			end
+		end
 	elseif unEquip then
 		if itemclass.EquipGroup then
 			self.InventoryEquipGroups[itemclass.EquipGroup] = nil
 		end
 		unEquip(item, self, itemclass, itemid)
-		if isAlive then self:EmitSound("impulse/unequip.wav") end
+		if isAlive then 
+			self:EmitSound("impulse/unequip.wav")
+			
+			if not isNoclipping and not itemclass.NoOnEquipMessage then
+				local message = item.UnequipMessage or "/me unequips " .. itemclass.Name .. "."
+				self:Say(message)
+			end
+		end
 	end
 
 	item.equipped = state

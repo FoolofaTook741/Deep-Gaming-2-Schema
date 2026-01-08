@@ -29,7 +29,7 @@ function ITEM:CanEquip(ply)
 end
 
 function ITEM:OnEquip(ply)
-    ply:Say("/me equips " .. ITEM.Name .. ".")
+    
     if ply:FlashlightIsOn() then
         ply:Flashlight()
     end
@@ -37,7 +37,7 @@ function ITEM:OnEquip(ply)
 end
 
 function ITEM:UnEquip(ply)
-	ply:Say("/me unequips " .. ITEM.Name .. ".")
+	
     if ply.DynamicFlashlight then
         ply.DynamicFlashlight:Remove()
         ply.DynamicFlashlight = nil

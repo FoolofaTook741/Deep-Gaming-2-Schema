@@ -31,12 +31,8 @@ function ITEM:CanEquip(ply)
 	return ply:Team() ~= TEAM_VORT
 end
 
-function ITEM:OnEquip(ply)
-    ply:Say("/me equips an " .. ITEM.Name .. ".")
-end
 
-function ITEM:UnEquip(ply)
-	ply:Say("/me unequips an " .. ITEM.Name .. ".")
-end
+
+
 
 impulse.RegisterItem(ITEM)

@@ -28,13 +28,9 @@ ITEM.CanStack = true
 ITEM.WeaponClass = "plutonic_omr"
 ITEM.CombineWeapon = false
 
-function ITEM:OnEquip(ply)
-    ply:Say("/me equips an " .. ITEM.Name .. ".")
-end
 
-function ITEM:UnEquip(ply)
-	ply:Say("/me unequips an " .. ITEM.Name .. ".")
-end
+
+
 
 function ITEM:CanEquip(ply)
 	return ply:Team() ~= TEAM_VORT

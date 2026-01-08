@@ -25,19 +25,20 @@ ITEM.UseName = "Toggle"
 ITEM.CanStack = false
 ITEM.WeaponClass = "weapon_simple_radio"
 
+ITEM.EquipMessage = "/me turns on their radio."
+ITEM.UnequipMessage = "/me turns off their radio."
+
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_CP or ply:Team() == TEAM_OTA
 end
 
 function ITEM:OnEquip(ply)
-    ply:Say("/me turns on their radio.")
     ply:Notify("Equip the SWEP and press 'R' to Cycle through the radio's Channels, use the LMB to speak on the channel.")
     ply:SetSyncVar(SYNC_RADIO_LISTEN, true, true)
 	ply:SetSyncVar(SYNC_RADIO_CHANNEL, 1, true)
 end
 
 function ITEM:UnEquip(ply)
-	ply:Say("/me turns off their radio.")
     ply:SetSyncVar(SYNC_RADIO_LISTEN, false, true)
     ply:SetSyncVar(SYNC_RADIO_TALK, false, true)
 end
