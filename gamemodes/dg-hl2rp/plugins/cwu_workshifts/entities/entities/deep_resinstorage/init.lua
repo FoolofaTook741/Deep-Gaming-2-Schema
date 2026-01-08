@@ -31,10 +31,15 @@ function ENT:RaidStorage(ply)
         ply:Notify("There was no Resin in storage.")
         return
     end
-    local weight = math.random(1, math.Clamp(CWU_RESIN * 10, 1, 100))
-    local aaa = 0
-    while aaa <= weight do
+
+    local maxUnits = math.Clamp(math.floor(CWU_RESIN * 10), 1, 100)
+    local units = math.random(1, maxUnits)
+
+    for i = 1, units do
         ply:GiveInventoryItem("util_resin")
     end
-    ply:Notify("You have stolen " .. weight/10 .. " KG of Resin.")
+
+    CWU_RESIN = math.max(CWU_RESIN - (units / 10), 0)
+
+    ply:Notify(("You have stolen %.1f KG of Resin."):format(units / 10))
 end
