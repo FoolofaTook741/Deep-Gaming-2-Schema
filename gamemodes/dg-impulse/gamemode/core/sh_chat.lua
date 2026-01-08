@@ -683,7 +683,6 @@ impulse.RegisterChatCommand("/g", groupChatCommand)
 
 
 if CLIENT then
-	local talkCol = Color(200, 200, 200)
 	local infoCol = Color(135, 206, 250)
 	local oocCol = color_white
 	local oocTagCol = Color(200, 0, 0)
@@ -800,7 +799,7 @@ if CLIENT then
 	end)
 
 	impulse.RegisterChatClass(10, function(message, speaker)
-		chat.AddText(yellCol, "**" .. speaker:Name() .. " " .. message .. "**")
+		chat.AddText(talkCol, "** " .. speaker:Name() .. " " .. message .. " **")
 	end)
 
 	impulse.RegisterChatClass(11, function(message, speaker)
