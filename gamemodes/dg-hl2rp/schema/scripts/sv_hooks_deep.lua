@@ -410,13 +410,14 @@ timer.Create("impulse_hunger_tick", 0.25, 0, function()
     end
 end)
 
+--[[
 timer.Create("impulse_canhear_tick", 0.65, 0, function()
     local allPlayers = player.GetAll()
     for _, listener in ipairs(allPlayers) do
         canHearCheck(listener, allPlayers)
     end
 end)
-
+--]]
 timer.Create("impulse_drag_tick", 0.2, 0, function()
     for dragged, _ in pairs(impulse.Arrest.Dragged) do
         if not IsValid(dragged) then
