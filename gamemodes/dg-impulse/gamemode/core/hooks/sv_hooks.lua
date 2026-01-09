@@ -607,11 +607,32 @@ local function canHearCheck(listener) -- based on darkrps voice chat optomizatio
 	end
 end
 
-function GM:PlayerCanHearPlayersVoice(listener, speaker)
-	if not speaker:Alive() then return false end
+local VOICE_CACHE_TTL = 0.25
+local voiceDistSqr = (impulse.Config.VoiceDistance or 600)
+voiceDistSqr = voiceDistSqr * voiceDistSqr
 
-	local canHear = listener.CanHear and listener.CanHear[speaker]
-	return canHear, true
+function GM:PlayerCanHearPlayersVoice(listener, speaker)
+    if not IsValid(listener) or not IsValid(speaker) then return false, false end
+    if listener == speaker then return true, false end
+
+    if not speaker:Alive() then return false, false end
+
+    local now = CurTime()
+
+    listener._voiceCache = listener._voiceCache or {}
+    local cache = listener._voiceCache
+
+    local sid = speaker:EntIndex()
+    local entry = cache[sid]
+    if entry and entry.expires > now then
+        return entry.canHear, true
+    end
+
+    local distSqr = listener:GetShootPos():DistToSqr(speaker:GetShootPos())
+    local canHear = (distSqr <= voiceDistSqr)
+
+    cache[sid] = { canHear = canHear, expires = now + VOICE_CACHE_TTL }
+    return canHear, true
 end
 
 function GM:UpdatePlayerSync(ply)
@@ -1214,11 +1235,12 @@ function GM:Think()
 				end
 			end
 		end
-
+		--[[
 		if not k.nextHearUpdate or k.nextHearUpdate < CurTime() then -- optimized version of canhear hook based upon darkrp
 			canHearCheck(k)
 			k.nextHearUpdate = ctime + 0.65
 		end
+		--]]
 	end
 
 	for v,k in pairs(impulse.Arrest.Dragged) do

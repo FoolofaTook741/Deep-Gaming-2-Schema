@@ -52,18 +52,22 @@ end
 net.Receive("vyhub_dashboard", function(_, ply)
     if not IsValid(ply) then return end
 
-    VyHub.Dashboard:get_data(ply:SteamID64(), function (users)
-        local users_json = json.encode(users)
+    VyHub.Dashboard:get_data(ply:SteamID64(), function(users)
+        -- Encode with engine JSON
+        local users_json = util.TableToJSON(users)
+        if not users_json then return end
+
         local users_json_compressed = util.Compress(users_json)
         local users_json_compressed_len = #users_json_compressed
+
         local perms = VyHub.Dashboard:get_permissions(ply)
-        local perms_json = json.encode(perms)
+        local perms_json = util.TableToJSON(perms) or "{}"
 
         net.Start("vyhub_dashboard")
             net.WriteUInt(users_json_compressed_len, 16)
             net.WriteData(users_json_compressed, users_json_compressed_len)
             net.WriteString(perms_json)
-	    net.Send(ply)
+        net.Send(ply)
     end)
 end)
 

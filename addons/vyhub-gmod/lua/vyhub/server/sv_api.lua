@@ -19,18 +19,20 @@ function VyHub.API:request(method, url, path_params, query, headers, request_bod
     end
 
     if istable(request_body) then
-        request_body = json.encode(request_body)
+        request_body = util.TableToJSON(request_body)
     end
 
     success_func = function(code, body, headers)
         local result = body
 
-        if headers["Content-Type"] and headers["Content-Type"] == 'application/json' then
-            result = json.decode(body)
-        end
+		local ct = headers["Content-Type"]
+		if ct and string.find(string.lower(ct), "application/json", 1, true) then
+			result = util.JSONToTable(body)
+		end
 
         if code >= 200 and code < 300 then
-            VyHub:msg(f("HTTP %s %s (%s): %s", method, url, json.encode(query), code), "debug")
+            local q = query and util.TableToJSON(query) or "null"
+			VyHub:msg(f("HTTP %s %s (%s): %s", method, url, q, code), "debug")
 
             if success != nil then
                 -- VyHub:msg(f("Response: %s", body), "debug")
@@ -42,7 +44,7 @@ function VyHub.API:request(method, url, path_params, query, headers, request_bod
                 local err_msg = f("HTTP %s %s: %s", method, url, code)
 
                 if query then
-                    err_msg = err_msg .. f("\nQuery: %s", json.encode(query))
+                    err_msg = err_msg .. f("\nQuery: %s", util.TableToJSON(query) or "null")
                 end
                 if request_body then
                     err_msg = err_msg .. f("\nBody: %s", request_body)
@@ -56,7 +58,7 @@ function VyHub.API:request(method, url, path_params, query, headers, request_bod
             end
 
             if failed != nil then
-                local err_text = json.encode(result)
+                local err_text = istable(result) and (util.TableToJSON(result) or "<json encode failed>") or tostring(result)
 
                 if istable(result) and result.detail != nil and result.detail.msg != nil then
                     err_text = f("%s (%s)", result.detail.msg, result.detail.code)
@@ -71,7 +73,7 @@ function VyHub.API:request(method, url, path_params, query, headers, request_bod
         local err_msg = f("HTTP %s %s: %s", method, url, reason)
 
         if query then
-            err_msg = err_msg .. f("\nQuery: %s", json.encode(query))
+            err_msg = err_msg .. f("\nQuery: %s", util.TableToJSON(query) or "null")
         end
         if request_body then
             err_msg = err_msg .. f("\nBody: %s", request_body)

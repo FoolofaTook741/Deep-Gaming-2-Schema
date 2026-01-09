@@ -30,17 +30,19 @@ function ENT:Initialize()
     end
 end
 
-function ENT:HasNearbyPlayer(range)
-    for _, ent in ipairs(ents.FindInSphere(self:GetPos(), range)) do
-        if ent:IsPlayer() and ent:Alive() then
+function ENT:HasNearbyPlayer(rangeSqr)
+    local pos = self:GetPos()
+    for _, ply in ipairs(player.GetAll()) do
+        if ply:Alive() and pos:DistToSqr(ply:GetPos()) <= rangeSqr then
             return true
         end
     end
     return false
 end
 
+local RANGE_SQR = 95 * 95
 function ENT:Think()
-    local shouldAnimate = self:HasNearbyPlayer(95)
+    local shouldAnimate = self:HasNearbyPlayer(RANGE_SQR)
     self.IsOpening = false
 
     if shouldAnimate then
@@ -70,7 +72,7 @@ function ENT:Think()
         self:ResetSequence(self.seqOpenIdle)
     end
 
-    self:NextThink(CurTime() + 0.25)
+    self:NextThink(CurTime() + 0.5)
     return true
 end
 

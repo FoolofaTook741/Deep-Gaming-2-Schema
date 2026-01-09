@@ -30,18 +30,57 @@ function ENT:Use(ply, caller)
     net.Send(ply)
 end
 
-net.Receive("potatoesPeeled", function(len, ply)
-    local s = net.ReadInt(32)
-    local reduction = s
-	if not timer.TimeLeft(ply:UserID().."impulsePrison") then return end
-    local timeleft = timer.TimeLeft(ply:UserID().."impulsePrison") - reduction
-    if timeleft < 1 then
-        timeleft = 1
+local MAX_REDUCTION = 120
+local COOLDOWN = 2
+local MAX_DIST_SQR = (120 * 120)
+
+net.Receive("potatoesPeeled", function(_, ply)
+    if not IsValid(ply) or not ply:IsPlayer() then return end
+
+    if (ply._potatoNext or 0) > CurTime() then return end
+    ply._potatoNext = CurTime() + COOLDOWN
+
+    local tname = ply:UserID() .. "impulsePrison"
+    local timeLeft = timer.TimeLeft(tname)
+    if not timeLeft then 
+        impulse.debugPrint("Potato peeler: no timer found for player "..ply:SteamID())
+        return 
     end
-    ply:Notify("You have reduced your sentence by " .. reduction .. " seconds from peeling the potatoes.")
-    timer.Adjust(ply:UserID().."impulsePrison", timeleft)
-    OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS + (s * 3)
+
+    local nearest
+    local ppos = ply:GetPos()
+    for _, ent in ipairs(ents.FindByClass("ninja_potatopeeler")) do
+        if IsValid(ent) and ppos:DistToSqr(ent:GetPos()) <= MAX_DIST_SQR then
+            nearest = ent
+            break
+        end
+    end
+    if not nearest then 
+        impulse.debugPrint("Potato peeler: no peeler found near player "..ply:SteamID())
+        return 
+    end
+
+    local reps = net.ReadInt(32)
+    if not isnumber(reps) then return end
+    reps = math.floor(reps)
+
+    if reps < 0 then return end
+    if reps > MAX_REDUCTION then 
+        impulse.debugPrint("Potato peeler: High potato count. Count:"..reps, ply:SteamID())
+        reps = MAX_REDUCTION 
+    end
+    if reps == 0 then return end
+
+    local newTime = timeLeft - reps
+    if newTime < 1 then newTime = 1 end
+
+    timer.Adjust(tname, newTime)
+
+    OCAAB_CUR_FUNDS = (tonumber(OCAAB_CUR_FUNDS) or 0) + (reps * 3)
+
+    ply:Notify("You have reduced your sentence by " .. reps .. " seconds from peeling the potatoes.")
+
     net.Start("DeepAdjustJailEndTime")
-    net.WriteUInt(reduction, 20)
+    net.WriteUInt(reps, 20)
     net.Send(ply)
 end)

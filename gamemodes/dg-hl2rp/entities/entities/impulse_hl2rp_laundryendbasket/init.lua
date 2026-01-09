@@ -12,30 +12,46 @@ function ENT:Initialize()
 end
 
 function ENT:Think()
-	local pos = self:GetPos()
+    local pos = self:GetPos()
 
-	for v,k in pairs(ents.FindByClass("impulse_hl2rp_laundryitem")) do
-		if k.isFolded and k:GetPos():DistToSqr(pos) < 20 ^ 2 then
-			local totalWorkers = table.Count(k.workers)
+    for _, ent in ipairs(ents.FindInSphere(pos, 20)) do
+        if ent:GetClass() ~= "impulse_hl2rp_laundryitem" then continue end
+        if not ent.isFolded then continue end
 
-			for ply,a in pairs(k.workers) do
-				if IsValid(ply) and ply:IsPlayer() and ply:Team() == TEAM_CWU and ply:GetTeamClass() == CLASS_INDUST then
-					local reward = math.floor(impulse.Config.FactoryLaundryReward / totalWorkers)
-					local totalWorkers = table.Count(k.workers)
-					if WORKSHIFT_LAUNDRY == true then
-						ply:GiveBankMoney(math.floor(reward * 1.75))
-						ply:Notify("You have received "..impulse.Config.CurrencyPrefix..(math.floor(reward * 1.75)).." for working in the laundromat.")
-					else
-						ply:GiveBankMoney(reward)
-						ply:Notify("You have received "..impulse.Config.CurrencyPrefix..reward.." for working in the factory.")
-					end
-					
-				end
-			end
+        local workers = ent.workers
+        if not istable(workers) then
+            ent:Remove()
+            continue
+        end
 
-			k:Remove()
-		end
-	end
-	self:NextThink(CurTime() + 2)
+        local totalWorkers = table.Count(workers)
+        if totalWorkers <= 0 then
+            ent:Remove()
+            continue
+        end
+
+        local baseReward = math.floor(impulse.Config.FactoryLaundryReward / totalWorkers)
+
+        local pay = baseReward
+        local msg = "You have received " .. impulse.Config.CurrencyPrefix .. baseReward .. " for working in the factory."
+
+        if WORKSHIFT_LAUNDRY == true then
+            pay = math.floor(baseReward * 1.75)
+            msg = "You have received " .. impulse.Config.CurrencyPrefix .. pay .. " for working in the laundromat."
+        end
+
+        for ply, _ in pairs(workers) do
+            if IsValid(ply) and ply:IsPlayer()
+            and ply:Team() == TEAM_CWU
+            and ply:GetTeamClass() == CLASS_INDUST then
+                ply:GiveBankMoney(pay)
+                ply:Notify(msg)
+            end
+        end
+
+        ent:Remove()
+    end
+
+    self:NextThink(CurTime() + 2)
+    return true
 end
-

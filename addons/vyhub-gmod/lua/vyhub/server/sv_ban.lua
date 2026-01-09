@@ -161,7 +161,8 @@ function VyHub.Ban:handle_queue()
                                             if code >= 400 and code < 500 then
                                                 local msg = reason
 
-                                                local error_msg = f("Could not create ban for %s, aborting: %s", steamid, json.encode(msg))
+												local msgStr = istable(msg) and (util.TableToJSON(msg) or "<json encode failed>") or tostring(msg)
+												local error_msg = f("Could not create ban for %s, aborting: %s", steamid, msgStr)
 
                                                 VyHub:msg(error_msg, "error")
                                                 
@@ -250,7 +251,8 @@ function VyHub.Ban:handle_queue()
                                 VyHub.Ban.unban_queue[steamid] = nil
                                 VyHub.Ban:save_queues()
                                 
-                                local error_msg = f("Could not unban user %s, aborting: %s", steamid, json.encode(msg))
+                                local msgStr = istable(msg) and (util.TableToJSON(msg) or "<json encode failed>") or tostring(msg)
+								local error_msg = f("Could not unban user %s, aborting: %s", steamid, msgStr)
     
                                 VyHub:msg(error_msg, "error")
                                 VyHub.Util:print_chat_steamid(creator_steamid, error_msg)

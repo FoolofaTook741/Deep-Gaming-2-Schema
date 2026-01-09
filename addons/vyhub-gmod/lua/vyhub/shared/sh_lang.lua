@@ -17,7 +17,7 @@ if SERVER then
             return
         end
 
-        local en = json.decode(f_en:Read())
+        local en = util.JSONToTable(f_en:Read())
         f_en:Close()
 
         if not istable(en) then
@@ -33,7 +33,7 @@ if SERVER then
             local f_custom = file.Open(f("vyhub/lang/%s.json", VyHub.Config.lang), "r", "LUA")
 
             if f_custom != nil then 
-                local custom = json.decode(f_custom:Read())
+                local custom = util.JSONToTable(f_custom:Read())
                 f_custom:Close()
 
                 if istable(custom) then
@@ -79,7 +79,7 @@ if CLIENT then
         local len = net.ReadUInt(16)
         local lang_compr = net.ReadData(len)
 
-        VyHub.lang = json.decode(util.Decompress(lang_compr))
+        VyHub.lang = util.JSONToTable(util.Decompress(lang_compr))
 
         VyHub:msg("Loaded language.")
         
