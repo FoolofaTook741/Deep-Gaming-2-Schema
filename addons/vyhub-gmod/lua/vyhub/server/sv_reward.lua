@@ -179,7 +179,9 @@ function VyHub.Reward:exec_rewards(event, steamid)
                 VyHub:msg(f("No implementation for reward type %s", reward.type) "warning")
             end
 
-            VyHub:msg(f("Executed reward %s for user %s (%s): %s", reward.type, ply:SteamName(), ply:SteamID64(), json.encode(data)))
+			local dataStr = istable(data) and (util.TableToJSON(data) or "<json encode failed>") or tostring(data)
+			VyHub:msg(f("Executed reward %s for user %s (%s): %s", reward.type, ply:SteamName(), ply:SteamID64(), dataStr))
+
 
             if se and reward.once then
                 VyHub.Reward:set_executed(areward.id)

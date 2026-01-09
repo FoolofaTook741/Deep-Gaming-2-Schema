@@ -9,12 +9,13 @@ function VyHub.Cache:save(key, value)
         data = value
     }
 
-    local filename = f("vyhub/%s.json", key)
-    local json = json.encode(data)
+    local filename = string.format("vyhub/%s.json", key)
+    local jsonStr = util.TableToJSON(data)
 
-    VyHub:msg("Write " .. filename .. ": " .. json, "debuga")
+    if not jsonStr then return end
 
-    file.Write(filename, json)
+    VyHub:msg("Write " .. filename, "debuga")
+    file.Write(filename, jsonStr)
 end
 
 function VyHub.Cache:get(key, max_age)
@@ -30,7 +31,8 @@ function VyHub.Cache:get(key, max_age)
         return nil
     end
 
-    local success, data = pcall(json.decode, data_str)
+	local data = util.JSONToTable(data_str)
+	if data == nil then return nil end
 
     if not success then
         return nil
