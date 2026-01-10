@@ -85,7 +85,7 @@ function VyHub.Ban:refresh()
         local result = VyHub.Cache:get("bans")
 
         if result != nil then
-            VyHub.bans = result
+            VyHub.bans = BuildBanIndex(result)
 
             VyHub:msg(f("Found %s users with cached active bans.", table.Count(VyHub.bans)), "neutral")
 
