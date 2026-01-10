@@ -188,24 +188,24 @@ net.Receive("impulseFabricatorPurchase", function(len, ply)
 end)
 
 local CWU_Items = {
-    food_apple = { cost = 30 },
-    food_banana = { cost = 30 },
-    food_orange = { cost = 30 },
-    food_pineapple = { cost = 50 },
+    food_apple = { cost = 10 },
+    food_banana = { cost = 10 },
+    food_orange = { cost = 10 },
+    food_pineapple = { cost = 25 },
     util_cookingoil = { cost = 15 },
-    util_meat = { cost = 30 },
+    util_meat = { cost = 25 },
     util_yeast = { cost = 40 },
-    ing_sugar = { cost = 25 },
-    util_chicken = { cost = 40 },
-    util_salt = { cost = 25 },
-    ing_grapes = { cost = 25 },
+    ing_sugar = { cost = 15 },
+    util_chicken = { cost = 30 },
+    util_salt = { cost = 15 },
+    ing_grapes = { cost = 15 },
     util_coffeegrounds = { cost = 20 },
-    food_carrot = { cost = 25 },
-    food_tomato = { cost = 25 },
-    ing_milk = { cost = 25 },
+    food_carrot = { cost = 10 },
+    food_tomato = { cost = 15 },
+    ing_milk = { cost = 20 },
     food_waterspecial = { cost = 20 },
-    food_water = { cost = 15 },
-    util_potato = { cost = 20 }
+    food_water = { cost = 10 },
+    util_potato = { cost = 10 }
 }
 
 local BulkExploitAttempts = BulkExploitAttempts or {}

@@ -3,19 +3,19 @@
 local PANEL = {}
 local items = {
     ["food_apple"] = {
-		Cost = 30,
+		Cost = 10,
         name = "Apple"
 	},
     ["food_banana"] = {
-		Cost = 30,
+		Cost = 10,
         name = "Banana"
 	},
     ["food_orange"] = {
-		Cost = 30,
+		Cost = 10,
         name = "Orange"
 	},
     ["food_pineapple"] = {
-		Cost = 50,
+		Cost = 25,
         name = "Pineapple"
 	},
     ["util_cookingoil"] = {
@@ -23,7 +23,7 @@ local items = {
         name = "Cooking Oil"
 	},
     ["util_meat"] = {
-		Cost = 30,
+		Cost = 25,
         name = "Meat"
 	},
     ["util_yeast"] = {
@@ -31,19 +31,19 @@ local items = {
         name = "Yeast"
 	},
     ["ing_sugar"] = {
-		Cost = 25,
+		Cost = 15,
         name = "Sugar"
 	},
     ["util_chicken"] = {
-		Cost = 40,
+		Cost = 30,
         name = "Chicken"
 	},
     ["util_salt"] = {
-		Cost = 25,
+		Cost = 15,
         name = "Salt"
 	},
     ["ing_grapes"] = {
-		Cost = 25,
+		Cost = 15,
         name = "Grapes"
 	},
     ["util_coffeegrounds"] = {
@@ -51,15 +51,15 @@ local items = {
         name = "Coffee Grounds"
 	},
     ["food_carrot"] = {
-		Cost = 25,
+		Cost = 10,
         name = "Carrot"
 	},
     ["food_tomato"] = {
-		Cost = 25,
+		Cost = 15,
         name = "Tomato"
 	},
 	["ing_milk"] = {
-		Cost = 25,
+		Cost = 20,
         name = "Milk"
 	},
     ["food_waterspecial"] = {
@@ -67,11 +67,11 @@ local items = {
         name = "Special Water"
 	},
 	["food_water"] = {
-		Cost = 15,
+		Cost = 10,
         name = "Water"
 	},
 	["util_potato"] = {
-		Cost = 20,
+		Cost = 10,
         name = "Potato"
 	}}
 

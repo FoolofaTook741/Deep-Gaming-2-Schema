@@ -41,7 +41,7 @@ VENDOR.Sell = {
     },
     ["util_spices"] = {
         Cost = 30,
-        BuyMax = 9,
+        BuyMax = 15,
         TempCooldown = 600
     },
     ["wep_axe"] = {
@@ -155,7 +155,7 @@ VENDOR.Sell = {
 
 VENDOR.Buy = {
     ["util_moonshine"] = {
-        Cost = 350
+        Cost = 400
     },
 }
 
