@@ -11,25 +11,25 @@ VENDOR.Talk = false
 
 VENDOR.Sell = {
 	["food_apple"] = {
-		Cost = 30,
+		Cost = 10,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["food_banana"] = {
-		Cost = 30,
+		Cost = 10,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["food_orange"] = {
-		Cost = 30,
+		Cost = 10,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["food_pineapple"] = {
-		Cost = 50,
+		Cost = 25,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
@@ -41,7 +41,7 @@ VENDOR.Sell = {
 		TempCooldown = 300
 	},
     ["util_meat"] = {
-		Cost = 30,
+		Cost = 25,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
@@ -53,25 +53,25 @@ VENDOR.Sell = {
 		TempCooldown = 300
 	},
     ["ing_sugar"] = {
-		Cost = 25,
+		Cost = 15,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["util_chicken"] = {
-		Cost = 40,
+		Cost = 30,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["util_salt"] = {
-		Cost = 25,
+		Cost = 15,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["ing_grapes"] = {
-		Cost = 25,
+		Cost = 15,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
@@ -83,19 +83,19 @@ VENDOR.Sell = {
 		TempCooldown = 300
 	},
     ["food_carrot"] = {
-		Cost = 25,
+		Cost = 10,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["food_tomato"] = {
-		Cost = 25,
+		Cost = 15,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
 	["ing_milk"] = {
-		Cost = 25,
+		Cost = 20,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
@@ -107,13 +107,13 @@ VENDOR.Sell = {
 		TempCooldown = 300
 	},
 	["food_water"] = {
-		Cost = 15,
+		Cost = 10,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
 	},
 	["util_potato"] = {
-		Cost = 20,
+		Cost = 10,
 		BuyMax = 20,
 		Restricted = true,
 		TempCooldown = 300
