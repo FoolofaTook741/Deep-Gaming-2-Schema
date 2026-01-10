@@ -11,13 +11,13 @@ VENDOR.Talk = true
 
 VENDOR.Sell = {
     ["util_bulletcasing"] = {
-        Cost = 95
+        Cost = 85
     },
     ["util_cloth"] = {
         Cost = 35
     },
     ["util_gunpowder"] = {
-        Cost = 110,
+        Cost = 55,
         BuyMax = 6,
         TempCooldown = 1200
     },
