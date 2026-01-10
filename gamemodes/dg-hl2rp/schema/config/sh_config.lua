@@ -775,7 +775,7 @@ impulse.Config.LootPools = {
 	["generic"] = {
 		Items = {
 			["util_cloth"] = {Rarity = 680, Rep = 2},
-			["util_gunpowder"] = {Rarity = 700, Rep = 3},
+			["util_gunpowder"] = {Rarity = 550, Rep = 3},
 			["util_metalplate"] = {Rarity = 600, Rep = 2},
 			["util_wood"] = {Rarity = 600, Rep = 2},
 			["util_plastic"] = {Rarity = 900, Rep = 2},
