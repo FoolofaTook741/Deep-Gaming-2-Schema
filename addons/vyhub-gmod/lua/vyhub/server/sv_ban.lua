@@ -50,9 +50,29 @@ function VyHub.Ban:kick_banned_players()
     end
 end
 
+local function BuildBanIndex(result)
+    local out = {}
+    if not istable(result) then return out end
+
+    for _, bans in pairs(result) do
+        if istable(bans) then
+            for _, ban in ipairs(bans) do
+                local sid = ban and ban.user and ban.user.identifier
+                if sid then
+                    sid = tostring(sid)
+                    out[sid] = out[sid] or {}
+                    table.insert(out[sid], ban)
+                end
+            end
+        end
+    end
+
+    return out
+end
+
 function VyHub.Ban:refresh()
     VyHub.API:get("/server/bundle/%s/ban", { VyHub.server.serverbundle_id }, { active = "true" }, function(code, result)
-        VyHub.bans = result
+        VyHub.bans = BuildBanIndex(result)
 
         VyHub.Cache:save("bans", VyHub.bans)
         
