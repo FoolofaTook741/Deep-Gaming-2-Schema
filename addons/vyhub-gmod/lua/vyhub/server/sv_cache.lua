@@ -34,10 +34,6 @@ function VyHub.Cache:get(key, max_age)
 	local data = util.JSONToTable(data_str)
 	if data == nil then return nil end
 
-    if not success then
-        return nil
-    end
-
     if istable(data) and data.timestamp and data.data then
         if max_age != nil and os.time() - data.timestamp > max_age then
             return nil
