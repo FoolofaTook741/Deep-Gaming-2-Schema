@@ -152,6 +152,7 @@ impulse.RagdollContainer.ScrapWeapons = {
 			["scrap_mp7"] = {Rarity = 600},
 			["scrap_shotgun"] = {Rarity = 800},
             ["scrap_ar2e"] = {Rarity = 650},
+            ["scrap_rappel"] = {Rarity = 750},
             ["scrap_osips"] = {Rarity = 800},
 			["scrap_hb"] = {Rarity = 800},
             ["scrap_xm1014"] = {Rarity = 800},

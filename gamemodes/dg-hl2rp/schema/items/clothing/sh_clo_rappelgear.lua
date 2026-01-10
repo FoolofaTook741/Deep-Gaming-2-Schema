@@ -18,6 +18,8 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "rappel"
 ITEM.CanStack = true   
 
+ITEM.ScrapClass = "scrap_rappel"
+
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT
 end
