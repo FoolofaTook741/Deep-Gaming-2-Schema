@@ -442,7 +442,7 @@ local radioCWU = {
 		if impulse.CommsNetWorkOn == false then
 			ply:Notify("The radio is not available at this time.")
 		else
-			if (ply:IsCP() and ply:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_REPRESENTATIVE) or (ply:Team() == TEAM_CWU) or (ply:IsCP() and ply:Team() == TEAM_CP and ply:GetClass() == RANK_OFC) then
+			if (ply:IsCP() and ply:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_REPRESENTATIVE) or (ply:Team() == TEAM_CWU) or (ply:IsCP() and ply:Team() == TEAM_CP and ply:GetTeamRank() == RANK_OFC) or (ply:IsCP() and ply:Team() == TEAM_OTA and ply:GetTeamRank() >= RANK_OCP) then
 				rawText = hook.Run("ChatClassMessageSend", 8, rawText, ply) or rawText
 				if ply:Team() == TEAM_CA or ply:Team() == TEAM_CWU then
 					for k,v in pairs(player.GetAll()) do
