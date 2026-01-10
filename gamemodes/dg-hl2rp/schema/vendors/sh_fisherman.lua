@@ -42,7 +42,7 @@ VENDOR.RandomTrades = {
 		["book_russian"] = {Rarity = 850, Cost = {2020, 3520}, BuyMax = 3},
 	},
 	Buy = {
-		["util_moonshine"] = {Cost = {260, 310}},
+		["util_moonshine"] = {Cost = {400, 500}},
 	}
 }
 
