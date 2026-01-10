@@ -47,7 +47,8 @@ if SERVER then
             end
         end     
         
-        VyHub.Lang.compressed = util.Compress(json.encode(VyHub.lang))
+        local jsonStr = util.TableToJSON(VyHub.lang, false)
+		VyHub.Lang.compressed = util.Compress(jsonStr)
     end
 
     if VyHub.lang == nil then
