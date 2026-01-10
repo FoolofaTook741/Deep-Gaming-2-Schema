@@ -9,7 +9,7 @@ ITEM.FOV = 17.929799426934
 ITEM.CamPos = Vector(33.237823486328, 25, 9)
 ITEM.Weight = 1.5
 
-ITEM.Droppable = false
+ITEM.Droppable = true
 ITEM.DropOnDeath = true
 ITEM.ConfiscateReward = 15
 
