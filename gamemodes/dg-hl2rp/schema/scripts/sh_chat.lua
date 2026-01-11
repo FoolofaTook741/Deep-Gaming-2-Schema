@@ -1316,6 +1316,7 @@ local cwWhitelistCommand = {
 			end
 		end)
 
+		query:Execute()
 		FetchSteamName(steamid, function(name, err)
 			local steamname = name or "Unknown"
 			local embeds = {{
