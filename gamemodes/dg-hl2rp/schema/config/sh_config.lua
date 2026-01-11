@@ -777,8 +777,8 @@ impulse.Config.LootPools = {
 			["util_cloth"] = {Rarity = 680, Rep = 2},
 			["util_gunpowder"] = {Rarity = 550, Rep = 3},
 			["util_metalplate"] = {Rarity = 600, Rep = 2},
-			["util_wood"] = {Rarity = 600, Rep = 2},
-			["util_plastic"] = {Rarity = 900, Rep = 2},
+			--["util_wood"] = {Rarity = 600, Rep = 2},
+			--["util_plastic"] = {Rarity = 900, Rep = 2},
 			["util_glue"] = {Rarity = 620, Rep = 4},
 			["util_paint"] = {Rarity = 820, Rep = 1},
 			["wep_pistol"] = {Rarity = 950, Rep = 1},
@@ -812,7 +812,7 @@ impulse.Config.LootPools = {
 	},
 	["electronic"] = {
 		Items = {
-			["util_plastic"] = {Rarity = 700, Rep = 3},
+			--["util_plastic"] = {Rarity = 700, Rep = 3},
 			["util_electronics"] = {Rarity = 850, Rep = 2},
 			["util_refinedmetalplate"] = {Rarity = 800}
 		},
