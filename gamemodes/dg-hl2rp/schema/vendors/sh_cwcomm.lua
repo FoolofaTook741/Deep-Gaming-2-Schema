@@ -122,7 +122,7 @@ VENDOR.Sell = {
 
 VENDOR.Buy = {
 	["food_wine"] = {
-		Cost = 175 -- half of the moonshine amount
+		Cost = 100 -- half of the moonshine amount
 	},
 }
 
