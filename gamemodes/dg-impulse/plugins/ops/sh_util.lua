@@ -555,7 +555,7 @@ local fixLegs = {
             fields = {
                 {
                     name = "Admin:",
-                    value = ply:Name() .. " (" .. ply:SteamID() .. ")"
+                    value = ply:SteamName() .. " (" .. ply:SteamID() .. ")"
                 },
                 {
                     name = "Target:",
