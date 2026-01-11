@@ -5,5 +5,9 @@ function ENT:Draw()
 end
 
 net.Receive("PinnacleVehicleTerminalOpen", function()
-	vgui.Create("VehicleTerminalMenu")
+    local term = net.ReadEntity()
+    if not IsValid(term) then return end
+
+    local pnl = vgui.Create("VehicleTerminalMenu")
+    pnl.Terminal = term
 end)

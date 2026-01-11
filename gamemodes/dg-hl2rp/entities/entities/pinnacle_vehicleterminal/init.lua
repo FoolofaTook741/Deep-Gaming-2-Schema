@@ -93,6 +93,75 @@ net.Receive("PinnaclePurchaseVehicle", function(_, ply)
     ply:Notify("Vehicle requisition approved.")
 end)
 
+net.Receive("PinnacleSellVehicle", function(_, ply)
+    local terminal = net.ReadEntity()
+    local veh = net.ReadEntity()
+
+    if not IsValid(ply) or not ply:IsPlayer() then return end
+
+    if not IsValid(terminal) or terminal:GetClass() ~= "pinnacle_vehicle_terminal" then
+        LogExploitAttempt(ply, "Invalid terminal entity", "N/A")
+        return
+    end
+
+    if not IsValid(veh) then
+        LogExploitAttempt(ply, "Invalid vehicle entity", "N/A")
+        return
+    end
+
+    local vehicleID = veh:GetClass()
+    local data = Vehicles[vehicleID]
+    if not data then
+        LogExploitAttempt(ply, "Tried to sell non-whitelisted vehicle", vehicleID)
+        return ply:Notify("That vehicle cannot be sold here.")
+    end
+
+    if not PurchasedVehicles[veh] then
+        LogExploitAttempt(ply, "Tried to sell untracked vehicle", vehicleID)
+        return ply:Notify("That vehicle wasn't requisitioned from this terminal.")
+    end
+
+    local owner64 = VehicleOwners[veh]
+    if owner64 and owner64 ~= ply:SteamID64() then
+        LogExploitAttempt(ply, "Tried to sell someone else's vehicle", vehicleID)
+        return ply:Notify("Only the requisitioner can sell this vehicle.")
+    end
+	
+    if terminal:GetPos():DistToSqr(veh:GetPos()) > SELL_DIST_SQR then
+        LogExploitAttempt(ply, "Vehicle too far from terminal", vehicleID)
+        return ply:Notify("Bring the vehicle closer to the terminal to sell it.")
+    end
+
+    if ply:Team() ~= data.faction then
+        LogExploitAttempt(ply, "Wrong faction (sell)", vehicleID)
+        return ply:Notify("You are not in the correct faction.")
+    end
+
+    if ply:GetTeamClass() ~= data.class then
+        LogExploitAttempt(ply, "Wrong class (sell)", vehicleID)
+        return ply:Notify("You are not the correct class.")
+    end
+
+    local refund = math.floor((data.Cost or 0) * 0.5)
+    if refund <= 0 then
+        LogExploitAttempt(ply, "Refund computed as 0", vehicleID)
+        return ply:Notify("This vehicle cannot be refunded.")
+    end
+
+    PurchasedVehicles[veh] = nil
+    VehicleOwners[veh] = nil
+
+    veh:Remove()
+
+    OCAAB_CUR_FUNDS = (OCAAB_CUR_FUNDS or 0) + refund
+
+    net.Start("DeepAdjustFunds")
+	net.WriteInt(OCAAB_CUR_FUNDS, 16)
+    net.Broadcast()
+
+    ply:Notify(("Vehicle sold back for %d OCAAB."):format(refund))
+end)
+
 function ENT:Initialize()
 	self:SetModel("models/props_combine/combine_interface001.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
@@ -119,6 +188,7 @@ function ENT:Use(activator, caller)
 		if not self.User then
 			self:EmitBudgetSound("ambient/machines/keyboard_slow_1second.wav")
 			net.Start("PinnacleVehicleTerminalOpen")
+			net.WriteEntity(self)
 			net.Send(activator)
 		else
 			activator:Notify("Terminal already in use.")
