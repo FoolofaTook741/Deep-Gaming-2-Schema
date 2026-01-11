@@ -87,6 +87,9 @@ function PANEL:SetupCrafting()
 	end)
 
 	for v,k in pairs(sortedMix) do
+		
+		if k.isSpecial and !k.isSpecial[ LocalPlayer():SteamID() ] then continue end
+		
 		local cat = self.availibleMixesLayout
 
 		if level < k.Level then
