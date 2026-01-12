@@ -33,8 +33,7 @@ zachun - Development Support
 JRB - Deep Gaming Development
 Abarden - Development and Web Services
 Matters - Development
-Maximus - Developement
-Jake - For being gay
+Maximus - Development
 Synapse - Great examples of HL2:RP systems
 bueberries - Level Design
 Ragismier - Level Design
@@ -342,6 +341,12 @@ impulse.Config.Achievements = {
 		Name = "Homophobic",
 		Desc = "Killed Jake, because he is gay.",
 		Icon = Material("materials/materials/achievements/gay.png"),
+		Points = 100
+	},
+	["ach_kuma"] = {
+		Name = "Don Mafioso",
+		Desc = "Killed Kumazaki, The Deep Gaming 2 Conniseur",
+		Icon = Material("icon16/lvs_resistance"),
 		Points = 100
 	},
 	["ach_sd"] = {
