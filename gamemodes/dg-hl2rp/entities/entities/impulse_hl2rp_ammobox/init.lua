@@ -143,7 +143,7 @@ function ENT:IsNearSignalJammerEntity()
 end
 
 
-function ENT:StartDrill(jammer)
+function ENT:StartDrill(jammer, driller)
     self.Drilling = true
     self:SetDrillEndTime(CurTime() + impulse.Config.AmmoDrillTime)
     self:EmitSound("vehicles/digger_grinder_loop1.wav", 75, 120)
@@ -195,7 +195,7 @@ function ENT:StartDrill(jammer)
         local droppedItemsLog = {}
 
         for itemID, quantity in pairs(items) do
-            local ITEM = impulse.Inventory.GetItem(itemID)
+            local ITEM = impulse.Inventory.Items[itemID]
             local itemName = ITEM and ITEM.Name or itemID
 
             table.insert(droppedItemsLog, itemName .. " x" .. quantity)
@@ -209,18 +209,24 @@ function ENT:StartDrill(jammer)
             end
         end
 
-        local embeds = {{
-            title = "Ammobox Raid Loot",
-            description = "An ammobox has been opened and items dropped.",
-            url = "https://www.deepgaming.xyz",
-            color = 10181046,
-            fields = {
-                {
-                    name = "Items Dropped:",
-                    value = table.concat(droppedItemsLog, "\n")
-                }
-            }
-        }}
+		local embeds = {{
+			title = "Ammo Box Looted",
+			description = "A ammobox has been opened and items dropped.",
+			url = "https://www.deepgaming.xyz",
+			color = 10181046,
+			fields = {
+				{
+					name = "Driller:",
+					value = driller:SteamName() .. " - " .. driller:SteamID(),
+					inline = false
+				},
+				{
+					name = "Items Dropped:",
+					value = table.concat(droppedItemsLog, "\n"),
+					inline = false
+				}
+			}
+		}}
         ReqwestLog(embeds, DG_OPS)
 
         timer.Simple(total, function()

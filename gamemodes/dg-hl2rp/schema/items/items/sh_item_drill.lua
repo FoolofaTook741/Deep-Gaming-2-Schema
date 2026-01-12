@@ -56,7 +56,7 @@ function ITEM:OnUse(ply, ent)
 			jam = true
 		end
 
-		ent:StartDrill(jam)
+		ent:StartDrill(jam, ply)
 		ply:Notify("You have started drilling the ammo box.")
 		if jam == true then
 			timer.Simple(60, function()
@@ -82,7 +82,7 @@ function ITEM:OnUse(ply, ent)
 			return
 		end
 
-		ent:StartDrill(jam)
+		ent:StartDrill(jam, ply)
 		ply:Notify("You have started drilling the ammo box.")
 		if jam == true then
 			timer.Simple(60, function()
