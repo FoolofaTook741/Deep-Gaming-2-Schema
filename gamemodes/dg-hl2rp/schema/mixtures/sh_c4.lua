@@ -8,7 +8,7 @@ MIX.Bench = "general"
 MIX.Output = "item_c4"
 MIX.Input = {
 	["util_plastic"] = {take = 16},
-    ["util_rdxcompound"] = {take = 5},
+    ["util_rdxcompound"] = {take = 1},
     ["util_electronics"] = {take = 3},
 }
 
