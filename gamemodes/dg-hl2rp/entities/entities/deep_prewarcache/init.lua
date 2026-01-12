@@ -26,7 +26,7 @@ end
 function ENT:StartC4()
     local id = self:GetCreationID()
 
-    timer.Create(id .. "DeepPWCBox", 2, math.floor(impulse.Config.PreWarCacheTime/2), function()
+    timer.Create(id .. "DeepPWCBox", 2, math.floor(impulse.Config.PreWarCacheTime), function()
         self:EmitSound("buttons/button17.wav")
     end)
     timer.Create("PWCCooldown", 900, 1, function()
