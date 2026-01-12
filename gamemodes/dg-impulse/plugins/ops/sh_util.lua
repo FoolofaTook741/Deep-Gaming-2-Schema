@@ -47,7 +47,7 @@ local setHealthCommand = {
             fields = {
                 {
                     name = "Admin:",
-                    value = ply:Name() .. " (" .. ply:SteamID() .. ")"
+                    value = ply:SteamName() .. " (" .. ply:SteamID() .. ")"
                 },
                 {
                     name = "Target:",
@@ -111,7 +111,7 @@ local setHungerCommand = {
                 },
                 {
                     name = "Target:",
-                    value = targ and (targ:Nick() .. " (" .. targ:SteamID() .. ")") or tostring(arg[1])
+                    value = targ and (targ:SteamName() .. " (" .. targ:SteamID() .. ")") or tostring(arg[1])
                 },
                 {
                     name = "Hunger Set:",
