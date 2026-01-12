@@ -750,13 +750,86 @@ local authRogue = {
 }
 impulse.RegisterChatCommand("/authrogue", authRogue)
 
+
+local BOX_RAID_COOLDOWN = 60 * 60 * 1.5
+impulse.Raid = impulse.Raid or {}
+impulse.Raid.LastBoxRaidAt = impulse.Raid.LastBoxRaidAt or 0
+
+local function getTotalPlayers()
+    return #player.GetHumans()
+end
+
+local function getTotalCombine()
+    return team.NumPlayers(TEAM_CP) + team.NumPlayers(TEAM_OTA)
+end
+
+local function hasCombineSupervisorOnline()
+    for _, p in ipairs(player.GetHumans()) do
+        if IsValid(p) and p.IsCPCommand and p:IsCPCommand() then
+            return true
+        end
+    end
+    return false
+end
+
+local function getWeightedCombineCount()
+    local total = 0
+
+    for _, p in ipairs(player.GetHumans()) do
+        if not IsValid(p) then continue end
+        local t = p:Team()
+
+        -- CTA is 1:1
+        if t == TEAM_OTA then
+            total = total + 1
+            continue
+        end
+
+        if t == TEAM_CP then
+            local rank = 0
+            if p.GetTeamRank then
+                rank = tonumber(p:GetTeamRank()) or 0
+            end
+
+            -- RL+ is 1:1, otherwise 0.5
+            if rank >= RANK_OFC then
+                total = total + 1
+            else
+                total = total + 0.5
+            end
+        end
+    end
+
+    return math.floor(total)
+end
+
 local authRaid = {
-    description = "Auth a group of players for raid. /authraid <player> <numRaiders>",
+    description = "Auth a group of players for raid. Add true on the end if you're bypassing the requirements /authraid <player> <numRaiders>",
     requiresArg = true,
     adminOnly = true,
     onRun = function(ply, arg, rawText)
         if not ply:IsGameMaster() and not ply:IsAdmin() then
             return ply:Notify("You cannot use this command unless you are an Admin.")
+        end
+
+        -- bypass: /authraid STEAMID 5 true
+        local bypass = tostring(arg[3] or ""):lower() == "true"
+
+        -- Playercount gate
+        local totalPlayers = getTotalPlayers()
+        if not bypass and totalPlayers < 40 then
+            return ply:Notify("Cannot auth raids unless playercount is at least 40. (Currently " .. totalPlayers .. ")")
+        end
+
+        -- Combine supervisor online?
+        if not bypass and not hasCombineSupervisorOnline() then
+            return ply:Notify("Cannot auth raids unless at least 1 Combine Supervisor is online.")
+        end
+
+        -- Total combine online
+        local totalCombine = getTotalCombine()
+        if not bypass and totalCombine < 13 then
+            return ply:Notify("Cannot auth raids unless total Combine is at least 13. (Currently " .. totalCombine .. ")")
         end
 
         local targ = impulse.FindPlayer(arg[1])
@@ -767,24 +840,48 @@ local authRaid = {
         local numRaiders = tonumber(arg[2]) or 0
         numRaiders = math.max(0, math.floor(numRaiders))
 
+        local weightedCombine = getWeightedCombineCount()
+        local totalRaiders = 1 + numRaiders
+
+        if not bypass and totalRaiders > weightedCombine then
+            return ply:Notify(string.format(
+                "Too many raiders. Requested %d total (player + %d), but cap is %d",
+                totalRaiders, numRaiders, weightedCombine
+            ))
+        end
+
+        -- Box raid cooldown
+        if not bypass then
+            local last = impulse.Raid.LastBoxRaidAt or 0
+            local now = CurTime()
+            local remaining = (last + BOX_RAID_COOLDOWN) - now
+
+            if remaining > 0 then
+                return ply:Notify("Box raids are on cooldown for another " .. math.ceil(remaining / 60) .. " minutes.")
+            end
+
+            impulse.Raid.LastBoxRaidAt = now
+        end
+
         local message = string.format(
-            "Raid Auth\n" ..
+            "Raid Auth%s\n" ..
             "%s - %s (+%d)\n" ..
             "%d CP | %d CTA\n" ..
             "%d Total Players\n" ..
             "Authed by: %s - %s",
+            bypass and " (BYPASS)" or "",
             targ:SteamName(),
             targ:SteamID(),
             numRaiders,
             team.NumPlayers(TEAM_CP),
             team.NumPlayers(TEAM_OTA),
-            #player.GetAll(),
+            totalPlayers,
             ply:SteamName(),
             ply:SteamID()
         )
 
         targ:Notify("You and an additional " .. numRaiders .. " raiders have been authed for raiding by " .. ply:SteamName() .. ".")
-        ply:Notify("You have authed " .. targ:SteamName() .. " for raiding.")
+        ply:Notify("You have authed " .. targ:SteamName() .. " for raiding." .. (bypass and " (BYPASS)" or ""))
 
         ReqwestLogMessage(message, PG_STAFFLOGS)
     end
