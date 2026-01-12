@@ -749,3 +749,45 @@ local authRogue = {
     end
 }
 impulse.RegisterChatCommand("/authrogue", authRogue)
+
+local authRaid = {
+    description = "Auth a group of players for raid. /authraid <player> <numRaiders>",
+    requiresArg = true,
+    adminOnly = true,
+    onRun = function(ply, arg, rawText)
+        if not ply:IsGameMaster() and not ply:IsAdmin() then
+            return ply:Notify("You cannot use this command unless you are an Admin.")
+        end
+
+        local targ = impulse.FindPlayer(arg[1])
+        if not IsValid(targ) then
+            return ply:Notify("Could not find player: " .. tostring(arg[1]))
+        end
+
+        local numRaiders = tonumber(arg[2]) or 0
+        numRaiders = math.max(0, math.floor(numRaiders))
+
+        local message = string.format(
+            "Raid Auth\n" ..
+            "%s - %s (+%d)\n" ..
+            "%d CP | %d CTA\n" ..
+            "%d Total Players\n" ..
+            "Authed by: %s - %s",
+            targ:SteamName(),
+            targ:SteamID(),
+            numRaiders,
+            team.NumPlayers(TEAM_CP),
+            team.NumPlayers(TEAM_OTA),
+            #player.GetAll(),
+            ply:SteamName(),
+            ply:SteamID()
+        )
+
+        targ:Notify("You and an additional " .. numRaiders .. " raiders have been authed for raiding by " .. ply:SteamName() .. ".")
+        ply:Notify("You have authed " .. targ:SteamName() .. " for raiding.")
+
+        ReqwestLogMessage(message, PG_STAFFLOGS)
+    end
+}
+
+impulse.RegisterChatCommand("/authraid", authRaid)
