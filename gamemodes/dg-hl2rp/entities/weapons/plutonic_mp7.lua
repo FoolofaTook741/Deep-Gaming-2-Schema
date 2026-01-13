@@ -12,8 +12,8 @@ SWEP.ItemClass = "wep_mp7"
 
 SWEP.HoldType = "smg"
 
-SWEP.WorldModel = Model("models/weapons/w_iiopnsmg1.mdl")
-SWEP.ViewModel = Model("models/weapons/c_iiopnsmg1.mdl")
+SWEP.WorldModel = Model("models/weapons/w_smg1.mdl")
+SWEP.ViewModel = Model("models/weapons/v_smg1.mdl")
 SWEP.ViewModelFOV = 62
 
 SWEP.ViewModelOffset = Vector(2.5, -2, -1)
