@@ -8,7 +8,6 @@ SWEP.Category = "Deep Gaming [Plutonic]"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
-SWEP.ItemClass = "wep_mp7"
 
 SWEP.HoldType = "smg"
 
