@@ -10,7 +10,7 @@ SWEP.SlotPos = 4
 
 SWEP.Spawnable = true
 
-SWEP.ViewModel = Model( "models/weapons/c_zombieswep.mdl" )
+SWEP.ViewModel = Model( "models/weapons/c_arms_citizen.mdl" )
 SWEP.WorldModel = ""
 SWEP.ViewModelFOV = 90
 SWEP.UseHands = true
