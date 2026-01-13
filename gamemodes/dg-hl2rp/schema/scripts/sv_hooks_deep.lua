@@ -139,8 +139,7 @@ DG_RATIONS = true
 
 local nextIncumberanceCheck = 0
 local nexte2Check = 0
-local nextmakeupcheck = 0
-local nextshieldremove = 0
+local MASTER_RATE = 0.25
 
 timer.Create("ocaabpassivefunding", 900, 0, function()
     if impulse.Dispatch.GetCityCode() < CODE_JW then
@@ -307,36 +306,77 @@ timer.Create("RefreshCPBalances", 1800, 0, function()
     end
 end)
 
-timer.Create("Deep_WallhammerShield", 0.2, 0, function()
-    for _, v in ipairs(team.GetPlayers(TEAM_OTA)) do
-        if not IsValid(v) or not v:Alive() then continue end
+local function ShieldTimerName(ply)
+    return "dg_shield_follow_" .. ply:EntIndex()
+end
 
-        local class = v.GetTeamClass and v:GetTeamClass()
-        if class ~= CLASS_PAYBACK then
-            if v.ShieldActive == false and IsValid(v.shield) then
-                v.shield:Remove()
-            end
-            continue
+local function RemoveShield(ply)
+    if not IsValid(ply) then return end
+
+    local tname = ShieldTimerName(ply)
+    if timer.Exists(tname) then timer.Remove(tname) end
+
+    if IsValid(ply.shield) then
+        ply.shield:Remove()
+    end
+
+    ply.shield = nil
+end
+
+local function ShouldHaveShield(ply)
+    if not IsValid(ply) or not ply:Alive() then return false end
+    if ply:Team() ~= TEAM_OTA then return false end
+
+    local class = ply.GetTeamClass and ply:GetTeamClass()
+    if class ~= CLASS_PAYBACK then return false end
+
+    if ply.ShieldActive ~= true then return false end
+    if ply.IsWeaponRaised and not ply:IsWeaponRaised() then return false end
+
+    local wep = ply:GetActiveWeapon()
+    if not IsValid(wep) then return false end
+    if wep:GetClass() ~= "plutonic_osish" then return false end
+
+    return true
+end
+
+local function EnsureFollowLoop(ply)
+    local tname = ShieldTimerName(ply)
+    if timer.Exists(tname) then return end
+
+    timer.Create(tname, 0.03, 0, function()
+        if not ShouldHaveShield(ply) then
+            RemoveShield(ply)
+            return
         end
 
-        local wep = v:GetActiveWeapon()
+        local wep = ply:GetActiveWeapon()
         if IsValid(wep) then
-            v:DrawWallhammerShield(wep)
+            ply:DrawWallhammerShield(wep)
+        else
+            RemoveShield(ply)
         end
+    end)
+end
 
-        if v.ShieldActive == false and IsValid(v.shield) then
-            v.shield:Remove()
+timer.Create("Deep_WallhammerShield", MASTER_RATE, 0, function()
+    for _, ply in ipairs(team.GetPlayers(TEAM_OTA)) do
+        if ShouldHaveShield(ply) then
+            EnsureFollowLoop(ply)
+        else
+            if IsValid(ply.shield) or timer.Exists(ShieldTimerName(ply)) then
+                RemoveShield(ply)
+            end
         end
     end
 end)
 
-timer.Create("Deep_ShieldCleanup", 3, 0, function()
-    for _, ent in ipairs(ents.FindByClass("dg_shield")) do
-        local owner = ent.CPPIGetOwner and ent:CPPIGetOwner() or nil
-        if IsValid(owner) and owner:GetTeamClass() ~= CLASS_PAYBACK then
-            ent:Remove()
-        end
-    end
+hook.Add("PlayerDisconnected", "dg_shield_cleanup_disc", function(ply)
+    RemoveShield(ply)
+end)
+
+hook.Add("PlayerDeath", "dg_shield_cleanup_death", function(ply)
+    RemoveShield(ply)
 end)
 
 local function canHearCheck(listener, allPlayers) -- based on darkrps voice chat optomization this is called every 0.5 seconds in the think hook

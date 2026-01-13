@@ -4,17 +4,22 @@ AddCSLuaFile( "shared.lua" )  -- and shared scripts are sent.
 include('shared.lua')
  
 function ENT:Initialize()
- 
-	self:SetModel( "models/hunter/plates/plate1x1.mdl" )
-	self:PhysicsInit( SOLID_VPHYSICS )      -- Make us work with physics,
-	self:SetMoveType( MOVETYPE_VPHYSICS )   -- after all, gmod is a physics
-	self:SetSolid( SOLID_VPHYSICS )         -- Toolbox
-	self.Hitpoints = 450
- 
-        local phys = self:GetPhysicsObject()
-	if (phys:IsValid()) then
-		phys:Wake()
-	end
+    self:SetModel("models/hunter/tubes/circle4x4.mdl")
+    self:SetModelScale(0.55, 0)
+
+    self:PhysicsInit(SOLID_VPHYSICS)
+    self:SetMoveType(MOVETYPE_NONE)
+    self:SetSolid(SOLID_VPHYSICS)
+
+    self:SetCollisionGroup(COLLISION_GROUP_NONE)
+
+    local phys = self:GetPhysicsObject()
+    if IsValid(phys) then
+        phys:EnableMotion(false)
+        phys:Wake()
+    end
+
+    self.Hitpoints = 450
 end
 
 sound.Add({
