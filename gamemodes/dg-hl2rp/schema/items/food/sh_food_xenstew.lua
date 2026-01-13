@@ -10,7 +10,7 @@ ITEM.Weight = 0.5
 ITEM.NoCenter = true
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 
 ITEM.Illegal = false
 ITEM.CanStack = true

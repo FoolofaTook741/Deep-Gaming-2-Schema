@@ -9,7 +9,7 @@ ITEM.CamPos = Vector(54.441261291504, 76.790832519531, 23.49570274353)
 ITEM.Weight = 2
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 
 ITEM.Illegal = false
 ITEM.CanStack = true

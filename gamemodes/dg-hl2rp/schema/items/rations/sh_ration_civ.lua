@@ -11,7 +11,7 @@ ITEM.NoCenter = false
 ITEM.Weight = 1
 
 ITEM.Droppable = false
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 
 ITEM.NotSpawnable = false
 
@@ -47,7 +47,7 @@ ITEM.CamPos = Vector(-12.836676597595, -7.3352437019348, 11.346704483032)
 ITEM.NoCenter = false
 ITEM.Weight = 1
 ITEM.Droppable = false
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 ITEM.NotSpawnable = false
 ITEM.DropIfRestricted = false
 ITEM.DropOnDeathIfRestricted = false
@@ -78,7 +78,7 @@ ITEM.CamPos = Vector(-12.836676597595, -7.3352437019348, 11.346704483032)
 ITEM.NoCenter = false
 ITEM.Weight = 1
 ITEM.Droppable = false
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 ITEM.NotSpawnable = false
 ITEM.DropIfRestricted = false
 ITEM.DropOnDeathIfRestricted = false
@@ -110,7 +110,7 @@ ITEM.CamPos = Vector(-12.836676597595, -7.3352437019348, 11.346704483032)
 ITEM.NoCenter = false
 ITEM.Weight = 1
 ITEM.Droppable = false
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 ITEM.NotSpawnable = false
 ITEM.DropIfRestricted = false
 ITEM.DropOnDeathIfRestricted = false

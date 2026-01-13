@@ -12,7 +12,7 @@ ITEM.NoCenter = true
 ITEM.Weight = 0.3
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 ITEM.ConfiscateReward = 3
 
 ITEM.Illegal = true
@@ -66,7 +66,7 @@ EMPTYBOX.ConfiscateReward = 1
 
 EMPTYBOX.CanStack = true
 EMPTYBOX.Droppable = true
-EMPTYBOX.DropOnDeath = false
+EMPTYBOX.DropOnDeath = true
 EMPTYBOX.UseName = "Refill"
 
 function EMPTYBOX:CanUse(ply)

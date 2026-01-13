@@ -8,7 +8,7 @@ ITEM.FOV = 50
 ITEM.Weight = 2.0
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 
 ITEM.Illegal = false
 ITEM.CanStack = true

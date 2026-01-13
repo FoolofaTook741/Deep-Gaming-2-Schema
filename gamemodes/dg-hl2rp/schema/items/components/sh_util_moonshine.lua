@@ -10,7 +10,7 @@ ITEM.NoCenter = true
 ITEM.Weight = 1
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 ITEM.ConfiscateReward = 8
 
 ITEM.Illegal = true

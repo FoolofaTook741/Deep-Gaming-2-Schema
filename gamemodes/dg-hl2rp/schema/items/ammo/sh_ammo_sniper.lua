@@ -11,7 +11,7 @@ ITEM.NoCenter = true
 ITEM.Weight = 0.3
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 
 ITEM.Illegal = true
 ITEM.CanStack = true
@@ -47,7 +47,7 @@ EMPTYBOX.NoCenter = ITEM.NoCenter
 
 EMPTYBOX.CanStack = true
 EMPTYBOX.Droppable = true
-EMPTYBOX.DropOnDeath = false
+EMPTYBOX.DropOnDeath = true
 EMPTYBOX.UseName = "Refill"
 EMPTYBOX.ConfiscateReward = 1
 

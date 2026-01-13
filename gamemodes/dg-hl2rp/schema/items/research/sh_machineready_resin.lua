@@ -11,7 +11,7 @@ ITEM.Weight = 2
 ITEM.Colour = Color(180, 180, 0)
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 
 ITEM.Illegal = true
 ITEM.CanStack = true

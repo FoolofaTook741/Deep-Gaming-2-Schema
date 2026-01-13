@@ -10,7 +10,7 @@ ITEM.CamPos = Vector(22.005731582642, 25, 9)
 ITEM.Weight = 0.4
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 
 ITEM.DropIfRestricted = false
 ITEM.DropOnDeathIfRestricted = false

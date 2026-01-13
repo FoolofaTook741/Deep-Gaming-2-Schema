@@ -10,7 +10,7 @@ ITEM.CamPos = Vector(-5.7306590080261, 37.249282836914, 14.326647758484)
 ITEM.Weight = 0.5
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 ITEM.ConfiscateReward = 2
 
 ITEM.Illegal = true
