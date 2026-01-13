@@ -11,8 +11,6 @@ end)
 local hostname = GetConVar("hostname"):GetString()
 hook.Add("PlayerContainerTake", "noclipInventory", function(ply, item, source, direction, amount)
 
-    if true then return end
-
     if (ply:GetMoveType() == MOVETYPE_NOCLIP) then
 		local roleID = "1112861503876505601" -- Staff Manager Role
         local assistantID = "1365691096146907262" -- ASM
