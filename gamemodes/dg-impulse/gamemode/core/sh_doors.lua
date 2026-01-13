@@ -31,6 +31,12 @@ function meta:CanLockUnlockDoor(doorOwners, doorGroup)
 		end
 	end
 
+	if doorGroup == 7 then 
+		if self:Team() == TEAM_CWU and class == CLASS_RESEARCH then
+			return true
+		end
+	end
+
 	if doorOwners and table.HasValue(doorOwners, self:EntIndex()) then
 		return true
 	elseif doorGroup and teamDoorGroups and table.HasValue(teamDoorGroups, doorGroup) then
