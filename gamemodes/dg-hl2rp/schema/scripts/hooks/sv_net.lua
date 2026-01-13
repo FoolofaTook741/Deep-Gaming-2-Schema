@@ -823,7 +823,7 @@ net.Receive("impulseHL2RPUseLocker", function(lem, ply)
 end)
 
 concommand.Add("inv_count_items", function(ply, cmd, args)
-    if IsValid(ply) and not ply:IsSuperAdmin() then
+    if IsValid(ply) and not ply:IsLeadAdmin() then
         if ply.Notify then
             ply:Notify("You must be a superadmin to run this command.")
         else
