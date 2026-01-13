@@ -2,6 +2,10 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+if SERVER then
+    util.AddNetworkString("dg_shield_hitfx")
+end
+
 function ENT:UpdateTransmitState()
     return TRANSMIT_ALWAYS
 end
@@ -15,7 +19,7 @@ function ENT:Initialize()
     self:SetSolid(SOLID_BBOX)
 
     self:SetCollisionBounds(
-        Vector(-60, -48, -80),a
+        Vector(-60, -48, -80),
         Vector( 60,  48, 80)
     )
 
@@ -48,12 +52,29 @@ sound.Add({
     volume = 1.0,
     level = SNDLVL_GUNFIRE,
     pitch = {65, 145},
-    sound = {"weapons/hla_vc/charger/shield_dmg/npc_charger_shield_01.wav"}
+    sound = {
+        "weapons/hla_vc/charger/shield_dmg/npc_charger_shield_01.wav",
+        "weapons/hla_vc/charger/shield_dmg/npc_charger_shield_02.wav",
+        "weapons/hla_vc/charger/shield_dmg/npc_charger_shield_03.wav",
+        "weapons/hla_vc/charger/shield_dmg/npc_charger_shield_04.wav",
+        "weapons/hla_vc/charger/shield_dmg/npc_charger_shield_05.wav",
+        "weapons/hla_vc/charger/shield_dmg/npc_charger_shield_06.wav",
+        "weapons/hla_vc/charger/shield_dmg/npc_charger_shield_07.wav",
+        "weapons/hla_vc/charger/shield_dmg/npc_charger_shield_08.wav",
+    }
 })
 
 function ENT:OnTakeDamage(dmginfo)
     local id = self:GetCreationID()
     local ply = self.CPPIGetOwner and self:CPPIGetOwner()
+    
+    local hitPos = dmginfo:GetDamagePosition()
+    if hitPos == vector_origin then hitPos = self:WorldSpaceCenter() end
+
+    net.Start("dg_shield_hitfx")
+    net.WriteEntity(self)
+    net.WriteVector(self:WorldToLocal(hitPos))
+    net.SendPVS(hitPos)
 
     if not timer.Exists(id .. "shielddmgcd") then
         self:EmitSound("CUST.OSIHS.Shield")
