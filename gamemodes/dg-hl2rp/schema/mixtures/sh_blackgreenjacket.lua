@@ -2,7 +2,7 @@ local MIX = {}
 
 MIX.Class = "blackgreenjacket"
 
-MIX.Level = 11
+MIX.Level = 10
 MIX.Bench = "clothing"
 
 MIX.Output = "clo_blackgreenjacket"

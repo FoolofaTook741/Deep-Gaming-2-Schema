@@ -2,7 +2,7 @@ local MIX = {}
 
 MIX.Class = "repairedturret"
 
-MIX.Level = 16
+MIX.Level = 10
 MIX.Bench = "tech"
 
 MIX.Output = "wep_wsmoke"
