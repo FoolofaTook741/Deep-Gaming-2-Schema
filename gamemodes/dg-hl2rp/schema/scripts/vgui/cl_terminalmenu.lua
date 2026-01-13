@@ -72,7 +72,7 @@ function PANEL:SetupUI()
 	self.lblLocalUnit:SetFont("BudgetLabel")
 
 	self.lblReminder = vgui.Create("DLabel", self.bulletin)
-	self.lblReminder:SetText("\n\n---------------------------------\nActing Sovereign Protection Unit: Commander KING-0\n---------------------------------\n\n---------------------------------\nActing Sovereign Transhuman Unit: Commander LEADER-0\n---------------------------------\n\n---------------------------------\nActing City Administrator: Major M Major\n---------------------------------")
+	self.lblReminder:SetText("\n\n---------------------------------\nActing Sovereign Protection Unit: Commander VICE-3\n---------------------------------\n\n---------------------------------\nActing Sovereign Transhuman Unit: Commander HAMMER-3\n---------------------------------\n\n---------------------------------\nActing City Administrator: Joseph Uio\n---------------------------------")
 	self.lblReminder:SetFont("BudgetLabel")
 	self.lblReminder:SizeToContents()
 	self.lblReminder:Dock(TOP)
