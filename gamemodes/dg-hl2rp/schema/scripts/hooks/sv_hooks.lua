@@ -696,3 +696,11 @@ end )
 hook.Add( "LuapadCanRunCL", "debugAuthCL", function( client )
     return client:IsSuperAdmin()
 end )
+
+hook.Add("PlayerDeath", "GiveAchKuma", function(victim, inflictor, attacker)
+    if (!IsValid(attacker) || !attacker:IsPlayer() || attacker == victim) then return end
+    
+    if (victim:SteamID() == "STEAM_0:1:419828223") then
+        attacker:AchievementGive("ach_kuma")
+    end
+end)

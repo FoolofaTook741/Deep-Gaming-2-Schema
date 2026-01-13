@@ -345,8 +345,8 @@ impulse.Config.Achievements = {
 	},
 	["ach_kuma"] = {
 		Name = "Don Mafioso",
-		Desc = "Killed Kumazaki, The Deep Gaming 2 Conniseur",
-		Icon = Material("icon16/lvs_resistance"),
+		Desc = "Killed Kumazaki, The Deep Gaming 2 Connoisseur",
+		Icon = Material("roleicons/donatordeep.png"),
 		Points = 100
 	},
 	["ach_sd"] = {
