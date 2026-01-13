@@ -348,8 +348,7 @@ function PANEL:OnMousePressed(keycode)
 			net.SendToServer()
 		end)
 	end
-
-	if (not self.IsEquipped) and (not self.IsRestricted or self.Item.DropIfRestricted) and self.Item.WeaponClass then
+	if (self.IsEquipped) and (not self.IsRestricted or self.Item.DropIfRestricted) and self.Item.WeaponClass then
 		popup:AddOption("Unload Ammo", function()
 			net.Start("DeepUnloadAmmo")
 			net.WriteString(self.Item.WeaponClass)
