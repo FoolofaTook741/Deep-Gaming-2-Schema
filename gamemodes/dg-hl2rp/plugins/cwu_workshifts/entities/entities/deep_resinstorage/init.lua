@@ -19,7 +19,7 @@ function ENT:Use(activator)
 	local has, count = ply:HasInventoryItem("util_resin")
     if has then
         ply:TakeInventoryItemClass("util_resin", nil, count)
-        ply:GiveMoney(15*count)   
+        --ply:GiveMoney(15*count)   
         CWU_RESIN = CWU_RESIN + 0.1*count
         ply:Notify("You have deposited "..0.1*count.." kg of Resin into storage.")
         return
