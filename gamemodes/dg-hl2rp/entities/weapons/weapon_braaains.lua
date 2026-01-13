@@ -10,7 +10,7 @@ SWEP.SlotPos = 4
 
 SWEP.Spawnable = true
 
-SWEP.ViewModel = Model( "models/weapons/c_zombieswep.mdl" )
+SWEP.ViewModel = Model( "models/weapons/c_arms_citizen.mdl" )
 SWEP.WorldModel = ""
 SWEP.ViewModelFOV = 90
 SWEP.UseHands = true
@@ -65,9 +65,8 @@ function SWEP:UpdateNextIdle()
 end
 
 function SWEP:PrimaryAttack( right )
-    if not IsValid(self.Owner) or not self.Owner:IsPlayer() then
-        return
-    end
+    local ply = self:GetOwner()
+    if not IsValid(ply) then return end
     
     self.Owner:SetAnimation( PLAYER_ATTACK1 )
     if !timer.Exists("zombsoundstackprot") then
@@ -90,7 +89,11 @@ function SWEP:PrimaryAttack( right )
     self:SetNextPrimaryFire( CurTime() + 0.9 )
     self:SetNextSecondaryFire( CurTime() + 0.9 )
     
-    self.Owner:AddSkillXP("strength", 1)
+    if ply.AddSkillXP then
+        ply:AddSkillXP("strength", 1)
+    elseif ply.GetSkillXP and ply.SetSkillXP then
+        ply:SetSkillXP("strength", (ply:GetSkillXP("strength") or 0) + 1)
+    end
 end
 
 function SWEP:SecondaryAttack()
