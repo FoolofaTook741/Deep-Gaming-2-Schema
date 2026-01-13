@@ -43,6 +43,9 @@ function ITEM:OnUse(ply)
 	for v,k in pairs(ents.FindByClass("deep_commsuplink")) do
 		if k:GetPos():DistToSqr(pos) < (500 ^ 2) && impulse.CommsNetWorkOn != true then 
     		impulse.CommsNetWorkOn = true
+			if !timer.Exists("emphackcooldown") then 
+				timer.Remove("emphackcooldown") 
+			end
 			ply:EmitSound("ambient/energy/weld2.wav")
 			ply:Notify("You have repaired the Combine Comms Uplink.")
     		for k, v in pairs(player.GetAll()) do 
