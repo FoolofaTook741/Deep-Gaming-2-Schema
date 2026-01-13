@@ -223,7 +223,7 @@ function PANEL:ShowGroup()
 
 	local ons = 0
 
-	for v,k in SortedPairsByMemberValue(group.Members, "Rank") do
+	for v, k in SortedPairsByMemberValue(group.Members or {}, "Rank") do
 		local p = player.GetBySteamID(v)
 		local state = "Offline"
 
