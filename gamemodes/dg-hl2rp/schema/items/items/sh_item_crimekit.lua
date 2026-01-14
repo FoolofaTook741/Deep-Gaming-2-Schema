@@ -82,7 +82,7 @@ function ITEM:OnUse(ply, trace)
 end
 
 function ITEM:ShouldTraceUse(ply, ent)
-	return ent:GetClass() == "impulse_bench" or ent:GetClass() == "deep_signaljammer" or ent:GetClass() == "gmod_wire_expression2" or ent:GetClass() == "deep_bulletpress" or ent:GetClass() == "deep_blremovalstation" or ent:GetClass() == "chensammocrate" or ent:GetClass() == "deep_refinery" or ent:GetClass() == "deep_hedgehog" or ent:GetClass() == "impulse_bench" or ent:GetClass() == "impulse_hl2rp_brewingbarrel" or ent:GetClass() == "deep_generator" or ent:GetClass() == "prop_physics" or ent:GetClass() == "gb_rp_sign"
+	return ent:GetClass() == "impulse_bench" or ent:GetClass() == "deep_signaljammer" or ent:GetClass() == "gmod_wire_expression2" or ent:GetClass() == "deep_bulletpress" or ent:GetClass() == "deep_blremovalstation" or ent:GetClass() == "chensammocrate" or ent:GetClass() == "deep_refinery" or ent:GetClass() == "deep_hedgehog" or ent:GetClass() == "impulse_bench" or ent:GetClass() == "impulse_hl2rp_brewingbarrel" or ent:GetClass() == "deep_generator" or ent:GetClass() == "prop_physics" or ent:GetClass() == "gb_rp_sign" or ent:GetClass() == "deep_winebrew"
 end
 
 impulse.RegisterItem(ITEM)
