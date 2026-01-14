@@ -19,78 +19,86 @@ end
 local bodyCol = Color(50, 50, 50, 210)
 local red = Color(255, 0, 0)
 function PANEL:SetInv(invdata)
-	local panel = self
+    local panel = self
 
-	for v,k in pairs(invdata) do
-		local bg = self.scroll:Add("DPanel")
-		bg:SetTall(38)
-		bg:DockMargin(5, 3, 5, 3)
-		bg:Dock(TOP)
-		bg.ItemName = k.Name
-		bg.ItemIllegal = k.Illegal or false
-		bg.ItemClass = k.UniqueID
+    for v, k in pairs(invdata) do
+        local bg = self.scroll:Add("DPanel")
+        bg:SetTall(38)
+        bg:DockMargin(5, 3, 5, 3)
+        bg:Dock(TOP)
 
-		function bg:Paint(w, h)
-			surface.SetDrawColor(bodyCol)
-			surface.DrawRect(0, 0, w, h)
+        bg.ItemName   = k.Name
+        bg.ItemIllegal= k.Illegal or false
+        bg.ItemClass  = k.UniqueID
+		bg.ItemRestricted = k.restricted == true
 
-			draw.SimpleText(self.ItemName, "Impulse-Elements18-Shadow", 10, 5, color_white)
+        bg.InvID = k.InvID
 
-			if self.ItemIllegal then
-				draw.SimpleText("Contraband", "Impulse-Elements16-Shadow", 10, 22, red)	
-			end
+        function bg:Paint(w, h)
+            surface.SetDrawColor(bodyCol)
+            surface.DrawRect(0, 0, w, h)
 
-			return true
-		end
+            draw.SimpleText(self.ItemName, "Impulse-Elements18-Shadow", 10, 5, color_white)
 
-		if bg.ItemIllegal and LocalPlayer():IsCP() then
-			local takeBtn = vgui.Create("DCheckBox", bg)
-			takeBtn:SetPos(300, 10)
-			takeBtn:SetValue(0)
-			takeBtn.ItemClass = k.UniqueID
+			if self.ItemRestricted and self.ItemIllegal then
+    			draw.SimpleText("Restricted - Contraband", "Impulse-Elements16-Shadow", 10, 22, Color(255, 200, 0))
+            elseif self.ItemIllegal then
+                draw.SimpleText("Contraband", "Impulse-Elements16-Shadow", 10, 22, red)
+            end
 
-			function takeBtn:OnChange(val)
-				if val then
-					table.insert(panel.taking, self.ItemClass)
-				else
-					table.RemoveByValue(panel.taking, self.ItemClass)
-				end
-			end
-			
-			local takeLbl = vgui.Create("DLabel", bg)
-			takeLbl:SetPos(245, 10)
-			takeLbl:SetText("Confiscate")
-			takeLbl:SizeToContents()
-		end
-	end
+            return true
+        end
 
-	self.finish = vgui.Create("DButton", self)
-	self.finish:SetPos(0, 470)
-	self.finish:SetSize(350, 30)
-	self.finish:SetText("Finish search")
+        if bg.ItemIllegal and LocalPlayer():IsCP() then
+            local takeBtn = vgui.Create("DCheckBox", bg)
+            takeBtn:SetPos(300, 10)
+            takeBtn:SetValue(false)
+            takeBtn.InvID = bg.InvID
 
-	function self.finish:DoClick()
-		net.Start("impulseInvDoSearchConfiscate")
-		net.WriteUInt(#panel.taking, 8)
-		for v,k in pairs(panel.taking) do
-			local netid = impulse.Inventory.ClassToNetID(k)
-			net.WriteUInt(netid, 10)
-		end
-		net.SendToServer()
+            function takeBtn:OnChange(val)
+                if val then
+                    panel.taking[self.InvID] = true
+                else
+                    panel.taking[self.InvID] = nil
+                end
+            end
 
-		panel:Remove()
-	end
+            local takeLbl = vgui.Create("DLabel", bg)
+            takeLbl:SetPos(245, 10)
+            takeLbl:SetText("Confiscate")
+            takeLbl:SizeToContents()
+        end
+    end
 
-	function self.finish:Think()
-		local count = table.Count(panel.taking)
+    self.finish = vgui.Create("DButton", self)
+    self.finish:SetPos(0, 470)
+    self.finish:SetSize(350, 30)
+    self.finish:SetText("Finish search")
 
-		if count > 0 then
-			self:SetText("Finish search (confiscating "..count.." items)")
-		else
-			self:SetText("Finish search")
-		end
-	end
+    function self.finish:DoClick()
+        local count = table.Count(panel.taking)
+
+        net.Start("impulseInvDoSearchConfiscate")
+        net.WriteUInt(count, 8)
+
+        for invid, _ in pairs(panel.taking) do
+            net.WriteUInt(invid, 16)
+        end
+
+        net.SendToServer()
+        panel:Remove()
+    end
+
+    function self.finish:Think()
+        local count = table.Count(panel.taking)
+        if count > 0 then
+            self:SetText("Finish search (confiscating "..count.." items)")
+        else
+            self:SetText("Finish search")
+        end
+    end
 end
+
 
 function PANEL:SetPlayer(ent)
 	self:SetTitle(ent:Nick().."'s Inventory")

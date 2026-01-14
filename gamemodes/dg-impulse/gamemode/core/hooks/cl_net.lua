@@ -228,30 +228,37 @@ net.Receive("impulseInvUpdateEquip", function()
 end)
 
 net.Receive("impulseInvDoSearch", function()
-	local searchee = Entity(net.ReadUInt(8))
-	local invSize = net.ReadUInt(16)
-	local money = net.ReadUInt(16)
-	local invCompiled = {}
+    local searchee = Entity(net.ReadUInt(8))
+    local invSize = net.ReadUInt(16)
+    local money = net.ReadUInt(16)
+    local invCompiled = {}
 
-	if not IsValid(searchee) then return end
+    if not IsValid(searchee) then return end
 
-	for i=1,invSize do
-		local itemnetid = net.ReadUInt(10)
-		local item = impulse.Inventory.Items[itemnetid]
-		
-		table.insert(invCompiled, item)
-	end
+    for i = 1, invSize do
+        local itemnetid = net.ReadUInt(10)
+        local invid     = net.ReadUInt(16)
+		local restricted = net.ReadBool()
 
+        local item = impulse.Inventory.Items[itemnetid]
+        if item then
+            local it = table.Copy(item)
+            it.InvID = invid
+			it.restricted = restricted
+            table.insert(invCompiled, it)
+        end
+    end
 
-	impulse.MakeWorkbar(2.5, "Searching...", function()
-		if not IsValid(searchee) then return end
-		LocalPlayer():Notify("This person has " .. money .. " credits on them.")
+    impulse.MakeWorkbar(2.5, "Searching...", function()
+        if not IsValid(searchee) then return end
+        LocalPlayer():Notify("This person has " .. money .. " credits on them.")
 
-		local searchMenu = vgui.Create("impulseSearchMenu")
-		searchMenu:SetInv(invCompiled)
-		searchMenu:SetPlayer(searchee)
-	end, true)
+        local searchMenu = vgui.Create("impulseSearchMenu")
+        searchMenu:SetInv(invCompiled)
+        searchMenu:SetPlayer(searchee)
+    end, true)
 end)
+
 
 net.Receive("impulseInvStorageOpen", function(len, ply)
 	impulse_storage = vgui.Create("impulseInventoryStorage")

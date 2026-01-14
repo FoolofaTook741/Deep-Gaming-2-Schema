@@ -515,52 +515,58 @@ local setscsCommand = {
 impulse.RegisterChatCommand("/setscs", setscsCommand)
 
 local searchCommand = {
-	description = "Searches a players inventory.",
-	requiresArg = false,
-	requiresAlive = true,
-	onRun = function(ply, args, text)
-		if not ply:IsCP() then return end
-		if ply.InvSearching and IsValid(ply.InvSearching) then return end
+    description = "Searches a players inventory.",
+    requiresArg = false,
+    requiresAlive = true,
+    onRun = function(ply, args, text)
+        if not ply:IsCP() then return end
+        if ply.InvSearching and IsValid(ply.InvSearching) then return end
 
-		local trace = {}
-		trace.start = ply:EyePos()
-		trace.endpos = trace.start + ply:GetAimVector() * 50
-		trace.filter = ply
+        local trace = {}
+        trace.start = ply:EyePos()
+        trace.endpos = trace.start + ply:GetAimVector() * 50
+        trace.filter = ply
 
-		local tr = util.TraceLine(trace)
-		local targ = tr.Entity
+        local tr = util.TraceLine(trace)
+        local targ = tr.Entity
 
-		if targ and IsValid(targ) and targ:IsPlayer() and targ:OnGround() then
-			if not targ.beenInvSetup then return end
+        if targ and IsValid(targ) and targ:IsPlayer() and targ:OnGround() then
+            if not targ.beenInvSetup then return end
 
-			if not ply:CanArrest(targ) then
-				return ply:Notify("You cannot search this player.")
-			end
+            if not ply:CanArrest(targ) then
+                return ply:Notify("You cannot search this player.")
+            end
 
-			if not targ:GetSyncVar(SYNC_ARRESTED, false) then
-				return ply:Notify("You must detain a player before searching them.")
-			end
+            if not targ:GetSyncVar(SYNC_ARRESTED, false) then
+                return ply:Notify("You must detain a player before searching them.")
+            end
 
-			targ:Freeze(true)
-			targ:Notify("You are currently being searched.")
-			ply:Notify("You have started searching "..targ:Nick()..".")
-			ply.InvSearching = targ
-			hook.Run("DoInventorySearch", ply, targ)
+            targ:Freeze(true)
+            targ:Notify("You are currently being searched.")
+            ply:Notify("You have started searching "..targ:Nick()..".")
+            ply.InvSearching = targ
+            hook.Run("DoInventorySearch", ply, targ)
 
-			local inv = targ:GetInventory(1)
-			net.Start("impulseInvDoSearch")
-			net.WriteUInt(targ:EntIndex(), 8)
-			net.WriteUInt(table.Count(inv), 16)
-			net.WriteUInt(targ:GetMoney(), 16)
-			for v,k in pairs(inv) do
-				local netid = impulse.Inventory.ClassToNetID(k.class)
-				net.WriteUInt(netid, 10)
-			end
-			net.Send(ply)
-		else
-			ply:Notify("No player in search range.")
-		end
-	end
+            local inv = targ:GetInventory(1) or {}
+
+            net.Start("impulseInvDoSearch")
+                net.WriteUInt(targ:EntIndex(), 8)
+                net.WriteUInt(table.Count(inv), 16)
+                net.WriteUInt(math.Clamp(tonumber(targ:GetMoney()) or 0, 0, 65535), 16)
+
+                for invid, slot in pairs(inv) do
+                    local netid = slot and slot.class and impulse.Inventory.ClassToNetID(slot.class)
+                    if netid then
+                        net.WriteUInt(netid, 10)
+                        net.WriteUInt(invid, 16)
+						net.WriteBool(slot.restricted == true)
+                    end
+                end
+            net.Send(ply)
+        else
+            ply:Notify("No player in search range.")
+        end
+    end
 }
 
 impulse.RegisterChatCommand("/invsearch", searchCommand)

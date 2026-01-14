@@ -923,40 +923,61 @@ net.Receive("impulseInvDoUse", function(len, ply)
 end)
 
 net.Receive("impulseInvDoSearchConfiscate", function(len, ply)
-	if not ply:IsCP() then return end
-	if (ply.nextInvConf or 0) > CurTime() then return end
-	ply.nextInfConf = CurTime() + 2
+    if not ply:IsCP() then return end
+    if (ply.nextInvConf or 0) > CurTime() then return end
+    ply.nextInvConf = CurTime() + 2
 
-	local targ = ply.InvSearching
-	if not IsValid(targ) or not ply:CanArrest(targ) then return end
+    local targ = ply.InvSearching
+    if not IsValid(targ) or not ply:CanArrest(targ) then return end
 
-	local count = net.ReadUInt(8) or 0
+    local count = net.ReadUInt(8) or 0
+	if count > 150 then return end
 
-	if count > 0 then
-		for i=1,count do
-			local netid = net.ReadUInt(10)
-			local item = impulse.Inventory.Items[netid]
+    ply.ConfiscatedInv = ply.ConfiscatedInv or {}
 
-			if not item then continue end
+    local taken = 0
 
-			if item.Illegal and targ:HasInventoryItem(item.UniqueID)  then
-				targ:TakeInventoryItemClass(item.UniqueID, 1)
-				if not ply.IsRogue == true then
-					table.insert(ply.ConfiscatedInv, item.UniqueID)
-				end
+    if count > 0 then
+        for i = 1, count do
+			
+            local invid = net.ReadUInt(16)
+            if not invid then continue end
+            local slot = (targ:GetInventory(1) or {})[invid]
+            if not slot then continue end
 
-				hook.Run("PlayerConfiscateItem", ply, targ, item.UniqueID)
-			end
-		end
+            local uid = slot.class
+            if not uid then continue end
 
-		ply:Notify("You have confiscated "..count.." items.")
-		targ:Notify("The search has been completed and "..count.." items have been confiscated.")
-	else
-		targ:Notify("The search has been completed.")
-	end
+            local itemDef = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(uid)]
+            if not itemDef then continue end
 
-	ply.InvSearching = nil
-	targ:Freeze(false)
+            if itemDef.Illegal ~= true then continue end
+
+            local isRestricted = (slot.restricted == true)
+
+            targ:TakeInventoryItem(invid, 1)
+
+            if isRestricted then
+                ply:Notify("You have destroyed a restricted " .. (itemDef.Name or "item") .. ".")
+            else
+                if ply.IsRogue ~= true then
+                    table.insert(ply.ConfiscatedInv, uid)
+                end
+                ply:Notify("You have confiscated a " .. (itemDef.Name or "item") .. ".")
+            end
+
+            taken = taken + 1
+            hook.Run("PlayerConfiscateItem", ply, targ, uid)
+        end
+
+        ply:Notify("You have confiscated "..taken.." items.")
+        targ:Notify("The search has been completed and "..taken.." items have been confiscated.")
+    else
+        targ:Notify("The search has been completed.")
+    end
+
+    ply.InvSearching = nil
+    targ:Freeze(false)
 end)
 
 net.Receive("impulseInvDoMove", function(len, ply)
@@ -1279,6 +1300,11 @@ net.Receive("impulseDoConfiscate", function(len, ply)
 	if item:GetPos():DistToSqr(ply:GetPos()) < (200 ^ 2) then
 		if not ply.ConfiscatedInv then
 			ply.ConfiscatedInv = {}
+		end
+		if item.IsRestrictedItem == true then
+			ply:Notify("You have destroyed a restricted "..itemName..".")
+			item:Remove()
+			return
 		end
 		if not ply.IsRogue == true then
 			table.insert(ply.ConfiscatedInv, class)
