@@ -147,7 +147,7 @@ impulse.Config.AutoModMaxRisk = 15
 
 impulse.Config.MaxPillPresses = 4
 
-impulse.Config.PreWarCacheTime = 180
+impulse.Config.PreWarCacheTime = 210
 
 impulse.Config.CommunityURL = "https://deepgaming2.com/news"
 impulse.Config.PanelURL = "https://deepgaming2.com/news"
