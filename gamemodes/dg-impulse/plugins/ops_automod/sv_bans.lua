@@ -12,7 +12,7 @@ function impulse.Ops.AutoMod.Ban(ply, reason, risk, details, length)
         end
     end
 
-    VyHub.Ban:create(ply:SteamID64(), length, reason, "76561198066038219")
+    VyHub.Ban:create(ply:SteamID64(), length, reason) -- Submit as SYSTEM ban rather than Abarden
 
 	if IsValid(ply) then
 		ply:Kick("Automatic punishment issued")
