@@ -213,7 +213,15 @@ function PANEL:SetupFun()
     self.Global:SetLabel("Global")
     self.Global:SetExpanded(false)
     self.Global:Dock(TOP)
-    
+
+    self.OwOOC = vgui.Create("DButton",self.Global,"opsDevOwOifyOn")
+    self.OwOOC:SetPaintBackground(false)
+    self.OwOOC:SetText("Toggle Furry Speak OOC")
+    self.OwOOC:SetFont("Impulse-Elements18-Shadow")
+    self.OwOOC:Dock(TOP)
+    self.OwOOC.DoClick = function()
+        net.Start("OwOifyOn")
+        net.SendToServer()
     end
 
     self.Local = self.Fun:Add("DCollapsibleCategory")
