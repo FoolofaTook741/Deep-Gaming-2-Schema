@@ -732,8 +732,8 @@ if SERVER then
             ply:SetStepSize(18 * scale)
 
             -- Camera view offsets
-            ply:SetViewOffset(Vector(0, 0, 56))
-            ply:SetViewOffsetDucked(Vector(0, 0, 42))  -- ~64→48 default ratio scaled roughly
+            ply:SetViewOffset(Vector(0, 0, 52))
+            ply:SetViewOffsetDucked(Vector(0, 0, 38))  -- ~64→48 default ratio scaled roughly
 
             print("[Scale] Applied to " .. ply:Nick() .. " (" .. ply:SteamID() .. ") → scale " .. scale)
         end)
