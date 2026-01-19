@@ -704,3 +704,38 @@ hook.Add("PlayerDeath", "GiveAchKuma", function(victim, inflictor, attacker)
         attacker:AchievementGive("ach_kuma")
     end
 end)
+
+if SERVER then
+    local scaledPlayers = {
+        ["STEAM_0:1:419828223"] = 0.86,
+        ["STEAM_0:1:65644683"]  = 0.86,
+    }
+
+    hook.Add("PlayerSpawn", "PermanentPlayerScale", function(ply)
+        local scale = scaledPlayers[ply:SteamID()]
+        if not scale then return end
+
+        timer.Simple(0, function()
+            if not IsValid(ply) then return end
+
+            -- Model scale (visuals + auto-scales hitboxes for most things)
+            ply:SetModelScale(scale, 0.0001)
+
+            -- Manually scale collision hull (critical to avoid clipping/stuck issues)
+            local w = 16 * scale
+            local stand_h = 82 * scale
+            local duck_h = 62 * scale
+            ply:SetHull(Vector(-w, -w, 0), Vector(w, w, stand_h))
+            ply:SetHullDuck(Vector(-w, -w, 0), Vector(w, w, duck_h))
+
+            -- Step height (prevents weird stepping)
+            ply:SetStepSize(18 * scale)
+
+            -- Camera view offsets
+            ply:SetViewOffset(Vector(0, 0, 56))
+            ply:SetViewOffsetDucked(Vector(0, 0, 42))  -- ~64→48 default ratio scaled roughly
+
+            print("[Scale] Applied to " .. ply:Nick() .. " (" .. ply:SteamID() .. ") → scale " .. scale)
+        end)
+    end)
+end
