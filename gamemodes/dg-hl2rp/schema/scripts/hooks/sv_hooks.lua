@@ -707,7 +707,7 @@ end)
 
 if SERVER then
     local scaledPlayers = {
-        ["STEAM_0:1:419828223"] = 0.86,
+        ["STEAM_0:1:419828223"] = 0.83,
         ["STEAM_0:1:65644683"]  = 0.86,
     }
 
