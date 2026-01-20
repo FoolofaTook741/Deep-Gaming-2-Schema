@@ -38,13 +38,13 @@ VENDOR.Sell = {
 	},
     ["item_emptyspecimencrate"] = {
 		Cost = 40,
-		BuyMax = 3,
+		BuyMax = 5,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["item_hcdomestication"] = {
 		Cost = 60,
-		BuyMax = 3,
+		BuyMax = 5,
 		Restricted = true,
 		TempCooldown = 300
 	},
