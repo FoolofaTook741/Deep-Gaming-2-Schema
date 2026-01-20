@@ -9,8 +9,8 @@ function SWEP:GiveAttachment(attachment)
 
 	if self:IsReliable() then
 		net.Start("Plutonic.AttachmentEquip")
-		net.WriteUInt(self:EntIndex(), 16)
-		net.WriteUInt(self:GetOwner():EntIndex(), 16)
+		net.WriteEntity(self)
+		net.WriteEntity(self:GetOwner())
 		net.WriteString(attachment)
 		net.Broadcast()
 	else
@@ -30,8 +30,8 @@ function SWEP:TakeAttachment(attachment)
 	end
 
 	net.Start("Plutonic.AttachmentRemove")
-	net.WriteUInt(self:EntIndex(), 16)
-	net.WriteUInt(self:GetOwner():EntIndex(), 16)
+	net.WriteEntity(self)
+	net.WriteEntity(self:GetOwner())
 	net.WriteString(attachment)
 	net.Broadcast()
 end
