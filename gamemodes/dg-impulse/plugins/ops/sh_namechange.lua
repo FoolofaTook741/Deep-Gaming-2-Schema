@@ -2,12 +2,10 @@ if SERVER then
 	util.AddNetworkString("impulseOpsNamechange")
 	util.AddNetworkString("impulseOpsDoNamechange")
 
-
 	local function CapitalizeName(str)
 		str = string.Trim(str or "")
 		str = string.lower(str)
 
-		
 		str = string.gsub(str, "(%a)([%w_']*)", function(first, rest)
 			return string.upper(first) .. rest
 		end)
@@ -31,7 +29,7 @@ if SERVER then
 		end
 
 		ply:SetRPName(output, true)
-		ply:Notify("You have changed your name to "..output..".")
+		ply:Notify("You have changed your name to " .. output .. ".")
 
 		ply.NameChangeForced = nil
 	end)
@@ -39,12 +37,13 @@ else
 	local nameChangeText = "You have been forced to change your name by a game moderator as it was deemed inappropriate.\nPlease change your name below to something more suitable.\nEXAMPLE: John Doe"
 
 	net.Receive("impulseOpsNamechange", function()
-		
 		local function CapitalizeName(str)
-			str = string.Trim(str or "")
+			str = tostring(str or "")
+
+			str = string.gsub(str, "^%s+", "")
+
 			str = string.lower(str)
 
-			
 			str = string.gsub(str, "(%a)([%w_']*)", function(first, rest)
 				return string.upper(first) .. rest
 			end)
@@ -74,7 +73,6 @@ else
 		entry:SetPos(15, 105)
 		entry:SetSize(470, 20)
 
-		
 		entry.OnChange = function(self)
 			local caretPos = self:GetCaretPos()
 			local value = self:GetValue()
@@ -95,7 +93,6 @@ else
 			local value = entry:GetValue()
 			local formatted = CapitalizeName(value)
 
-			
 			if value ~= formatted then
 				Derma_Message("Names must use proper capitalisation.\nExample: John Doe", "impulse", "OK")
 				entry:SetText(formatted)
