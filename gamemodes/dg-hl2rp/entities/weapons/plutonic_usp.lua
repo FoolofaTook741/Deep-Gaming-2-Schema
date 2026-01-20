@@ -132,15 +132,19 @@ local copynum = SWEP.Primary.NumShots + 0
 local copybdmg = SWEP.Primary.Damage + 0
 local copyrecoil = SWEP.Primary.Recoil + 0
 local copyspreadmax = SWEP.Spread.Max + 0
+local copyISF = SWEP.IronsightsFOV + 0
+local copyISPos = Vector(SWEP.IronsightsPos.x, SWEP.IronsightsPos.y, SWEP.IronsightsPos.z)
+local copyISAng = Angle(SWEP.IronsightsAng.p, SWEP.IronsightsAng.y, SWEP.IronsightsAng.r)
 
 SWEP.Attachments = {
 	att_pistol_resin = {
 		Cosmetic = {
 			Model = "models/weapons/arccw_go/atts/supp_large.mdl",
-			Bone = "ValveBiped.Bip01_R_Finger4",
-			Pos = Vector(-20, 0, 0),
-			Ang = Angle(-25, 44, 70),
-			Scale = 0.0001,
+			Bone = "Base",
+			Pos = Vector(-16, 0.0, 1.8),
+			Ang = Angle(0, 0, 0),
+
+			Scale = 0.85,
 			Skin = 0
 		},
 		ModSetup = function(e)
@@ -159,16 +163,12 @@ SWEP.Attachments = {
 	att_pistol_silencer = {
 		Cosmetic = {
 			Model = "models/weapons/arccw_go/atts/supp_large.mdl",
-			Bone = "ValveBiped.Bip01_R_Finger4",
-			Pos = Vector(4.8, -2, -6.5),
-			Ang = Angle(-25, 44, 70),
+			Bone = "Base",
+			Pos = Vector(-16, 0.0, 1.8),
+			Ang = Angle(0, 0, 0),
+
 			Scale = 0.85,
 			Skin = 0
-			--World = {
-			--	Pos = Vector(11, 1.5, -6),
-			--	Ang = Angle(0, 180, 90),
-			--	Scale = 0.85
-			--}
 		},
 		ModSetup = function(e)
 			e.Primary.Sound = Sound("LS2.USP.Silenced")
@@ -180,68 +180,71 @@ SWEP.Attachments = {
 		end,
 		Behaviour = "silencer",
 	},
-	t1_reflex = {
-		Cosmetic = {
-			Model = "models/weapons/arccw_go/atts/t1.mdl",
-			Bone = "ValveBiped.Bip01_R_Finger4",
-			Pos = Vector(1.4, 2, -5.2),
-			Ang = Angle(-25, 44, 170),
-			Scale = 0.85,
-			Skin = 0,
-		},
-		Reticule = {
-			Size = 0.25,
-			RotationAngle = 180,
-			Pos = Vector(0,-0.032,1.025),
-			Material = Material("hud/holosight/go_delta.png"),
-			Color = Color(0,255,0,255),
-			NoMask = true,
-		},
-		ModSetup = function(e)
-			e.IronsightsPos = Vector(-5.275, 0, 2.75)
-			e.IronsightsAng = Angle(0, 1.5, 0)
-			e.IronSightsFOV = 0.5
-			e.Primary.Recoil = 0.1
-		end,
-		ModCleanup = function(e)
-			e.IronsightsPos = Vector(-5.92, 0, 3.1)
-			e.IronsightsAng = Angle(0, 0, -1)
-			e.IronsightsFov = copyISF
-			e.Primary.Recoil = copyrecoil
-		end,
-		Behaviour = "reflex_sight",
+
+t1_reflex = {
+	Cosmetic = {
+		Model = "models/weapons/arccw_go/atts/t1.mdl",
+		Bone = "Base",
+		Pos = Vector(2, 0.0, 2.3),
+		Ang = Angle(0, 0, 0),
+		Scale = 0.85,
+		Skin = 0,
 	},
-	barska_rds = {
-		Cosmetic = {
-			Model = "models/weapons/arccw_go/atts/barska.mdl",
-			Bone = "ValveBiped.Bip01_R_Finger4",
-			Pos = Vector(1.4, 2, -5.2),
-			Ang = Angle(-25, 44, 170),
-			Scale = 0.85,
-			Skin = 0,
-		},
-		Reticule = {
-			Size = 0.25,
-			RotationAngle = 180,
-			Pos = Vector(0,-0.032,1.025),
-			Material = Material("hud/holosight/go_barska.png"),
-			Color = Color(0,150,255,255),
-			NoMask = true,
-		},
-		ModSetup = function(e)
-			e.IronsightsPos = Vector(-5.275, 0, 2.75)
-			e.IronsightsAng = Angle(0, 1.5, 0)
-			e.IronSightsFOV = 0.5
-			e.Primary.Recoil = 0.1
-		end,
-		ModCleanup = function(e)
-			e.IronsightsPos = Vector(-5.92, 0, 3.1)
-			e.IronsightsAng = Angle(0, 0, -1)
-			e.IronsightsFov = copyISF
-			e.Primary.Recoil = copyrecoil
-		end,
-		Behaviour = "red_dot_sight",
+	Reticule = {
+		Size = 0.25,
+		RotationAngle = 180,
+		Pos = Vector(0, -0.032, 1.025),
+		Material = Material("hud/holosight/go_delta.png"),
+		Color = Color(0,255,0,255),
+		NoMask = true,
 	},
+	ModSetup = function(e)
+		e.IronsightsPos = Vector(-6.275, 0, 2)
+		e.IronsightsAng = Angle(0, 1.5, 0)
+		e.IronsightsFOV = 0.6
+		e.Primary.Recoil = 0.1
+	end,
+	ModCleanup = function(e)
+		e.IronsightsPos = copyISPos
+		e.IronsightsAng = copyISAng
+		e.IronsightsFOV = copyISF
+		e.Primary.Recoil = copyrecoil
+	end,
+	Behavior = "reflex_sight",
+},
+barska_rds = {
+	Cosmetic = {
+		Model = "models/weapons/arccw_go/atts/barska.mdl",
+		Bone = "Base",
+		Pos = Vector(2.2, 0.0, 2.25),
+		Ang = Angle(0, 0, 0),
+		Scale = 0.85,
+		Skin = 0,
+	},
+	Reticule = {
+		Size = 0.25,
+		RotationAngle = 180,
+		Pos = Vector(0, -0.032, 1.025),
+		Material = Material("hud/holosight/go_barska.png"),
+		Color = Color(0,150,255,255),
+		NoMask = true,
+	},
+	ModSetup = function(e)
+		e.IronsightsPos = Vector(-6.25, 0, 2.0)
+		e.IronsightsAng = Angle(0, 1.5, 0)
+
+		e.IronsightsFOV = 0.6
+
+		e.Primary.Recoil = 0.1
+	end,
+	ModCleanup = function(e)
+		e.IronsightsPos = copyISPos
+		e.IronsightsAng = copyISAng
+		e.IronsightsFOV = copyISF
+		e.Primary.Recoil = copyrecoil
+	end,
+	Behavior = "red_dot_sight",
+},
 }
 
 --[[function SWEP:CustomShootEffects()
