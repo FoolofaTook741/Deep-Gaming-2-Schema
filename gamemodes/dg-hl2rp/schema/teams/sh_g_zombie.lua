@@ -31,6 +31,7 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
     local sid = ply:SteamID64()
     local buff = math.Clamp(GetSporeCount() * 15, 0, 200)
     if newTeam == TEAM_ZOMBIE then
+        ply:AllowFlashlight(false)
         ply:ClearInventory(1)
         if ply:IsDonator() == true then
             local chance = math.random(1,100)
@@ -247,6 +248,7 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
         end
     elseif oldTeam == TEAM_ZOMBIE then
         timer.Remove(sid .. "zombiemoans")
+        ply:AllowFlashlight(true)
         ply:SetNoTarget(false) 
         ply:SetWalkSpeed(120)
         ply:SetJumpPower( 200 )
