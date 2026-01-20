@@ -3173,3 +3173,88 @@ if CLIENT then
 		chat.AddText(Color(255, 0, 0), "[GHOST] ", Color(255, 255, 255), speaker:Name(), ": ", message)
 	end)
 end
+
+local scaleCommand = {
+    description = "Scales a player's model size by SteamID (0.5 to 4.0). Resets on death. Admin only.",
+    requiresArg = true,
+    leadAdminOnly = true,
+    onRun = function(ply, arg, rawText)
+        if not (ply:IsUserGroup("leadadmin") or ply:IsUserGroup("superadmin") or ply:IsUserGroup("developer")) then
+            ply:Notify("You do not have permission to use this command.")
+            return
+        end
+
+        if #arg < 2 then
+            ply:Notify("SteamID required. Usage: /scale <steamid> <0.5 to 4.0>")
+            return
+        end
+
+        local steamid = arg[1]
+        local scaleStr = arg[2]
+        local scale = tonumber(scaleStr)
+
+        if not scale or scale < 0.5 or scale > 4.0 then
+            ply:Notify("Invalid scale. Must be between 0.5 and 4.0.")
+            return
+        end
+
+        local target = nil
+        for _, p in ipairs(player.GetAll()) do
+            if string.lower(p:SteamID()) == string.lower(steamid) then
+                target = p
+                break
+            end
+        end
+
+        if not IsValid(target) or not target:IsPlayer() then
+            ply:Notify("Player not found with SteamID: " .. steamid)
+            return
+        end
+
+        timer.Simple(0, function()
+            if not IsValid(target) then return end
+
+            target:SetModelScale(scale, 0.0001)
+
+            local w = 16 * scale
+            local stand_h = 82 * scale
+            local duck_h = 62 * scale
+            target:SetHull(Vector(-w, -w, 0), Vector(w, w, stand_h))
+            target:SetHullDuck(Vector(-w, -w, 0), Vector(w, w, duck_h))
+
+            target:SetStepSize(18 * scale)
+
+            local view_z = 64 * scale
+            local duck_z = 48 * scale
+            target:SetViewOffset(Vector(0, 0, view_z))
+            target:SetViewOffsetDucked(Vector(0, 0, duck_z))
+
+            ply:Notify("Scaled " .. target:Nick() .. " to " .. scale .. "x. Resets on death.")
+            target:Notify("Your scale has been set to " .. scale .. "x by an admin. Resets on death.")
+            print("[ScaleCmd] " .. ply:Nick() .. " scaled " .. target:Nick() .. " (" .. target:SteamID() .. ") to " .. scale)
+        end)
+    end
+}
+
+impulse.RegisterChatCommand("/scale", scaleCommand)
+
+hook.Add("PlayerDeath", "ResetPlayerScaleOnDeath", function(victim)
+    if not IsValid(victim) then return end
+
+    timer.Simple(0.1, function()
+        if not IsValid(victim) then return end
+
+        local curScale = victim:GetModelScale() or 1
+        if curScale == 1 then return end
+
+        victim:SetModelScale(1, 0.0001)
+
+        victim:SetHull(Vector(-16, -16, 0), Vector(16, 16, 82))
+        victim:SetHullDuck(Vector(-16, -16, 0), Vector(16, 16, 62))
+
+        victim:SetStepSize(18)
+
+        victim:SetViewOffset(Vector(0, 0, 64))
+        victim:SetViewOffsetDucked(Vector(0, 0, 48))
+    end)
+end)
