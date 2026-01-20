@@ -45,26 +45,59 @@ TEAM_COOLDOWN_BYPASS = {
 }
 
 net.Receive("cuffsDoSearch", function(len, ply)
-    local targ = net.ReadEntity()
-    local inv = targ:GetInventory(1)
+    if not IsValid(ply) or not ply:IsPlayer() then return end
+    if not ply:IsCP() then return end
+    if ply.InvSearching and IsValid(ply.InvSearching) then return end
 
-    if not targ:IsHandcuffed() then
+    local targ = net.ReadEntity()
+    if not IsValid(targ) or not targ:IsPlayer() then return end
+
+    if not targ:OnGround() then return end
+    if not targ.beenInvSetup then return end
+
+    if ply.CanArrest and not ply:CanArrest(targ) then
+        ply:Notify("You cannot search this player.")
         return
     end
 
-    if ply:GetPos():Distance(targ:GetPos()) > 1000 then
+    if not targ:IsHandcuffed() then
+        ply:Notify("You must detain a player before searching them.")
         return
+    end
+
+    if ply:GetPos():DistToSqr(targ:GetPos()) > (200 * 200) then
+        ply:Notify("No player in search range.")
+        return
+    end
+
+    targ:Freeze(true)
+    targ:Notify("You are currently being searched.")
+    ply:Notify("You have started searching " .. targ:Nick() .. ".")
+    ply.InvSearching = targ
+    hook.Run("DoInventorySearch", ply, targ)
+
+    local inv = targ:GetInventory(1) or {}
+
+    local written = 0
+    for invid, slot in pairs(inv) do
+        local netid = slot and slot.class and impulse.Inventory.ClassToNetID(slot.class)
+        if netid then written = written + 1 end
     end
 
     net.Start("impulseInvDoSearch")
-	net.WriteUInt(targ:EntIndex(), 8)
-	net.WriteUInt(table.Count(inv), 16)
-    net.WriteUInt(targ:GetMoney(), 16)
-	for v,k in pairs(inv) do
-		local netid = impulse.Inventory.ClassToNetID(k.class)
-		net.WriteUInt(netid, 10)
-	end
-	net.Send(ply)
+    net.WriteUInt(targ:EntIndex(), 8)
+    net.WriteUInt(written, 16)
+    net.WriteUInt(math.Clamp(tonumber(targ:GetMoney()) or 0, 0, 65535), 16)
+
+        for invid, slot in pairs(inv) do
+            local netid = slot and slot.class and impulse.Inventory.ClassToNetID(slot.class)
+            if netid then
+                net.WriteUInt(netid, 10)
+                net.WriteUInt(invid, 16)
+                net.WriteBool(slot.restricted == true)
+            end
+        end
+    net.Send(ply)
 end)
 
 
