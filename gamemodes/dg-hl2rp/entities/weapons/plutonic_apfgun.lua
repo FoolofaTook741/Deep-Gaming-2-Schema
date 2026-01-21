@@ -40,11 +40,11 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("LS2.APF.Single")
 
-SWEP.Primary.Recoil = 1.4 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 7
+SWEP.Primary.Recoil = 0.9 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 2
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(960)
+SWEP.Primary.Delay = RPM(900)
 SWEP.Primary.Tracer = "AR2Tracer"
 SWEP.UseIronsightsRecoil = false
 SWEP.SpeedReduction = 170

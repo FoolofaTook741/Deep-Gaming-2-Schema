@@ -1,0 +1,43 @@
+local ITEM = {}
+
+ITEM.UniqueID = "clo_reinforcedcphelmet"
+ITEM.Name = "Reinforced Civil Protection Mask"
+ITEM.Desc =  "A strengthened Civil Protection mask with added plating, reducing head damage by 15%."
+ITEM.Category = "Clothing Items - Accessories"
+ITEM.Model = Model("models/wn7new/metropolice/n7_cp_gasmask1.mdl")
+ITEM.FOV = 12.213467048711
+ITEM.CamPos = Vector(46.418338775635, 20.630373001099, 32.091690063477)
+ITEM.NoCenter = true
+ITEM.Weight = 0.2
+
+ITEM.Droppable = true
+ITEM.DropOnDeath = true
+
+ITEM.Illegal = false
+ITEM.Equipable = true
+ITEM.EquipGroup = "pants"
+ITEM.CanStack = true   
+
+function ITEM:CanEquip(ply)
+	return ply:Team() == TEAM_CP and not ply.IsAugmented and not ply.IsRogue
+end
+
+function ITEM:OnEquip(ply)
+    if ply:GetTeamRank() >= RANK_DCO then
+        ply:SetBodygroup(3, 3)
+    elseif ply:GetTeamClass() == CLASS_SWORD then
+        ply:SetBodygroup(3, 2)
+    else
+        ply:SetBodygroup(3, 1)
+    end
+    ply.HasCPMask = true
+    ply.HasReinforcedCPMask = true
+end
+
+function ITEM:UnEquip(ply)
+	ply:SetBodygroup(3, 0)
+    ply.HasCPMask = false
+    ply.HasReinforcedCPMask = false
+end
+
+impulse.RegisterItem(ITEM)

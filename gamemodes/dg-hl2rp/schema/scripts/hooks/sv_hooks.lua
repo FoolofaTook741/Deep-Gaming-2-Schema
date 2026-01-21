@@ -322,17 +322,9 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			dmginfo:ScaleDamage(0.65)
 		end
 		if hitgroup == HITGROUP_HEAD then
-			local rank = ply.GetTeamRank and ply:GetTeamRank() or 0
-			if rank >= RANK_DCO then
+			if ply.HasReinforcedCPMask == true and ply.HasCPMask == true then
 				dmginfo:ScaleDamage(0.85)
-			elseif rank >= RANK_DVL then
-				dmginfo:ScaleDamage(0.88)
-			elseif rank >= RANK_OFC then
-				dmginfo:ScaleDamage(0.90)
-			elseif rank >= RANK_I1 then
-				dmginfo:ScaleDamage(0.93)
-			else
-				dmginfo:ScaleDamage(0.95)
+				ply:EmitSound("player/bhit_helmet-1.wav")
 			end
 		end
 	else
