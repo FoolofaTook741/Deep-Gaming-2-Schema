@@ -2,174 +2,217 @@ include("shared.lua")
 
 local myFrame
 local progbar
-local mylabel
+local myLabel
+local stateLabel
+local qKeyPanel
+local eKeyPanel
 
 local LR = false
-local incrementValue = 0.18 
-
-local finished = false 
-
+local incrementValue = 0.18
+local drainRate = 0.004
+local finished = false
 local reps = 0
+local lastInputTime = 0
 
-surface.CreateFont( "myFont", {
-	font = "Arial", --  Use the font-name which is shown to you by your operating system Font Viewer, not the file name
-	extended = false,
-	size = 25,
-	weight = 500,
-	blursize = 0,
-	scanlines = 0,
-	antialias = true,
-	underline = false,
-	italic = false,
-	strikeout = false,
-	symbol = false,
-	rotary = false,
-	shadow = false,
-	additive = false,
-	outline = false,
-} )
+surface.CreateFont("PotatoTitleFont", {
+    font = "Roboto",
+    size = 32,
+    weight = 800,
+    antialias = true
+})
+
+surface.CreateFont("PotatoBigFont", {
+    font = "Roboto",
+    size = 26,
+    weight = 700,
+    antialias = true
+})
+
+surface.CreateFont("PotatoSmallFont", {
+    font = "Roboto",
+    size = 20,
+    weight = 500,
+    antialias = true
+})
 
 function ENT:Draw()
-
     self:DrawModel()
-
 end
 
-function ENT:Initialize()
+hook.Add("Think", "potatoPeelLogic", function()
+    if not IsValid(myFrame) or not myFrame:IsVisible() then return end
+    if not IsValid(progbar) then return end
 
-    --drawFrame()
-    
-end
+    local pressed = false
 
-
-hook.Add("Think", "potatoPeelDecay", function()
-  if myFrame and myFrame:IsVisible() then
-	local frac = progbar:GetFraction()
-    if frac > 0 then
-      progbar:SetFraction(math.max(0, frac - 0.003 * FrameTime()))
+    if input.IsKeyDown(27) and not input.IsKeyDown(15) and LR == false and finished == false then
+        LR = true
+        pressed = true
+        lastInputTime = CurTime()
+        progbar:SetFraction(math.min(1, progbar:GetFraction() + incrementValue))
     end
-	if((input.IsKeyDown(27) && !input.IsKeyDown(15)) && (LR == false  && finished == false)) then
-		LR = true
-		progbar:SetFraction(progbar:GetFraction() + incrementValue)
-	end
-	if((input.IsKeyDown(15) && !input.IsKeyDown(27)) && (LR == true && finished == false)) then
-		LR = false 
-		progbar:SetFraction(progbar:GetFraction() + incrementValue)
-	end
-	if(progbar:GetFraction() >= 1 && finished == false) then
-		finished = true 
-		reps = reps + 1
-		mylabel:SetText("Reps: "..reps)
-	elseif (progbar:GetFraction() <= 0 && finished == true  ) then
-		finished = false                 
-	elseif (finished == true ) then
-		progbar:SetFraction(progbar:GetFraction() - 0.01)
-	end
-  end
+
+    if input.IsKeyDown(15) and not input.IsKeyDown(27) and LR == true and finished == false then
+        LR = false
+        pressed = true
+        lastInputTime = CurTime()
+        progbar:SetFraction(math.min(1, progbar:GetFraction() + incrementValue))
+    end
+
+    if not pressed and finished == false then
+        progbar:SetFraction(math.max(0, progbar:GetFraction() - drainRate))
+    end
+
+    if progbar:GetFraction() >= 1 and finished == false then
+        finished = true
+        reps = reps + 1
+        myLabel:SetText("Potatoes Peeled: " .. reps)
+        stateLabel:SetText("Potato peeled! Keep going...")
+    end
+
+    if finished == true then
+        progbar:SetFraction(math.max(0, progbar:GetFraction() - 0.02))
+        if progbar:GetFraction() <= 0 then
+            finished = false
+            stateLabel:SetText("Keep peeling...")
+        end
+    end
+
+    if IsValid(qKeyPanel) and IsValid(eKeyPanel) then
+        qKeyPanel.Active = not LR
+        eKeyPanel.Active = LR
+    end
 end)
 
-net.Receive("potatoSignal",function()
-
+net.Receive("potatoSignal", function()
     drawFrame()
     myFrame:SetVisible(true)
-
-
+    myFrame:MakePopup()
 end)
 
-
-
 function drawFrame()
-
     reps = 0
     LR = false
+    finished = false
 
-
-    local outlineColor = Color(0,0,0)    
-    local backgroundColor = Color(59,57,57)
-
-    local labelOutline = Color(0,0,0)
-    local labelColor = Color(124,120,120)
-
-    local textColor = Color(0,0,0)
-
+    if IsValid(myFrame) then
+        myFrame:Remove()
+    end
 
     local frame = vgui.Create("DFrame")
-    frame:SetSize( ScrW() * 1200/1920, ScrH() * 800/1080 )
-    frame:SetTitle( "Potato Peeler" )
-    frame:SetDraggable( false ) 
+    frame:SetSize(ScrW() * 0.4, ScrH() * 0.35)
     frame:Center()
-    frame:SetVisible(false )
-    frame:MakePopup()
-    frame:SetSizable(true)  
-    frame:ShowCloseButton(false )
-    frame.Paint = function(s , w , h)
-    
-        draw.RoundedBox(5,0,0,w,h,outlineColor)
-        draw.RoundedBox(5,2,2,w-4,h-4,backgroundColor)
+    frame:SetTitle("")
+    frame:SetDraggable(false)
+    frame:ShowCloseButton(false)
+    frame.startTime = SysTime()
+
+    frame.Paint = function(self, w, h)
+        Derma_DrawBackgroundBlur(self, self.startTime)
+        surface.SetDrawColor(0, 0, 0, 200)
+        surface.DrawRect(0, 0, w, h)
+
+        draw.RoundedBox(12, 0, 0, w, h, Color(18, 20, 26, 245))
+        draw.RoundedBox(10, 4, 4, w - 8, h - 8, Color(30, 34, 42, 255))
+        draw.RoundedBoxEx(10, 4, 4, w - 8, 42, Color(70, 110, 160), true, true, false, false)
+
+        draw.SimpleText("POTATO PEELER", "PotatoTitleFont", w / 2, 25, Color(230, 240, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
+
     myFrame = frame
 
-    local bar = vgui.Create( "DProgress",frame )
-    bar:SetPos( (ScrW()*(3/16)),(ScrH()/8))
-    bar:SetSize( (ScrW()/4), 50 )
-    bar:SetFraction( 0.0 )
-    progbar = bar
+    local inner = vgui.Create("DPanel", frame)
+    inner:Dock(FILL)
+    inner:DockMargin(20, 60, 20, 20)
+    inner.Paint = function() end
 
-    local repCounter = vgui.Create("DLabel",frame)
-    repCounter:SetPos((ScrW() * 520/1920),(ScrH() * 270/1080) )
-    repCounter:SetText("Reps: "..reps)
-    repCounter:SetTextColor(textColor)
-    repCounter:SetSize((ScrW() * 200/1920),(ScrH() * 100/1080) )
-    repCounter:SetTextInset( 30, 0 )
-    repCounter:SetFont("myFont")
-    repCounter.Paint = function(s , w , h)
-    
-        draw.RoundedBox(5,0,0,w,h,labelOutline)
-        draw.RoundedBox(5,2,2,w-4,h-4,labelColor)
-    end
-    mylabel = repCounter
+    stateLabel = vgui.Create("DLabel", inner)
+    stateLabel:Dock(TOP)
+    stateLabel:SetTall(24)
+    stateLabel:SetFont("PotatoSmallFont")
+    stateLabel:SetText("Alternate Q and E to peel")
+    stateLabel:SetTextColor(Color(220, 220, 230))
+    stateLabel:SetContentAlignment(5)
 
-    local qLab = vgui.Create("DLabel",frame)
-    qLab:SetPos((ScrW()/8),(ScrH()/8))
-    qLab:SetFont("myFont")
-    qLab:SetText("Q")
-    qLab:SetSize((ScrW()/24),(ScrH()/24))
-    qLab:SetTextColor(textColor)
-    qLab:SetTextInset((ScrW()/64), 0 )
-    qLab.Paint = function(s , w , h)
-    
-        draw.RoundedBox(5,0,0,w,h,labelOutline)
-        draw.RoundedBox(5,2,2,w-4,h-4,labelColor)
-    end
+    local barHolder = vgui.Create("DPanel", inner)
+    barHolder:Dock(TOP)
+    barHolder:DockMargin(40, 16, 40, 0)
+    barHolder:SetTall(54)
+    barHolder.Paint = function() end
 
-    local eLab = vgui.Create("DLabel",frame)
-    eLab:SetPos((ScrW()*(29/64)),(ScrH()/8))
-    eLab:SetFont("myFont")
-    eLab:SetText("E")
-    eLab:SetSize((ScrW()/24),(ScrH()/24))
-    eLab:SetTextColor(textColor)
-    eLab:SetTextInset((ScrW()/64), 0 )
-    eLab.Paint = function(s , w , h)
-    
-        draw.RoundedBox(5,0,0,w,h,labelOutline)
-        draw.RoundedBox(5,2,2,w-4,h-4,labelColor)
+    progbar = vgui.Create("DProgress", barHolder)
+    progbar:Dock(FILL)
+    progbar:SetFraction(0)
+
+    progbar.Paint = function(self, w, h)
+        local frac = self:GetFraction()
+        draw.RoundedBox(8, 0, 0, w, h, Color(15, 15, 20))
+        local r = Lerp(frac, 200, 80)
+        local g = Lerp(frac, 120, 220)
+        local b = Lerp(frac, 70, 120)
+        draw.RoundedBox(8, 0, 0, w * frac, h, Color(r, g, b))
+        surface.SetDrawColor(0, 0, 0, 200)
+        surface.DrawOutlinedRect(0, 0, w, h)
     end
 
-    local finButton = vgui.Create("DButton",frame)
-    finButton:SetPos((ScrW() * (18/64)),(ScrH() * (3/8)) )
-    finButton:SetSize((ScrW() * (1/12)),(ScrH() * (1/12)) )
-    finButton:SetText("Finish")
-    finButton:SetFont("myFont")
-    finButton.Paint = function(s , w , h)
-    
-        draw.RoundedBox(5,0,0,w,h,labelOutline)
-        draw.RoundedBox(5,2,2,w-4,h-4,labelColor)
+    myLabel = vgui.Create("DLabel", inner)
+    myLabel:Dock(TOP)
+    myLabel:DockMargin(0, 10, 0, 0)
+    myLabel:SetFont("PotatoBigFont")
+    myLabel:SetText("Reps: 0")
+    myLabel:SetTextColor(Color(240, 240, 245))
+    myLabel:SetContentAlignment(5)
+
+    local keyRow = vgui.Create("DPanel", inner)
+    keyRow:Dock(TOP)
+    keyRow:DockMargin(80, 10, 80, 0)
+    keyRow:SetTall(60)
+    keyRow.Paint = function() end
+
+    local function KeyBox(text)
+        local p = vgui.Create("DPanel", keyRow)
+        p:SetWide(80)
+        p.Active = false
+
+        p.Paint = function(self, w, h)
+            local glow = self.Active and (0.5 + math.sin(CurTime() * 6) * 0.5) or 0
+            local col = Color(40 + glow * 80, 50 + glow * 120, 70 + glow * 160)
+            draw.RoundedBox(8, 0, 0, w, h, col)
+            surface.SetDrawColor(0, 0, 0, 200)
+            surface.DrawOutlinedRect(0, 0, w, h)
+            draw.SimpleText(text, "PotatoBigFont", w / 2, h / 2, Color(240, 240, 240), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        return p
     end
-    finButton.DoClick = function()
+
+    qKeyPanel = KeyBox("Q")
+    qKeyPanel:Dock(LEFT)
+    qKeyPanel:DockMargin(20, 0, 20, 0)
+
+    eKeyPanel = KeyBox("E")
+    eKeyPanel:Dock(RIGHT)
+    eKeyPanel:DockMargin(20, 0, 20, 0)
+
+    local bottom = vgui.Create("DButton", inner)
+    bottom:Dock(BOTTOM)
+    bottom:SetTall(44)
+    bottom:SetText("TURN IN")
+    bottom:SetFont("PotatoBigFont")
+    bottom:SetTextColor(Color(240, 240, 240))
+
+    bottom.Paint = function(self, w, h)
+        local hover = self:IsHovered()
+        local col = hover and Color(90, 180, 120) or Color(60, 130, 90)
+        draw.RoundedBox(8, 0, 0, w, h, col)
+        surface.SetDrawColor(0, 0, 0, 200)
+        surface.DrawOutlinedRect(0, 0, w, h)
+    end
+
+    bottom.DoClick = function()
         net.Start("potatoesPeeled")
-            net.WriteInt(reps,32)
+            net.WriteInt(reps, 32)
         net.SendToServer()
         frame:Close()
     end
-
 end
