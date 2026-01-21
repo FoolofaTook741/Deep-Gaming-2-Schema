@@ -1,25 +1,28 @@
-ENT.Base			= "base_gmodentity" 
-ENT.Type			= "anim"
-ENT.PrintName		= "Combine Terminal"
-ENT.Author			= "vin"
-ENT.Purpose			= ""
-ENT.Instructions	= "Press E"
-ENT.Category 		= "impulse"
+ENT.Base            = "base_gmodentity"
+ENT.Type            = "anim"
+ENT.PrintName       = "Combine Terminal"
+ENT.Author          = "vin"
+ENT.Purpose         = ""
+ENT.Instructions    = "Press E"
+ENT.Category        = "impulse"
 
-ENT.Spawnable = true
-ENT.AdminOnly = true
+ENT.Spawnable       = true
+ENT.AdminOnly       = true
 
-ENT.HUDName = "Combine Terminal"
-ENT.HUDDesc = "This can be used by Combine personnel."
-ENT.Emped = false
+ENT.HUDName         = "Combine Terminal"
+ENT.HUDDesc         = "This can be used by Combine personnel."
+ENT.Emped           = false
 
 function ENT:SetupDataTables()
-	self:NetworkVar("Int", 0, "NetworkedUser")
-	self:NetworkVar("Bool", 0, "ConvictIndex")
-	self:NetworkVar("Bool", 1, "OverwatchIndex")
-	self:NetworkVar("Bool", 1, "EMPed")
+    self:NetworkVar("Int", 0, "NetworkedUser")
+    self:NetworkVar("Bool", 0, "ConvictIndex")
+    self:NetworkVar("Bool", 1, "OverwatchIndex")
 end
 
 function ENT:IsEMPed()
-	return self.Emped
+    if SERVER then
+        return self.Emped == true
+    else
+        return self:GetNWBool("TerminalEmped", false)
+    end
 end
