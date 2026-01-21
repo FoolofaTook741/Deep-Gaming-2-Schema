@@ -27,7 +27,7 @@ if SERVER then
         ReqwestLog( embeds, DG_E2 )
     end
 
-    local reviewURL       = "https://abardenservers.com/pg_dev/e2.php"
+    local reviewURL       = "https://hl2rp.deepgaming2.com/whitelists/e2.php"
     local sharedSecret    = "kRS15O4xkcMT7AZ877tcxjCsCg6GPh67"
     local authFile        = "wire_e2_authorized.txt"
     local authorized      = {}
@@ -78,6 +78,7 @@ if SERVER then
         if not IsValid(ent) or ent._WireE2Hooked then return end
         ent._WireE2Hooked = true
         local origSetup = ent.Setup
+        ent._WireE2OrigSetup = origSetup
 
         function ent:Setup(code, includes, restore, forcecompile, filepath)
             local ply     = self.player
@@ -87,7 +88,7 @@ if SERVER then
             
 			if ply:IsGameMaster() then 
 				return origSetup(self, code, includes, restore, forcecompile, filepath) 
-			end
+			end-
 
             if #code > MAX_CODE_LEN then
                 if IsValid(ply) then
@@ -114,7 +115,6 @@ if SERVER then
             self._WireE2Hash = hash
             impulse.debugPrint("[WireE2] New submission by "..plyName.." → "..hash)
 
-            -- 3) already pending?
             if pending[hash] then
                 if IsValid(ply) then
                     ply:SendChatClassMessage(231,
@@ -125,7 +125,6 @@ if SERVER then
             end
 
             if not authorized[hash] then
-                -- cap queue
                 if #pendingOrder >= MAX_PENDING then
                     local old = table.remove(pendingOrder,1)
                     pending[old] = nil
@@ -133,18 +132,18 @@ if SERVER then
                     notifyAdmins("wire_e2_removed", old)
                 end
 
-                pending[hash] = { player=ply, ent=self, code=code, time=now }
+                pending[hash] = {
+                    player = ply,
+                    ent = self,
+                    code = code,
+                    time = now,
+                    includes = includes,
+                    restore = restore,
+                    forcecompile = forcecompile,
+                    filepath = filepath
+                }
                 table.insert(pendingOrder, hash)
                 impulse.debugPrint("[WireE2] Pending approval: "..hash)
-
-                local recipients = {}
-                for _, p in ipairs(player.GetAll()) do if p:IsLeadAdmin() then recipients[#recipients+1]=p end end
-                net.Start("wire_e2_pending_list")
-                  net.WriteUInt(1,16)
-                  net.WriteString(hash)
-                  net.WriteString(plyName)
-                  net.WriteString(code)
-                net.Send(recipients)
 
                 timer.Simple(PENDING_TIMEOUT, function() expirePending(hash) end)
 
@@ -169,16 +168,50 @@ if SERVER then
                           return
                         end
 
-                        pending[hash].score   = res.score
-                        pending[hash].verdict = res.verdict or "safe"
-                        pending[hash].details = res.details or ""
+                        local data = pending[hash]
+                        if not data then return end
 
-                        notifyAdmins("wire_e2_review",
-                            hash,
-                            res.score,
-                            pending[hash].verdict,
-                            pending[hash].details
-                        )
+                        data.score   = res.score
+                        data.verdict = res.verdict or "safe"
+                        data.details = res.details or ""
+
+                        if data.verdict == "safe" and tonumber(data.score) and data.score <= 30 then
+                            authorized[hash] = true
+                            saveAuth()
+
+                            pending[hash] = nil
+                            for i,h in ipairs(pendingOrder) do if h == hash then table.remove(pendingOrder, i) break end end
+
+                            if IsValid(data.player) then
+                                net.Start("wire_e2_user_approved")
+                                net.WriteString("Auto-Approved")
+                                net.Send(data.player)
+                            end
+
+                            if IsValid(data.ent) and data.ent._WireE2OrigSetup then
+                                data.ent._WireE2Code = data.code
+                                data.ent._WireE2Hash = hash
+                                data.ent:EmitSound("buttons/button14.wav")
+
+                                data.ent:_WireE2OrigSetup(data.code, data.includes, data.restore, data.forcecompile, data.filepath)
+                            end
+
+                            LogE2ApprovalToDiscord(hash, IsValid(data.player) and data.player or Entity(0), "Auto-Approved")
+                            return
+                        end
+
+                        do
+                            local recipients = {}
+                            for _, p in ipairs(player.GetAll()) do if p:IsLeadAdmin() then recipients[#recipients+1]=p end end
+                            net.Start("wire_e2_pending_list")
+                            net.WriteUInt(1,16)
+                            net.WriteString(hash)
+                            net.WriteString((IsValid(data.player) and data.player:Nick()) or "Unknown")
+                            net.WriteString(data.code)
+                            net.Send(recipients)
+                        end
+
+                        notifyAdmins("wire_e2_review", hash, data.score, data.verdict, data.details)
 
                         print(string.format(
                           "[WireE2] Review complete for %s: score=%d, verdict=%s, analysis=\"%s\"",
