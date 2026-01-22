@@ -91,49 +91,6 @@ function SCHEMA:HUDPaint()
 	end
 end
 
-[[- function SCHEMA:RagdollMenuAddOptions(panel, body)
-	if not LocalPlayer():IsCP() or LocalPlayer():GetTeamClass() != CLASS_JURY then
-		return
-	end
-
-	panel:AddAction("impulse/icons/detective-256.png", "Investigate Body", function()
-		panel:Remove()
-
-		if impulse.Anim.GetModelClass(body:GetModel()) == "metrocop" then
-			impulse.MakeWorkbar(15, "Inspecting body...", function()
-				if not IsValid(body) or not LocalPlayer():IsCP() or not LocalPlayer():Alive() then
-					return
-				end
-
-				impulse.MakeWorkbar(15, "Reviewing bodycam footage...", function()
-					if not IsValid(body) then
-						return
-					end
-
-					net.Start("impulseHL2RPInspectBody")
-					net.WriteEntity(body)
-					net.SendToServer()
-				end, true)
-			end, true)
-		else
-			impulse.MakeWorkbar(15, "Inspecting body...", function()
-				if not IsValid(body) then
-					return
-				end
-
-				if body:GetModel() == "models/gibs/fast_zombie_legs.mdl" then
-					Derma_Message("A skeleton remains, with most of it's flesh ripped off...\nWhat happened here?", "impulse", "Close")
-					return
-				end
-
-				net.Start("impulseHL2RPInspectBody")
-				net.WriteEntity(body)
-				net.SendToServer()
-			end, true)
-		end
-	end)
-end -]]
-
 local range = impulse.Config.VortessenceRange ^ 2
 local zomrange = 1000
 local col = Color(138, 43, 226)

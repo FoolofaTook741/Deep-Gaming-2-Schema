@@ -125,10 +125,6 @@ net.Receive("impulseHL2RPInspectBodyComplete", function()
 		msg = msg.."\n"..wDesc
 	end
 
-	[[-if killer != "" then
-		msg = msg.."\n\nAfter review of the bodycam footage the suspect who killed this officer has been identified as "..killer.."."
-		msg = msg.."\nThey have automatically been added to the BOL index."
-	end]]
 
 	Derma_Message(msg, "impulse", "Close")
 	print(msg)
