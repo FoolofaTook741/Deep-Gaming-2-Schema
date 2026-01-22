@@ -455,25 +455,6 @@ function PANEL:SetupUI()
 					end, nil, "Issue Credits")
 				end):SetIcon("icon16/flag_green.png")
 			end
-			if (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_CP and LocalPlayer():GetTeamClass() == CLASS_GHOST)) then
-				m:AddOption("View Bodycam", function()
-					if not IsValid(row) then
-						LocalPlayer():Notify("Invalid row.")
-						return
-					end
-					local targ = player.GetBySteamID64(row:GetValue(2))
-				
-					if not IsValid(targ) then
-						LocalPlayer():Notify("Invalid entity.")
-						return
-					end
-				
-				
-					net.Start("deepViewBodyCam")
-					net.WriteEntity(targ)
-					net.SendToServer()
-				end):SetIcon("icon16/camera_small.png")
-			end
 			m:Open()
 		end
 	end

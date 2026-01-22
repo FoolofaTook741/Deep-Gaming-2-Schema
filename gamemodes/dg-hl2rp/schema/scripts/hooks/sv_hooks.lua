@@ -518,11 +518,6 @@ function SCHEMA:PlayerShouldGetHungry(ply)
 	return ply.Team(ply) != TEAM_OTA and ply.Team(ply) != TEAM_ZOMBIE and ply.Team(ply) != TEAM_STALKER
 end
 
-[[- function SCHEMA:PlayerRagdollPreSpawn(rag, dier, killer)
-	if IsValid(killer) and killer:IsPlayer() and killer.HasFaceCover then -- has facewrap
-		rag.NoBodycamID = true -- no bdycam
-	end
-end -]]
 
 -- source weapon_frag being retarded and THIS happens
 
