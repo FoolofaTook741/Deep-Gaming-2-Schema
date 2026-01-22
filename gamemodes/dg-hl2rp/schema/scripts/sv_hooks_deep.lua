@@ -140,20 +140,40 @@ net.Receive("deepPriorityOneSuspect", function(len, ply)
 end)
 
 net.Receive("DeepUnloadAmmo", function(len, ply)
+    if not IsValid(ply) or not ply:Alive() then return end
+
     local weaponclass = net.ReadString()
-    for k,v in pairs(ply:GetWeapons()) do
+
+    local wep = nil
+    for _, v in pairs(ply:GetWeapons()) do
         if v:GetClass() == weaponclass then
-            if v:Clip1() > 0 then
-                local amount = v:Clip1() 
-                local setammo = ply:GetAmmoCount(v:GetPrimaryAmmoType())
-                v:SetClip1(0)
-                ply:SetAmmo(setammo + amount, v:GetPrimaryAmmoType())
-                ply:EmitSound("items/ammo_pickup.wav")
-                ply:Notify("You have unloaded " .. amount .. " rounds.")
-                break
-            end
+            wep = v
+            break
         end
     end
+
+    if not IsValid(wep) then
+        return
+    end
+
+    local ammoType = wep:GetPrimaryAmmoType()
+    if ammoType <= 0 then return end
+
+    local clip = wep:Clip1()
+    if clip <= 0 then return end
+
+    local oldNextThink = wep:GetNextThink()
+    wep:SetNextThink(CurTime() + 9999)  
+
+    wep:SetClip1(0)
+
+    local reserve = ply:GetAmmoCount(ammoType)
+    ply:SetAmmo(reserve + clip, ammoType)
+
+    wep:SetNextThink(oldNextThink)
+
+    ply:EmitSound("items/ammo_pickup.wav")
+    ply:Notify("Unloaded " .. clip .. " rounds.") 
 end)
 
 impulse.RationsServer = true
