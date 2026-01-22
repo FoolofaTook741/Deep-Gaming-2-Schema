@@ -655,7 +655,7 @@ function PANEL:SetupUI()
                 end):SetIcon("icon16/flag_green.png")
             end
 
-            [[if (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_CP and LocalPlayer():GetTeamClass() == CLASS_GHOST)) then
+            if (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_CP and LocalPlayer():GetTeamClass() == CLASS_GHOST)) then
                 m:AddOption("View Bodycam", function()
                     if not IsValid(row) then
                         LocalPlayer():Notify("Invalid row.")
@@ -672,7 +672,7 @@ function PANEL:SetupUI()
                     net.WriteEntity(targ)
                     net.SendToServer()
                 end):SetIcon("icon16/camera_small.png")
-            end]]
+            end
 
             m:Open()
         end

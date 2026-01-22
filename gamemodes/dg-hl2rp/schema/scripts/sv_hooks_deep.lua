@@ -2134,7 +2134,7 @@ hook.Add( "PlayerDisconnected", "Playerleave", function(ply)
     end
 end )
 
--[[net.Receive("deepViewBodyCam", function(len, ply)
+net.Receive("deepViewBodyCam", function(len, ply)
     if ply:IsCP() and (ply:IsCPCommand() or (ply:GetTeamClass() == CLASS_GHOST and ply:Team() == TEAM_CP)) then
         local target = net.ReadEntity()
         if not target:GetTeamRank() then
@@ -2149,10 +2149,10 @@ end )
             ply:Notify("This unit does not have a bodycam.")
             return
         end
-        if target:IsGameMaster() then
+--[[        if target:IsGameMaster() then
             ply:Notify("This units bodycam is not accessible at your rank.")
             return
-        end
+        end]]
         if not target:Alive() then
             ply:Notify("This unit is deceased.")
             return
@@ -2171,10 +2171,10 @@ end )
         if not ply.BCT then
             ply.PrevPos = ply:GetPos()
         end
-       if target == ply then
+--[[        if target == ply then
             ply:Notify("You can't spectate yourself you idiot.")
             return
-        end
+        end]]
         ply.BCT = target
         ply:SelectWeapon( "impulse_hands" )
         ply:SetViewEntity(target)
@@ -2183,8 +2183,7 @@ end )
         end
         table.insert(target.Viewers, ply)
     end
-end]]
-
+end)
 
 
 local nextMineThink   = 0
