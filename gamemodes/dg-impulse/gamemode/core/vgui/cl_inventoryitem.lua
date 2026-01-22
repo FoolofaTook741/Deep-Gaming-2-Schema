@@ -348,6 +348,36 @@ function PANEL:OnMousePressed(keycode)
 			net.SendToServer()
 		end)
 	end
+if (not self.IsEquipped) and (not self.IsRestricted or self.Item.DropIfRestricted) and self.Count > 1 then
+    local itemUniqueID = self.Item.UniqueID       
+    local maxCount = self.Count                      
+
+    local dropLimit = 40
+    local effectiveMax = math.min(maxCount, dropLimit)
+
+    popup:AddOption("Drop X", function()
+        Derma_StringRequest(
+            "Drop Items",
+            "How many do you want to drop? (Max 40) (1–" .. effectiveMax .. ")",
+            tostring(math.min(10, effectiveMax)), 
+            function(strAmount)
+                local amount = tonumber(strAmount)
+                if not amount or amount < 1 or amount > effectiveMax then
+                    return 
+
+                end
+
+                net.Start("DeepMultiDrop")
+                net.WriteString(itemUniqueID)
+                net.WriteUInt(amount, 16)
+                net.SendToServer()
+            end,
+            nil,
+            "Drop",
+            "Cancel"
+        )
+    end)
+end
 	if (self.IsEquipped) and (not self.IsRestricted or self.Item.DropIfRestricted) and self.Item.WeaponClass then
 		popup:AddOption("Unload Ammo", function()
 			net.Start("DeepUnloadAmmo")
