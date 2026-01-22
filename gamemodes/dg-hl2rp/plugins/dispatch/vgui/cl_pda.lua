@@ -8,6 +8,8 @@ local helixs = 0
 local grids = 0
 local ghosts = 0
 local swords = 0
+local sacrificeActive = false
+local sacrificeCooldown = false
 
 local echos = 0
 local maces = 0
@@ -669,26 +671,63 @@ function PANEL:SetupPDA()
         end
     end
 
-    if (LocalPlayer():Team() == TEAM_CP and rank >= RANK_DVL) or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_ORD) then
-        self.sacCode = vgui.Create("DButton", self.utilPnl)
-        self.sacCode:SetFont("DebugFixed")
-        self.sacCode:SetText("ACTIVATE SACRIFICE CODE")
-        self.sacCode:Dock(TOP)
+   if (LocalPlayer():Team() == TEAM_CP and rank >= RANK_DVL)
+or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_ORD) then
 
-        function self.sacCode:Paint(w, h)
-            surface.SetDrawColor(20, 4, 4, 220)
-            surface.DrawRect(0, 0, w, h)
-            surface.SetDrawColor(COMBINE_WARNING)
-            surface.DrawOutlinedRect(0, 0, w, h)
-            draw.SimpleText("ACTIVATE SACRIFICE CODE", "DebugFixed", w / 2, h / 2, COMBINE_TEXT, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
+    self.sacCode = vgui.Create("DButton", self.utilPnl)
+    self.sacCode:Dock(TOP)
+    self.sacCode:SetTall(28)
+    self.sacCode:SetFont("DebugFixed")
+    self.sacCode:SetText("")
 
-        function self.sacCode:DoClick()
-            net.Start("deepSacrificeCodeSet")
-            net.SendToServer()
-            pdaSound()
+    local cooldown = 30
+    local nextUse = 0
+
+    function self.sacCode:DoClick()
+        if CurTime() < nextUse then return end
+
+        nextUse = CurTime() + cooldown
+
+        net.Start("deepSacrificeCodeSet")
+        net.SendToServer()
+
+        pdaSound()
+    end
+
+    function self.sacCode:Paint(w, h)
+        local onCooldown = CurTime() < nextUse
+
+        surface.SetDrawColor(8, 16, 28, 220)
+        surface.DrawRect(0, 0, w, h)
+
+        surface.SetDrawColor(onCooldown and Color(80, 80, 80, 200) or COMBINE_ACCENT)
+        surface.DrawOutlinedRect(0, 0, w, h)
+
+        if onCooldown then
+            local timeLeft = math.ceil(nextUse - CurTime())
+            draw.SimpleText(
+                "SACRIFICE CODE COOLDOWN (" .. timeLeft .. "s)",
+                "DebugFixed",
+                w / 2,
+                h / 2,
+                COMBINE_MUTED,
+                TEXT_ALIGN_CENTER,
+                TEXT_ALIGN_CENTER
+            )
+        else
+            draw.SimpleText(
+                "ACTIVATE SACRIFICE CODE",
+                "DebugFixed",
+                w / 2,
+                h / 2,
+                COMBINE_TEXT,
+                TEXT_ALIGN_CENTER,
+                TEXT_ALIGN_CENTER
+            )
         end
     end
+end
+
 
     if ((LocalPlayer():Team() == TEAM_CP and rank >= RANK_OFC) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_DEPUTY) or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_OCP)) then
         if LocalPlayer():IsSuperAdmin() then
@@ -991,15 +1030,16 @@ function PANEL:SetupPDA()
         taxSheet.Button.NoShowSquad = true
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
-        self.CivTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
-        self.CivTaxSlider:SetText("R.T.R. - CIVIC POPULACE")
-        self.CivTaxSlider:SetMax(50)
-        self.CivTaxSlider:SetDecimals(0)
-        self.CivTaxSlider:SetMin(0)
-        self.CivTaxSlider:Dock(TOP)
-        self.CivTaxSlider:SetValue(civTax)
-    end
+	if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    	self.taxPnl.CivTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
+    	self.taxPnl.CivTaxSlider:SetText("R.T.R. - CIVIC POPULACE")
+    	self.taxPnl.CivTaxSlider:SetMax(50)
+   	 	self.taxPnl.CivTaxSlider:SetDecimals(0)
+    	self.taxPnl.CivTaxSlider:SetMin(0)
+    	self.taxPnl.CivTaxSlider:Dock(TOP)
+   	 self.taxPnl.CivTaxSlider:SetValue(civTax)
+	end
+
 
     if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.SaveCivTax = vgui.Create("DButton", self.taxPnl)
@@ -1019,20 +1059,20 @@ function PANEL:SetupPDA()
             net.Start("DeepCivilianTaxRate")
             net.WriteUInt(self:GetParent().CivTaxSlider:GetValue(), 8)
             net.SendToServer()
-            self:GetParent():GetParent():Remove()
             pdaSound()
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
-        self.RentSlider = vgui.Create("DNumSlider", self.taxPnl)
-        self.RentSlider:SetText("RENT (PER DOOR)")
-        self.RentSlider:SetMax(40)
-        self.RentSlider:SetDecimals(0)
-        self.RentSlider:SetMin(15)
-        self.RentSlider:Dock(TOP)
-        self.RentSlider:SetValue(doorPrice)
-    end
+	if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    	self.taxPnl.RentSlider = vgui.Create("DNumSlider", self.taxPnl)
+    	self.taxPnl.RentSlider:SetText("RENT (PER DOOR)")
+    	self.taxPnl.RentSlider:SetMax(40)
+    	self.taxPnl.RentSlider:SetDecimals(0)
+    	self.taxPnl.RentSlider:SetMin(15)
+    	self.taxPnl.RentSlider:Dock(TOP)
+    	self.taxPnl.RentSlider:SetValue(doorPrice)
+	end
+
 
     if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.SaveRent = vgui.Create("DButton", self.taxPnl)
@@ -1052,7 +1092,6 @@ function PANEL:SetupPDA()
             net.Start("DeepSetRent")
             net.WriteUInt(self:GetParent().RentSlider:GetValue(), 8)
             net.SendToServer()
-            self:GetParent():GetParent():Remove()
             pdaSound()
         end
     end
@@ -1460,15 +1499,16 @@ function PANEL:SetupPDA()
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
-        self.CWTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
-        self.CWTaxSlider:SetText("R.T.R. - CIVIC WORKFORCE")
-        self.CWTaxSlider:SetMax(50)
-        self.CWTaxSlider:SetDecimals(0)
-        self.CWTaxSlider:SetMin(0)
-        self.CWTaxSlider:Dock(TOP)
-        self.CWTaxSlider:SetValue(cwuTax)
-    end
+	if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    	self.taxPnl.CWTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
+    	self.taxPnl.CWTaxSlider:SetText("R.T.R. - CIVIC WORKFORCE")
+    	self.taxPnl.CWTaxSlider:SetMax(50)
+    	self.taxPnl.CWTaxSlider:SetDecimals(0)
+    	self.taxPnl.CWTaxSlider:SetMin(0)
+    	self.taxPnl.CWTaxSlider:Dock(TOP)
+    	self.taxPnl.CWTaxSlider:SetValue(cwuTax)
+	end
+
 
     if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.SaveCWTax = vgui.Create("DButton", self.taxPnl)
@@ -1488,7 +1528,6 @@ function PANEL:SetupPDA()
             net.Start("DeepWorkerTaxRate")
             net.WriteUInt(self:GetParent().CWTaxSlider:GetValue(), 8)
             net.SendToServer()
-            self:GetParent():GetParent():Remove()
             pdaSound()
         end
     end
