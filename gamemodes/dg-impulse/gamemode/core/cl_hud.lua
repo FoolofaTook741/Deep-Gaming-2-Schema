@@ -255,81 +255,115 @@ local entities_you_CANNOT_fucking_use = {
 local len = 180
 local colorWhite = Color( 215, 215, 215 )
 
-local function DrawEntInfo(target, alpha)
-    if entities_you_CANNOT_fucking_use[target:GetClass()] then return end
+local function DrawEntInfo( target, alpha )
+	if entities_you_CANNOT_fucking_use[target:GetClass()] then return end
 
-    local angs = LocalPlayer():EyeAngles()
-    angs.r = 0
-    angs.p = 0
+	local angs = LocalPlayer():EyeAngles()
+	angs.r = 0
+	angs.p = 0
 
-    local centerPos = target:LocalToWorld(target:OBBCenter())
-    local wfinal = centerPos + angs:Up() * 0
-    local sfinal = wfinal:ToScreen()
 
-    if not sfinal.visible then return end
+    local worigin = target:LocalToWorld(target:OBBCenter()) + (angs:Right() * 14)
+	local whalfway = worigin + (angs:Right() * 12) + (angs:Up() * 3)
+	local wfinal = whalfway + (angs:Right() * 3) + (angs:Up() * 6)
+
+	local sorigin = worigin:ToScreen()
+	local shalfway = whalfway:ToScreen()
+	local sfinal = wfinal:ToScreen()
 
     local frac = alpha / 255
-    local colorCenter = ColorAlpha(darkCol, frac * 220)
-    local colorWhite  = ColorAlpha(colorWhite, alpha)
-    local colorGold   = ColorAlpha(Color(255, 215, 0), alpha)
+    local size = math.ease.OutQuart( frac ) * 12
+    local colorCenter = ColorAlpha( darkCol, frac * 220 )
+	local colorWhite = ColorAlpha( colorWhite, alpha )
+	local black = ColorAlpha( color_black, alpha )
 
-    local baseY = sfinal.y + 60
 
-    local buttonSpacing = 45
+	-- dont draw the fucking line behind the fucking square
+	render.ClearStencil()
+	render.SetStencilEnable( true )
+	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_ALWAYS )
+	render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
+	render.SetStencilReferenceValue( 7 )
 
-    local eX = sfinal.x - buttonSpacing
-    local eBoxY = baseY
-    surface.DrawOutlinedRect(eX - 16, eBoxY - 16, 32, 32, 2)
-    surface.SetDrawColor(colorCenter)
-    surface.DrawRect(eX - 16, eBoxY - 16, 32, 32)
-    draw.SimpleText("E", "Impulse-Elements22-Shadow", eX, eBoxY, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    draw.SimpleTextOutlined("Interact", "Impulse-Elements22-Shadow", eX, eBoxY + 42, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, colorCenter)
+		surface.SetDrawColor( 0, 0, 0, 1 )
+		surface.DrawRect( sfinal.x - 16, sfinal.y - 16, 32, 32 )
 
-    local fX = sfinal.x + buttonSpacing
-    local fBoxY = baseY
-    surface.DrawOutlinedRect(fX - 16, fBoxY - 16, 32, 32, 2)
-    surface.SetDrawColor(colorCenter)
-    surface.DrawRect(fX - 16, fBoxY - 16, 32, 32)
-    draw.SimpleText("F", "Impulse-Elements22-Shadow", fX, fBoxY, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    draw.SimpleTextOutlined("Inspect", "Impulse-Elements22-Shadow", fX, fBoxY + 42, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, colorCenter)
+	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_NOTEQUAL )
+	render.SetStencilFailOperation( STENCIL_ZERO )
 
-    if target.Inspected then
-        local nameY = baseY - 85
+		surface.SetDrawColor( black )
+		surface.DrawLine( sorigin.x + 1, sorigin.y + 1, shalfway.x + 1, shalfway.y + 1 )
+		surface.DrawLine( shalfway.x + 1, shalfway.y + 1, sfinal.x + 1, sfinal.y + 1 )
+
+		surface.SetDrawColor( colorWhite )
+		surface.DrawLine( sorigin.x, sorigin.y, shalfway.x, shalfway.y )
+		surface.DrawLine( shalfway.x, shalfway.y, sfinal.x, sfinal.y )
+
+	render.SetStencilEnable( false )
+
+	surface.DrawOutlinedRect( sfinal.x - 16, sfinal.y - 16, 32, 32, 2 )
+
+	surface.SetDrawColor( colorCenter )
+	surface.DrawRect( sfinal.x - 16, sfinal.y - 16, 32, 32 )
+
+    draw.SimpleText(
+		"E",
+		"Impulse-Elements22-Shadow",
+		sfinal.x, sfinal.y,
+		colorWhite,
+		TEXT_ALIGN_CENTER,
+		TEXT_ALIGN_CENTER
+	)
+
+	local text = "Interact"
+
+	if target.Inspected then
+		text = target.HUDName or ""
+		local desc = target.HUDDesc or ""
+		
+        if #desc > 55 then
+            desc = string.Trim( string.Left( desc, 69 ) ) .. "..."
+        end
 
         draw.SimpleTextOutlined(
-            target.HUDName or target:GetClass() or "Unnamed",
-            "Impulse-Elements22-Shadow",
-            sfinal.x,
-            nameY,
-            colorGold,
+            desc,
+			"Impulse-Elements20-Shadow",
+            sfinal.x, sfinal.y + size + 20,
+            colorWhite,
             TEXT_ALIGN_CENTER,
-            TEXT_ALIGN_CENTER,
-            2, colorCenter
+            TEXT_ALIGN_TOP,
+            1, colorCenter
         )
+    else
+        local scrw = ScrW()
+        local scrh = ScrH()
 
-        local desc = target.HUDDesc or ""
-        desc = string.Trim(desc)
+		local labelX = (ScrW() / 2) + 24
+		local labelY = ScrH() - 128 + 24
+		local boxX = labelX - 58 - 58
+		local boxY = labelY - 24
+		local keyX = boxX + 24
+		local keyY = boxY + 24
 
-        if desc ~= "" then
-            local maxLen = 70
-            if #desc > maxLen then
-                desc = string.sub(desc, 1, maxLen - 3) .. "..."
-            end
+		local black = ColorAlpha( color_black, alpha )
+		local boxCol = ColorAlpha( darkCol, math.min( alpha, 190 ) )
 
-            local descY = nameY + 32
+		draw.RoundedBox( 4, boxX, boxY, 48, 48, boxCol )
 
-            draw.SimpleTextOutlined(
-                desc,
-                "Impulse-Elements20-Shadow",
-                sfinal.x,
-                descY,
-                colorWhite,
-                TEXT_ALIGN_CENTER,
-                TEXT_ALIGN_CENTER,
-                1, colorCenter
-            )
-        end
-    end
+		draw.SimpleText( "Inspect", "Impulse-Elements32-Shadow", labelX + 1, labelY + 1, black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( "Inspect", "Impulse-Elements32-Shadow", labelX, labelY, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( "F", "Impulse-CharacterInfo-NO", keyX, keyY, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+	end
+
+    draw.SimpleTextOutlined(
+		text,
+		"Impulse-Elements22-Shadow",
+		sfinal.x, sfinal.y + size,
+		colorWhite,
+		TEXT_ALIGN_CENTER,
+		TEXT_ALIGN_TOP,
+        2, colorCenter
+    )
 end
 
 
