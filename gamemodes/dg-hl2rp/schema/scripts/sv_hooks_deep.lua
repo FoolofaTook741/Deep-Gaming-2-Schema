@@ -2134,7 +2134,7 @@ hook.Add( "PlayerDisconnected", "Playerleave", function(ply)
     end
 end )
 
-[[net.Receive("deepViewBodyCam", function(len, ply)
+-[[net.Receive("deepViewBodyCam", function(len, ply)
     if ply:IsCP() and (ply:IsCPCommand() or (ply:GetTeamClass() == CLASS_GHOST and ply:Team() == TEAM_CP)) then
         local target = net.ReadEntity()
         if not target:GetTeamRank() then
