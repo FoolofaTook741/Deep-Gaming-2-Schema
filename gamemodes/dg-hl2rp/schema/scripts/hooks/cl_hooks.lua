@@ -91,7 +91,7 @@ function SCHEMA:HUDPaint()
 	end
 end
 
-function SCHEMA:RagdollMenuAddOptions(panel, body)
+[[- function SCHEMA:RagdollMenuAddOptions(panel, body)
 	if not LocalPlayer():IsCP() or LocalPlayer():GetTeamClass() != CLASS_JURY then
 		return
 	end
@@ -132,7 +132,7 @@ function SCHEMA:RagdollMenuAddOptions(panel, body)
 			end, true)
 		end
 	end)
-end
+end -]]
 
 local range = impulse.Config.VortessenceRange ^ 2
 local zomrange = 1000

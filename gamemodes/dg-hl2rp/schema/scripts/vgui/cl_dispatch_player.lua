@@ -765,7 +765,7 @@ local applications = {
 			end
 		end
 	},
-	["Body Cameras"] = {
+	[[["Body Cameras"] = {
 		img = "impulse/icons/star-128.png",
 		xPos = 120,
 		yPos = 120,
@@ -865,7 +865,7 @@ local applications = {
 
 			return pnl
 		end
-	},
+	},]]
 	["Radio"] = {
     img = "impulse/icons/megaphone-128.png",
     xPos = 120,

@@ -20,11 +20,11 @@ util.AddNetworkString("callsignset")
 util.AddNetworkString("deepdiscordwebhook")
 util.AddNetworkString("rationboolean")
 util.AddNetworkString("impulseHL2RPDeployScanner")
-util.AddNetworkString("deepViewBodyCam")
+[[util.AddNetworkString("deepViewBodyCam") ]]
 util.AddNetworkString("impulseHL2RPTerminalTypeRequest")
 util.AddNetworkString("ImpulseHL2RPPurchaseDistPermit")
 util.AddNetworkString("impulseBulkOrder")
-util.AddNetworkString("impulseFabricatorPurchase")
+util.AddNetworkString("impulseFabricatorPurchase")a
 util.AddNetworkString("impulseSquadLeaderAssignment")
 util.AddNetworkString("impulseSquadAssignment")
 util.AddNetworkString("impulseHL2RPOVWDispatchRadio")
@@ -769,10 +769,10 @@ net.Receive("impulseHL2RPInspectBody", function(len, ply)
 		cantBOL = true
 	end
 
-	if (not body.NoBodycamID and killer and not body.Killer:IsDispatchBOL()) and (not cantBOL) then
+	[[- if (not body.NoBodycamID and killer and not body.Killer:IsDispatchBOL()) and (not cantBOL) then
 		body.Killer:AddDispatchBOL(10, 1200) -- assault on pt and 20 mins
 		ply:Notify(killer.." has been automatically added to the BOL index.")
-	end
+	end-]]
 
 	net.Start("impulseHL2RPInspectBodyComplete")
 	net.WriteBool(body.FallDeath or false)
