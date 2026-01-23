@@ -47,6 +47,18 @@ VENDOR.Sell = {
 			end
 		end
 	},
+    ["item_workbenchpermit"] = {
+		Desc = "Admin Branch - 4/2 minutes",
+		Cost = 45,
+		BuyMax = 4,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+				return true
+			else return false
+			end
+		end
+	},
 	["item_firearmspermit"] = {
 		Desc = "Admin Branch - 1/2 minutes",
 		Cost = 45,
