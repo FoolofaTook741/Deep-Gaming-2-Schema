@@ -8,6 +8,8 @@ if SERVER then
     util.AddNetworkString("wire_e2_user_approved")
     util.AddNetworkString("wire_e2_user_denied")
     util.AddNetworkString("wire_e2_revoke")
+	util.AddNetworkString("wire_e2_blacklist_hash")
+	
 
     local function LogE2ApprovalToDiscord(hash, adminPly, action)
         local ts           = os.time()
@@ -40,6 +42,56 @@ if SERVER then
     local SUBMIT_COOLDOWN = 10
     local MAX_PENDING     = 20
     local PENDING_TIMEOUT = 1200
+	
+	local function IsAuthorized(hash)
+		local v = authorized[hash]
+		if v == true then return true end
+		if istable(v) and v.approved == true then return true end
+		return false
+	end
+
+	local function GetAuthInfo(hash)
+		local v = authorized[hash]
+		if istable(v) then return v end
+		return nil
+	end
+	
+	if plogs and plogs.Register then
+		plogs.Register("WireE2", true, Color(80, 200, 255))
+	end
+	
+	local function PLogsLiveApproved(ent)
+		if not (plogs and plogs.PlayerLog) then return end
+		if not IsValid(ent) or ent:GetClass() ~= "gmod_wire_expression2" then return end
+
+		local hash = ent._WireE2Hash
+		if not hash or not IsAuthorized(hash) then return end
+
+		local ply = ent.player
+		if not IsValid(ply) then return end
+
+		local auth = GetAuthInfo(hash) or {}
+		local pos  = ent:GetPos()
+		
+		local details = (auth.details and auth.details ~= "") and tostring(auth.details) or "n/a"
+		details = details:gsub("[%c]+", " "):Trim()
+		if #details > 220 then details = details:sub(1, 220) .. "..." end
+
+		local msg = string.format(
+			"%s spawned approved E2 | %s",
+			ply:SteamName(),
+			details
+		)
+
+		plogs.PlayerLog(ply, "WireE2", msg, {
+			["SteamName"] = ply:SteamName(),
+			["SteamID"]   = ply:SteamID(),
+			["Hash"]      = hash,
+			["EntIndex"]  = ent:EntIndex(),
+			["Pos"]       = string.format("%.1f, %.1f, %.1f", pos.x, pos.y, pos.z),
+		})
+	end
+
 
     if file.Exists(authFile, "DATA") then
         authorized = util.JSONToTable(file.Read(authFile, "DATA")) or {}
@@ -98,10 +150,11 @@ if SERVER then
             local plyName = IsValid(ply) and ply:Nick() or "Unknown"
             local steamID = IsValid(ply) and ply:SteamID() or "unknown"
             local now     = CurTime()
+			
 			if ply:IsGameMaster() then 
 				return origSetup(self, code, includes, restore, forcecompile, filepath) 
 			end
-
+			
             if #code > MAX_CODE_LEN then
                 if IsValid(ply) then
                     ply:SendChatClassMessage(231,
@@ -150,7 +203,7 @@ if SERVER then
                 return
             end
 
-            if not authorized[hash] then
+            if not IsAuthorized(hash) then
                 if #pendingOrder >= MAX_PENDING then
                     local old = table.remove(pendingOrder,1)
                     pending[old] = nil
@@ -202,8 +255,17 @@ if SERVER then
                         data.details = res.details or ""
 
                         if data.verdict == "safe" and tonumber(data.score) and data.score <= 30 then
-                            authorized[hash] = true
-                            saveAuth()
+							authorized[hash] = {
+								approved     = true,
+								score        = tonumber(data.score) or 0,
+								verdict      = tostring(data.verdict or "safe"),
+								details      = tostring(data.details or ""),
+								owner_steamid   = IsValid(data.player) and data.player:SteamID() or nil,
+								owner_steamname = IsValid(data.player) and data.player:SteamName() or nil,
+								approved_by  = "Auto-Approved",
+								approved_time = os.time()
+							}
+							saveAuth()
 
                             pending[hash] = nil
                             for i,h in ipairs(pendingOrder) do if h == hash then table.remove(pendingOrder, i) break end end
@@ -218,8 +280,8 @@ if SERVER then
                                 data.ent._WireE2Code = data.code
                                 data.ent._WireE2Hash = hash
                                 data.ent:EmitSound("buttons/button14.wav")
-
                                 data.ent:_WireE2OrigSetup(data.code, data.includes, data.restore, data.forcecompile, data.filepath)
+								PLogsLiveApproved(data.ent)
                             end
 
                             LogE2ApprovalToDiscord(hash, IsValid(data.player) and data.player or Entity(0), "Auto-Approved")
@@ -256,8 +318,10 @@ if SERVER then
                 return
             end
             
-            self._WireE2Code = code
-            return origSetup(self, code, includes, restore, forcecompile, filepath)
+			self._WireE2Code = code
+			local ret = origSetup(self, code, includes, restore, forcecompile, filepath)
+			PLogsLiveApproved(self)
+			return ret
         end
     end
 
@@ -300,8 +364,23 @@ if SERVER then
             return
         end
 
-        authorized[hash] = true
-        saveAuth()
+		local info = {
+			approved      = true,
+			approved_by   = ply:SteamName(),
+			approved_time = os.time()
+		}
+
+		-- if it was reviewed already, preserve AI info
+		if data then
+			info.score   = tonumber(data.score) or info.score
+			info.verdict = data.verdict or info.verdict
+			info.details = data.details or info.details
+			info.owner_steamid   = IsValid(data.player) and data.player:SteamID() or nil
+			info.owner_steamname = IsValid(data.player) and data.player:SteamName() or nil
+		end
+
+		authorized[hash] = info
+		saveAuth()
         pending[hash] = nil
         for i,h in ipairs(pendingOrder) do if h==hash then table.remove(pendingOrder,i) break end end
 
@@ -352,7 +431,7 @@ if SERVER then
             return
         end
     
-        if authorized[hash] then
+        if IsAuthorized(hash) then
             authorized[hash] = nil
             saveAuth()
 			blacklisted[hash] = {
@@ -384,5 +463,64 @@ if SERVER then
 
         LogE2ApprovalToDiscord(hash, admin, "Blacklisted")
     end)
+	
+    net.Receive("wire_e2_blacklist_hash", function(_, admin)
+        if not IsValid(admin) or not admin:IsLeadAdmin() then return end
+
+        local hash   = tostring(net.ReadString() or "")
+		local reason = tostring(net.ReadString() or ""):Trim()
+		if reason == "" then reason = "Blacklisted by an administrator." end
+
+		hash = hash:gsub("[%s%c]", ""):lower()
+
+		if not hash:match("^[0-9a-f]+$") then
+			admin:SendChatClassMessage(
+				231,
+				"[WireE2] Invalid hash: contains non-hex characters.",
+				admin
+			)
+			return
+		end
+
+		if #hash ~= 64 then
+			admin:SendChatClassMessage(
+				231,
+				"[WireE2] Invalid hash length (expected 64 hex characters).",
+				admin
+			)
+			return
+		end
+
+        if authorized[hash] then
+            authorized[hash] = nil
+            saveAuth()
+        end
+
+        blacklisted[hash] = {
+            by     = admin:SteamName(),
+            reason = reason,
+            time   = os.time()
+        }
+        saveBlacklist()
+
+        if pending[hash] then
+            pending[hash] = nil
+            for i,h in ipairs(pendingOrder) do
+                if h == hash then table.remove(pendingOrder, i) break end
+            end
+            notifyAdmins("wire_e2_removed", hash)
+        end
+
+        admin:SendChatClassMessage(231, ("Blacklisted hash %s"):format(hash), admin)
+
+        LogE2ApprovalToDiscord(hash, admin, "Blacklisted (Manual Hash)")
+
+        for _, ent in ipairs(ents.FindByClass("gmod_wire_expression2")) do
+            if ent._WireE2Hash == hash then
+                ent:Remove()
+            end
+        end
+    end)
+
 
 end

@@ -2,22 +2,132 @@ if CLIENT then
 
     local pendingEntries = {}
     local impulseE2Panel
+	local NET_BLACKLIST_HASH = "wire_e2_blacklist_hash"
 
     local PANEL = {}
 
-    function PANEL:Init()
-        self:SetSize(600,400)
-        self:Center()
-        self:SetTitle("Pending E2 Approvals")
-        self:MakePopup()
-        self:SetDeleteOnClose(true)
+	function PANEL:Init()
+		self:SetSize(600,400)
+		self:Center()
+		self:SetTitle("Pending E2 Approvals")
+		self:MakePopup()
+		self:SetDeleteOnClose(true)
 
-        self.list = vgui.Create("DListView", self)
-        self.list:Dock(FILL)
-        self.list:AddColumn("Hash")
-        self.list:AddColumn("Owner")
-        self.list:AddColumn("Score")
-        self.list:AddColumn("Verdict")
+		local top = vgui.Create("DPanel", self)
+		top:Dock(TOP)
+		top:SetTall(34)
+		top:DockMargin(0, 0, 0, 5)
+		top.Paint = function() end
+
+		local btnBL = vgui.Create("DButton", top)
+		btnBL:Dock(LEFT)
+		btnBL:DockMargin(5, 0, 0, 0)
+		btnBL:SetWide(170)
+		btnBL:SetText("Blacklist by Hash...")
+		btnBL:SetIcon("icon16/delete.png")
+
+       function btnBL:DoClick()
+			if not LocalPlayer():IsLeadAdmin() then
+				chat.AddText(Color(255,0,0), "[WireE2] Access denied.")
+				return
+			end
+
+			local frm = vgui.Create("DFrame")
+			frm:SetTitle("Blacklist E2 by Hash")
+			frm:SetSize(520, 260)
+			frm:Center()
+			frm:MakePopup()
+
+			local bottom = vgui.Create("DPanel", frm)
+			bottom:Dock(BOTTOM)
+			bottom:SetTall(44)
+			bottom:DockMargin(10, 10, 10, 10)
+			bottom.Paint = function() end
+
+			local cancel = vgui.Create("DButton", bottom)
+			cancel:Dock(RIGHT)
+			cancel:SetWide(110)
+			cancel:SetText("Cancel")
+			function cancel:DoClick() frm:Close() end
+
+			local confirm = vgui.Create("DButton", bottom)
+			confirm:Dock(RIGHT)
+			confirm:DockMargin(0, 0, 10, 0)
+			confirm:SetWide(180)
+			confirm:SetText("Blacklist Hash")
+			confirm:SetIcon("icon16/exclamation.png")
+
+			-- Body area (everything else goes in here)
+			local body = vgui.Create("DPanel", frm)
+			body:Dock(FILL)
+			body:DockMargin(0, 0, 0, 0)
+			body.Paint = function() end
+
+			local lbl1 = vgui.Create("DLabel", body)
+			lbl1:Dock(TOP)
+			lbl1:DockMargin(10, 10, 10, 0)
+			lbl1:SetText("Hash (64 hex chars):")
+
+			local hashEntry = vgui.Create("DTextEntry", body)
+			hashEntry:Dock(TOP)
+			hashEntry:DockMargin(10, 5, 10, 0)
+			hashEntry:SetTall(24)
+			hashEntry:SetPlaceholderText("e.g. f4ee0a9c24cc84a15c4f55b51950f617...")
+
+			local lbl2 = vgui.Create("DLabel", body)
+			lbl2:Dock(TOP)
+			lbl2:DockMargin(10, 10, 10, 0)
+			lbl2:SetText("Reason (shown to player):")
+
+			local reasonEntry = vgui.Create("DTextEntry", body)
+			reasonEntry:Dock(FILL)
+			reasonEntry:DockMargin(10, 5, 10, 0)
+			reasonEntry:SetMultiline(true)
+			reasonEntry:SetText("")
+
+			function confirm:DoClick()
+				local reason = (reasonEntry:GetValue() or ""):Trim()
+
+				local hash = tostring(hashEntry:GetValue() or "")
+				hash = hash:gsub("[%s%c]", ""):lower()
+
+				if not hash:match("^[0-9a-f]+$") then
+					Derma_Message("Hash contains non-hex characters.", "Invalid hash", "OK")
+					return
+				end
+
+				if #hash ~= 64 then
+					Derma_Message("Hash must be exactly 64 hex characters (SHA-256).", "Invalid hash", "OK")
+					return
+				end
+				if reason == "" then reason = "Blacklisted by an administrator." end
+
+				Derma_Query(
+					"Blacklist this hash?\n\n"..hash.."\n\nReason:\n"..reason,
+					"Confirm Blacklist",
+					"Yes", function()
+						net.Start(NET_BLACKLIST_HASH)
+							net.WriteString(hash)
+							net.WriteString(reason)
+						net.SendToServer()
+
+						pendingEntries[hash] = nil
+						if IsValid(impulseE2Panel) then impulseE2Panel:Refresh() end
+
+						frm:Close()
+					end,
+					"No", function() end
+				)
+			end
+			end
+
+		
+		    self.list = vgui.Create("DListView", self)
+			self.list:Dock(FILL)
+			self.list:AddColumn("Hash")
+			self.list:AddColumn("Owner")
+			self.list:AddColumn("Score")
+			self.list:AddColumn("Verdict")
 
         function self.list:OnRowRightClick(idx,row)
             local hash = row:GetValue(1)
