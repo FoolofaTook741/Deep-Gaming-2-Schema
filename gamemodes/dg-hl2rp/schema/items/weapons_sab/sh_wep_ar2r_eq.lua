@@ -28,7 +28,8 @@ ITEM.WeaponClass = "plutonic_ar2r"
 ITEM.CombineWeapon = false
 
 
-
+ITEM.EquipTime = 3
+ITEM.UnEquipTime = 3
 
 
 function ITEM:CanEquip(ply)
