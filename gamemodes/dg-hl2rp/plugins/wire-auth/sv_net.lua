@@ -30,6 +30,8 @@ if SERVER then
     local reviewURL       = "https://hl2rp.deepgaming2.com/whitelists/e2.php"
     local sharedSecret    = "kRS15O4xkcMT7AZ877tcxjCsCg6GPh67"
     local authFile        = "wire_e2_authorized.txt"
+	local blacklistFile   = "wire_e2_blacklist.txt"
+	local blacklisted     = {} -- [hash] = { by = "name", reason = "text", time = os.time() }
     local authorized      = {}
     local pending         = {}
     local pendingOrder    = {}
@@ -43,6 +45,17 @@ if SERVER then
         authorized = util.JSONToTable(file.Read(authFile, "DATA")) or {}
         impulse.debugPrint("[WireE2] Loaded "..table.Count(authorized).." approved scripts")
     end
+	
+	if file.Exists(blacklistFile, "DATA") then
+		blacklisted = util.JSONToTable(file.Read(blacklistFile, "DATA")) or {}
+		impulse.debugPrint("[WireE2] Loaded "..table.Count(blacklisted).." blacklisted scripts")
+	end
+
+	local function saveBlacklist()
+		file.Write(blacklistFile, util.TableToJSON(blacklisted, true))
+		impulse.debugPrint("[WireE2] Saved "..table.Count(blacklisted).." blacklisted scripts")
+	end
+	
     local function saveAuth()
         file.Write(authFile, util.TableToJSON(authorized, true))
         impulse.debugPrint("[WireE2] Saved "..table.Count(authorized).." approvals")
@@ -85,10 +98,9 @@ if SERVER then
             local plyName = IsValid(ply) and ply:Nick() or "Unknown"
             local steamID = IsValid(ply) and ply:SteamID() or "unknown"
             local now     = CurTime()
-            
 			if ply:IsGameMaster() then 
 				return origSetup(self, code, includes, restore, forcecompile, filepath) 
-			end-
+			end
 
             if #code > MAX_CODE_LEN then
                 if IsValid(ply) then
@@ -114,6 +126,20 @@ if SERVER then
             local hash = util.SHA256(code)
             self._WireE2Hash = hash
             impulse.debugPrint("[WireE2] New submission by "..plyName.." → "..hash)
+			
+			if blacklisted[hash] then
+				local info = blacklisted[hash]
+				local reason = (type(info) == "table" and info.reason) or "Blacklisted by an administrator."
+				if IsValid(ply) then
+					ply:SendChatClassMessage(231,
+						"[WireE2] This E2 is blacklisted and cannot be used.\nReason: "..tostring(reason),
+						ply
+					)
+				end
+				if IsValid(self) then self:Remove() end
+				impulse.debugPrint("[WireE2] Blocked blacklisted submission "..hash.." from "..plyName)
+				return
+			end
 
             if pending[hash] then
                 if IsValid(ply) then
@@ -329,7 +355,14 @@ if SERVER then
         if authorized[hash] then
             authorized[hash] = nil
             saveAuth()
+			blacklisted[hash] = {
+				by = admin:SteamName(),
+				reason = "Revoked/Blacklisted by admin",
+				time = os.time()
+			}
+			saveBlacklist()
             print(("[WireE2] %s revoked approval for %s"):format(admin:Nick(), hash))
+			
         end
     
         for _, ent in ipairs(ents.FindByClass("gmod_wire_expression2")) do
