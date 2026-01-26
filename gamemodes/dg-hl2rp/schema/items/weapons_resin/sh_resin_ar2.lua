@@ -28,7 +28,8 @@ ITEM.CanStack = true
 
 ITEM.WeaponClass = "plutonic_resin_ar2"
 
-
+ITEM.EquipTime = 3
+ITEM.UnEquipTime = 3
 
 
 
