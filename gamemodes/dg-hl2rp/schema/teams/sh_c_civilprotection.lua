@@ -753,8 +753,8 @@ TEAM_CP = impulse.Teams.Define({
 			end
 		},
 		{
-			name = "RL",
-			description = "RL",
+			name = "OfC",
+			description = "OfC",
 			doorGroup = {1, 2, 3, 6, 7},
 			xp = 0,
 			whitelistLevel = 5,
@@ -775,7 +775,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetRPName("MPF:OfC." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_GRID then
 					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
@@ -791,7 +791,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetRPName("MPF:OfC." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 					ply:Give("weapon_lvsrepair")
 				elseif ply:GetTeamClass() == CLASS_HELIX then
 					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
@@ -808,7 +808,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetRPName("MPF:OfC." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_SWORD then
 					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
@@ -825,7 +825,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetRPName("MPF:OfC." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_GHOST then
 					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
@@ -840,7 +840,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetRPName("MPF:OfC." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
 					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
 					ply:SetMaxArmor(0)
