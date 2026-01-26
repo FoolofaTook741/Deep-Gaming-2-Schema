@@ -827,16 +827,15 @@ impulse.Config.LootPools = {
 	},
 	["ammobox"] = {
 		Items = {
-			["wep_mp7"] = {Rarity = 600, Rep = 1},
 			["bl_ar2e"] = {Rarity = 765, Rep = 2},
 			["bl_ar2r"] = {Rarity = 695, Rep = 2},
-			["bl_ar2"] = {Rarity = 620, Rep = 1},
+			["bl_ar2"] = {Rarity = 610, Rep = 1},
 			["bl_apf"] = {Rarity = 820, Rep = 1},
 			["bl_omr"] = {Rarity = 690, Rep = 3},
 			["bl_osiprmk1"] = {Rarity = 740, Rep = 2},
 			["util_heavyceramicplate"] = {Rarity = 680, Rep = 2},
 			["cos_elitevest"] = {Rarity = 945, Rep = 1},
-			["wep_mp7a8"] = {Rarity = 860, Rep = 3},
+			["wep_mp7a8"] = {Rarity = 830, Rep = 3},
 			["bl_ar3"] = {Rarity = 930, Rep = 1},
 			["wep_osiprmk1c"] = {Rarity = 970, Rep = 1},
 			["util_energycore"] = {Rarity = 730, Rep = 2},
