@@ -435,26 +435,36 @@ local ictRadioCommand = {
 impulse.RegisterChatCommand("/ir", ictRadioCommand)
 
 local radioCWU = {
-	description = "Send a radio message to CWU.",
-	requiresArg = true,
-	requiresAlive = true,
-	onRun = function(ply, arg, rawText)
-		if impulse.CommsNetWorkOn == false then
-			ply:Notify("The radio is not available at this time.")
-		else
-			if (ply:IsCP() and ply:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_REPRESENTATIVE) or (ply:Team() == TEAM_CWU) or (ply:IsCP() and ply:Team() == TEAM_CP and ply:GetTeamRank() == RANK_OFC) or (ply:IsCP() and ply:Team() == TEAM_OTA and ply:GetTeamRank() >= RANK_OCP) then
-				rawText = hook.Run("ChatClassMessageSend", 8, rawText, ply) or rawText
-				if ply:Team() == TEAM_CA or ply:Team() == TEAM_CWU then
-					for k,v in pairs(player.GetAll()) do
-						if (v:IsCP() and v:IsCPCommand()) or v:Team() == TEAM_CWU or (v:GetPos():Distance(ply:GetPos()) < 100 and v != ply) or v:Team() == TEAM_CA or v.SnooperMode == true then
-							v:SendChatClassMessage(72, rawText, ply)
-						end
-					end
-				end
-				ply:EmitBudgetSound("ambient/levels/prison/radio_random2.wav")
-			end
-		end
-	end
+    description = "Send a radio message to CWU.",
+    requiresArg = true,
+    requiresAlive = true,
+    onRun = function(ply, arg, rawText)
+        if impulse.CommsNetWorkOn == false then
+            ply:Notify("The radio is not available at this time.")
+            return
+        end
+
+        if ply:Team() == TEAM_CA or 
+           ply:Team() == TEAM_CWU or 
+           (ply:Team() == TEAM_CP and ply:GetTeamRank() >= RANK_OFC) or 
+           (ply:Team() == TEAM_OTA and ply:GetTeamRank() >= RANK_OCP) then
+            
+            rawText = hook.Run("ChatClassMessageSend", 8, rawText, ply) or rawText
+            
+            ply:EmitBudgetSound("ambient/levels/prison/radio_random2.wav")
+            
+            for _, v in pairs(player.GetAll()) do
+                if (v:IsCP() and v:IsCPCommand()) or 
+                   v:Team() == TEAM_CWU or 
+                   v:Team() == TEAM_CA or 
+                   (v:GetPos():Distance(ply:GetPos()) < 100 and v != ply) or 
+                   v.SnooperMode == true then
+                    
+                    v:SendChatClassMessage(72, rawText, ply)
+                end
+            end
+        end
+    end
 }
 
 impulse.RegisterChatCommand("/cwradio", radioCWU)
