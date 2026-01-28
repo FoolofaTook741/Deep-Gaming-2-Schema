@@ -27,7 +27,7 @@ if CLIENT then
 		btnBL:SetIcon("icon16/delete.png")
 
        function btnBL:DoClick()
-			if not LocalPlayer():IsLeadAdmin() then
+			if not LocalPlayer():IsAdmin() then
 				chat.AddText(Color(255,0,0), "[WireE2] Access denied.")
 				return
 			end
@@ -209,7 +209,7 @@ if CLIENT then
     vgui.Register("impulseE2SubmissionViewer", PANEL, "DFrame")
 
     concommand.Add("wire_e2_viewer", function()
-        if not LocalPlayer():IsLeadAdmin() then
+        if not LocalPlayer():IsAdmin() then
             chat.AddText(Color(255,0,0),"[WireE2] Access denied."); return
         end
         if not IsValid(impulseE2Panel) then
@@ -221,7 +221,7 @@ if CLIENT then
     end)
 
     net.Receive("wire_e2_pending_list", function()
-        if not LocalPlayer():IsLeadAdmin() then return end
+        if not LocalPlayer():IsAdmin() then return end
         local count = net.ReadUInt(16)
         local wasOpen = IsValid(impulseE2Panel)
         for i=1,count do
@@ -252,7 +252,7 @@ if CLIENT then
     end)
 
     net.Receive("wire_e2_review", function()
-        if not LocalPlayer():IsLeadAdmin() then return end
+        if not LocalPlayer():IsAdmin() then return end
         local hash, score, verdict, details =
             net.ReadString(), net.ReadFloat(), net.ReadString(), net.ReadString()
         pendingEntries[hash] = pendingEntries[hash] or {}
@@ -263,7 +263,7 @@ if CLIENT then
     end)
 
     net.Receive("wire_e2_removed", function()
-        if not LocalPlayer():IsLeadAdmin() then return end
+        if not LocalPlayer():IsAdmin() then return end
         local hash = net.ReadString()
         pendingEntries[hash] = nil
         if IsValid(impulseE2Panel) then impulseE2Panel:Refresh() end

@@ -165,7 +165,7 @@ if SERVER then
     local function notifyAdmins(msgType, ...)
         local recipients = {}
         for _, p in ipairs(player.GetAll()) do
-            if p:IsLeadAdmin() then recipients[#recipients+1] = p end
+            if p:IsAdmin() then recipients[#recipients+1] = p end
         end
         net.Start(msgType)
           for _, v in ipairs({...}) do
@@ -350,7 +350,7 @@ if SERVER then
 
                         do
                             local recipients = {}
-                            for _, p in ipairs(player.GetAll()) do if p:IsLeadAdmin() then recipients[#recipients+1]=p end end
+                            for _, p in ipairs(player.GetAll()) do if p:IsAdmin() then recipients[#recipients+1]=p end end
                             net.Start("wire_e2_pending_list")
                             net.WriteUInt(1,16)
                             net.WriteString(hash)
@@ -402,7 +402,7 @@ if SERVER then
     end)
 
     net.Receive("wire_e2_request_list", function(_, ply)
-        if not ply:IsLeadAdmin() then return end
+        if not ply:IsAdmin() then return end
         local cnt = 0
         for _ in pairs(pending) do cnt = cnt+1 end
 
@@ -417,7 +417,7 @@ if SERVER then
     end)
 
     net.Receive("wire_e2_approve", function(_, ply)
-        if not ply:IsLeadAdmin() then return end
+        if not ply:IsAdmin() then return end
         local hash = net.ReadString()
         local data = pending[hash]
         if not data then
@@ -454,7 +454,7 @@ if SERVER then
     end)
 
     net.Receive("wire_e2_deny", function(_, ply)
-        if not ply:IsLeadAdmin() then return end
+        if not ply:IsAdmin() then return end
         local hash, reason = net.ReadString(), net.ReadString()
         local data = pending[hash]
         if data then
@@ -525,7 +525,7 @@ if SERVER then
     end)
 	
     net.Receive("wire_e2_blacklist_hash", function(_, admin)
-        if not IsValid(admin) or not admin:IsLeadAdmin() then return end
+        if not IsValid(admin) or not admin:IsAdmin() then return end
 
         local hash   = tostring(net.ReadString() or "")
 		local reason = tostring(net.ReadString() or ""):Trim()
