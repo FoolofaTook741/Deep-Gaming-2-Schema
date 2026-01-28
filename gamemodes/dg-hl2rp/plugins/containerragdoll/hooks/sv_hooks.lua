@@ -631,29 +631,38 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
 end
 
 function PLUGIN:KeyPress(ply, key)
-    if key == IN_USE then
-        local trace = ply:GetEyeTrace()
-        local ent = trace.Entity
+    if key ~= IN_USE then return end
 
-        if IsValid(ent) and ent:GetClass() == "prop_ragdoll" then
-            if deadPlayerRagdoll then
-                if ply:IsPlayer() and ply:Alive() then
-                    if ply:GetSyncVar(SYNC_ARRESTED, false) then 
-                        return ply:Notify("You cannot access a container when detained.") 
-                    end
-            
-                    if ply:IsCP() and ent:GetLoot() then
-                        return ply:Notify("You cannot access this container as this team.")
-                    end
+    local trace = ply:GetEyeTrace()
+    local ent = trace.Entity
 
-                    if ply:IsCP() and ply:IsScanner() then
-                        return ply:Notify("You cannot access containers as a scanner.")
-                    end
+    if IsValid(ent) and ent:GetClass() == "prop_ragdoll" then
+        local maxDist = 80
+        local maxDistSqr = maxDist * maxDist
 
-                    ent.Users = ent.Users or {}
-                    if not ent.Users[ply] then
-                        ent:AddUser(ply)
-                    end
+        local src = ply:GetShootPos()
+        local near = ent:NearestPoint(src)
+        if near:DistToSqr(src) > maxDistSqr then
+            return
+        end
+
+        if deadPlayerRagdoll then
+            if ply:IsPlayer() and ply:Alive() then
+                if ply:GetSyncVar(SYNC_ARRESTED, false) then
+                    return ply:Notify("You cannot access a container when detained.")
+                end
+
+                if ply:IsCP() and ent:GetLoot() then
+                    return ply:Notify("You cannot access this container as this team.")
+                end
+
+                if ply:IsCP() and ply:IsScanner() then
+                    return ply:Notify("You cannot access containers as a scanner.")
+                end
+
+                ent.Users = ent.Users or {}
+                if not ent.Users[ply] then
+                    ent:AddUser(ply)
                 end
             end
         end
