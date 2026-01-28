@@ -6,6 +6,7 @@ hook.Add("PlayerNoClip", "opsNoclip", function(ply, state)
 				ply:GodEnable()
 				ply:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 				ply:SetNoTarget(true)
+				ply.FlashSafe = true
 
 				if ply:FlashlightIsOn() then
 					ply:Flashlight(false)
@@ -18,6 +19,7 @@ hook.Add("PlayerNoClip", "opsNoclip", function(ply, state)
 				ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
 				ply:AllowFlashlight(true)
 				ply:SetNoTarget(false)
+				ply.FlashSafe = false
 			end
 		end
 
