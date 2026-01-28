@@ -150,7 +150,7 @@ SWEP.Attachments = {
 		},
 		ModSetup = function(e)
 			e.IncendiaryRounds = true
-            e.Primary.Damage = 4.5
+            e.Primary.Damage = 6
             e.Primary.NumShots = 8
 			e.Primary.Sound = Sound("PLT.DragonsBreath")
 		end,
