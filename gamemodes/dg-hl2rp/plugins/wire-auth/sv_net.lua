@@ -34,6 +34,9 @@ if SERVER then
     local authFile        = "wire_e2_authorized.txt"
 	local blacklistFile   = "wire_e2_blacklist.txt"
 	local blacklisted     = {} -- [hash] = { by = "name", reason = "text", time = os.time() }
+    impulse.WireE2 = impulse.WireE2 or {}
+    impulse.WireE2.memberBlacklistFile = "wire_e2_member_blacklist.txt"
+    impulse.WireE2.memberBlacklisted   = impulse.WireE2.memberBlacklisted or {}
     local authorized      = {}
     local pending         = {}
     local pendingOrder    = {}
@@ -42,6 +45,52 @@ if SERVER then
     local SUBMIT_COOLDOWN = 10
     local MAX_PENDING     = 20
     local PENDING_TIMEOUT = 1200
+
+    if file.Exists(impulse.WireE2.memberBlacklistFile, "DATA") then
+        impulse.WireE2.memberBlacklisted = util.JSONToTable(file.Read(impulse.WireE2.memberBlacklistFile, "DATA")) or {}
+        impulse.debugPrint("[WireE2] Loaded "..table.Count(impulse.WireE2.memberBlacklisted).." member blacklists")
+    end
+
+    function impulse.WireE2.SaveMemberBlacklist()
+        file.Write(impulse.WireE2.memberBlacklistFile, util.TableToJSON(impulse.WireE2.memberBlacklisted, true))
+    end
+
+    function impulse.WireE2.IsMemberBlacklisted(steamID32)
+        local e = impulse.WireE2.memberBlacklisted[steamID32]
+        if not e then return false end
+
+        local untilTs = tonumber(e.untilTs or 0) or 0
+        if untilTs ~= 0 and untilTs <= os.time() then
+            impulse.WireE2.memberBlacklisted[steamID32] = nil
+            impulse.WireE2.SaveMemberBlacklist()
+            return false
+        end
+
+        return true
+    end
+
+    function impulse.WireE2.MemberBlacklistSet(steamID32, minutes, reason, adminName)
+        minutes = tonumber(minutes) or 0
+        reason = tostring(reason or "Blacklisted from E2."):Trim()
+        if reason == "" then reason = "Blacklisted from E2." end
+
+        local untilTs = (minutes <= 0) and 0 or (os.time() + (minutes * 60))
+
+        impulse.WireE2.memberBlacklisted[steamID32] = {
+            untilTs = untilTs,
+            reason  = reason,
+            by      = tostring(adminName or "Unknown"),
+            time    = os.time()
+        }
+
+        impulse.WireE2.SaveMemberBlacklist()
+        return untilTs
+    end
+
+    function impulse.WireE2.MemberBlacklistRemove(steamID32)
+        impulse.WireE2.memberBlacklisted[steamID32] = nil
+        impulse.WireE2.SaveMemberBlacklist()
+    end
 	
 	local function IsAuthorized(hash)
 		local v = authorized[hash]
@@ -150,7 +199,18 @@ if SERVER then
             local plyName = IsValid(ply) and ply:Nick() or "Unknown"
             local steamID = IsValid(ply) and ply:SteamID() or "unknown"
             local now     = CurTime()
-			
+
+            if IsValid(ply) then
+                local sid32 = ply:SteamID()
+                if sid32 and impulse.WireE2.IsMemberBlacklisted(sid32) then
+                    local e = impulse.WireE2.memberBlacklisted[sid32] or {}
+                    local reason = tostring(e.reason or "Blacklisted from E2.")
+                    ply:SendChatClassMessage(231, "You are blacklisted from using E2.\nReason: "..reason, ply)
+                    if IsValid(self) then self:Remove() end
+                    return
+                end
+            end
+                        
 			if ply:IsGameMaster() then 
 				return origSetup(self, code, includes, restore, forcecompile, filepath) 
 			end
