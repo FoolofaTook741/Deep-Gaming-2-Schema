@@ -699,7 +699,7 @@ if CLIENT then
 	local radioCol = Color(65, 120, 200)
 	local pmCol = Color(45, 154, 6)
 	local advertCol = Color(255, 174, 66)
-	local acCol = Color(0, 235, 0, 255)
+	local acCol = Color(38, 5, 226)
 	local eventCol = Color(3, 127, 252)
 	local fallbackRankCol = Color(211, 211, 211)
 	local groupCol = Color(3, 188, 0)
