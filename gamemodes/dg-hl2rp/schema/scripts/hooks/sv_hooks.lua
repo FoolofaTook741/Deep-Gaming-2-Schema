@@ -515,6 +515,9 @@ function SCHEMA:PlayerJailed(ply)
 end
 
 function SCHEMA:PlayerShouldGetHungry(ply)
+	if ply:GetMoveType() == MOVETYPE_NOCLIP then
+        return false
+    end
 	return ply.Team(ply) != TEAM_OTA and ply.Team(ply) != TEAM_ZOMBIE and ply.Team(ply) != TEAM_STALKER
 end
 
