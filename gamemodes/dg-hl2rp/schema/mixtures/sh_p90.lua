@@ -1,11 +1,11 @@
 local MIX = {}
 
-MIX.Class = "plutonic_p90"
+MIX.Class = "wep_p90"
 
 MIX.Level = 6
 MIX.Bench = "heavyweapon"
 
-MIX.Output = "plutonic_p90"
+MIX.Output = "wep_p90"
 MIX.Input = {
 	["util_pipe"] = {take = 2},
 	["util_glue"] = {take = 2},
