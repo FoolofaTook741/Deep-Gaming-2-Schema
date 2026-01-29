@@ -74,10 +74,10 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
                     ply:SetNoTarget(true)
                     ply:GiveInventoryItem("item_corruptedheart", 1, true)
                     ply:GiveInventoryItem("monster_speedboost", 1, true)
-                    ply:SetHealth(200 + buff)
+                    ply:SetHealth(80 + buff)
                     ply:Give("weapon_braaains")
-                    ply:SetWalkSpeed(140)
-                    ply:SetRunSpeed(210)
+                    ply:SetWalkSpeed(120)
+                    ply:SetRunSpeed(170)
                     ply:SetJumpPower( 600 )
                     ply.RegularZombie = false
                     ply.Zombine = false
@@ -187,10 +187,10 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
                 ply:SetNoTarget(true)
                 ply:GiveInventoryItem("item_corruptedheart", 1, true)
                 ply:GiveInventoryItem("monster_speedboost", 1, true)
-                ply:SetHealth(200 + buff)
+                ply:SetHealth(80 + buff)
                 ply:Give("weapon_braaains")
-                ply:SetWalkSpeed(140)
-                ply:SetRunSpeed(210)
+                ply:SetWalkSpeed(120)
+                ply:SetRunSpeed(140)
                 ply:SetJumpPower( 600 )
                 ply.RegularZombie = false
                 ply.Zombine = false
