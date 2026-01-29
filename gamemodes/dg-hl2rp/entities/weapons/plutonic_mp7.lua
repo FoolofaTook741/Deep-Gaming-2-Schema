@@ -66,9 +66,9 @@ SWEP.CenteredAng = Angle(0,0,0)
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.15
+SWEP.Spread.Max = 0.35
 SWEP.Spread.IronsightsMod = 0.95 -- multiply
-SWEP.Spread.CrouchMod = 1 -- crouch effect (multiply)
+SWEP.Spread.CrouchMod = 0.90 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 1.2 -- how does if the player is in the air effect spread (multiply)
 SWEP.Spread.RecoilMod = 0 -- how does the recoil effect the spread (sustained fire) (additional)
 SWEP.Spread.VelocityMod = 0.42 -- movement speed effect on spread (additonal)
