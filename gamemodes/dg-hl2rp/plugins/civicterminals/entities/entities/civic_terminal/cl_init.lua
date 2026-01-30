@@ -52,6 +52,18 @@ end
 
 ENT.Menus = {}
 
+net.Receive("deepupdatedecree", function() 
+	local id = net.ReadUInt(3)
+	local boole = net.ReadBool()
+	if id == 1 then 
+		rations = boole
+	elseif id == 2 then
+		lockdownCode = boole
+	else
+		separation = boole
+	end
+end)
+
 ENT.Menus[""] = {
 	buttons = {
 		CVButton("ENTER TERMINAL", -190, 50, 380, 52, CVCOLOR_BLUE, function(self)
@@ -60,17 +72,6 @@ ENT.Menus[""] = {
 		end),
 	},
 	paint = function(self)
-        net.Receive("deepupdatedecree", function() 
-            local id = net.ReadUInt(3)
-            local boole = net.ReadBool()
-            if id == 1 then 
-                rations = boole
-            elseif id == 2 then
-                lockdownCode = boole
-            else
-                separation = boole
-            end
-        end)
 
 		draw.DrawText("CIVIC TERMINAL :: " .. self:EntIndex() * 21, font50, -450, -300, lightCombineBlueText, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 		
@@ -284,9 +285,6 @@ ENT.Menus['LoyalistTier'] = {
         end)
     },
     paint = function(self)
-        net.Start("impulseHL2RPGetLoyalistTier")
-            net.WriteEntity(self)
-        net.SendToServer()
 
         surface.DrawLine(-525, -240, 500, -240)
         draw.DrawText("CIVIC TERMINAL :: " .. self:EntIndex() * 21, font32, 400, -285, lightCombineBlueText, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
@@ -300,7 +298,8 @@ ENT.Menus['LoyalistTier'] = {
         surface.SetDrawColor(lightCombineBlue.r, lightCombineBlue.g, lightCombineBlue.b, 30)
         surface.DrawRect(-190, -175, 380, 275)
 
-        local tier = LocalPlayer().LoyalistTier or "Loading..."
+		local tier = LocalPlayer().LoyalistTier
+		tier = (tier == nil) and "Loading..." or tostring(tier)
         draw.DrawText(
             tier,
             font64,
@@ -523,7 +522,18 @@ ENT.Menus["Main"] = {
 ENT.__CurrentMenu = ""
 
 function ENT:OpenMenu(menu_)
-	self.__CurrentMenu = menu_
+    self.__CurrentMenu = menu_
+
+    if menu_ == "LoyalistTier" then
+        LocalPlayer().LoyalistTier = nil
+
+        if (self._nextLoyalistReq or 0) > CurTime() then return end
+        self._nextLoyalistReq = CurTime() + 2
+
+        net.Start("impulseHL2RPGetLoyalistTier")
+            net.WriteEntity(self)
+        net.SendToServer()
+    end
 end
 
 
