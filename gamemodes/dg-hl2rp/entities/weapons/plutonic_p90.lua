@@ -46,7 +46,7 @@ SWEP.Primary.Recoil = 1.2 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 7
 SWEP.Primary.PenetrationScale = 2
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.018
+SWEP.Primary.Cone = 0.022
 SWEP.Primary.Delay = RPM(900)
 
 SWEP.UseIronsightsRecoil = false
@@ -65,7 +65,7 @@ SWEP.Spread = {}
 SWEP.Spread.Min = 0
 SWEP.Spread.Max = 1
 SWEP.Spread.IronsightsMod = 0.97 -- multiply
-SWEP.Spread.CrouchMod = 0.5 -- crouch effect (multiply)
+SWEP.Spread.CrouchMod = 0.35 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 1.2 -- how does if the player is in the air effect spread (multiply)
 SWEP.Spread.RecoilMod = 0 -- how does the recoil effect the spread (sustained fire) (additional)
 SWEP.Spread.VelocityMod = 1.7 -- movement speed effect on spread (additonal)
