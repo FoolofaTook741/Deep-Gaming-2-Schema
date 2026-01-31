@@ -70,7 +70,7 @@ function GM:DatabaseConnected()
         sqlQuery:Create("id", "int unsigned NOT NULL AUTO_INCREMENT")
         sqlQuery:Create("ownerid", "int(11) unsigned DEFAULT NULL") -- owner db id
         sqlQuery:Create("name", "varchar(255) NOT NULL")
-        sqlQuery:Create("type", "int(11) unsigned NOT NULL")
+        sqlQuery:Create("type", "int(11) unsigned DEFAULT 0")
         sqlQuery:Create("maxsize", "int(11) unsigned NOT NULL")
         sqlQuery:Create("maxstorage", "int(11) unsigned NOT NULL")
         sqlQuery:Create("ranks", "longtext")
