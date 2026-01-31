@@ -1,4 +1,6 @@
 concommand.Add("impulse_debug_pos", function(ply)
+    if not ply:IsAdmin() then return end
+
 	local pos = ply:GetPos()
 
 	local output = "Vector("..pos.x..", "..pos.y..", "..pos.z..")"
@@ -8,6 +10,8 @@ concommand.Add("impulse_debug_pos", function(ply)
 end)
 
 concommand.Add("impulse_debug_eyepos", function(ply)
+    if not ply:IsAdmin() then return end
+
 	local pos = ply:EyePos()
 
 	local output = "Vector("..pos.x..", "..pos.y..", "..pos.z..")"
@@ -17,6 +21,8 @@ concommand.Add("impulse_debug_eyepos", function(ply)
 end)
 
 concommand.Add("impulse_debug_ang", function(ply)
+    if not ply:IsAdmin() then return end
+
 	local pos = ply:EyeAngles()
 
 	local output = "Angle("..pos.p..", "..pos.y..", "..pos.r..")"
@@ -26,6 +32,8 @@ concommand.Add("impulse_debug_ang", function(ply)
 end)
 
 concommand.Add("impulse_debug_ent_ang", function(ply)
+    if not ply:IsAdmin() then return end
+
 	local traceEnt = LocalPlayer():GetEyeTrace().Entity
 
 	if not traceEnt or not IsValid(traceEnt) then
@@ -40,6 +48,8 @@ concommand.Add("impulse_debug_ent_ang", function(ply)
 end)
 
 concommand.Add("impulse_debug_ent_pos", function(ply)
+    if not ply:IsAdmin() then return end
+
 	local traceEnt = LocalPlayer():GetEyeTrace().Entity
 
 	if not traceEnt or not IsValid(traceEnt) then
@@ -54,16 +64,20 @@ concommand.Add("impulse_debug_ent_pos", function(ply)
 end)
 
 concommand.Add("impulse_debug_hudtoggle", function(ply)
+    if not ply:IsAdmin() then return end
+
 	impulse_DevHud = !impulse_DevHud
 end)
 
 concommand.Add("impulse_debug_iconeditor", function(ply)
-	if ply:IsSuperAdmin() or ply:IsDeveloper() then
+    if ply:IsSuperAdmin() or ply:IsDeveloper() then
 		vgui.Create("impulseIconEditor")
 	end
 end)
 
 concommand.Add("impulse_debug_wtl", function(ply)
+    if not ply:IsAdmin() then return end
+
 	local traceEnt = LocalPlayer():GetEyeTrace().Entity
 
 	if not traceEnt or not IsValid(traceEnt) then
@@ -93,6 +107,8 @@ concommand.Add("impulse_debug_wtl", function(ply)
 end)
 
 concommand.Add("impulse_debug_dump", function(ply, cmd, arg)
+    if not ply:IsAdmin() then return end
+
 	if arg[1] and arg[1] == "help" then
 		print("Available memory targets: (does not include sub-targets)")
 
@@ -128,6 +144,8 @@ concommand.Add("impulse_debug_dump", function(ply, cmd, arg)
 end)
 
 concommand.Add("impulse_debug_id", function(ply, cmd, args)
+    if not ply:IsAdmin() then return end
+
     if not IsValid(ply) or not ply:IsPlayer() then return end
     if not ply:IsSuperAdmin() then return end
 
