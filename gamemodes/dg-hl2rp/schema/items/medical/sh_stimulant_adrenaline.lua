@@ -59,7 +59,7 @@ function ITEM:OnUse(ply)
         end)
 	    timer.Create(ply:SteamID() .. "adrstim", 240, 1, function()
             if ply:Team() == team and ply:GetTeamClass() == class then
-                ply:SetRunSpeed(speed)  -- FIXED: restore original captured speed instead of 200
+                ply:SetRunSpeed(speed)  -- restore original speed instead of perma setting 200 and not reverting type shiiiiii
             end
             ply:Notify("The effects of the Caffeinated Stimulant Pills have worn off.")
             ply.Drugs = math.Clamp(ply.Drugs - 1,0,5) 
