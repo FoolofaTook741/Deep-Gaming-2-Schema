@@ -1,6 +1,7 @@
 -- Armor Penetration
 Plutonic.Hooks.Add(
 	"ScalePlayerDamage",
+	"ArmorPen",
 	function(ply, hitgroup, dmg)
 		if ply:Armor() == 0 then 
 			return 

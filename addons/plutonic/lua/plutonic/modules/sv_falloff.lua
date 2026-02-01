@@ -1,5 +1,6 @@
 Plutonic.Hooks.Add(
 	"ScalePlayerDamage",
+	"Falloff",
 	function(ply, hitgroup, dmg)
 		if ply:Team() == 10 then
 			local attacker = dmg:GetAttacker()
