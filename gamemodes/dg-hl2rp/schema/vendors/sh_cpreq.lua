@@ -144,7 +144,7 @@ VENDOR.Sell = {
 		CanBuy = function(ply)
 			local teamClass = ply:GetTeamClass()
 			local teamRank = ply:GetTeamRank()
-			if (teamClass == CLASS_SWORD and teamRank >= RANK_I1) or (teamClass == CLASS_UNION and teamRank >= RANK_OFC) or (teamRank >= RANK_DVL) or (teamClass == CLASS_GRID and teamRank >= RANK_I2) then
+			if (teamClass == CLASS_SWORD and teamRank >= RANK_I1) or (teamClass == CLASS_UNION and teamRank >= RANK_I1) or (teamRank >= RANK_SQL) then
 				return true
 			else
 				return false

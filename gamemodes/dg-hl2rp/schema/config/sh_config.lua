@@ -108,7 +108,7 @@ impulse.Config.BodyDeSpawnTime = 360 -- 6 mins
 
 impulse.Config.BrokenLegsHealTime = 300 -- 5 mins
 
-impulse.Config.PropPrice = 5
+impulse.Config.PropPrice = 2
 impulse.Config.PropPriceDonator = 0
 
 impulse.Config.RPNameChangePrice = 50

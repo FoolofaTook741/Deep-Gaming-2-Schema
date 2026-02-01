@@ -1096,7 +1096,7 @@ net.Receive("DeepTerminalWhitelistChange", function(len, ply)
 
         if ply:Team() == TEAM_CP then
             teamnameclean = "Metro Police Force"
-            ranktable = { "i5", "i4", "i3", "i2", "i1", "RL", "SqL", "DvL", "DcO", "CmD", "11" }
+            ranktable = { "i5", "i4", "i3", "i2", "i1", "OfC", "SqL", "DvL", "DcO", "CmD", "11" }
         elseif ply:Team() == TEAM_OTA then
             teamnameclean = "Combine Transhuman Arm"
             ranktable = { "CGR", "CSO", "ECS", "CCP", "CTL", "ORD", "CSC", "7" }
