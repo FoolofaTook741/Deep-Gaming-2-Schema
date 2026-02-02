@@ -591,17 +591,6 @@ VENDOR.Sell = {
 			end 
 		end
 	},
-	["wep_cz75"] = {
-		Desc = "i3+",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I3 then
-				return true
-			else return false
-			end 
-		end
-	},
 	["item_motionsensor"] = {
 		Desc = "GHOST Only",
 		Restricted = true,
