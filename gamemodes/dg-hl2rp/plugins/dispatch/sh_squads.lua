@@ -11,7 +11,7 @@ function meta:SquadCanMake()
 		return false
 	end
 
-	if t == TEAM_CP and rank < RANK_I2 then
+	if t == TEAM_CP and rank < RANK_I1 then
 		return false
 	end
 
