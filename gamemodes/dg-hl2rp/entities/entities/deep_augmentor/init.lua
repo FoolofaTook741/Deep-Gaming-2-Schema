@@ -159,7 +159,7 @@ function ENT:Use(ply)
                     ply:SetBodygroup(7, 0)
                     ply:Give("plutonic_mp7a8")
                     ply.IsAugmented = true
-                    local ranktable = {"i5", "i4", "i3", "i2", "i1", "OfC", "SqL", "DvL", "DcO", "VCmD", "CmD"}
+                    local ranktable = {"i4", "i3", "i2", "i1", "OfC", "SqL", "DvL", "DcO", "VCmD", "CmD"}
                     ply:SetRPName("MPF:" .. ranktable[ply:GetTeamRank()] .. ".SCAR-" ..math.random(1,999))
                     timer.Remove(sid.."augmentation")
                     ply:Notify("Augmentation process complete. Take no prisoners.")
