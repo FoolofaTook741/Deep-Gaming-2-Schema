@@ -340,11 +340,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_pistol"] = {
-		Desc = "i4+",
+		Desc = "i3+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I4 then
+			if ply:GetTeamRank() >= RANK_I3 then
 				return true
 			else return false
 			end
