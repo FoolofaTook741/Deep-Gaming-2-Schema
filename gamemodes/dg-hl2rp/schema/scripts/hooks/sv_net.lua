@@ -411,8 +411,8 @@ net.Receive("impulseHL2RPRankBecome", function(len, ply)
 		if plyrank >= ranktwo && ply:GetTeamClass() == division then
 			ply:SetTeamRank(rank)
 			success = true
-		elseif rank == RANK_I5 and division != CLASS_UNION then
-			ply:Notify("You cannot become anything other than UNION as an i5.")
+		elseif rank == RANK_I4 and division != CLASS_UNION then
+			ply:Notify("You cannot become anything other than UNION as an i4.")
         elseif plyrank >= ranktwo then
             if ply:CanBecomeTeamClass(division, true) then
 				ply:ClearInventory(1)
