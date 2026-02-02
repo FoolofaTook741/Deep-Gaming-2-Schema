@@ -291,7 +291,6 @@ TEAM_CP = impulse.Teams.Define({
 			name = "i4",
 			description = "i4",
 			xp = 0,
-			whitelistLevel = 0,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_UNION then
 					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
