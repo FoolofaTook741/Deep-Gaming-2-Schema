@@ -576,13 +576,13 @@ impulse.Config.Achievements = {
 impulse.Config.ModQuickReplies = {
 	"Your report has been received, but we need more details to proceed. Please provide additional info (e.g., player name, time of incident).",
 	"Unfortunately we can not help with this type of issue. If you have any issues with rule-breakers feel free to send another report.",
-	"We cannot accommodate refund requests unless this ticket pertains to your last death. Please submit a request on https://pinnacle-gaming.xyz/",
+	"We cannot accommodate refund requests unless this ticket pertains to your last death. Please submit a request on https://deepgaming2.com",
 	"Do you have a clip available? Witness testimony will not be deemed credible unless supported by a verifiable clip.",
 	"We have decided to not grant you rogue permission, please do not make another request for at least 1 hour.",
 	"You have been granted rogue permission. Please remember, you may only be an i4 or i5. Furthermore, you may only kill in absolute self-defense situations.",
 	"Apologies for the delay in responding to this report.",
 	"Thank you for your report.",
-	"Unfortunately I will have to close this report as it is too old to be dealt with. Feel free to submit a ban request at https://pinnacle-gaming.xyz/",
+	"Unfortunately I will have to close this report as it is too old to be dealt with. Feel free to submit a ban request at https://deepgaming2.com",
 	"False arrest reports can be submitted through the Combine Discord. Staff are unable to assist unless this involves job abuse.",
 	"This report seems to duplicate an existing case. We’re already looking into it. Thanks for your patience!",
 	"We’ve reviewed your report but couldn’t find sufficient evidence. Please let us know if the issue persists."
