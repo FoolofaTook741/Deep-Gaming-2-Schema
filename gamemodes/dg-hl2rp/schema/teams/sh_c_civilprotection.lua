@@ -291,7 +291,7 @@ TEAM_CP = impulse.Teams.Define({
 			name = "i4",
 			description = "i4",
 			xp = 0,
-			whitelistLevel = 1,
+			whitelistLevel = 0,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_UNION then
 					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
@@ -303,7 +303,6 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 0)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
@@ -318,7 +317,6 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 0)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, false)
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
@@ -334,7 +332,6 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 0)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, false)
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
@@ -349,7 +346,6 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 1)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, false)
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
@@ -363,7 +359,6 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 1)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
