@@ -288,73 +288,6 @@ TEAM_CP = impulse.Teams.Define({
 
 	ranks = {
 		{
-			name = "i5",
-			description = "i5",
-			xp = 0,
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:i5." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:i5." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:i5." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 0)
-					ply:SetBodygroup(0, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				else
-					ply:SetRPName("MPF:i5." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				end
-			end
-		},
-		{
 			name = "i4",
 			description = "i4",
 			xp = 0,
@@ -385,7 +318,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 0)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
+					ply:GiveInventoryItem("wep_pistol", 1, false)
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
@@ -401,7 +334,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 0)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
+					ply:GiveInventoryItem("wep_pistol", 1, false)
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
@@ -416,7 +349,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 1)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
+					ply:GiveInventoryItem("wep_pistol", 1, false)
 					ply:GiveInventoryItem("wep_stunstick", 1, true)
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
@@ -1355,23 +1288,21 @@ CLASS_SWORD = 4
 CLASS_GHOST = 5
 CLASS_DISPATCH = 6
 
-RANK_I5 = 1
-RANK_I4 = 2
-RANK_I3 = 3
-RANK_I2 = 4
-RANK_I1 = 5
-RANK_OFC = 6
-RANK_SQL = 7
-RANK_DVL = 8
-RANK_DCO = 9
-RANK_VCMD = 10
-RANK_CMD = 11
+RANK_I4 = 1
+RANK_I3 = 2
+RANK_I2 = 3
+RANK_I1 = 4
+RANK_OFC = 5
+RANK_SQL = 6
+RANK_DVL = 7
+RANK_DCO = 8
+RANK_VCMD = 9
+RANK_CMD = 10
 
 
 impulse.SubmatsConfig = {
 	[TEAM_CP] = {
 		[CLASS_UNION] = {
-			[RANK_I5] = "",
 			[RANK_I4] = "horizons_submats/union_i4.vmt",
 			[RANK_I3] = "horizons_submats/union_i3.vmt",
 			[RANK_I2] = "horizons_submats/union_i2.vmt",
@@ -1384,7 +1315,6 @@ impulse.SubmatsConfig = {
 			[RANK_CMD] = "horizons_submats/cmd.vmt"
 		},
 		[CLASS_HELIX] = {
-			[RANK_I5] = "",
 			[RANK_I4] = "horizons_submats/xray_i4.vmt",
 			[RANK_I3] = "horizons_submats/xray_i3.vmt",
 			[RANK_I2] = "horizons_submats/xray_i2.vmt",
@@ -1397,7 +1327,6 @@ impulse.SubmatsConfig = {
 			[RANK_CMD] = "horizons_submats/cmd.vmt"
 		},
 		[CLASS_GRID] = {
-			[RANK_I5] = "",
 			[RANK_I4] = "horizons_submats/defender_i4.vmt",
 			[RANK_I3] = "horizons_submats/defender_i3.vmt",
 			[RANK_I2] = "horizons_submats/defender_i2.vmt",
@@ -1410,7 +1339,6 @@ impulse.SubmatsConfig = {
 			[RANK_CMD] = "horizons_submats/cmd.vmt"
 		},
 		[CLASS_GHOST] = {
-			[RANK_I5] = "",
 			[RANK_I4] = "horizons_submats/jury_i4.vmt",
 			[RANK_I3] = "horizons_submats/jury_i3.vmt",
 			[RANK_I2] = "horizons_submats/jury_i2.vmt",
@@ -1423,7 +1351,6 @@ impulse.SubmatsConfig = {
 			[RANK_CMD] = "horizons_submats/cmd.vmt"
 		},
 		[CLASS_SWORD] = {
-			[RANK_I5] = "",
 			[RANK_I4] = "horizons_submats/union_i4.vmt",
 			[RANK_I3] = "horizons_submats/union_i3.vmt",
 			[RANK_I2] = "horizons_submats/union_i2.vmt",
@@ -1436,7 +1363,6 @@ impulse.SubmatsConfig = {
 			[RANK_CMD] = "horizons_submats/cmd.vmt"
 		},
 		[CLASS_DISPATCH] = {
-			[RANK_I5] = "",
 			[RANK_I4] = "horizons_submats/union_i4.vmt",
 			[RANK_I3] = "horizons_submats/union_i3.vmt",
 			[RANK_I2] = "horizons_submats/union_i2.vmt",
