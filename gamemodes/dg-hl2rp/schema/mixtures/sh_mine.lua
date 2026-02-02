@@ -2,7 +2,7 @@ local MIX = {}
 
 MIX.Class = "hopper_mine"
 
-MIX.Level = 12
+MIX.Level = 10
 MIX.Bench = "tech"
 
 MIX.Output = "item_mine"
