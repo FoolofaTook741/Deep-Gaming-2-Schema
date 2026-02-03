@@ -1,8 +1,8 @@
 {
     "ply": {
-        "banned": "Player <green>%s</green> has been <red>off-world relocated for %s</red>. Reason: <green>%s</green>",
+        "banned": "Player <green>%s</green> has been <red>banned for %s</red>. Reason: <green>%s</green>",
         "no_permissions": "You don't have all required permissions.",
-        "banned_self": "You have been off-world relocated from city.",
+        "banned_self": "You have been banned from the server.",
         "group_changed": "Your group has been changed to <green>%s</green>.",
         "error_get": "Could find player. Please try again.",
         "welcome": "Welcome on the server, <green>%s</green>"
