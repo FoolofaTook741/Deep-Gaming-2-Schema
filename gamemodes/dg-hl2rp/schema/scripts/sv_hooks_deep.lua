@@ -923,7 +923,7 @@ hook.Add( "PlayerDeath", "FundAdjustment", function(victim, inflictor, attacker)
         if attacker:IsPlayer() then
             if victim:IsCP() and !attacker:IsCP() then
                 local deduction = 30
-                if victim:Team() == TEAM_CP and victim:GetTeamRank() > RANK_I5 then
+                if victim:Team() == TEAM_CP and victim:GetTeamRank() > RANK_I4 then
                     deduction = 30 * victim:GetTeamRank()
                 elseif victim:Team() == TEAM_OTA and victim:GetTeamRank() > RANK_OWG then
                     deduction = 60 * victim:GetTeamRank()
