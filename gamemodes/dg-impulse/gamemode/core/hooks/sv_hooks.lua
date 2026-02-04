@@ -1420,21 +1420,28 @@ local whitelistProp = {
 	["collision"] = true
 }
 
+local allowedProperties = {
+	gamemaster = {
+		skin = true,
+		bodygroups = true,
+		ignite = true,
+		extinguish = true,
+		statue = true,
+		statue_stop = true
+	}
+}
+
 function GM:CanProperty(ply, prop)
-	if whitelistProp[prop] then
+	if whitelistProp and whitelistProp[prop] then
 		return true
 	end
-	
+
 	if ply:IsLeadAdmin() then
 		return true
 	end
 
-	if ply:IsGameMaster() and (prop == "skin" or prop == "bodygroups") then
-		return true
-	end
-
-	if ply:IsAdmin() and (prop == "ignite" or prop == "extinguish") then
-		return true
+	if ply:IsGameMaster() then
+		return allowedProperties.gamemaster[prop] == true
 	end
 
 	return false
