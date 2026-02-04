@@ -3,3 +3,21 @@ function PLUGIN:PlayerShouldGetHungry(ply)
 		return false
 	end
 end
+
+local function GiveAdminTools(ply)
+    if ply:IsAdmin() then
+        ply:Give("weapon_physgun")
+        ply:Give("gmod_tool")
+        ply:Give("impulse_hands")
+    end
+end
+
+hook.Add("PlayerSpawn", "GiveAdminToolsOnSpawn", GiveAdminTools)
+
+hook.Add("OnPlayerChangedTeam", "GiveAdminToolsOnTeamChange", function(ply, oldTeam, newTeam)
+    timer.Simple(0.1, function()
+        if IsValid(ply) then
+            GiveAdminTools(ply)
+        end
+    end)
+end)
