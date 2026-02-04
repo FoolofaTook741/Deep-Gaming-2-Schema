@@ -1362,7 +1362,7 @@ function GM:PlayerSpawnProp(ply, model)
 		return false
 	end
 
-	if ply:IsAdmin() then
+	if ply:IsGameMaster() then
 		return true
 	end
 
