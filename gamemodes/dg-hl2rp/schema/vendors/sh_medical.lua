@@ -13,25 +13,25 @@ VENDOR.Talk = true
 
 VENDOR.Sell = {
 	["item_healthkit"] = {
-		Cost = math.floor(45 * GL_MED_DISC),
+		Cost = math.floor(20 * GL_MED_DISC),
 		BuyMax = 4,
 		Restricted = true,
 		TempCooldown = 300
 	},
 	["item_morphine"] = {
-		Cost = math.floor(85 * GL_MED_DISC),
+		Cost = math.floor(70 * GL_MED_DISC),
 		BuyMax = 2,
 		Restricted = true,
 		TempCooldown = 300
 	},
 	["item_stimshot"] = {
-		Cost = math.floor(60 * GL_MED_DISC),
+		Cost = math.floor(15 * GL_MED_DISC),
 		BuyMax = 2,
 		Restricted = true,
 		TempCooldown = 300
 	},
 	["item_splint"] = {
-		Cost = math.floor(25 * GL_MED_DISC),
+		Cost = math.floor(15 * GL_MED_DISC),
 		BuyMax = 4,
 		Restricted = true,
 		TempCooldown = 300
@@ -43,7 +43,7 @@ VENDOR.Sell = {
 		TempCooldown = 300
 	},
 	["util_medicalsupplies"] = {
-		Cost = math.floor(80 * GL_MED_DISC),
+		Cost = math.floor(50 * GL_MED_DISC),
 		Restricted = false,
 	},
 }
