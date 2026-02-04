@@ -16,7 +16,7 @@ if SERVER then
 			attacker:AchievementGive("ach_fromthegrave")
 		end
 
-		if (attacker:Team() == TEAM_CP and attacker:GetTeamRank() == RANK_I5 and wep:GetClass() == "plutonic_stunstick") and (victim.HasTier3Vest or victim.HasEliteOTAVest) then
+		if (attacker:Team() == TEAM_CP and attacker:GetTeamRank() == RANK_I4 and wep:GetClass() == "plutonic_stunstick") and (victim.HasTier3Vest or victim.HasEliteOTAVest) then
 			attacker:AchievementGive("ach_chadi5")
 		end
 

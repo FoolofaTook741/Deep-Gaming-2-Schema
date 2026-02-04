@@ -494,8 +494,8 @@ impulse.Config.Achievements = {
 		Points = 20
 	},
 	["ach_chadi5"] = {
-		Name = "Chad i5",
-		Desc = "Defeat a rebel with Tier 5 armor as an i5 with a stun baton.",
+		Name = "Chad i4",
+		Desc = "Defeat a rebel with Tier 5 armor as an i4 with a stun baton.",
 		Icon = Material("gamepadui/easy"),
 		Points = 20
 	},
