@@ -53,7 +53,7 @@ VENDOR.Sell = {
         Cost = 100
     },
     ["util_glue"] = {
-        Cost = 20, 
+        Cost = 19, 
         TempCooldown = 600
     },
     ["util_plastic"] = {
