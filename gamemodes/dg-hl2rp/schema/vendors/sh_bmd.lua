@@ -11,24 +11,24 @@ VENDOR.Talk = true
 
 VENDOR.Sell = {
     ["util_bulletcasing"] = {
-        Cost = 85
+        Cost = 30
     },
     ["util_cloth"] = {
         Cost = 35
     },
     ["util_gunpowder"] = {
         Cost = 55,
-        BuyMax = 6,
+        BuyMax = 10,
         TempCooldown = 1200
     },
     ["util_wood"] = {
-        Cost = 30
+        Cost = 15
     },
     ["item_lockpick"] = {
         Cost = 200
     },
     ["ammo_pistol"] = {
-        Cost = 150
+        Cost = 100
     },
     ["wep_pistol"] = {
         Cost = 225,
@@ -57,8 +57,8 @@ VENDOR.Sell = {
         TempCooldown = 600
     },
     ["util_plastic"] = {
-        Cost = 45,
-        BuyMax = 8,
+        Cost = 5,
+        BuyMax = 16,
         TempCooldown = 1200
     },
     ["util_medicalsupplies"] = {
@@ -156,6 +156,42 @@ VENDOR.Sell = {
 VENDOR.Buy = {
     ["util_moonshine"] = {
         Cost = 400
+    },
+
+    ["book_arabic"] = {
+        Cost = 100
+    },
+
+    ["book_spanish"] = {
+        Cost = 100
+    },
+
+    ["book_russian"] = {
+        Cost = 100
+    },
+
+    ["book_german"] = {
+        Cost = 100
+    },
+
+    ["book_italian"] = {
+        Cost = 100
+    },
+
+    ["book_hebrew"] = {
+        Cost = 100
+    },
+
+    ["book_chinese"] = {
+        Cost = 100
+    },
+
+    ["util_paint"] = {
+        Cost = 20
+    },
+
+    ["util_combinescrap"] = {
+        Cost = 25
     },
 }
 
