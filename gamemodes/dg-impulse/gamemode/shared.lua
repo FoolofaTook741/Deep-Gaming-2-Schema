@@ -53,7 +53,8 @@ function impulse.lib.LoadFile(fileName)
 			AddCSLuaFile(fileName)
 		end
 
-		_G[string.sub(fileName, 26, string.len(fileName) - 4)] = include(fileName)
+		local name = string.match(fileName, "rq_(.+)%.lua$")
+		_G[name] = include(fileName)
 	end
 end
 
