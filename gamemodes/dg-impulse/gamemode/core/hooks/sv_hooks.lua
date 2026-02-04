@@ -1505,6 +1505,7 @@ local gmTools = {
 	["lamp"]     = true,
     ["light"]    = true,
 	["imagetool"] = true,
+	["wire_light"] = true
 }
 
 function GM:CanTool(ply, tr, tool)
