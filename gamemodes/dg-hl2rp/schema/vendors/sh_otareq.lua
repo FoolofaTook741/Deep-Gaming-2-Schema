@@ -103,7 +103,7 @@ VENDOR.Sell = {
 			else return false end
 		end
 	},
-	["wep_mp5sd"] = {
+	["wep_ar15"] = {
 		Desc = "ECHO CCP+",
 		Restricted = true,
 		Max = 1,
@@ -514,20 +514,20 @@ function VENDOR:CanUse(ply)
 end
 
 function VENDOR:OnItemPurchased(class, ply)
-	if class == "wep_mp7" and (ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_osips") or ply:HasInventoryItem("wep_mp5sd")) then
+	if class == "wep_mp7" and (ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_osips") or ply:HasInventoryItem("wep_ar15")) then
 		ply:TakeInventoryItemClass("wep_ar2")
 		ply:TakeInventoryItemClass("wep_osips")
-		ply:TakeInventoryItemClass("wep_mp5sd")
+		ply:TakeInventoryItemClass("wep_ar15")
 	end
-	if class == "wep_ar2" and (ply:HasInventoryItem("wep_osips") or ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_mp5sd")) then
+	if class == "wep_ar2" and (ply:HasInventoryItem("wep_osips") or ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_ar15")) then
 		ply:TakeInventoryItemClass("wep_mp7")
 		ply:TakeInventoryItemClass("wep_osips")
-		ply:TakeInventoryItemClass("wep_mp5sd")
+		ply:TakeInventoryItemClass("wep_ar15")
 	end
-	if class == "wep_osips" and (ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_mp5sd")) then
+	if class == "wep_osips" and (ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_ar15")) then
 		ply:TakeInventoryItemClass("wep_mp7")
 		ply:TakeInventoryItemClass("wep_ar2")
-		ply:TakeInventoryItemClass("wep_mp5sd")
+		ply:TakeInventoryItemClass("wep_ar15")
 	end 
 	if class == "att_reflex" and (ply:HasInventoryItem("att_cmore") or ply:HasInventoryItem("att_reddot") or ply:HasInventoryItem("att_holosight")) then
 		ply:TakeInventoryItemClass("att_cmore")
@@ -539,7 +539,7 @@ function VENDOR:OnItemPurchased(class, ply)
 		ply:TakeInventoryItemClass("att_reddot")
 		ply:TakeInventoryItemClass("att_holosight")
 	end
-	if class == "wep_mp5sd" and (ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_osips")) then
+	if class == "wep_ar15" and (ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_osips")) then
 		ply:TakeInventoryItemClass("wep_mp7")
 		ply:TakeInventoryItemClass("wep_ar2")
 		ply:TakeInventoryItemClass("wep_osips")
