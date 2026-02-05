@@ -211,7 +211,18 @@ VENDOR.Sell = {
 			end
 		end
 	},
-	["wep_mp5sd"] = {
+	["wep_ar15"] = {
+		Desc = "GHOST Only",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if ply:GetTeamClass() == CLASS_GHOST then
+				return true
+			else return false
+			end
+		end
+	},
+	["wep_honeybadger"] = {
 		Desc = "GHOST Only",
 		Restricted = true,
 		Max = 1,
@@ -786,6 +797,24 @@ function VENDOR:OnItemPurchased(class, ply)
 		ply:TakeInventoryItemClass("wep_osisg")
 		ply:TakeInventoryItemClass("wep_m500")
 		ply:TakeInventoryItemClass("wep_p90")
+	end
+	if class == "wep_ar15" and (ply:HasInventoryItem("wep_honeybadger") or ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_pm63") or ply:HasInventoryItem("wep_shotgun") or ply:HasInventoryItem("wep_osisg") or ply:HasInventoryItem("wep_m500") or ply:HasInventoryItem("wep_p90")) then
+		ply:TakeInventoryItemClass("wep_mp7")
+		ply:TakeInventoryItemClass("wep_pm63")
+		ply:TakeInventoryItemClass("wep_shotgun")
+		ply:TakeInventoryItemClass("wep_osisg")
+		ply:TakeInventoryItemClass("wep_m500")
+		ply:TakeInventoryItemClass("wep_p90")
+		ply:TakeInventoryItemClass("wep_honeybadger")
+	end
+	if class == "wep_honeybadger" and (ply:HasInventoryItem("wep_ar15") or ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_pm63") or ply:HasInventoryItem("wep_shotgun") or ply:HasInventoryItem("wep_osisg") or ply:HasInventoryItem("wep_m500") or ply:HasInventoryItem("wep_p90")) then
+		ply:TakeInventoryItemClass("wep_mp7")
+		ply:TakeInventoryItemClass("wep_pm63")
+		ply:TakeInventoryItemClass("wep_shotgun")
+		ply:TakeInventoryItemClass("wep_osisg")
+		ply:TakeInventoryItemClass("wep_m500")
+		ply:TakeInventoryItemClass("wep_p90")
+		ply:TakeInventoryItemClass("wep_ar15")
 	end
 	if class == "wep_mp7a8" and (ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_pm63") or ply:HasInventoryItem("wep_shotgun") or ply:HasInventoryItem("wep_osisg") or ply:HasInventoryItem("wep_m500") or ply:HasInventoryItem("wep_p90")) then
 		ply:TakeInventoryItemClass("wep_mp7")

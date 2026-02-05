@@ -1,8 +1,8 @@
 local ITEM = {}
 
-ITEM.UniqueID = "wep_mp5sd"
-ITEM.Name = "AR-15 (.50 Beowulf)"
-ITEM.Desc =  "An AR-15 chambered in .50 Beowulf."
+ITEM.UniqueID = "wep_honeybadger"
+ITEM.Name = "Honeybadger"
+ITEM.Desc =  "A lightweight compact PDW chambered in .300 blackout."
 ITEM.Category = "Weapons"
 ITEM.Model = Model("models/weapons/w_rif_blast_ar15_50.mdl")
 ITEM.FOV = 46.239255014327
