@@ -785,7 +785,7 @@ end
                 net.SendToServer()
                 surface.PlaySound("ambient/cmb_alarm.mp3")
             else
-                LocalPlayer():Notify("Please wait " .. math.floor(timer.TimeLeft("lockdowncooldown")) .. " seconds before using this button.")
+                LocalPlayer():Notify("Please wait " .. math.floor(timer.TimeLeft("rationcooldown")) .. " seconds before using this button.")
             end
             pdaSound()
         end
