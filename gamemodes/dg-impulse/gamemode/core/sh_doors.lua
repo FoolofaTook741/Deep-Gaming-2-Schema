@@ -32,7 +32,7 @@ function meta:CanLockUnlockDoor(doorOwners, doorGroup)
 	end
 
 	if doorGroup == 7 then 
-		if self:Team() == TEAM_CWU and class == CLASS_RESEARCH then
+		if self:Team() == TEAM_CWU and self:GetTeamClass() == CLASS_RESEARCH then
 			return true
 		end
 	end
