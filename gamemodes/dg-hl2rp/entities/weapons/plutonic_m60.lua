@@ -2,7 +2,7 @@ AddCSLuaFile()
 
 SWEP.Base = "plutonic_base"
 
-SWEP.PrintName = "M2 Browning Machine Gun"
+SWEP.PrintName = "M60 Machine Gun"
 SWEP.Category = "Deep Gaming [Plutonic]"
 
 SWEP.Spawnable = true
@@ -50,7 +50,7 @@ SWEP.Primary.Sound = Sound("LS2.M2.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.M2.Inside")
 
 
-SWEP.Primary.Recoil = 3 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Recoil = 2.6 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 15
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.04
@@ -79,7 +79,7 @@ SWEP.Spread.AirMod = 10.8 -- how does if the player is in the air effect spread 
 SWEP.Spread.RecoilMod = 0.01 -- how does the recoil effect the spread (sustained fire) (additional)
 SWEP.Spread.VelocityMod = 16.25 -- movement speed effect on spread (additonal)
 
-SWEP.IronsightsPos = Vector(-5.6, 0, 4.7)
+SWEP.IronsightsPos = Vector(-1.6, 0, -1)
 SWEP.IronsightsAng = Angle(0, 3, 0)
 SWEP.IronsightsFOV = 0.72
 SWEP.IronsightsSensitivity = 0.8
@@ -100,8 +100,8 @@ SWEP.Attachments = {
 			Skin = 0
 		},
 		ModSetup = function(e)
-			e.Primary.Delay = RPM(700)
-			e.Primary.Recoil = 11
+			e.Primary.Delay = RPM(600)
+			e.Primary.Recoil = 8
 		end,
 		ModCleanup = function(e)
 			e.Primary.Delay = copyDelay
@@ -115,8 +115,8 @@ SWEP.LoweredPos = Vector(0, -16, -13)
 SWEP.LoweredAng = Angle(0, 20, 0)
 
 SWEP.SoundString = "weapons/syndod/30cal_fire.wav"
-SWEP.WorldModelString = "models/weapons/arccw/w_50cal_12.mdl"
-SWEP.ViewModelString = "models/weapons/arccw/c_50cal_10.mdl"
+SWEP.WorldModelString = "models/weapons/w_dm60.mdl"
+SWEP.ViewModelString = "models/weapons/v_dm60.mdl"
 
 local CopyViewModelOrigin = SWEP.ViewModelFOV
 function SWEP:PostDrawViewModel(viewmodel, player)

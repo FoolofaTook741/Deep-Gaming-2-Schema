@@ -63,7 +63,7 @@ SWEP.Primary.Inside_Sound = Sound("LS2.AR2.Inside")
 SWEP.Primary.Recoil = 0.6
 SWEP.Primary.Damage = 13
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.02 -- base spread value
+SWEP.Primary.Cone = 0.01 -- base spread value
 SWEP.Primary.Delay = RPM(600)
 SWEP.Primary.Tracer = "AR2Tracer"
 
