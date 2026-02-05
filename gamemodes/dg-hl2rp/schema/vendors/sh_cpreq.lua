@@ -103,10 +103,12 @@ VENDOR.Sell = {
 			return false
 		end
 	},
+	--[[
 	["util_radio"] = {
 		Restricted = true,
 		Max = 1,
 	},
+	--]]
 	["wep_sw500"] = {
 		Desc = "CmD Only",
 		Restricted = true,

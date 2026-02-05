@@ -168,7 +168,8 @@ impulse.Config.DisabledPlugins = {
 	["season_aprilfools"] = true,
 	["ending"] = true,
 	["properties"] = true,
-	["quests"] = true
+	["quests"] = true,
+	["radios"] = true
 }
 
 impulse.Config.DoorPrice = 15

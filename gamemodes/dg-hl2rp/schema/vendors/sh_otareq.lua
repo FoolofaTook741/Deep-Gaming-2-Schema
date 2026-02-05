@@ -25,10 +25,12 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1
 	},
+	--[[
 	["util_radio"] = {
 		Restricted = true,
 		Max = 1,
 	},
+	--]]
 	["wep_omr"] = {
 		Desc = "RANGER CSO+",
 		Restricted = true,
