@@ -29,6 +29,7 @@ function ITEM:OnUse(ply, door)
 		if door:IsPlayer() and door:GetSyncVar(SYNC_ARRESTED, false) then
 			door:UnArrest()
 			door.JailEscaped = true
+			door:UnJail()
 			door:Notify("You have been lockpicked out of your restraints by "..ply:Nick()..".")
 
 			ply:EmitSound("weapons/357/357_reload4.wav")

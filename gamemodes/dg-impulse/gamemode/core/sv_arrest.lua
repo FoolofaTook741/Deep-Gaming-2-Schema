@@ -141,6 +141,7 @@ function meta:UnJail()
 
 	if self.JailEscaped then
 		self.JailEscaped = false
+		timer.Remove(self:UserID().."impulsePrison")
 		return
 	end
 
