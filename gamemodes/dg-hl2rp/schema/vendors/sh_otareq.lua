@@ -184,7 +184,19 @@ VENDOR.Sell = {
 			else return false end
 		end
 	},
-
+	["item_broadcastkey"] = {
+		Desc = "A key for the broadcast terminal, do not lose this.",
+		Cost = 0,
+		BuyMax = 1,
+		TempCooldown = 600,
+		Restricted = true,
+		CanBuy = function(ply)
+			if (ply:GetTeamRank() >= RANK_ORD) then
+				return true
+			else return false
+			end
+		end
+	},
 
 	--[[["wep_ar2orb"] = {
 		Desc = "FIST Only",
