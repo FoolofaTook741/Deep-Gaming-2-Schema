@@ -337,36 +337,3 @@ impulse.Business.Define("Vending Machine", {
     	end
     end
 })
-
-impulse.Business.Define("Low Grade Research Computer", {
-    entity = "deep_lgrc",
-    model = "models/props_se/computer_03_1970.mdl",
-    description = "A research computer.",
-    category = "Research Equipment",
-    price = 250,
-    refundAdd = 200,
-    refund = true,
-    removeOnTeamSwitch = true,
-    postSpawn = function(ent, ply)
-		ent.CPPISetOwner(ply)
-    	ply.LGRCs = (ply.LGRCs or 0) + 1
-    end,
-    customCheck = function(ply)
-        if ply:Team() != TEAM_CWU then
-            return false
-        end
-
-        if ply:GetTeamClass() != CLASS_RESEARCH then
-            return false
-        end
-
-    	local lgrcs = ply.LGRCs or 0
-
-    	if lgrcs >= 10 then
-    		ply:Notify("You have reached the max amount of LGRCs.")
-    		return false
-    	else
-    		return true
-    	end
-    end
-})

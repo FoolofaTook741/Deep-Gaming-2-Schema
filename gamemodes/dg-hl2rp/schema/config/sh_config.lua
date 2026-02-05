@@ -841,7 +841,6 @@ impulse.Config.LootPools = {
 			["wep_osiprmk1c"] = {Rarity = 970, Rep = 1},
 			["util_energycore"] = {Rarity = 730, Rep = 2},
 			["util_particleaccelerator"] = {Rarity = 980, Rep = 1},
-			["item_augmentchip"] = {Rarity = 995, Rep = 1},
 			["item_ammocrate"] = {Rarity = 600, Rep = 3},
 		},
 		MaxItems = 20,

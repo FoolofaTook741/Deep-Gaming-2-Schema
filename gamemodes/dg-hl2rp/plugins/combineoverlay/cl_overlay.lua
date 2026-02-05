@@ -32,13 +32,6 @@ local lockdown = false
 local separation = false
 local rations = true
 local fracturedstarttime = 0
-local resin = 0
-
-
-net.Receive("DeepUpdateResin", function()
-    resin = net.ReadFloat()
-    resin = math.Round(resin, 1)
-end)
 
 local awardcredits = 0
 
@@ -792,9 +785,6 @@ local function DrawAuxData(offset)
 
         add = add + 14
     end
-
-    draw.SimpleText("RESIN (FACTION STOCKPILE): " .. resin .. " KG ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
-
     add = add + 28
 
     if LocalPlayer():IsCPCommand() and LocalPlayer():Team() == TEAM_CP and awardcredits != 0 then

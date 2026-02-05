@@ -703,36 +703,6 @@ net.Receive("DeepFundingOperation", function(len,ply)
                     end
                 end
             end)
-        elseif upgrade == "ResearchFunding" && funds >= researchfundingamount then
-			local totalRecieved = researchfundingamount
-            if RES_IF == true then
-                CWU_FUNDING = CWU_FUNDING + researchfundingamount + 100
-				totalRecieved = researchfundingamount + 100
-            else
-                CWU_FUNDING = CWU_FUNDING + researchfundingamount
-            end
-            if RES_OCAAB == true then
-                OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS - (researchfundingamount * 0.75)
-            else
-                OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS - researchfundingamount
-            end
-            net.Start("DeepAdjustFunds")
-            net.WriteInt(OCAAB_CUR_FUNDS, 16)
-            net.Broadcast()
-            for k, v in pairs(player.GetAll()) do
-                if v:Team() == TEAM_CWU and v:GetTeamClass() == CLASS_RESEARCH then
-                    if RES_IF == true then
-                        v:Notify("OCAAB STIMULUS RECEIVED, 1100C HAS BEEN ADDED TO FUNDING.")
-                    else
-                        v:Notify("OCAAB STIMULUS RECEIVED, 1000C HAS BEEN ADDED TO FUNDING.")
-                    end
-                end
-            end 
-			for k, v in pairs(player.GetAll()) do
-				if v:IsCP() then
-					v:SendCombineMessage("RESEARCH & DEVELOPMENT HAS RECEIVED A FUNDING BOOST OF  "..totalRecieved.." BY ORDER OF THE O.C.A.A.B.", Color(0, 150, 0))
-				end
-			end 
         elseif upgrade == "Distribution" && funds >= incendiariescost && !timer.Exists("OCABuyout") then
             local combine = GetCombineCount()
             local cut = math.floor(OCAAB_CUR_FUNDS/combine)

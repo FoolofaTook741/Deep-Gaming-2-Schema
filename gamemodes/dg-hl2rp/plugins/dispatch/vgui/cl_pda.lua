@@ -976,28 +976,6 @@ end
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
-        self.researchFunding = vgui.Create("DButton", self.economyPnl)
-        self.researchFunding:SetFont("DebugFixed")
-        self.researchFunding:SetText("C.W. RESEARCH FUNDING (No Cooldown) - 1000C")
-        self.researchFunding:Dock(TOP)
-
-        function self.researchFunding:Paint(w, h)
-            surface.SetDrawColor(8, 16, 28, 220)
-            surface.DrawRect(0, 0, w, h)
-            surface.SetDrawColor(COMBINE_ACCENT)
-            surface.DrawOutlinedRect(0, 0, w, h)
-            draw.SimpleText("C.W. RESEARCH FUNDING (No Cooldown) - 1000C", "DebugFixed", w / 2, h / 2, COMBINE_TEXT, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
-
-        function self.researchFunding:DoClick()
-            net.Start("DeepFundingOperation")
-            net.WriteString("ResearchFunding")
-            net.SendToServer()
-            pdaSound()
-        end
-    end
-
     if LocalPlayer():Team() == TEAM_CA and rank >= RANK_CA and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.distribute = vgui.Create("DButton", self.economyPnl)
         self.distribute:SetFont("DebugFixed")
@@ -1094,71 +1072,6 @@ end
             net.SendToServer()
             pdaSound()
         end
-    end
-    
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_REPRESENTATIVE and LocalPlayer():GetTeamClass() == CLASS_BASE then
-        self.researchPnl = vgui.Create("DPanel", self.sheet)
-        self.researchPnl:Dock(FILL)
-        StyleCombinePanel(self.researchPnl, 32)
-
-        self.researchScroll = vgui.Create("DScrollPanel", self.researchPnl)
-        self.researchScroll:Dock(FILL)
-        self.researchScroll:DockMargin(0, 30, 0, 0)
-
-        local researchSheet = self:AddCombineTab("R&D", self.researchPnl)
-        researchSheet.Button:SetFont("DebugFixed")
-        researchSheet.Button.NoShowSquad = true
-
-        function self:AddResearchItems(category, items)
-            local catLabel = vgui.Create("DLabel", self.researchScroll)
-            catLabel:SetText(category)
-            catLabel:SetFont("DebugFixed")
-            catLabel:SetTextColor(COMBINE_MUTED)
-            catLabel:Dock(TOP)
-            catLabel:DockMargin(8, 10, 8, 5)
-            
-            for _, item in ipairs(items) do
-                local itemPanel = vgui.Create("DPanel", self.researchScroll)
-                itemPanel:SetTall(30)
-                itemPanel:Dock(TOP)
-                itemPanel:DockMargin(8, 0, 8, 5)
-                itemPanel.Paint = function(_, w, h)
-                    surface.SetDrawColor(50, 50, 50, 200)
-                    surface.DrawRect(0, 0, w, h)
-                end
-
-                local itemLabel = vgui.Create("DLabel", itemPanel)
-                local text = item.name
-                if item.progress == 1 then
-                    text = text .. " - Complete"
-                elseif item.progress ~= 0 then
-                    text = text .. " - In progress"
-                else
-                    text = text .. " - Not complete"
-                end
-                itemLabel:SetText(text)
-                itemLabel:SetFont("DebugFixed")
-                itemLabel:SetTextColor(COMBINE_TEXT)
-                itemLabel:Dock(FILL)
-                itemLabel:DockMargin(8, 0, 8, 0)
-            end
-        end
-
-        net.Receive("researchTableData", function()
-            local techResearch = net.ReadTable()
-            local weaponResearch = net.ReadTable()
-            local ecoResearch = net.ReadTable()
-            
-            if IsValid(self.researchScroll) then
-                self.researchScroll:Clear()
-                self:AddResearchItems("Technology Research", techResearch)
-                self:AddResearchItems("Weapon Research", weaponResearch)
-                self:AddResearchItems("Economy Research", ecoResearch)
-            end
-        end)
-        
-        net.Start("researchTable")
-        net.SendToServer()
     end
 
     if LocalPlayer():Team() == TEAM_CP and rank >= RANK_I3 then 
