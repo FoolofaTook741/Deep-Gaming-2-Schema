@@ -1532,6 +1532,11 @@ net.Receive("impulseVendorBuy", function(len, ply)
 		return
 	end
 
+	-- Vendor-specific hook
+	if vendor.Vendor.OnItemPurchased then
+		vendor.Vendor.OnItemPurchased(vendor, itemclass, ply)
+	end
+
 	if not ply:CanHoldItem(itemclass) then
 		return ply:Notify("You don't have enough inventory space to hold this item.")
 	end
@@ -1649,11 +1654,6 @@ net.Receive("impulseVendorBuy", function(len, ply)
 
 	-- Give the purchased item
 	ply:GiveInventoryItem(itemclass, 1, sellData.Restricted or false)
-
-	-- Vendor-specific hook
-	if vendor.Vendor.OnItemPurchased then
-		vendor.Vendor.OnItemPurchased(vendor, itemclass, ply)
-	end
 
 	-- Global hook
 	hook.Run("PlayerVendorBuy", ply, vendor, itemclass, sellData.Cost or 0)
