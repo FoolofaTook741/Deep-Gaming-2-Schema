@@ -220,66 +220,12 @@ function VENDOR:CanUse(ply)
 	return ply:Team() == TEAM_OTA and ply:GetTeamClass() != nil and (impulse.Dispatch.GetCityCode() >= CODE_AJ or (impulse.Dispatch.GetCityCode() >= CODE_AJ or RES_MASSPRODUCTION == true))
 end
 
-function VENDOR:OnItemPurchased(class, ply)
-	if class == "wep_mp7" and (ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_osips") or ply:HasInventoryItem("wep_mp5sd")) then
-		ply:TakeInventoryItemClass("wep_ar2")
-		ply:TakeInventoryItemClass("wep_osips")
-		ply:TakeInventoryItemClass("wep_mp5sd")
-	end
-	if class == "wep_ar2" and (ply:HasInventoryItem("wep_osips") or ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_mp5sd")) then
-		ply:TakeInventoryItemClass("wep_mp7")
-		ply:TakeInventoryItemClass("wep_osips")
-		ply:TakeInventoryItemClass("wep_mp5sd")
-	end
-	if class == "wep_osips" and (ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_mp5sd")) then
-		ply:TakeInventoryItemClass("wep_mp7")
-		ply:TakeInventoryItemClass("wep_ar2")
-		ply:TakeInventoryItemClass("wep_mp5sd")
-	end 
-	if class == "att_reflex" and (ply:HasInventoryItem("att_cmore") or ply:HasInventoryItem("att_reddot") or ply:HasInventoryItem("att_holosight")) then
-		ply:TakeInventoryItemClass("att_cmore")
-		ply:TakeInventoryItemClass("att_reddot")
-		ply:TakeInventoryItemClass("att_holosight")
-	end
-	if class == "att_cmore" and (ply:HasInventoryItem("att_reflex") or ply:HasInventoryItem("att_reddot") or ply:HasInventoryItem("att_holosight")) then
-		ply:TakeInventoryItemClass("att_reflex")
-		ply:TakeInventoryItemClass("att_reddot")
-		ply:TakeInventoryItemClass("att_holosight")
-	end
-	if class == "wep_mp5sd" and (ply:HasInventoryItem("wep_mp7") or ply:HasInventoryItem("wep_ar2") or ply:HasInventoryItem("wep_osips")) then
-		ply:TakeInventoryItemClass("wep_mp7")
-		ply:TakeInventoryItemClass("wep_ar2")
-		ply:TakeInventoryItemClass("wep_osips")
-	end
-	if class == "wep_shotgun" and (ply:HasInventoryItem("wep_osisg") or ply:HasInventoryItem("wep_m500")) then
-		ply:TakeInventoryItemClass("wep_osisg")
-		ply:TakeInventoryItemClass("wep_m500")
-	end
-	if class == "wep_shotgun" and (ply:HasInventoryItem("wep_osisg") or ply:HasInventoryItem("wep_m500")) then
-		ply:TakeInventoryItemClass("wep_osisg")
-		ply:TakeInventoryItemClass("wep_m500")
-	end
-	if class == "att_slugrounds" and (ply:HasInventoryItem("att_dragonsbreath")) then
-		ply:TakeInventoryItemClass("att_dragonsbreath")
-	end
-	if class == "att_dragonsbreath" and (ply:HasInventoryItem("att_slugrounds")) then
-		ply:TakeInventoryItemClass("att_slugrounds")
-	end
-	if class == "wep_m500" and (ply:HasInventoryItem("wep_shotgun") or ply:HasInventoryItem("wep_osisg"))  then
-		ply:TakeInventoryItemClass("wep_shotgun")
-		ply:TakeInventoryItemClass("wep_osisg")
-	end
-	if class == "wep_osr" and ply:HasInventoryItem("wep_omr") then
-		ply:TakeInventoryItemClass("wep_omr")
-	end
-	if class == "wep_omr" and ply:HasInventoryItem("wep_osr") then
-		ply:TakeInventoryItemClass("wep_osr")
-	end
-	if class == "wep_apf" and ply:HasInventoryItem("wep_ar3") then
-		ply:TakeInventoryItemClass("wep_ar3")
-	end
-	if class == "wep_ar3" and ply:HasInventoryItem("wep_apf") then
-		ply:TakeInventoryItemClass("wep_apf")
+function VENDOR.OnItemPurchased(class, itemclass, ply) --Update the item removals here: gamemodes\dg-hl2rp\schema\scripts\sh_functions.lua **bottom of the file**
+	itemType = meta.getItemType(itemclass)
+	if itemType ~= nil then
+		for i, val in ipairs(itemType) do
+			ply:TakeInventoryItemClass(val)
+		end
 	end
 end
 
