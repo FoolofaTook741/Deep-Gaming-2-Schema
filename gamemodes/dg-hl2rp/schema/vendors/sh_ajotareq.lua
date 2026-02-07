@@ -35,7 +35,7 @@ VENDOR.Sell = {
 			else return false end
 		end
 	},
-	["wep_mp5sd"] = {
+	["wep_ar15"] = {
 		Desc = "ECHO ECS+",
 		Restricted = true,
 		Max = 1,

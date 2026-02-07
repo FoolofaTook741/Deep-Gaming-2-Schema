@@ -13,7 +13,7 @@ ITEM.Weight = 6
 ITEM.Droppable = true
 ITEM.DropOnDeath = true
 
-ITEM.ScrapClass = "scrap_hb"
+ITEM.ScrapClass = "scrap_ar15"
 
 ITEM.DropIfRestricted = false
 ITEM.DropOnDeathIfRestricted = false

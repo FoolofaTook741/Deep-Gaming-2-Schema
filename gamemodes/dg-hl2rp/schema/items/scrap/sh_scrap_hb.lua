@@ -1,10 +1,10 @@
 local ITEM = {}
 
 ITEM.UniqueID = "scrap_hb"
-ITEM.Name = "Damaged AR-15 (.50 Beowulf)"
-ITEM.Desc =  "A damaged weapon commonly used by GHOST units."
+ITEM.Name = "Damaged Honeybadger"
+ITEM.Desc =  "A damaged PDW commonly used by GHOST units."
 ITEM.Category = "Scrap"
-ITEM.Model = Model("models/weapons/w_rif_blast_ar15_50.mdl")
+ITEM.Model = Model("models/weapons/private_arsenals/w_honeybadger.mdl")
 ITEM.FOV = 46.239255014327
 ITEM.CamPos = Vector(32.664756774902, -19.484241485596, 9.1690540313721)
 ITEM.Weight = 4.5
@@ -83,7 +83,7 @@ function ITEM:OnUse(ply)
                 itemList[#itemList + 1] = string.format("%d %s", count, item)
             end
             local notifyText = #itemList > 0 and table.concat(itemList, ", ") or "nothing"
-            ply:Notify("You have dismantled the AR-15 .50, yielding: " .. notifyText .. ".")
+            ply:Notify("You have dismantled the Honeybadger, yielding: " .. notifyText .. ".")
         end
     end)
     return true

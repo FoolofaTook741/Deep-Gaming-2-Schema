@@ -193,7 +193,7 @@ VENDOR.Sell = {
 			end
 		end
 	},
-	["wep_mp5sd"] = {
+	["wep_honeybadger"] = {
 		Desc = "GHOST Only",
 		Restricted = true,
 		Max = 1,
