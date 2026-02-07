@@ -10,8 +10,8 @@ SWEP.AdminOnly = false
 
 SWEP.HoldType = "ar2"
 
-SWEP.WorldModel = Model("models/weapons/arccw/w_50cal_12.mdl")
-SWEP.ViewModel = Model("models/weapons/arccw/c_50cal_10.mdl")
+SWEP.WorldModel = Model("models/weapons/w_dm60.mdl")
+SWEP.ViewModel = Model("models/weapons/v_dm60.mdl")
 SWEP.ViewModelFOV = 65
 SWEP.ViewModelOffset = Vector(2.5, 3, -0.25)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)

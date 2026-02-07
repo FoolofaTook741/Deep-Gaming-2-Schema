@@ -240,8 +240,8 @@ end
 
 
 SWEP.SoundString = "ma85_mw3/silencer/smg_mp5.wav"
-SWEP.WorldModelString = "models/weapons/private_arsenals/w_honeybadger.mdl"
-SWEP.ViewModelString = "models/weapons/private_arsenals/c_honeybadger.mdl"
+SWEP.WorldModelString = "models/weapons/w_rif_blast_ar15_50.mdl"
+SWEP.ViewModelString = "models/weapons/c_rif_blast_ar15_50.mdl"
 
 local CopyViewModelOrigin = SWEP.ViewModelFOV
 function SWEP:PostDrawViewModel(viewmodel, player)
