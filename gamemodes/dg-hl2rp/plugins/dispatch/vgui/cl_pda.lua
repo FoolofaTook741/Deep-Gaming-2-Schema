@@ -1186,7 +1186,7 @@ end
         function self.hbbutton:DoClick()
             net.Start("DeepSterilizedCreditsPurchase")
             net.WriteString("Item")
-            net.WriteString("wep_mp5sd")
+            net.WriteString("wep_ar15")
             net.WriteInt(160, 16)
             net.SendToServer()
             self:GetParent():GetParent():Remove()

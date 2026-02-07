@@ -108,12 +108,12 @@ net.Receive("DeepSterilizedCreditsPurchase", function(len, ply)
     end
     local validweapons = {
         ["wep_cz75"] = true, ["wep_pm63"] = true, ["wep_mp7"] = true,
-        ["wep_mp5sd"] = true, ["wep_mp7a8"] = true, ["wep_m500"] = true,
+        ["wep_ar15"] = true, ["wep_mp7a8"] = true, ["wep_m500"] = true,
         ["wep_shotgun"] = true, ["wep_357"] = true, ["grenade_flashbang"] = true
     }
     local validweaponscost = {
         ["wep_cz75"] = 40, ["wep_pm63"] = 80, ["wep_mp7"] = 130,
-        ["wep_mp5sd"] = 160, ["wep_mp7a8"] = 550, ["wep_m500"] = 300,
+        ["wep_ar15"] = 160, ["wep_mp7a8"] = 550, ["wep_m500"] = 300,
         ["wep_shotgun"] = 350, ["wep_357"] = 425, ["grenade_flashbang"] = 50
     }
     if purchasetype == "Item" then
