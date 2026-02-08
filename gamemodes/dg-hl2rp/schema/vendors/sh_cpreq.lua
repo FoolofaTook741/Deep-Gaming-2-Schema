@@ -112,6 +112,7 @@ VENDOR.Sell = {
 	["wep_sw500"] = {
 		Desc = "CmD Only",
 		Restricted = true,
+		ItemType = "secondaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			return ply:GetTeamRank() >= RANK_CMD
@@ -142,6 +143,7 @@ VENDOR.Sell = {
 	["wep_shotgun"] = {
 		Desc = "SWORD i1+/UNION RL+/DvL+/Grid i2+",
 		Restricted = true,
+		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			local teamClass = ply:GetTeamClass()
@@ -156,6 +158,7 @@ VENDOR.Sell = {
 	["wep_m500"] = {
 		Desc = "GRID i1+",
 		Restricted = true,
+		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			local teamClass = ply:GetTeamClass()
@@ -170,6 +173,7 @@ VENDOR.Sell = {
 	["att_slugrounds"] = {
 		Desc = "UNION RL+/DVL+",
 		Restricted = true,
+		ItemType = "weaponAttachments",
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamRank() >= RANK_OFC and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_DVL && ply:GetTeamClass() != CLASS_SWORD) then
@@ -181,6 +185,7 @@ VENDOR.Sell = {
 	["wep_osisg"] = {
 		Desc = "UNION i2+/Grid i3+",
 		Restricted = true, 
+		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamRank() == RANK_I2 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I3 and ply:GetTeamClass() == CLASS_GRID) then
@@ -192,6 +197,7 @@ VENDOR.Sell = {
 	["wep_mp7"] = {
 		Desc = "U i3+/i1+/GHOST/i3 AJ+",
 		Restricted = true,
+		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamClass() == CLASS_UNION && ply:GetTeamRank() >= RANK_I3) or (ply:GetTeamRank() >= RANK_I1 or ply:GetTeamClass() == CLASS_GHOST) or (ply:GetTeamRank() >= RANK_I3 && impulse.Dispatch.GetCityCode() >= CODE_JW) then
@@ -225,6 +231,7 @@ VENDOR.Sell = {
 	["wep_honeybadger"] = {
 		Desc = "GHOST Only",
 		Restricted = true,
+		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamClass() == CLASS_GHOST then
@@ -236,6 +243,7 @@ VENDOR.Sell = {
 	["wep_pm63"] = {
 		Desc = "i3+",
 		Restricted = true,
+		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamRank() >= RANK_I3 then
@@ -247,6 +255,7 @@ VENDOR.Sell = {
 	["wep_p90"] = {
 		Desc = "UNION i3+/AJ:UNION i4+ /i2+",
 		Restricted = true,
+		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamRank() >= RANK_I2) or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I3) or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I4 and impulse.Dispatch.GetCityCode() >= CODE_JW) then
@@ -258,6 +267,7 @@ VENDOR.Sell = {
 	["wep_357"] = {
 		Desc = "DcO+",
 		Restricted = true,
+		ItemType = "secondaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			return ply:GetTeamRank() >= RANK_DCO
@@ -355,6 +365,7 @@ VENDOR.Sell = {
 	["wep_pistol"] = {
 		Desc = "i3+",
 		Restricted = true,
+		ItemType = "secondaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamRank() >= RANK_I3 then
@@ -366,6 +377,7 @@ VENDOR.Sell = {
 	["att_pistol_silencer"] = {
 		Desc = "Ghost",
 		Restricted = true,
+		ItemType = "weaponAttachments",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamClass() >= CLASS_GHOST then
@@ -399,6 +411,7 @@ VENDOR.Sell = {
 	["att_reflex"] = {
 		Desc = "i2+",
 		Restricted = true,
+		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamRank() >= RANK_I2 then
@@ -410,6 +423,7 @@ VENDOR.Sell = {
 	["att_cmore"] = {
 		Desc = "U i2+/U i3 MRG/i1+/GHOST/i3 JW+",
 		Restricted = true,
+		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamClass() == CLASS_UNION && ply:GetTeamRank() >= RANK_I2) or (ply:GetTeamRank() >= RANK_I1 or ply:GetTeamClass() == CLASS_GHOST) or (ply:GetTeamRank() >= RANK_I3 && impulse.Dispatch.GetCityCode() >= CODE_JW) or (ply:GetTeamRank() >= RANK_I3 && ply:GetTeamClass() == CLASS_UNION && impulse.Dispatch.GetCityCode() >= CODE_UNREST) then
@@ -421,6 +435,7 @@ VENDOR.Sell = {
 	["att_holosight"] = {
 		Desc = "UNION I3+/I2+/GHOST",
 		Restricted = true,
+		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamClass() == CLASS_UNION && ply:GetTeamRank() >= RANK_I3) or ply:GetTeamRank() >= RANK_I2 or ply:GetTeamClass() == CLASS_GHOST then
@@ -454,6 +469,7 @@ VENDOR.Sell = {
 	["wep_mp7a8"] = {
 		Desc = "SWORD or DcO+/JW: UNION i1+",
 		Restricted = true,
+		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamClass() == CLASS_SWORD or ply:GetTeamRank() >= RANK_DCO or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I1 and impulse.Dispatch.GetCityCode() >= CODE_JW) then
@@ -466,6 +482,7 @@ VENDOR.Sell = {
 	["wep_tt"] = {
 		Desc = "SWORD or SqL+",
 		Restricted = true,
+		ItemType = "secondaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamClass() == CLASS_SWORD or ply:GetTeamRank() >= RANK_SQL then
@@ -514,6 +531,7 @@ VENDOR.Sell = {
 	["cos_cpvest1"] = {
 		Desc = "i3+",
 		Restricted = true,
+		ItemType = "armorItems",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamRank() >= RANK_I3 then
@@ -526,6 +544,7 @@ VENDOR.Sell = {
 	["cos_cpvest2"] = {
 		Desc = "MARGINAL Only or SWORD",
 		Restricted = true,
+		ItemType = "armorItems",
 		Max = 1,
 		CanBuy = function(ply)
 			if impulse.Dispatch.GetCityCode() >= CODE_UNREST or ply:GetTeamClass() == CLASS_SWORD then
@@ -538,6 +557,7 @@ VENDOR.Sell = {
 	["cos_cpvest3"] = {
 		Desc = "SWORD/RL+ MARGINAL or HC",
 		Restricted = true,
+		ItemType = "armorItems",
 		Max = 1,
 		CanBuy = function(ply)
 			if (impulse.Dispatch.GetCityCode() >= CODE_UNREST and (ply:GetTeamClass() == CLASS_SWORD or ply:GetTeamRank() >= RANK_OFC)) or ply:GetTeamRank() >= RANK_DVL then
@@ -550,6 +570,7 @@ VENDOR.Sell = {
 	["cos_cpvest4"] = {
 		Desc = "DvL MARGINAL or DcO+",
 		Restricted = true,
+		ItemType = "armorItems",
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamRank() == RANK_DVL && impulse.Dispatch.GetCityCode() >= CODE_UNREST) or ply:GetTeamRank() >= RANK_DCO then
@@ -720,13 +741,7 @@ function VENDOR:CanUse(ply)
 	return ply:Team() == TEAM_CP and ply:GetTeamClass() != nil
 end
 
-function VENDOR.OnItemPurchased(class, itemclass, ply) --Update the item removals here: gamemodes\dg-hl2rp\schema\scripts\sh_functions.lua **bottom of the file**
-	itemType = meta.getItemType(itemclass)
-	if itemType ~= nil then
-		for i, val in ipairs(itemType) do
-			ply:TakeInventoryItemClass(val)
-		end
-	end
+function VENDOR.OnItemPurchased(class, itemclass, ply)
 end
 
 impulse.RegisterVendor(VENDOR)
