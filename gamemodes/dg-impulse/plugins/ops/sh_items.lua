@@ -136,19 +136,17 @@ else
     util.AddNetworkString("impulseOpsItemSpawner")
 end
 
-
 local giveItemCommand = {
-    description = "Gives a player the specified item. Use /itemspawner instead.",
+    description = "Gives a player the specified item, online or offline. Use /itemspawner though, easier to use.",
     requiresArg = true,
     superAdminOnly = true,
     onRun = function(ply, arg, rawText)
-        if not ply:IsSuperAdmin() then
-            return
-        end
+        if not ply:IsSuperAdmin() then return end
 
         local steamid = arg[1]
         local item = arg[2]
         local restricted = tobool(arg[3] or "false")
+        local quantity = tonumber(arg[4]) or 1
 
         if not item then
             return ply:Notify("No item uniqueID supplied.")
@@ -158,62 +156,75 @@ local giveItemCommand = {
             return ply:Notify("SteamID too long.")
         end
 
-        local query = mysql:Select("impulse_players")
-        query:Select("id")
-        query:Where("steamid", steamid)
-        query:Callback(function(result)
-            if not IsValid(ply) then
-                return
-            end
+        if quantity < 1 then
+            return ply:Notify("Quantity must be at least 1.")
+        end
 
-            if not type(result) == "table" or #result == 0 then
-                return ply:Notify("This Steam account has not joined the server yet or the SteamID is invalid.")
-            end
+        local target = player.GetBySteamID(steamid)
+        local nameValue = "Offline Player ("..steamid..")"
 
-            if not impulse.Inventory.ItemsRef[item] then
-                return ply:Notify("Item: "..item.." does not exist.")
-            end
+        if restricted and (not target or not IsValid(target)) then
+            return ply:Notify("You cannot give restricted items to offline players.")
+        end
 
-            local target = player.GetBySteamID(steamid)
-            local nameValue = "Offline Player ("..steamid..")"
-            if target and IsValid(target) then
+        if target and IsValid(target) then
+            for i = 1, quantity do
                 target:GiveInventoryItem(item, 1, restricted)
-                nameValue = target:SteamName().." ("..steamid..")"
             end
+            nameValue = target:SteamName().." ("..steamid..")"
+
             local embeds = {{
                 title = "ITEM Spawned",
                 description = "Manager spawned item.",
                 url = "https://discord.com/channels/1365688835777757295/1367695815635763200",
                 color = 5763719,
                 fields = {
-                    {
-                        name = "Manager:",
-                        value = ply:SteamName().." ("..steamid..")"
-                    },
-                    {
-                        name = "Target:",
-                        value = nameValue
-                    },
-                    {
-                        name = "Item:",
-                        value = item
-                    },
+                    { name = "Manager:", value = ply:SteamName().." ("..ply:SteamID()..")" },
+                    { name = "Target:", value = nameValue },
+                    { name = "Item:", value = item },
+                    { name = "Quantity:", value = tostring(quantity) },
                 }
             }}
-            
-            if target and IsValid(target) then
-                ReqwestLog(embeds, DG_SENT)
-                return ply:Notify("You have given "..target:Nick().." a "..item..".")
-            end
-            local impulseID = result[1].id
-            if restricted then
-                return ply:Notify("You cannot give offline players restricted items.")
-            end
             ReqwestLog(embeds, DG_SENT)
-            impulse.Inventory.DBAddItem(impulseID, item, nil, ply)
-            ply:Notify("Offline player ("..steamid..") has been given a "..item..".")
-        end)
 
+            return ply:Notify("You have given "..target:Nick().." "..quantity.." "..item.."(s).")
+        end
+
+        local query = mysql:Select("impulse_players")
+        query:Select("id")
+        query:Where("steamid", steamid)
+        query:Callback(function(result)
+            local impulseID
+            if type(result) == "table" and #result > 0 then
+                impulseID = result[1].id
+            else
+                return ply:Notify("Cannot give item: SteamID "..steamid.." has not joined the server yet.")
+            end
+
+            if not impulse.Inventory.ItemsRef[item] then
+                return ply:Notify("Item: "..item.." does not exist.")
+            end
+
+            for i = 1, quantity do
+                impulse.Inventory.DBAddItem(impulseID, item, nil, ply)
+            end
+
+            local embeds = {{
+                title = "ITEM Spawned",
+                description = "Manager spawned item to offline player.",
+                url = "https://discord.com/channels/1365688835777757295/1367695815635763200",
+                color = 5763719,
+                fields = {
+                    { name = "Manager:", value = ply:SteamName().." ("..ply:SteamID()..")" },
+                    { name = "Target:", value = nameValue },
+                    { name = "Item:", value = item },
+                    { name = "Quantity:", value = tostring(quantity) },
+                }
+            }}
+            ReqwestLog(embeds, DG_SENT)
+
+            ply:Notify("Offline player ("..steamid..") has been given "..quantity.." "..item.."(s).")
+        end)
         query:Execute()
     end
 }
@@ -234,3 +245,63 @@ local itemSpawnerCommand = {
 }
 
 impulse.RegisterChatCommand("/itemspawner", itemSpawnerCommand)
+
+local giveItemStorageCommand = {
+    description = "Gives a player the specified item directly to storage.",
+    requiresArg = true,
+    superAdminOnly = true,
+    onRun = function(ply, arg, rawText)
+        if not ply:IsSuperAdmin() then return end
+
+        local steamid = arg[1]
+        local item = arg[2]
+        local storageType = tonumber(arg[3]) or 2 -- default to 2 = Player Storage
+        local quantity = tonumber(arg[4]) or 1
+
+        if not item then
+            return ply:Notify("No item uniqueID supplied.")
+        end
+
+        if steamid:len() > 25 then
+            return ply:Notify("SteamID too long.")
+        end
+
+        if quantity < 1 then
+            return ply:Notify("Quantity must be at least 1.")
+        end
+
+        local query = mysql:Select("impulse_players")
+        query:Select("id")
+        query:Where("steamid", steamid)
+        query:Callback(function(result)
+            if not IsValid(ply) then return end
+
+            if not type(result) == "table" or #result == 0 then
+                return ply:Notify("This Steam account has not joined the server yet or the SteamID is invalid.")
+            end
+
+            if not impulse.Inventory.ItemsRef[item] then
+                return ply:Notify("Item: "..item.." does not exist.")
+            end
+
+            local target = player.GetBySteamID(steamid)
+            local nameValue = "Offline Player ("..steamid..")"
+
+            if target and IsValid(target) then
+                nameValue = target:SteamName().." ("..steamid..")"
+            end
+
+            local impulseID = result[1].id
+            for i = 1, quantity do
+                impulse.Inventory.DBAddItem(impulseID, item, storageType, ply)
+            end
+
+            local storageText = storageType == 1 and "Player Inventory" or "Player Storage"
+            ply:Notify("Gave "..quantity.." "..item.."(s) to "..nameValue.." in "..storageText..".")
+        end)
+
+        query:Execute()
+    end
+}
+
+impulse.RegisterChatCommand("/giveitemstorage", giveItemStorageCommand)
