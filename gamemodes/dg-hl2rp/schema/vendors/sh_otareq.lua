@@ -327,7 +327,6 @@ VENDOR.Sell = {
 	["wep_incendiary"] = {
 		Desc = "CTL+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamRank() >= RANK_OSL then
