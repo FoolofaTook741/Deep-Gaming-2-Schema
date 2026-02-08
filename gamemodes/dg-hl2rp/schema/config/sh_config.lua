@@ -604,13 +604,6 @@ impulse.Config.AutoModDict = {
 		RequestClose = true,
 		Reply = "Hey there! We can't provide any specific assistance with how to use E2. To learn about E2 take a look at the tutorials here: https://github.com/wiremod/wire/wiki/Expression-2#Tutorials"
 	},
-	{
-		Terms = {"STUCK"},
-		IgnorePunc = true,
-		RequestClose = true,
-		Reply = "I've tried to get you un-stuck. This automated system might not always work, however. You can activate this by typing /unstuck in chat. If you are still stuck, just hang in there and we'll be with you shortly!",
-		Command = "say /unstuck"
-	}
 }
 
 impulse.Config.TrashSpawns = {}
