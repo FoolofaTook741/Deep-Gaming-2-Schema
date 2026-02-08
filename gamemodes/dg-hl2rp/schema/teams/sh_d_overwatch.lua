@@ -883,13 +883,13 @@ CLASS_APF = 5
 CLASS_NOMAD = 6
 CLASS_PAYBACK = 7
 
-RANK_CGR = 1
-RANK_CSO = RANK_CGR
-RANK_ECS = 2
-RANK_CCP = 3
-RANK_CTL = 4
-RANK_ORD = 5
-RANK_CSC = 6
+RANK_CGR = 1 -- this is not whitelisted, cso and above are
+RANK_CSO = 2
+RANK_ECS = 3
+RANK_CCP = 4
+RANK_CTL = 5
+RANK_ORD = 6
+RANK_CSC = 7
 
 hook.Add("PlayerFootstep", "wallhammerfoot", function(ply, pos, foot, sound) 
     if ply:Team() == TEAM_OTA && ply:GetTeamClass() == CLASS_PAYBACK then
