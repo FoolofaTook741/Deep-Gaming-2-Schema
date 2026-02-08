@@ -186,6 +186,20 @@ net.Receive("impulseHL2RPDispatchCityCode", function(len, ply)
 
 			if not allowed then
 				ply:TakeInventoryItemClass("clo_reinforcedcphelmet")
+				local targetID
+				local inv = impulse.Inventory.Data[ply.impulseID]
+				if inv and inv[1] then
+				    for id, item in pairs(inv[1]) do
+				        if item.class == "clo_cphelmet" then
+				            targetID = id
+				            break
+				        end
+				    end
+				end
+
+				if targetID then
+				    ply:SetInventoryItemEquipped(targetID, true)
+				end
 			end
 		end
 	end
