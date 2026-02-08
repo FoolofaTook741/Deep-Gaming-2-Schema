@@ -92,7 +92,7 @@ local commandpingCommand = {
 			return ply:Notify("This command is restricted to combine only!")
 		end
 
-		if ply:Team() == TEAM_OTA and ply:GetTeamRank() < RANK_OCP then
+		if ply:Team() == TEAM_OTA and ply:GetTeamRank() < RANK_CCP then
 			return ply:Notify("You must be a CCP to use this command.")
 		end
 

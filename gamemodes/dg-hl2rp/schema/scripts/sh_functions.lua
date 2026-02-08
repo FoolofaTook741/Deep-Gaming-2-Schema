@@ -160,7 +160,7 @@ function meta:IsCPCommand()
 			return true
 		end
 	elseif self:Team() == TEAM_OTA then
-		if rank >= RANK_OCP then
+		if rank >= RANK_CCP then
 			return true
 		end
 	elseif self:Team() == TEAM_CA then
@@ -181,7 +181,7 @@ function meta:IsCommander()
 			return true
 		end
 	elseif self:Team() == TEAM_OTA then
-		if rank >= RANK_OSC then
+		if rank >= RANK_CSC then
 			return true
 		end
 	elseif self:Team() == TEAM_CA then

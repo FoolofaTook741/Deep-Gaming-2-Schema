@@ -32,7 +32,7 @@ if SERVER then
 			attacker:AchievementGive("ach_cpgod") 
 		end
 
-		if (not attacker:IsCP()) and (victim:Team() == TEAM_OTA and victim:GetTeamRank() != RANK_OSC and victim:GetTeamClass() == CLASS_FIST) then
+		if (not attacker:IsCP()) and (victim:Team() == TEAM_OTA and victim:GetTeamRank() != RANK_CSC and victim:GetTeamClass() == CLASS_FIST) then
 			attacker:AchievementGive("ach_elite") 
 		end
 
@@ -75,7 +75,7 @@ if SERVER then
 				attacker:AchievementGive("ach_kingpin")
 			end
 
-			if victim:Team() == TEAM_OTA and victim:GetTeamRank() == RANK_OSC then
+			if victim:Team() == TEAM_OTA and victim:GetTeamRank() == RANK_CSC then
 				attacker:AchievementGive("ach_takeover")
 			end
 		end

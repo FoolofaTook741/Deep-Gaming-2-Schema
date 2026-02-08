@@ -160,7 +160,7 @@ function PANEL:SetupUI()
 	local doDispatch = false
 	local panel = self
 
-	if (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_OTA && LocalPlayer():GetTeamRank() >= RANK_OCP) or (LocalPlayer():Team() == TEAM_CP && LocalPlayer():GetTeamRank() >= RANK_OFC) or (LocalPlayer():Team() == TEAM_CA && LocalPlayer():GetTeamRank() >= RANK_COUNCILMAN)) then
+	if (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_OTA && LocalPlayer():GetTeamRank() >= RANK_CCP) or (LocalPlayer():Team() == TEAM_CP && LocalPlayer():GetTeamRank() >= RANK_OFC) or (LocalPlayer():Team() == TEAM_CA && LocalPlayer():GetTeamRank() >= RANK_COUNCILMAN)) then
 		doDispatch = true
 
 		self.dispatch = vgui.Create("DPanel", self)

@@ -204,7 +204,7 @@ impulse.Voice.DefineClass("grunt", function(ply)
 	local teamClass = ply:GetTeamClass()
 	if not teamClass then return false end
 
-	return (team == TEAM_OTA and rank == RANK_OWG) or (teamClass == CLASS_NOMAD and rank < RANK_ORD)
+	return (team == TEAM_OTA and rank == RANK_CGR) or (teamClass == CLASS_NOMAD and rank < RANK_ORD)
 end, function(client, sounds, chatType)
 	if not IsValid(client) then return end
 
@@ -248,7 +248,7 @@ impulse.Voice.DefineClass("overwatch", function(ply)
 	local teamClass = ply:GetTeamClass()
 	if not teamClass then return false end
 
-	return ((team == TEAM_OTA and rank > RANK_OWG and rank < RANK_ORD) and teamClass ~= CLASS_APF and teamClass ~= CLASS_PAYBACK and teamClass ~= CLASS_NOMAD) or (teamClass == CLASS_FIST and team == TEAM_OTA)
+	return ((team == TEAM_OTA and rank > RANK_CGR and rank < RANK_ORD) and teamClass ~= CLASS_APF and teamClass ~= CLASS_PAYBACK and teamClass ~= CLASS_NOMAD) or (teamClass == CLASS_FIST and team == TEAM_OTA)
 end, function(client, sounds, chatType)
 	if not IsValid(client) then return end
 

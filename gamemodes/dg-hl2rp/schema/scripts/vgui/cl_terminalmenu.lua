@@ -392,7 +392,7 @@ function PANEL:SetupUI()
     local doDispatch = false
 
     if IsValid(self.terminalEnt) and self.terminalEnt:GetOverwatchIndex() and
-        (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_OTA and LocalPlayer():GetTeamRank() >= RANK_OCP) or
+        (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_OTA and LocalPlayer():GetTeamRank() >= RANK_CCP) or
         (LocalPlayer():Team() == TEAM_CP and LocalPlayer():GetTeamRank() >= RANK_OFC) or
         (LocalPlayer():Team() == TEAM_CA and LocalPlayer():GetTeamRank() >= RANK_COUNCILMAN)) then
 

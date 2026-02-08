@@ -447,7 +447,7 @@ local radioCWU = {
         if ply:Team() == TEAM_CA or 
            ply:Team() == TEAM_CWU or 
            (ply:Team() == TEAM_CP and ply:GetTeamRank() >= RANK_OFC) or 
-           (ply:Team() == TEAM_OTA and ply:GetTeamRank() >= RANK_OCP) then
+           (ply:Team() == TEAM_OTA and ply:GetTeamRank() >= RANK_CCP) then
             
             rawText = hook.Run("ChatClassMessageSend", 8, rawText, ply) or rawText
             
@@ -2492,7 +2492,7 @@ local setRogueCommand = {
         	if ply:Team() == TEAM_CP and ply:GetTeamRank() < RANK_OFC then
 				ply:Notify("You cannot use this command.")
 				return
-			elseif ply:Team() == TEAM_OTA and ply:GetTeamRank() < RANK_OCP then
+			elseif ply:Team() == TEAM_OTA and ply:GetTeamRank() < RANK_CCP then
 				ply:Notify("You cannot use this command.")
 				return
 			elseif ply:Team() == TEAM_CA and ply:GetTeamRank() < RANK_CA then

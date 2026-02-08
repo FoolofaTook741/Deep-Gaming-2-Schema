@@ -202,7 +202,7 @@ TEAM_CWU = impulse.Teams.Define({
 			doorGroup = {1},
 			whitelistLevel = 3,
 			--[[canPromote = {
-				[RANK_OWG] = true
+				[RANK_CGR] = true
 			},]]
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_MEDIC then
@@ -246,8 +246,8 @@ TEAM_CWU = impulse.Teams.Define({
 			doorGroup = {1, 2, 7},
 			whitelistLevel = 4,
 			--[[canPromote = {
-				[RANK_OWG] = true,
-				[RANK_OWS] = true,
+				[RANK_CGR] = true,
+				[RANK_CSO] = true,
 			},]]
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() != CLASS_ICT then

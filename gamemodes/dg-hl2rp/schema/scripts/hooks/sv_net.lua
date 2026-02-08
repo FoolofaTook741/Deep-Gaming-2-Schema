@@ -391,7 +391,7 @@ net.Receive("impulseHL2RPRankBecome", function(len, ply)
 		if plyrank >= ranktwo && ply:GetTeamClass() == division then
 			ply:SetTeamRank(rank)
 			success = true
-		elseif rank == RANK_OWG and div > CLASS_MACE then
+		elseif rank == RANK_CGR and div > CLASS_MACE then
 			ply:Notify("You cannot become anything other than MACE or ECHO as a Grunt.")
 		elseif plyrank >= ranktwo then
 			if ply:CanBecomeTeamClass(division, true) then
