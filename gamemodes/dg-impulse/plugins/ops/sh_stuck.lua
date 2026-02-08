@@ -1,3 +1,4 @@
+--[[
 local unStuckCommand = {
     description = "Tries to get you unstuck.",
     onRun = function(ply, arg, rawText)
@@ -17,3 +18,4 @@ local unStuckCommand = {
 }
 
 impulse.RegisterChatCommand("/unstuck", unStuckCommand)
+--]]
