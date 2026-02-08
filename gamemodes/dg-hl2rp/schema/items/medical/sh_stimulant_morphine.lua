@@ -47,7 +47,14 @@ function ITEM:OnUse(ply)
         local chance = math.random(0,15) + ply:GetSkillLevel("medical")
         local maxhealth = 150
         local addhealth = 50 
-        if chance < 20 then
+        if chance >= 18 then
+            addhealth = 50
+            maxhealth = 150
+            ply:Notify("You have taken the Morphine Pills.")
+        else
+            ply:Notify("You have taken the Morphine Pills, but they had no effect.")
+        end
+       --[[ if chance < 20 then
             maxhealth = 75
             addhealth = -25
             ply:Notify("You have taken the Morphine Pills, but they had a negative impact.")
@@ -55,7 +62,7 @@ function ITEM:OnUse(ply)
             addhealth = 50
             maxhealth = 150
             ply:Notify("You have taken the Morphine Pills.")
-        end
+        end ]]--
         ply:SetHealth(math.Clamp(ply:Health() + addhealth, 1, 150))
         ply:SetMaxHealth(maxhealth)
 	    timer.Create(ply:SteamID() .. "morphinestim", 300, 1, function()
