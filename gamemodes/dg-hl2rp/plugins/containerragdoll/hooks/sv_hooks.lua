@@ -218,7 +218,7 @@ impulse.RagdollContainer.AmmoDrops = {
         AssociatedWeapons = {
             ["wep_mp7"] = true,
             ["wep_mp7a8"] = true,
-            ["wep_p90"] = true
+            ["wep_p90"] = true,
             ["wep_ar15"] = true,
             ["wep_honeybadger"] = true,
         }
