@@ -1589,12 +1589,12 @@ net.Receive("impulseVendorBuy", function(len, ply)
 
 		for oldClass, oldData in pairs(vendor.Vendor.Sell) do
 			if oldData.ItemType == sellData.ItemType and oldClass ~= itemclass then
-				impulse.debugimpulse.debugPrint("[DEBUG] Checking if player has item: " .. oldClass)
+				impulse.debugPrint("[DEBUG] Checking if player has item: " .. oldClass)
 
 				local hasItem = ply:HasInventoryItem(oldClass)
 
 				if hasItem then
-					impulse.debugimpulse.debugPrint("[DEBUG] Player has item " .. oldClass .. ", removing it")
+					impulse.debugPrint("[DEBUG] Player has item " .. oldClass .. ", removing it")
 
 					ply:TakeInventoryItemClass(oldClass)
 
@@ -1603,7 +1603,7 @@ net.Receive("impulseVendorBuy", function(len, ply)
 						ply:Notify("Your " .. oldItem.Name .. " has been replaced with " .. item.Name .. ".")
 					end
 
-					impulse.debugimpulse.debugPrint("[DEBUG] Removed old item: " .. oldClass)
+					impulse.debugPrint("[DEBUG] Removed old item: " .. oldClass)
 					break
 				end
 			end
