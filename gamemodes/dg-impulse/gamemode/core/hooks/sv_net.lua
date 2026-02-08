@@ -159,7 +159,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 					firstjoin = timestamp
 				}
 
-				print("[impulse] "..plyID.." has been submitted to the database. RP Name: ".. charName)
+				impulse.debugPrint("[impulse] "..plyID.." has been submitted to the database. RP Name: ".. charName)
 				ply:Freeze(false)
 				impulse.SetupPlayer(ply, setupData)
 
@@ -1532,11 +1532,6 @@ net.Receive("impulseVendorBuy", function(len, ply)
 		return
 	end
 
-	-- Vendor-specific hook
-	if vendor.Vendor.OnItemPurchased then
-		vendor.Vendor.OnItemPurchased(vendor, itemclass, ply)
-	end
-
 	if not ply:CanHoldItem(itemclass) then
 		return ply:Notify("You don't have enough inventory space to hold this item.")
 	end
@@ -1569,7 +1564,6 @@ net.Receive("impulseVendorBuy", function(len, ply)
 			tMax.Cooldown = nil
 		end
 
-		-- Block purchase if cooldown active
 		if tMax.Cooldown and tMax.Cooldown > now then
 			return ply:Notify("This vendor has no more of this item to give you. Come back in " ..
 				string.NiceTime(tMax.Cooldown - now) .. " for more.")
@@ -1588,6 +1582,34 @@ net.Receive("impulseVendorBuy", function(len, ply)
 		end
 	end
 
+	local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemclass)]
+
+	if sellData.ItemType then
+		impulse.debugPrint("[DEBUG] Item has ItemType: " .. tostring(sellData.ItemType))
+		for oldClass, oldData in pairs(vendor.Vendor.Sell) do
+			if oldData.ItemType == sellData.ItemType and oldClass ~= itemclass then
+				impulse.debugimpulse.debugPrint("[DEBUG] Checking if player has item: " .. oldClass)
+
+				local hasItem = ply:HasInventoryItem(oldClass)
+
+				if hasItem then
+					impulse.debugimpulse.debugPrint("[DEBUG] Player has item " .. oldClass .. ", removing it")
+
+					ply:TakeInventoryItemClass(oldClass)
+
+					local oldItem = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(oldClass)]
+					if oldItem and item then
+						ply:Notify("Your " .. oldItem.Name .. " has been replaced with " .. item.Name .. ".")
+					end
+
+					impulse.debugimpulse.debugPrint("[DEBUG] Removed old item: " .. oldClass)
+					break
+				end
+			end
+		end
+	else
+		impulse.debugPrint("[DEBUG] Item does not have ItemType defined")
+	end
 
 	local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemclass)]
 	local vendorid = vendor.Vendor.UniqueID
@@ -1654,6 +1676,11 @@ net.Receive("impulseVendorBuy", function(len, ply)
 
 	-- Give the purchased item
 	ply:GiveInventoryItem(itemclass, 1, sellData.Restricted or false)
+
+	-- Vendor-specific hook
+	if vendor.Vendor.OnItemPurchased then
+		vendor.Vendor.OnItemPurchased(vendor, itemclass, ply)
+	end
 
 	-- Global hook
 	hook.Run("PlayerVendorBuy", ply, vendor, itemclass, sellData.Cost or 0)
