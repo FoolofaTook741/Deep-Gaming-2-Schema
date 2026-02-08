@@ -1532,10 +1532,6 @@ net.Receive("impulseVendorBuy", function(len, ply)
 		return
 	end
 
-	if not ply:CanHoldItem(itemclass) then
-		return ply:Notify("You don't have enough inventory space to hold this item.")
-	end
-
 	-- Cooldown system - ONLY check if CooldownOnMax is NOT defined
 	if sellData.Cooldown and not sellData.CooldownOnMax then
 		ply.VendorCooldowns = ply.VendorCooldowns or {}
@@ -1610,6 +1606,10 @@ net.Receive("impulseVendorBuy", function(len, ply)
 		end
 	else
 		--impulse.debugPrint("[DEBUG] Item does not have ItemType defined")
+	end
+
+	if not ply:CanHoldItem(itemclass) then
+		return ply:Notify("You don't have enough inventory space to hold this item.")
 	end
 
 	local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemclass)]
