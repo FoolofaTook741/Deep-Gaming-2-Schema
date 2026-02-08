@@ -29,6 +29,7 @@ ITEM.UseWorkBarSound = "cloth"
 function ITEM:OnUse(ply)
     if ply:Team() == TEAM_VORT && ply:GetBodygroup(8) != 1 && ply.HasVortArmor != true then
 	    ply:SetBodygroup(1, 8)
+        ply:SetBodygroup(6, 2)
 	    ply.HasVortArmor = true
 	    ply:Notify("You have put on the vortigaunt armor.")
 		return true
