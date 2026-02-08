@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.Base = "plutonic_base"
 
 SWEP.PrintName = "AAC Honey Badger"
-SWEP.Category = "Deep Gaming [Longsword]"
+SWEP.Category = "Deep Gaming [Plutonic]"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
