@@ -109,12 +109,14 @@ net.Receive("DeepSterilizedCreditsPurchase", function(len, ply)
     local validweapons = {
         ["wep_cz75"] = true, ["wep_pm63"] = true, ["wep_mp7"] = true,
         ["wep_ar15"] = true, ["wep_mp7a8"] = true, ["wep_m500"] = true,
-        ["wep_shotgun"] = true, ["wep_357"] = true, ["grenade_flashbang"] = true
+        ["wep_shotgun"] = true, ["wep_357"] = true, ["grenade_flashbang"] = true,
+        ["wep_teargas"] = true, ["item_enhancedvial"] = true, ["stimulant_regen"] = true
     }
     local validweaponscost = {
         ["wep_cz75"] = 40, ["wep_pm63"] = 80, ["wep_mp7"] = 130,
         ["wep_ar15"] = 160, ["wep_mp7a8"] = 550, ["wep_m500"] = 300,
-        ["wep_shotgun"] = 350, ["wep_357"] = 425, ["grenade_flashbang"] = 50
+        ["wep_shotgun"] = 350, ["wep_357"] = 425, ["grenade_flashbang"] = 50,
+        ["wep_teargas"] = 60, ["item_enhancedvial"] = 30, ["stimulant_regen"] = 50
     }
     if purchasetype == "Item" then
         if info == "Credits" then
