@@ -653,7 +653,7 @@ VENDOR.Sell = {
 		Cooldown = 900,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_GRID && ply:GetTeamRank() >= RANK_I1  then
+			if ply:GetTeamClass() == CLASS_GRID && ply:GetTeamRank() >= RANK_I3  then
 				return true
 			else 
 				return false
