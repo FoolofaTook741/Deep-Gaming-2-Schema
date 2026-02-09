@@ -85,7 +85,7 @@ impulse.Badges = {
 	communitymanager = {Material("roleicons/upperadmin.png"), "This player is a member of the HL2RP Upper Administration.", function(ply) return ply:GetUserGroup() == "communitymanager" end},
 	devers = {Material("roleicons/developer2.png"), "This player is a developer or has made contributions to the developmental branch of Deep Gaming", function(ply) return devers[ply:SteamID()] end},
 	director = {Material("roleicons/cdirector_1.png"), "This is Thrawn, the director of the Deep Gaming since 2025.", function(ply) return not ply:IsIncognito() and (ply:SteamID() == "STEAM_0:0:581542620") end},
-	mage = {Material("icon16/cup.png"), "I survived the fall of Landis and all I got was this stupid badge", function(ply) return ply:SteamID() == "STEAM_0:0:176956777" or ply:SteamID() == "STEAM_0:0:48850308" or ply:SteamID() == "STEAM_0:1:97315061" end},
+	mage = {Material("icon16/cup.png"), "I survived the fall of Landis and all I got was this stupid cup", function(ply) return ply:SteamID() == "STEAM_0:0:176956777" or ply:SteamID() == "STEAM_0:0:48850308" or ply:SteamID() == "STEAM_0:1:97315061" end},
 }
 
 local cheapBlur = Color(0, 0, 0, 205)
