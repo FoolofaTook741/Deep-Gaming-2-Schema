@@ -17,7 +17,6 @@ function ENT:Initialize()
 end
 
 function ENT:Use( activator, caller )
-	print(activator.NextRebelHeal)
 	if activator:Team() != TEAM_ZOMBIE then
 		activator.NextRebelHeal = activator.NextRebelHeal or 0
 		local medSuppliesHas, medSuppliesCount = activator:HasInventoryItem("util_medicalsupplies")
