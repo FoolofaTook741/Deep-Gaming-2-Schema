@@ -90,6 +90,7 @@ SWEP.PropDissolveTime             = 0
 SWEP.DistanceTime                 = 0
 SWEP.ImpactTime                   = 0
 SWEP.ScreamTime                   = 0
+SWEP.ScreamCooldown               = 0
 -----------------------------------------------------
 
 SWEP.HighDamage = 3
