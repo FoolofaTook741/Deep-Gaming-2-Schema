@@ -16,7 +16,7 @@ end
 
 local ammoValues = {
     ["Pistol"] = 250,
-    ["357"] = 24,
+    ["357"] = 36,
     ["SniperRound"] = 160,
     ["AirboatGun"] = 90,
     ["SMG1"] = 500,
@@ -25,7 +25,7 @@ local ammoValues = {
     ["AR2"] = 300,
     ["Buckshot"] = 52,
     ["XBowBolt"] = 45,
-    ["SniperPenetratedRound"] = 20,
+    ["SniperPenetratedRound"] = 40,
     ["AlyxGun"] = 600,
     ["Rifle"] = 360,
     ["AR2AltFire"] = 1,
