@@ -12,7 +12,13 @@ local function GiveAdminTools(ply)
     end
 end
 
-hook.Add("PlayerSpawn", "GiveAdminToolsOnSpawn", GiveAdminTools)
+hook.Add("PostSetupPlayer", "GiveAdminToolsOnSpawn", function(ply)
+	timer.Simple(4, function()
+		if IsValid(ply) then
+			GiveAdminTools(ply)
+		end
+	end)
+end)
 
 hook.Add("OnPlayerChangedTeam", "GiveAdminToolsOnTeamChange", function(ply, oldTeam, newTeam)
     timer.Simple(0.1, function()
