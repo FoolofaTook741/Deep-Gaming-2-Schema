@@ -453,47 +453,55 @@ return true
 end
 
 function SWEP:SecondaryAttack()
-	if IsValid(self) and IsValid(self.Owner) and self.Owner:Alive() and self.AmmoTime < CurTime() and self.AmmoTime2 < CurTime() then
-		if SERVER then
-			self.Owner:EmitSound("npc/stalker/go_alert2a.wav",80,100,0.4)
-			if GetConVar("sh_shake"):GetBool() then
-				self.Owner:SendLua("util.ScreenShake( LocalPlayer():GetPos() ,3,4,1,2)")
-			end
-		end
-		
-		if GetConVar("sh_secondaryparticle"):GetBool() then
-			ParticleEffect( "houndeye_sonic_attack", self.Owner:GetShootPos() + self.Owner:GetAimVector()*10, Angle(0,0,0), self.Owner )
-		end
-		for k,v in pairs(ents.FindInSphere(self:GetPos(),350)) do
-			if v:IsNPC() and SERVER then
-				v:AddEntityRelationship( self.Owner, D_FR, 1 )
-				local npc = v
-				local owner = self.Owner
-				timer.Simple(5,function()
-					if IsValid(npc) and IsValid(owner) and SERVER then
-						npc:AddEntityRelationship( owner, D_HT, 1 )
-					end
-				end)
-				local dmginfo = DamageInfo()
-				dmginfo:SetAttacker( self.Owner )
-				dmginfo:SetInflictor( self )
-				dmginfo:SetDamageType( DMG_GENERIC )
-				dmginfo:SetDamage( 20 )
-				dmginfo:SetDamageForce( (self.Owner:GetPos() - v:GetPos())*-200 )
-				v:TakeDamageInfo( dmginfo )
-				local npc = v
-				local owner = self.Owner
-				timer.Simple(0.05,function()
-					if IsValid(npc) and IsValid(owner) and npc:GetClass()!="npc_strider" then
-						npc:SetVelocity((owner:GetPos() - npc:GetPos())*-10 + npc:GetUp()*150)
-					end
-				end)
-			end
-		end
-		self.AmmoTime = CurTime() + 3
-		self.AmmoTime2 = CurTime() + 3
-		self.Weapon:SetNextPrimaryFire( CurTime() + 3 )
+	if CurTime() < self.ScreamCooldown then
+		return
 	end
+
+	if not IsValid(self) or not IsValid(self.Owner) or not self.Owner:Alive() then return end
+	if self.AmmoTime >= CurTime() or self.AmmoTime2 >= CurTime() then return end
+
+	if SERVER then
+		self.Owner:EmitSound("npc/stalker/go_alert2a.wav", 80, 100, 0.4)
+		if GetConVar("sh_shake"):GetBool() then
+			self.Owner:SendLua("util.ScreenShake( LocalPlayer():GetPos() ,3,4,1,2)")
+		end
+	end
+
+	if GetConVar("sh_secondaryparticle"):GetBool() then
+		ParticleEffect("houndeye_sonic_attack", self.Owner:GetShootPos() + self.Owner:GetAimVector()*10, Angle(0,0,0), self.Owner)
+	end
+
+	for k, v in pairs(ents.FindInSphere(self:GetPos(), 350)) do
+		if v:IsNPC() and SERVER then
+			v:AddEntityRelationship(self.Owner, D_FR, 1)
+			local npc = v
+			local owner = self.Owner
+			timer.Simple(5, function()
+				if IsValid(npc) and IsValid(owner) and SERVER then
+					npc:AddEntityRelationship(owner, D_HT, 1)
+				end
+			end)
+
+			local dmginfo = DamageInfo()
+			dmginfo:SetAttacker(self.Owner)
+			dmginfo:SetInflictor(self)
+			dmginfo:SetDamageType(DMG_GENERIC)
+			dmginfo:SetDamage(20)
+			dmginfo:SetDamageForce((self.Owner:GetPos() - v:GetPos()) * -200)
+			v:TakeDamageInfo(dmginfo)
+
+			timer.Simple(0.05, function()
+				if IsValid(npc) and IsValid(owner) and npc:GetClass() ~= "npc_strider" then
+					npc:SetVelocity((owner:GetPos() - npc:GetPos()) * -10 + npc:GetUp() * 150)
+				end
+			end)
+		end
+	end
+
+	self.ScreamCooldown = CurTime() + 120
+	self.AmmoTime = CurTime() + 3
+	self.AmmoTime2 = CurTime() + 3
+	self.Weapon:SetNextPrimaryFire(CurTime() + 3)
 end
 
 function SWEP:Initialize()
