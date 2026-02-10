@@ -780,7 +780,16 @@ function GM:HUDPaint()
 
 				surface.SetFont("Impulse-Elements18-Shadow")
 				surface.SetTextPos(scrW-130, scrH-50)
-				surface.DrawText("Props: "..LocalPlayer():GetSyncVar(SYNC_PROPCOUNT, 0).."/"..((LocalPlayer():IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit))
+				local ply = LocalPlayer()
+
+				local maxProps
+				if ply:IsGameMaster() then
+					maxProps = "∞"
+				else
+					maxProps = (ply:IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
+				end
+
+				surface.DrawText("Props: " ..ply:GetSyncVar(SYNC_PROPCOUNT, 0) .."/" .. maxProps)
 			end
 		end
 
@@ -1246,7 +1255,14 @@ function GM:HUDPaint()
 
 				surface.SetFont(littlefont)
 				surface.SetTextPos(ScrW()-(ScrW()/14.769), dgh_YPos+(ScrW()/40))
-				surface.DrawText("Props: "..LocalPlayer():GetSyncVar(SYNC_PROPCOUNT, 0).."/"..((LocalPlayer():IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit))
+				local ply = LocalPlayer()
+				local maxProps
+				if ply:IsGameMaster() then
+					maxProps = "∞"
+				else
+					maxProps = (ply:IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
+				end
+				surface.DrawText("Props: " ..ply:GetSyncVar(SYNC_PROPCOUNT, 0) .."/" .. maxProps)
 			end
 		end
 
