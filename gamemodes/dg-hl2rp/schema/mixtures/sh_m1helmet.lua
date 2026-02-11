@@ -8,7 +8,7 @@ MIX.Bench = "general"
 MIX.Output = "cos_m1helmet"
 MIX.Input = {
 	["util_metalplate"] = {take = 5},
-	["util_glue"] = {take = 4},
+	["util_glue"] = {take = 2},
 }
 
 impulse.RegisterMixture(MIX)
