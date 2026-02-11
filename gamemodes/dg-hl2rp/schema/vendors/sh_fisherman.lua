@@ -20,9 +20,9 @@ VENDOR.RandomTrades = {
 		["ammo_smg"] = {Rarity = 800, Cost = {50, 180}, BuyMax = 2},
 		["cos_combatgasmask"] = {Rarity = 890, Cost = {100, 150}, BuyMax = 1},
 		["wep_pistol"] = {Rarity = 780, Cost = {70, 250}, BuyMax = 1},
-		["wep_cz75"] = {Rarity = 660, Cost = {130, 330}, BuyMax = 2},
+		-- ["wep_cz75"] = {Rarity = 660, Cost = {130, 330}, BuyMax = 2},
 		["util_rdxcompound"] = {Rarity = 430, Cost = {280, 440}, BuyMax = 4},
-		["wep_pickaxe"] = {Rarity = 500, Cost = {50, 101}, BuyMax = 2},
+		-- ["wep_pickaxe"] = {Rarity = 500, Cost = {50, 101}, BuyMax = 2},
 		["cos_otavest3"] = {Rarity = 890, Cost = {260, 699}, BuyMax = 1},
 		-- ["wep_goldengun"] = {Rarity = 997, Cost = {6000, 9000}, BuyMax = 1},
 		-- ["wep_goldenak47"] = {Rarity = 999, Cost = {15000, 20000}, BuyMax = 1},
@@ -33,9 +33,9 @@ VENDOR.RandomTrades = {
 		["wep_mg34"] = {Rarity = 890, Cost = {1020, 1470}, BuyMax = 1},
 		["wep_mp7"] = {Rarity = 690, Cost = {320, 550}, BuyMax = 3},
 		["util_yeast"] = {Rarity = 600, Cost = {6, 13}, BuyMax = 6},
-		["item_padlock"] = {Rarity = 580, Cost = {10, 20}, BuyMax = 2},
+		-- ["item_padlock"] = {Rarity = 580, Cost = {10, 20}, BuyMax = 2},
 		["util_gear"] = {Rarity = 350, Cost = {19, 65}, BuyMax = 3},
-		["util_plastic"] = {Rarity = 360, Cost = {42, 62}, BuyMax = 3},
+		-- ["util_plastic"] = {Rarity = 360, Cost = {42, 62}, BuyMax = 3},
 		["util_gunpowder"] = {Rarity = 690, Cost = {18, 30}, BuyMax = 10},
 		["util_cloth"] = {Rarity = 400, Cost = {5, 20}, BuyMax = 6},
 		["att_dragonsbreath"] = {Rarity = 900, Cost = {1015, 1520}, BuyMax = 1},
@@ -111,32 +111,31 @@ end
 function VENDOR:Initialize()
 	self.MainPos = impulse.Config.FishermanPos
 	self:SetAngles(impulse.Config.FishermanAng)
+	self.TimerMade = false
+	self.BeenTriggered = false
 	fishermanDisappear(self)
 end
 
-local timerMade = timerMade or false
 function VENDOR:Think()
     self:NextThink(CurTime() + 2)
 
     if self.BeenTriggered then
-    	return true
+        return true
     end
 
-	if not timerMade then
-    	timer.Simple(1800, function()
-    		if not IsValid(self) then
-    			return
-    		end
+    if not self.TimerMade then
+        self.TimerMade = true
 
-    		fishermanAppear(self)
-    		timerMade = false
-    	end)
+        timer.Simple(1800, function()
+            self.TimerMade = false
 
-    	timerMade = true
+            if not IsValid(self) then return end
+
+            fishermanAppear(self)
+        end)
     end
 
     return true
 end
-
 
 impulse.RegisterVendor(VENDOR)
