@@ -141,7 +141,7 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_shotgun"] = {
-		Desc = "SWORD i1+/UNION RL+/DvL+/Grid i2+",
+		Desc = "SWORD i1+/UNION i1+/DvL+/Grid i2+",
 		Restricted = true,
 		ItemType = "primaryWeapon",
 		Max = 1,
