@@ -1979,7 +1979,7 @@ local razorSpawnCar = {
             return
         end
 
-        if ply:Team() == TEAM_CP and ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I2 then
+        if ply:Team() == TEAM_CP and ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_OFC then
             impulse.Teams.GetWhitelist(ply:SteamID(), "CP_HactLicense", function(level)
                 if not level then
                     ply:Notify("You must have a HACT License to spawn an APC.")
@@ -2000,7 +2000,7 @@ local razorCarRemove = {
 	description = "(NOMAD/GRID) Despawns the APC.",
     requiresArg = false,
     onRun = function(ply, arg, rawText)
-    	if ((ply:Team() == TEAM_OTA) and (ply:GetTeamClass() == CLASS_NOMAD)) or (ply:Team() == TEAM_CP and ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I2) then -- wtf is lua doing idk
+    	if ((ply:Team() == TEAM_OTA) and (ply:GetTeamClass() == CLASS_NOMAD)) or (ply:Team() == TEAM_CP and ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_OFC) then -- wtf is lua doing idk
 			if IsValid(ply.RazorVehicle) then
 				ply.RazorVehicle:Remove()
 				OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS + 2000
