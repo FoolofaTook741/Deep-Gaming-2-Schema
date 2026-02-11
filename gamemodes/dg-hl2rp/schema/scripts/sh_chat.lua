@@ -1990,7 +1990,7 @@ local razorSpawnCar = {
             return
         end
 
-        ply:Notify("You must be a NOMAD or GRID (I2+) to spawn an APC.")
+        ply:Notify("You must be a NOMAD or GRID (OfC+) to spawn an APC.")
     end
 }
 
