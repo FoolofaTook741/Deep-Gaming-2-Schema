@@ -379,7 +379,7 @@ TEAM_CP = impulse.Teams.Define({
 			name = "i3",
 			description = "i3",
 			xp = 0,
-			whitelistLevel = 2,
+			whitelistLevel = 1,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_UNION then
 					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
@@ -475,7 +475,7 @@ TEAM_CP = impulse.Teams.Define({
 			description = "i2",
 			doorGroup = {1, 2, 3, 6, 7},
 			xp = 0,
-			whitelistLevel = 3,
+			whitelistLevel = 2,
 			whitelistFailMessage = "You must be promoted to use this rank.",
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_UNION then
@@ -587,7 +587,7 @@ TEAM_CP = impulse.Teams.Define({
 			description = "i1",
 			doorGroup = {1, 2, 3, 6, 7},
 			xp = 0,
-			whitelistLevel = 4,
+			whitelistLevel = 3,
 			whitelistFailMessage = "You must be promoted to use this rank.",
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_UNION then
@@ -684,7 +684,7 @@ TEAM_CP = impulse.Teams.Define({
 			description = "OfC",
 			doorGroup = {1, 2, 3, 6, 7},
 			xp = 0,
-			whitelistLevel = 5,
+			whitelistLevel = 4,
 			whitelistFailMessage = "You must be promoted to use this rank.",
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_UNION then
@@ -785,7 +785,7 @@ TEAM_CP = impulse.Teams.Define({
 			description = "SqL",
 			doorGroup = {1, 2, 3, 4, 6, 7},
 			xp = 0,
-			whitelistLevel = 6,
+			whitelistLevel = 5,
 			whitelistFailMessage = "You must be promoted to use this rank.",
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_UNION then
@@ -886,7 +886,7 @@ TEAM_CP = impulse.Teams.Define({
 			description = "DvL",
 			doorGroup = {1, 2, 3, 4, 6, 7},
 			xp = 0,
-			whitelistLevel = 7,
+			whitelistLevel = 6,
 			whitelistFailMessage = "You must be promoted to use this rank.",
 			limit = 5,
 			onBecome = function(ply, rank)
@@ -992,7 +992,7 @@ TEAM_CP = impulse.Teams.Define({
 			description = "DcO",
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			xp = 0,
-			whitelistLevel = 8,
+			whitelistLevel = 7,
 			whitelistFailMessage = "You must be promoted to use this rank.",
 			limit = 3,
 			onBecome = function(ply, rank)
@@ -1102,7 +1102,7 @@ TEAM_CP = impulse.Teams.Define({
 			},
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			xp = 0,
-			whitelistLevel = 9,
+			whitelistLevel = 8,
 			whitelistFailMessage = "You must be promoted to use this rank.",
 			limit = 1,
 			onBecome = function(ply, rank)
@@ -1173,7 +1173,7 @@ TEAM_CP = impulse.Teams.Define({
 			description = "CmD",
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			xp = 0,
-			whitelistLevel = 10,
+			whitelistLevel = 9,
 			whitelistFailMessage = "You must be promoted to use this rank.",
 			limit = 1,
 			onBecome = function(ply, rank)
@@ -1282,16 +1282,15 @@ CLASS_SWORD = 4
 CLASS_GHOST = 5
 CLASS_DISPATCH = 6
 
-RANK_I4 = 1
-RANK_I3 = 2
-RANK_I2 = 3
-RANK_I1 = 4
-RANK_OFC = 5
-RANK_SQL = 6
-RANK_DVL = 7
-RANK_DCO = 8
-RANK_VCMD = 9
-RANK_CMD = 10
+RANK_I3 = 1
+RANK_I2 = 2
+RANK_I1 = 3
+RANK_OFC = 4
+RANK_SQL = 5
+RANK_DVL = 6
+RANK_DCO = 7
+RANK_VCMD = 8
+RANK_CMD = 9
 
 
 impulse.SubmatsConfig = {

@@ -1520,7 +1520,7 @@ local cpWhitelistCommand = {
     description = "(Supervisor only) Changes a player's Civil Protection whitelist level. Args STEAMID NUMBER.",
     requiresArg = true,
     onRun = function(ply, arg, rawText)
-        if ply:GetTeamWhitelist("TEAM_CP") < 4 and not ply:IsLeadAdmin() then
+        if ply:GetTeamWhitelist("TEAM_CP") < 3 and not ply:IsLeadAdmin() then
             ply:Notify("You cannot use this command.")
             return
         end
@@ -1530,11 +1530,12 @@ local cpWhitelistCommand = {
         level = math.floor(level)
 
         if not ply:IsLeadAdmin() then
-            local maxLevels = { [4] = 1, [5] = 4, [6] = 5, [7] = 6, [8] = 7, [9] = 8, [10] = 10 }
-            local maxAllowed = maxLevels[ply:GetTeamWhitelist("TEAM_CP")] or math.huge
-            if level > maxAllowed then
+            --local maxLevels = { [3] = 1, [4] = 3, [5] = 4, [6] = 5, [7] = 6, [8] = 7, [9] = 8 } --This isn't used anymore
+            --local maxAllowed = maxLevels[ply:GetTeamWhitelist("TEAM_CP")] or math.huge --Original logic
+			local maxAllowed = ply:GetTeamRank() - 1
+            if (maxAllowed == 3 and level > 1) or (level >= maxAllowed) then
                 ply:Notify("You cannot whitelist higher than the allowed rank at this rank.")
-                return
+                return	
             end
         end
 
