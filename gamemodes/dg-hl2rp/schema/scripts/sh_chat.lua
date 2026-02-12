@@ -871,7 +871,7 @@ local paybackWhitelistCommand = {
     requiresArg = true,
     onRun = function(ply, arg, rawText)
     	if not ply:IsLeadAdmin() then
-			if ply:GetTeamWhitelist("TEAM_OTA") < 4 then
+			if ply:GetTeamWhitelist("TEAM_OTA") < RANK_CTL then
 				ply:Notify("You cannot use this command.")
 				return
 			end
@@ -957,7 +957,7 @@ local apfWhitelistCommand = {
     requiresArg = true,
     onRun = function(ply, arg, rawText)
     	if not ply:IsLeadAdmin() then
-			if ply:GetTeamWhitelist("TEAM_OTA") < 4 then
+			if ply:GetTeamWhitelist("TEAM_OTA") < RANK_CTL then
 				ply:Notify("You cannot use this command.")
 				return
 			end
@@ -1043,7 +1043,7 @@ local fistWhitelistCommand = {
     requiresArg = true,
     onRun = function(ply, arg, rawText)
     	if not ply:IsLeadAdmin() then
-			if ply:GetTeamWhitelist("TEAM_OTA") < 4 then
+			if ply:GetTeamWhitelist("TEAM_OTA") < RANK_CTL then
 				ply:Notify("You cannot use this command.")
 				return
 			end
@@ -1129,7 +1129,7 @@ local scoutWhitelistCommand = {
     requiresArg = true,
     onRun = function(ply, arg, rawText)
     	if not ply:IsLeadAdmin() then
-			if ply:GetTeamWhitelist("TEAM_OTA") < 4 then -- CTL
+			if ply:GetTeamWhitelist("TEAM_OTA") < RANK_CTL then
 				ply:Notify("You cannot use this command.")
 				return
 			end
