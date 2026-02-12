@@ -533,7 +533,7 @@ local swordWhitelistCommand = {
     description = "(Supervisor only) Whitelists a player for the SWORD division.",
     requiresArg = true,
     onRun = function(ply, arg, rawText)
-    	if ply:GetTeamWhitelist("TEAM_CP") < 6 then
+    	if ply:GetTeamWhitelist("TEAM_CP") < 5 then
 			ply:Notify("You cannot use this command.")
 			return
 		end
