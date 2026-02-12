@@ -98,12 +98,16 @@ local function fishermanAppear(ent)
 
 	ent.BeenTriggered = true
 	ent.Buys = 0
-
+    
 	fishermanRandomInv(ent)
 
 	ent:SetPos(ent.MainPos)
 	ent:SetNoDraw(false)
 	ent:SetNotSolid(false)
+    ent:SetUseType(SIMPLE_USE)
+    --ent:SetSolid(SOLID_BBOX)
+    --ent:SetMoveType(MOVETYPE_NONE)
+    --ent:SetCollisionGroup(COLLISION_GROUP_NONE)
 
 	timer.Simple(360, function()
 		if not IsValid(ent) then return end
@@ -117,7 +121,6 @@ function VENDOR:Initialize()
 
 	self:SetNoDraw(true)
 	self:SetNotSolid(true)
-
 	self.BeenTriggered = false
 
 	self.TimerID = "TravelerSpawn_" .. self:EntIndex()
@@ -139,5 +142,6 @@ function VENDOR:OnRemove()
 		timer.Remove(self.TimerID)
 	end
 end
+
 
 impulse.RegisterVendor(VENDOR)
