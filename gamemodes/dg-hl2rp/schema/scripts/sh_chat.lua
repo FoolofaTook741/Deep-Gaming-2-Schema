@@ -1981,13 +1981,7 @@ local razorSpawnCar = {
         end
 
         if ply:Team() == TEAM_CP and ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_OFC then
-            impulse.Teams.GetWhitelist(ply:SteamID(), "CP_HactLicense", function(level)
-                if not level then
-                    ply:Notify("You must have a HACT License to spawn an APC.")
-                    return
-                end
-                spawnAPC(ply)
-            end)
+            spawnAPC(ply)
             return
         end
 
