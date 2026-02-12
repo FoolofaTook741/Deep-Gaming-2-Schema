@@ -17,7 +17,7 @@ VENDOR.Sell = {
 		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CSO && ply:GetTeamClass() == CLASS_ECHO then
+			if ply:GetTeamRank() >= RANK_OWS && ply:GetTeamClass() == CLASS_ECHO then
 				return true
 			else return false end
 		end
@@ -32,7 +32,7 @@ VENDOR.Sell = {
 		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CTL && ply:GetTeamClass() == CLASS_ECHO then
+			if ply:GetTeamRank() >= RANK_OSL && ply:GetTeamClass() == CLASS_ECHO then
 				return true
 			else return false end
 		end
@@ -43,7 +43,7 @@ VENDOR.Sell = {
 		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_ECS then
+			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_EOS then
 				return true
 			else return false
 			end
@@ -55,7 +55,7 @@ VENDOR.Sell = {
 		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_MACE && ply:GetTeamRank() >= RANK_ECS then
+			if ply:GetTeamClass() == CLASS_MACE && ply:GetTeamRank() >= RANK_EOS then
 				return true
 			else return false end
 		end
@@ -88,7 +88,7 @@ VENDOR.Sell = {
 		Max = 1,
 		Cooldown = 1200,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_ECS && ply:GetTeamClass() == CLASS_MACE && impulse.Dispatch.GetCityCode() >= CODE_UNREST then
+			if ply:GetTeamRank() >= RANK_EOS && ply:GetTeamClass() == CLASS_MACE && impulse.Dispatch.GetCityCode() >= CODE_UNREST then
 				return true
 			else return false end
 		end
@@ -98,7 +98,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CSO && ply:GetTeamClass() == CLASS_APF then
+			if ply:GetTeamRank() >= RANK_OWS && ply:GetTeamClass() == CLASS_APF then
 				return true
 			else return false end
 		end
@@ -108,7 +108,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CCP then
+			if ply:GetTeamRank() >= RANK_OCP then
 				return true
 			else return false
 			end
@@ -120,7 +120,7 @@ VENDOR.Sell = {
 		Max = 1,
 		Cooldown = 600,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_CTL and ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_PAYBACK then
+			if (ply:GetTeamRank() >= RANK_OSL and ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_PAYBACK then
 				return true
 			else return false
 			end
@@ -132,7 +132,7 @@ VENDOR.Sell = {
 		Max = 1,
 		Cooldown = 600,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_CTL and ply:GetTeamClass() == CLASS_ECHO) or (ply:GetTeamRank() >= RANK_CSO and ply:GetTeamClass() == CLASS_MACE) or ply:GetTeamClass() == CLASS_FIST then
+			if (ply:GetTeamRank() >= RANK_OSL and ply:GetTeamClass() == CLASS_ECHO) or (ply:GetTeamRank() >= RANK_OWS and ply:GetTeamClass() == CLASS_MACE) or ply:GetTeamClass() == CLASS_FIST then
 				return true
 			else return false
 			end
@@ -148,7 +148,7 @@ VENDOR.Sell = {
 		ItemType = "weaponAttachments",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CTL and ply:GetTeamClass() == CLASS_MACE then
+			if ply:GetTeamRank() >= RANK_OSL and ply:GetTeamClass() == CLASS_MACE then
 				return true
 			else return false
 			end
@@ -160,7 +160,7 @@ VENDOR.Sell = {
 		ItemType = "weaponAttachments",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CSO and ply:GetTeamClass() == CLASS_MACE then
+			if ply:GetTeamRank() >= RANK_OWS and ply:GetTeamClass() == CLASS_MACE then
 				return true
 			else return false
 			end
@@ -196,7 +196,7 @@ VENDOR.Sell = {
 		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_CSO and ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_FIST then
+			if (ply:GetTeamRank() >= RANK_OWS and ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_FIST then
 				return true
 			else return false
 			end
@@ -207,7 +207,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 2,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_ECS then
+			if ply:GetTeamRank() >= RANK_EOS then
 				return true
 			else return false
 			end

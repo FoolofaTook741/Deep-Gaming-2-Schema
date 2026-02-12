@@ -58,7 +58,7 @@ local waypointCommand = {
 				end
 			end
 			local isCommander = false
-			if (ply:Team() == TEAM_CP and ply:GetTeamRank() >= RANK_CMD) or (ply:GetTeamRank() >= RANK_CSC and ply:Team() == TEAM_OTA) or (ply:GetTeamRank() >= RANK_EA and ply:Team() == TEAM_CA) then
+			if (ply:Team() == TEAM_CP and ply:GetTeamRank() >= RANK_CMD) or (ply:GetTeamRank() >= RANK_OSC and ply:Team() == TEAM_OTA) or (ply:GetTeamRank() >= RANK_EA and ply:Team() == TEAM_CA) then
 				isCommander = true
 			end
 			net.Start("impulseHL2RPWaypoint")

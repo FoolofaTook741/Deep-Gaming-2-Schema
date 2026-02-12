@@ -116,12 +116,12 @@ hook.Add("PlayerDeath", "bslcounter", function(victim, inflictor, attacker)
             end
         elseif victimTeam == TEAM_OTA then
             local rank = victim:GetTeamRank()
-            if rank ~= nil and RANK_ORD ~= nil and RANK_CSC ~= nil then
+            if rank ~= nil and RANK_ORD ~= nil and RANK_OSC ~= nil then
                 if rank < RANK_ORD then
                     points = 8
                 elseif rank == RANK_ORD then
                     points = 34
-                elseif rank == RANK_CSC then
+                elseif rank == RANK_OSC then
                     points = 67
                 end
             else

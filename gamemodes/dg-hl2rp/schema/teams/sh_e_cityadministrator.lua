@@ -242,7 +242,7 @@ TEAM_CA = impulse.Teams.Define({
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			whitelistLevel = 5,
 			--[[canPromote = {
-				[RANK_CGR] = true
+				[RANK_OWG] = true
 			},]]
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
@@ -288,7 +288,7 @@ TEAM_CA = impulse.Teams.Define({
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			whitelistLevel = 6,
 			--[[canPromote = {
-				[RANK_CGR] = true
+				[RANK_OWG] = true
 			},]]
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then

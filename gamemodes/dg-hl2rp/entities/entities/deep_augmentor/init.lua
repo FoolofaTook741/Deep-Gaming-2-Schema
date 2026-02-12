@@ -39,7 +39,7 @@ function ENT:Use(ply)
                 local sid = ply:SteamID()
                 timer.Create(sid .. "augmentation", 25, 1, function()
                     if ply:GetTeamClass() == CLASS_ECHO or ply:GetTeamClass() == CLASS_MACE or ply:GetTeamClass() == CLASS_RANGER or ply:GetTeamClass() == CLASS_NOMAD then
-                        if ply:GetTeamRank() < RANK_ORD and ply:GetTeamRank() > RANK_CGR then
+                        if ply:GetTeamRank() < RANK_ORD and ply:GetTeamRank() > RANK_OWG then
                             ply:SetModel("models/cultist/hl_a/vannila_combine/npc/combine_soldier.mdl")
                             if ply:GetTeamClass() == CLASS_ECHO then
                                 ply:SetSkin(0)
@@ -174,7 +174,7 @@ function ENT:Use(ply)
     elseif ply:Team() == TEAM_OTA and impulse.Dispatch.GetCityCode() < CODE_AJ and ply.IsAugmented != true then
         local ranktable = {"CGR", "CSO", "ECS"}
         if ply:GetTeamClass() == CLASS_MACE or ply:GetTeamClass() == CLASS_ECHO or ply:GetTeamClass() == CLASS_FIST then
-            if ply:GetTeamRank() == RANK_CGR and ply:GetTeamClass() != CLASS_FIST then
+            if ply:GetTeamRank() == RANK_OWG and ply:GetTeamClass() != CLASS_FIST then
                 if ply.NovaTrooper != true then
                     ply:SetSkin(2)
                     ply.NovaTrooper = true
@@ -204,13 +204,13 @@ function ENT:Use(ply)
                         ply:SetModel("models/nemez/combine_soldiers/combine_soldier_nova_h.mdl")
                         self:EmitSound("items/suitchargeok1.wav")
                     end
-                    if ply:GetTeamRank() < RANK_CCP then
+                    if ply:GetTeamRank() < RANK_OCP then
                         ply:SetRPName("CTA:"..ranktable[ply:GetTeamRank()]..".NOVA-"..math.random(1,99))
                         self:EmitSound("items/suitchargeok1.wav")
                     end
                 else
                     if ply:GetTeamClass() == CLASS_MACE then
-                        if ply:GetTeamRank() < RANK_CCP then
+                        if ply:GetTeamRank() < RANK_OCP then
                             ply:SetModel("models/nemez/combine_soldiers/combine_soldier_h.mdl")
                             ply:SetSkin(1)
                             ply.NovaTrooper = false
@@ -233,7 +233,7 @@ function ENT:Use(ply)
                             self:EmitSound("items/suitchargeok1.wav")
                         end
                     elseif ply:GetTeamClass() == CLASS_ECHO then
-                        if ply:GetTeamRank() < RANK_CCP then
+                        if ply:GetTeamRank() < RANK_OCP then
                             local ranktable = {"CGR", "CSO", "ECS"}
                             ply:SetModel("models/nemez/combine_soldiers/combine_soldier_h.mdl")
                             ply:SetSkin(0)
