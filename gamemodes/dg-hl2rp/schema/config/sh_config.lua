@@ -786,8 +786,8 @@ impulse.Config.LootPools = {
 			["util_rdxcompound"] = {Rarity = 980, Rep = 1},
 			["util_xenextract"] = {Rarity = 820, Rep = 1},
 			["book_spanish"] = {Rarity = 990, Rep = 1},
-			["book_arabic"] = {Rarity = 990, Rep = 1},
-			['util_resin'] = {Rarity = 895, Rep = 1}
+			--['util_resin'] = {Rarity = 895, Rep = 1},
+			["book_arabic"] = {Rarity = 990, Rep = 1}
 		},
 		MaxRarity = 1700,
 		MinItems = 3,
