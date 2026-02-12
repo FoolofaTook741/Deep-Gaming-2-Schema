@@ -62,9 +62,9 @@ local function fishermanDisappear(ent)
 		end
 
 		ent.BeenTriggered = false
-		ent:SetPos(Vector(-4061.1323242188, 14661.44140625, 10783.806640625)) -- ik its messy
-		ent:RemoveAllDecals()
 		ent:SetNoDraw(true)
+		ent:SetNotSolid(true)
+		ent:RemoveAllDecals()
 	end)
 end
 
@@ -92,50 +92,52 @@ local function fishermanRandomInv(ent)
 end
 
 local function fishermanAppear(ent)
+	if not IsValid(ent) then
+		return
+	end
+
 	ent.BeenTriggered = true
 	ent.Buys = 0
+
 	fishermanRandomInv(ent)
 
-	timer.Simple(360, function()
-		if not IsValid(ent) then
-			return
-		end
+	ent:SetPos(ent.MainPos)
+	ent:SetNoDraw(false)
+	ent:SetNotSolid(false)
 
+	timer.Simple(300, function()
+		if not IsValid(ent) then return end
 		fishermanDisappear(ent)
 	end)
-
-	ent:SetNoDraw(false)
-	ent:SetPos(ent.MainPos)
 end
 
 function VENDOR:Initialize()
 	self.MainPos = impulse.Config.FishermanPos
 	self:SetAngles(impulse.Config.FishermanAng)
-	self.TimerMade = false
+
+	self:SetNoDraw(true)
+	self:SetNotSolid(true)
+
 	self.BeenTriggered = false
-	fishermanDisappear(self)
+
+	self.TimerID = "TravelerSpawn_" .. self:EntIndex()
+
+	timer.Create(self.TimerID, 1200, 0, function()
+		if not IsValid(self) then
+			timer.Remove(self.TimerID)
+			return
+		end
+
+		if not self.BeenTriggered then
+			fishermanAppear(self)
+		end
+	end)
 end
 
-function VENDOR:Think()
-    self:NextThink(CurTime() + 2)
-
-    if self.BeenTriggered then
-        return true
-    end
-
-    if not self.TimerMade then
-        self.TimerMade = true
-
-        timer.Simple(1800, function()
-            self.TimerMade = false
-
-            if not IsValid(self) then return end
-
-            fishermanAppear(self)
-        end)
-    end
-
-    return true
+function VENDOR:OnRemove()
+	if self.TimerID then
+		timer.Remove(self.TimerID)
+	end
 end
 
 impulse.RegisterVendor(VENDOR)
