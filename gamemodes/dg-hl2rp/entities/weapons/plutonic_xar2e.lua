@@ -60,8 +60,8 @@ SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "ar2"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 35
-SWEP.Primary.DefaultClip = 35
+SWEP.Primary.ClipSize = 45
+SWEP.Primary.DefaultClip = 45
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false

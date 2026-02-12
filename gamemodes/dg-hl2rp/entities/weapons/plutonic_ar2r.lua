@@ -51,10 +51,10 @@ sound.Add({
 SWEP.Primary.Sound = Sound("LS2.AR2R.Single")
 
 SWEP.Primary.Recoil = 0.125 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 18
+SWEP.Primary.Damage = 21
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.01 -- base spread value
-SWEP.Primary.Delay = RPM(420)
+SWEP.Primary.Delay = RPM(450)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.BulletModel = Model("models/weapons/rifleshell.mdl")

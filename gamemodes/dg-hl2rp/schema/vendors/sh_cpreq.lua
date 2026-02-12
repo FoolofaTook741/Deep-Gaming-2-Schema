@@ -559,24 +559,6 @@ VENDOR.Sell = {
 			return false
 		end
 	},
-	["clo_reinforcedcphelmet"] = {
-		Desc = "UNION/SWORD i3+ (MARGINAL+) | SWORD SqL+ (Any Code)",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_SWORD and ply:GetTeamRank() >= RANK_SQL then
-				return true
-			end
-
-			if impulse.Dispatch.GetCityCode() < CODE_UNREST then return false end
-
-			if (ply:GetTeamClass() == CLASS_UNION or ply:GetTeamClass() == CLASS_SWORD) and ply:GetTeamRank() >= RANK_I3 then
-				return true
-			end
-
-			return false
-		end
-	},
 	["item_crimescenekit"] = {
 		Restricted = true,
 		Max = 1	

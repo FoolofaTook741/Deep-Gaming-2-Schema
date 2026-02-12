@@ -49,11 +49,11 @@ SWEP.Primary.Sound = Sound("CUST.MG34.Single")
 SWEP.Primary.Inside_Sound = Sound("CUST.MG34.Inside")
 
 SWEP.Primary.Recoil = 1.3 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 10.4
+SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 1
-SWEP.Primary.PenetrationScale = 1.5
+SWEP.Primary.PenetrationScale = 1.25
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(900)
+SWEP.Primary.Delay = RPM(1300)
 SWEP.SpeedReduction = 150
 
 SWEP.UseIronsightsRecoil = false
