@@ -1609,7 +1609,7 @@ net.Receive("impulseVendorBuy", function(len, ply)
 			end
 		end
 	else
-		--impulse.debugPrint("[DEBUG] Item does not have ItemType defined")
+		impulse.debugPrint("[DEBUG] Item does not have ItemType defined")
 	end
 
 	local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemclass)]
