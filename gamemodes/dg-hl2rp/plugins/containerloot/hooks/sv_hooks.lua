@@ -631,7 +631,7 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
         end        
     end
 end
-
+--[[
 function PLUGIN:KeyPress(ply, key)
     if key ~= IN_USE then return end
 
@@ -670,3 +670,4 @@ function PLUGIN:KeyPress(ply, key)
         end
     end
 end
+--]]
