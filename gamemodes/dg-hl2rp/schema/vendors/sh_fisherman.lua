@@ -105,7 +105,7 @@ local function fishermanAppear(ent)
 	ent:SetNoDraw(false)
 	ent:SetNotSolid(false)
 
-	timer.Simple(300, function()
+	timer.Simple(360, function()
 		if not IsValid(ent) then return end
 		fishermanDisappear(ent)
 	end)
@@ -122,7 +122,7 @@ function VENDOR:Initialize()
 
 	self.TimerID = "TravelerSpawn_" .. self:EntIndex()
 
-	timer.Create(self.TimerID, 1200, 0, function()
+	timer.Create(self.TimerID, 1800, 0, function()
 		if not IsValid(self) then
 			timer.Remove(self.TimerID)
 			return
