@@ -7,6 +7,9 @@ SWEP.Category = "Deep Gaming [Plutonic]"
 SWEP.ViewModelOffset = Vector(0, 0, 0)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)
 
+SWEP.CenteredPos = Vector(-3, -2, -4)
+SWEP.CenteredAng = Angle(3,3,0)
+
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
 

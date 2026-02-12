@@ -40,6 +40,9 @@ SWEP.Primary.HitDelay = 0.1
 
 SWEP.Primary.Ammo = "medical_supplies"
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Primary.Automatic = true
 SWEP.Secondary.Automatic = true
 

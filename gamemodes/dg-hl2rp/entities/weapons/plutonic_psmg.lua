@@ -16,6 +16,9 @@ SWEP.WorldModel = Model("models/weapons/psmg/w_psmg.mdl")
 SWEP.ViewModel = Model("models/weapons/psmg/c_psmg.mdl")
 SWEP.ViewModelFOV = 65
 
+SWEP.CenteredPos = Vector(-5, -3, -2.55)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 

@@ -45,6 +45,9 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 
+SWEP.CenteredPos = Vector(-5, -4, -3)
+SWEP.CenteredAng = Angle(3,0,0)
+
 SWEP.UseIronsightsRecoil = false
 
 SWEP.Spread = {}

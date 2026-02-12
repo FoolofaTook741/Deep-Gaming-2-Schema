@@ -158,9 +158,9 @@ function GM:DefineSettings()
 	impulse.DefineSetting("thirdperson_leftsided", {name="Left Shoulder Third Person", category="View", type="tickbox", default=false})
 	impulse.DefineSetting("centered_guns", {name="Centered Gun Viewmodels", category="View", type="tickbox", default=false, onChanged = function(newValue)
 		if newValue == 1 then
-			RunConsoleCommand("longsword_centered", "1")
+			RunConsoleCommand("plutonic_centered", "1")
 		else
-			RunConsoleCommand("longsword_centered", "0")
+			RunConsoleCommand("plutonic_centered", "0")
 		end
 	end})
 	impulse.DefineSetting("perf_mcore", {name="Multi-core rendering enabled", category="Performance", type="tickbox", default=false, onChanged = function(newValue)

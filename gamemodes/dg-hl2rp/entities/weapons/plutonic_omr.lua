@@ -15,6 +15,9 @@ SWEP.ViewModel = Model("models/weapons/c_overwatch_sr2_marksmen_rifle.mdl")
 SWEP.ViewModelOffset = Vector(2,0,2)
 SWEP.ViewModelFOV = 45
 
+SWEP.CenteredPos = Vector(-6, 3, -3)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 

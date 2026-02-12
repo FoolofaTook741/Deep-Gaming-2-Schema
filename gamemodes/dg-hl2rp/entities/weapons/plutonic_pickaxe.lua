@@ -14,6 +14,9 @@ SWEP.WorldModel = Model("models/weapons/hl2meleepack/w_pickaxe.mdl")
 SWEP.ViewModel = Model("models/weapons/hl2meleepack/v_pickaxe.mdl")
 SWEP.ViewModelFOV = 60
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 

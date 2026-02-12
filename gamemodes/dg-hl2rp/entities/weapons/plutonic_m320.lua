@@ -37,6 +37,8 @@ SWEP.Projectile.ForceMod = 4
 SWEP.DontRemoveOnEmpty = true
 SWEP.Reloadable = true
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
 
 sound.Add({
 	name = "LS.M320.Fire",

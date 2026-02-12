@@ -14,6 +14,8 @@ SWEP.WorldModel = Model("models/weapons/tfa_nmrih/w_me_sledge.mdl")
 SWEP.ViewModel = Model("models/weapons/tfa_nmrih/v_me_sledge.mdl")
 SWEP.ViewModelFOV = 60
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 

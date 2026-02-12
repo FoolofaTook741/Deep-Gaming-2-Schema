@@ -19,6 +19,9 @@ SWEP.SlotPos = 1
 
 SWEP.LowerAngles = Angle(15, -10, -20)
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.MuzzleEffect = "muzzleflash_ak74"
 
 SWEP.BlowbackPos = Vector(0, 0, 0)

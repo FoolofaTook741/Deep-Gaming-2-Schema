@@ -18,6 +18,9 @@ SWEP.WorldModel = Model("")
 SWEP.ViewModel = Model("models/weapons/c_vortbeamvm.mdl")
 SWEP.ViewModelFOV = 54
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 

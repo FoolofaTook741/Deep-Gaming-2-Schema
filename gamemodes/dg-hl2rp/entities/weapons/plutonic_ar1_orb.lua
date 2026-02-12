@@ -39,6 +39,9 @@ SWEP.Primary.Sound = "weapons/irifle/irifle_fire2.wav"
 SWEP.Primary.ClipSize = 1
 SWEP.Primary.DefaultClip = 0
 
+SWEP.CenteredPos = Vector(-3, -2, -4)
+SWEP.CenteredAng = Angle(3,3,0)
+
 SWEP.ReloadSound = Sound("weapons/projectmmod_ar2/npc_ar2_reload.wav")
 SWEP.EmptySound = Sound("Weapon_AR2.Empty")
 

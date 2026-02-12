@@ -60,7 +60,7 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 
-SWEP.CenteredPos = Vector(-4.5, -1, -2.55)
+SWEP.CenteredPos = Vector(-4.8, -1, -2.55)
 SWEP.CenteredAng = Angle(0,0,0)
 
 

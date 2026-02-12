@@ -20,6 +20,9 @@ SWEP.WorldModel = Model("models/weapons/arccw_go/w_eq_smokegrenade_thrown.mdl")
 SWEP.ViewModel = Model("models/weapons/arccw_go/v_eq_smokegrenade.mdl")
 SWEP.ViewModelFOV = 50
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 

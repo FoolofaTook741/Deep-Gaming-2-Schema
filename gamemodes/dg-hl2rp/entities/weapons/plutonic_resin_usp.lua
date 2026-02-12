@@ -20,6 +20,9 @@ SWEP.QuickDraw = true
 SWEP.ViewModelOffset = Vector(2.5, 3, -1)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)
 
+SWEP.CenteredPos = Vector(-5, -4, -3)
+SWEP.CenteredAng = Angle(3,0,0)
+
 SWEP.Slot = 3
 SWEP.SlotPos = 1
 

@@ -16,6 +16,9 @@ SWEP.ViewModelFOV = 55
 SWEP.ViewModelOffset = Vector(0, 0, 0)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)
 
+SWEP.CenteredPos = Vector(-3.5, -3, -2.55)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 
