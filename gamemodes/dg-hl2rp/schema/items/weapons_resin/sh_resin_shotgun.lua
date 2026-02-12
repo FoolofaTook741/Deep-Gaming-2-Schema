@@ -1,16 +1,16 @@
 local ITEM = {}
 
 ITEM.UniqueID = "resin_shotgun"
-ITEM.Name = "Franchi SPAS-12 (Modified)"
+ITEM.Name = "Franchi SPAS-12 (Modified) [Deprecated]"
 ITEM.Desc =  "A large shotgun that packs a punch. Fires 12G buckshot rounds."
 ITEM.Category = "Weapons"
-ITEM.Model = Model("models/weapons/w_spas122.mdl")
+ITEM.Model = Model("models/props_junk/cardboard_box004a.mdl")
 ITEM.FOV = 12.213467048711
 ITEM.CamPos = Vector(74.5, -84.809997558594, -26)
-ITEM.Weight = 6
+ITEM.Weight = 0
 ITEM.NoCenter = true
 
-ITEM.Colour = Color(180, 180, 0)
+ITEM.Colour = Color(75, 0, 0)
 
 ITEM.Droppable = true
 ITEM.DropOnDeath = true
@@ -23,13 +23,13 @@ ITEM.CraftIfRestricted = false
 ITEM.ConfiscateReward = 15
 
 ITEM.Illegal = true
-ITEM.Equipable = true
-ITEM.EquipGroup = "primary"
-ITEM.CanStack = true
+ITEM.UseName = "Convert to SPAS-12"
 
-ITEM.WeaponClass = "plutonic_resin_spas12"
-
-
+function ITEM:OnUse(ply)
+	ply:GiveInventoryItem("wep_shotgun", 1)
+	ply:GiveInventoryItem("resin_machineready", 1)
+	return true
+end
 
 
 

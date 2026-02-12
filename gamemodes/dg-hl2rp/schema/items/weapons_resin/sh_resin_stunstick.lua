@@ -1,13 +1,13 @@
 local ITEM = {}
 
 ITEM.UniqueID = "resin_stunstick"
-ITEM.Name = "Stun Baton (Modified)"
+ITEM.Name = "Stun Baton (Modified) [Deprecated]"
 ITEM.Desc =  "An electrified baton that can be used to stun disobedient citizens."
 ITEM.Category = "Weapons"
-ITEM.Model = Model("models/weapons/w_stunbaton.mdl")
+ITEM.Model = Model("models/props_junk/cardboard_box004a.mdl")
 ITEM.FOV = 25
-ITEM.Weight = 1.2
-ITEM.Colour = Color(180, 180, 0)
+ITEM.Weight = 0
+ITEM.Colour = Color(75, 0, 0)
 
 ITEM.Droppable = true
 ITEM.DropOnDeath = false
@@ -19,14 +19,13 @@ ITEM.DropOnDeathIfRestricted = false
 ITEM.CraftIfRestricted = false
 
 ITEM.Illegal = true
-ITEM.Equipable = true
-ITEM.EquipGroup = "melee"
-ITEM.CanStack = true
+ITEM.UseName = "Convert to Stunstick"
 
-ITEM.WeaponClass = "plutonic_resin_stunbaton"
-
-
-
+function ITEM:OnUse(ply)
+	ply:GiveInventoryItem("wep_stunstick", 1)
+	ply:GiveInventoryItem("resin_machineready", 1)
+	return true
+end
 
 
 function ITEM:CanEquip(ply)
