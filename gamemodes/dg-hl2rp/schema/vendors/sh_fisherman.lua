@@ -43,6 +43,8 @@ VENDOR.RandomTrades = {
 	},
 	Buy = {
 		["util_moonshine"] = {Cost = {400, 500}},
+		["util_resin"] = {Cost = {20, 35}},
+		["resin_machineready"] = {Cost = {500, 875}},
 	}
 }
 
@@ -62,8 +64,8 @@ local function fishermanDisappear(ent)
 		end
 
 		ent.BeenTriggered = false
+		ent:SetPos(Vector(-4061.1323242188, 14661.44140625, 10783.806640625)) -- ik its messy
 		ent:SetNoDraw(true)
-		ent:SetNotSolid(true)
 		ent:RemoveAllDecals()
 	end)
 end
@@ -103,10 +105,9 @@ local function fishermanAppear(ent)
 
 	ent:SetPos(ent.MainPos)
 	ent:SetNoDraw(false)
-	ent:SetNotSolid(false)
-    ent:SetUseType(SIMPLE_USE)
     --ent:SetSolid(SOLID_BBOX)
     --ent:SetMoveType(MOVETYPE_NONE)
+    --ent:SetUseType(SIMPLE_USE)
     --ent:SetCollisionGroup(COLLISION_GROUP_NONE)
 
 	timer.Simple(360, function()
@@ -120,7 +121,6 @@ function VENDOR:Initialize()
 	self:SetAngles(impulse.Config.FishermanAng)
 
 	self:SetNoDraw(true)
-	self:SetNotSolid(true)
 	self.BeenTriggered = false
 
 	self.TimerID = "TravelerSpawn_" .. self:EntIndex()
