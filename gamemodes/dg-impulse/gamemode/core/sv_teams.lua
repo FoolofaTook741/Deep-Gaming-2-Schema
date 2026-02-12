@@ -491,9 +491,9 @@ function impulse.Teams.GetWhitelist(steamid, team, callback)
 end
 
 function meta:GetTeamWhitelist(team)
-	if self:IsSuperAdmin() and not team == TEAM_CITIZEN then
-		return 999
-	end
+    if self:IsSuperAdmin() and team ~= TEAM_CITIZEN then
+        return 999
+    end
 	if not self.Whitelists[team] then
 		return 0
 	else
@@ -508,7 +508,6 @@ function meta:HasTeamWhitelist(team, level)
 	if not self.Whitelists then
 		return false
 	end
-
 	if self:IsSuperAdmin() then
 		return true
 	end
