@@ -513,7 +513,7 @@ TEAM_OTA = impulse.Teams.Define({
 			description = "captain",
 			xp = 0,
 			--[[canPromote = {
-				[RANK_CGR] = true
+				[RANK_OWG] = true
 			},]]
 			whitelistLevel = 3,
 			onBecome = function(ply, rank)
@@ -608,8 +608,8 @@ TEAM_OTA = impulse.Teams.Define({
 			xp = 0,
 			doorGroup = {1, 2, 3, 4, 6, 7},
 			--[[canPromote = {
-				[RANK_CGR] = true,
-				[RANK_CSO] = true,
+				[RANK_OWG] = true,
+				[RANK_OWS] = true,
 			},]]
 			whitelistLevel = 4,
 			onBecome = function(ply, rank)
@@ -701,9 +701,9 @@ TEAM_OTA = impulse.Teams.Define({
 			xp = 0,
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			--[[canPromote = {
-				[RANK_CGR] = true,
-				[RANK_ECS] = true,
-				[RANK_CCP] = true,
+				[RANK_OWG] = true,
+				[RANK_EOS] = true,
+				[RANK_OCP] = true,
 			},]]
 			whitelistLevel = 5,
 			onBecome = function(ply, rank)
@@ -799,11 +799,11 @@ TEAM_OTA = impulse.Teams.Define({
 			xp = 0,
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			--[[canPromote = {
-				[RANK_CGR] = true,
-				[RANK_ECS] = true,
-				[RANK_CCP] = true,
-				[RANK_CTL] = true,
-				[RANK_CSC] = true,
+				[RANK_OWG] = true,
+				[RANK_EOS] = true,
+				[RANK_OCP] = true,
+				[RANK_OSL] = true,
+				[RANK_ORD] = true,
 			},]]
 			whitelistLevel = 6,
 			onBecome = function(ply, rank)
@@ -883,13 +883,20 @@ CLASS_APF = 5
 CLASS_NOMAD = 6
 CLASS_PAYBACK = 7
 
-RANK_CGR = 1
-RANK_CSO = RANK_CGR
-RANK_ECS = 2
-RANK_CCP = 3
-RANK_CTL = 4
-RANK_ORD = 5
-RANK_CSC = 6
+RANK_OWG = 1
+RANK_OWS = 2
+RANK_EOS = 3
+RANK_OCP = 4
+RANK_OSL = 5
+RANK_ORD = 6
+RANK_OSC = 7
+
+RANK_CGR = RANK_OWG
+RANK_CSO = RANK_OWS
+RANK_ECS = RANK_EOS
+RANK_CCP = RANK_OCP
+RANK_CTL = RANK_OSL
+RANK_CSC = RANK_OSC
 
 hook.Add("PlayerFootstep", "wallhammerfoot", function(ply, pos, foot, sound) 
     if ply:Team() == TEAM_OTA && ply:GetTeamClass() == CLASS_PAYBACK then
