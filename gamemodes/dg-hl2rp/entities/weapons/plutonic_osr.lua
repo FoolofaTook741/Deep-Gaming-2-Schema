@@ -14,6 +14,9 @@ SWEP.WorldModel = Model("models/tnb/weapons/w_cisr.mdl")
 SWEP.ViewModel = Model("models/tnb/weapons/c_cisr.mdl")
 SWEP.ViewModelFOV = 45
 
+SWEP.CenteredPos = Vector(-6, 3, -4)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 
