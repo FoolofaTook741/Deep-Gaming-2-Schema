@@ -1610,7 +1610,7 @@ local otaWhitelistCommand = {
     description = "(Supervisor only) Changes a player's CTA whitelist level. Args STEAMID NUMBER.",
     requiresArg = true,
     onRun = function(ply, arg, rawText)
-        if ply:GetTeamWhitelist("TEAM_OTA") < 4 and not ply:IsLeadAdmin() then
+        if ply:GetTeamWhitelist("TEAM_OTA") < 3 and not ply:IsLeadAdmin() then
             ply:Notify("You cannot use this command.")
             return
         end
