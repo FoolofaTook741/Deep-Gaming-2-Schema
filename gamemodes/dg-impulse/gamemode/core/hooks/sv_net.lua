@@ -1586,7 +1586,6 @@ net.Receive("impulseVendorBuy", function(len, ply)
 
 	if sellData.ItemType then
 		impulse.debugPrint("[DEBUG] Item has ItemType: " .. tostring(sellData.ItemType))
-
 		for oldClass, oldData in pairs(vendor.Vendor.Sell) do
 			if oldData.ItemType == sellData.ItemType and oldClass ~= itemclass then
 				impulse.debugimpulse.debugPrint("[DEBUG] Checking if player has item: " .. oldClass)
