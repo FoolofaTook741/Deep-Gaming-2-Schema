@@ -101,7 +101,7 @@ net.Receive("impulseDISPSquadMake", function()
 	if (ply.nextSquadDo or 0) > CurTime() then return end
 	ply.nextSquadDo = CurTime() + 1
 
-	if not ply:Alive() then
+	if not ply:Alive() or not ply:IsCPCommand() then
 		return
 	end
 	local lowestFree = 1
