@@ -77,7 +77,7 @@ function PhysObj:EnableMotion( bool )
 	if APG.isBadEnt( ent ) and APG.getOwner( ent ) then
 		ent.APG_Frozen = not bool
 		if not ent.APG_Frozen then
-			if self:GetClass() == "impulse_container" and self:GetModel() == "models/props_junk/cardboard_box004a.mdl" then
+			if IsValid(self) and self.GetClass and self.GetModel and self:GetClass() == "impulse_container" and (self:GetModel() or "") == "models/props_junk/cardboard_box004a.mdl" then
 				APG._EnableMotion( self, bool )
 				return
 			end
