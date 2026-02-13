@@ -265,7 +265,7 @@ function PANEL:SetupUI()
     self.lblReminder:SetTextColor(COMBINE_MUTED)
     self.lblReminder:SetText("\nCHAIN OF COMMAND REGISTRY\n" ..
         "---------------------------------\n" ..
-        "Acting Sovereign Protection Unit: Commander VICE-3\n" ..
+        "Acting Sovereign Protection Unit: Commander QUICK-7\n" ..
         "---------------------------------\n" ..
         "Acting Sovereign Transhuman Unit: Commander HAMMER-3\n" ..
         "---------------------------------\n" ..
@@ -402,7 +402,7 @@ function PANEL:SetupUI()
         self.dispatch:Dock(FILL)
         StyleCombinePanel(self.dispatch, 40)
 
-        if (LocalPlayer():GetTeamClass() == CLASS_DISPATCH) then
+        if (LocalPlayer():GetTeamClass() == CLASS_DISPATCH and LocalPlayer():Team() == TEAM_CP) then
             self.dispatchPlayerButton = vgui.Create("DButton", self.dispatch)
             self.dispatchPlayerButton:SetText("INITIATE DISPATCH BOOTUP SEQUENCE")
             self.dispatchPlayerButton:SetFont("BudgetLabel")
