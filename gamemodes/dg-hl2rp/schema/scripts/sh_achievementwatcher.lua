@@ -54,7 +54,7 @@ if SERVER then
 			attacker:AchievementGive("ach_entity")
 		end
 
-		if victim:IsSuperAdmin() and victim:SteamID64() == "76561199123350968" or victim:SteamID64() == "76561198207757255" then -- thrawn and jake
+		if victim:IsSuperAdmin() and victim:SteamID64() == "76561198018673792" then -- Fool
 			attacker:AchievementGive("ach_sd")
 		end
 
