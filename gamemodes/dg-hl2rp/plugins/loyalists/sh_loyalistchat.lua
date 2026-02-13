@@ -14,7 +14,7 @@ local loyalistLevelCommand = {
 				end
 			end
     	end
-		local ranktable = { "Neutral", "Tier I", "Tier II", "Tier III" }
+		local ranktable = { "Neutral", "Tier I", "Tier II", "Tier III", "Tier IV", "Level V", "Level VI"}
 
         local steamid = arg[1]
 		local level = arg[2]

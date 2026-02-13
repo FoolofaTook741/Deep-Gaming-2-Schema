@@ -1,7 +1,7 @@
 local ITEM = {}
 
 ITEM.UniqueID = "ration_civ"
-ITEM.Name = "Citizen Ration"
+ITEM.Name = "Minimal Ration"
 ITEM.Desc =  "A Citizen Ration."
 ITEM.Category = "Rations"
 ITEM.Model = Model("models/weapons/w_package.mdl")
@@ -38,7 +38,7 @@ impulse.RegisterItem(ITEM)
 
 local ITEM = {}
 ITEM.UniqueID = "ration_tier1"
-ITEM.Name = "Tier I Loyalist Ration"
+ITEM.Name = "Standard Ration"
 ITEM.Desc = "A ration package for Tier I Loyalists, offering improved provisions."
 ITEM.Category = "Rations"
 ITEM.Model = Model("models/willardnetworks/food/ration_box.mdl")
@@ -69,7 +69,7 @@ impulse.RegisterItem(ITEM)
 
 local ITEM = {}
 ITEM.UniqueID = "ration_tier2"
-ITEM.Name = "Tier II Loyalist Ration"
+ITEM.Name = "Loyalist Ration"
 ITEM.Desc = "A ration package for Tier II Loyalists, offering improved provisions."
 ITEM.Category = "Rations"
 ITEM.Model = Model("models/willardnetworks/food/ration_box.mdl")
@@ -101,7 +101,7 @@ impulse.RegisterItem(ITEM)
 
 local ITEM = {}
 ITEM.UniqueID = "ration_tier3"
-ITEM.Name = "Tier III Loyalist Ration"
+ITEM.Name = "Priority Ration"
 ITEM.Desc = "A ration package for Tier III Loyalists, offering improved provisions."
 ITEM.Category = "Rations"
 ITEM.Model = Model("models/willardnetworks/food/ration_box.mdl")

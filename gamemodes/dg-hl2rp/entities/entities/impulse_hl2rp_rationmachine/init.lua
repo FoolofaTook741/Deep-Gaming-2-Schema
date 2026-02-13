@@ -259,13 +259,13 @@ function ENT:Use(activator, caller)
                     level = tonumber(result[1].level) or 0
                 end
 
-                if level == 3 then
+                if level >= 5 then
                     activator:GiveInventoryItem("ration_tier3", 1)
                     activator:GiveInventoryItem(isUnrest and "card_3_marginal" or "card_3", 1)
-                elseif level == 2 then
+                elseif level == 3 or level == 4 then
                     activator:GiveInventoryItem("ration_tier2", 1)
                     activator:GiveInventoryItem(isUnrest and "card_2_marginal" or "card_2", 1)
-                elseif level == 1 then
+                elseif level == 1 or level == 2 then
                     activator:GiveInventoryItem("ration_tier1", 1)
                     activator:GiveInventoryItem(isUnrest and "card_1_marginal" or "card_1", 1)
                 else
