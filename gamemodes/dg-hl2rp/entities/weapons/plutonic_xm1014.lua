@@ -78,7 +78,7 @@ SWEP.IronsightsRecoilVisualMultiplier = 15
 
 SWEP.IncendiaryRounds = false
 
-SWEP.CenteredPos = Vector(-9.0, -1, -2.55)
+SWEP.CenteredPos = Vector(-5, -1, -2.55)
 SWEP.CenteredAng = Angle(0,0,0)
 
 SWEP.BlowbackPos = Vector(0, 0, 0)

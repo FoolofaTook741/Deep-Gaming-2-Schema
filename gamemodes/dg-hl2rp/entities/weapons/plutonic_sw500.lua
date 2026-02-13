@@ -17,6 +17,9 @@ SWEP.ViewModelFOV = 55
 SWEP.ViewModelOffset = Vector(2.5, 3, -0.25)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)
 
+SWEP.CenteredPos = Vector(-3.8, -1, -2.55)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 3
 SWEP.SlotPos = 1
 
@@ -50,11 +53,11 @@ sound.Add({
 SWEP.Primary.Sound = Sound("LS2.SW500.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.SW500.Inside")
 SWEP.Primary.Recoil = 20 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 80
+SWEP.Primary.Damage = 70
 SWEP.Primary.PenetrationScale = 1.1
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.010
-SWEP.Primary.Delay = RPM(120)
+SWEP.Primary.Delay = RPM(100)
 
 SWEP.Primary.Ammo = "357"
 SWEP.Primary.Automatic = true

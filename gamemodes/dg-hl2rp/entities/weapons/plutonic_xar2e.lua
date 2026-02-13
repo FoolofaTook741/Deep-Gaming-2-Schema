@@ -60,13 +60,16 @@ SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "ar2"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 45
-SWEP.Primary.DefaultClip = 45
+SWEP.Primary.ClipSize = 35
+SWEP.Primary.DefaultClip = 35
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
+
+SWEP.CenteredPos = Vector(-3, -2, -4)
+SWEP.CenteredAng = Angle(3,3,0)
 
 SWEP.UseIronsightsRecoil = false
 

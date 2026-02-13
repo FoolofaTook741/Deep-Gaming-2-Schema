@@ -14,6 +14,9 @@ SWEP.WorldModel = Model("models/weapons/w_stunbaton.mdl")
 SWEP.ViewModel = Model("models/weapons/c_stunstick.mdl")
 SWEP.ViewModelFOV = 52
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 

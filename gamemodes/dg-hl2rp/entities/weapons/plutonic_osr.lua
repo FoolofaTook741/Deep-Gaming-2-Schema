@@ -14,6 +14,9 @@ SWEP.WorldModel = Model("models/tnb/weapons/w_cisr.mdl")
 SWEP.ViewModel = Model("models/tnb/weapons/c_cisr.mdl")
 SWEP.ViewModelFOV = 45
 
+SWEP.CenteredPos = Vector(-6, 3, -4)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 
@@ -40,7 +43,7 @@ SWEP.Primary.Sound = Sound("CUST.OSR.Single")
 SWEP.Primary.Recoil = 20 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 75
 SWEP.Primary.NumShots = 1
-SWEP.Primary.PenetrationScale = 1.33
+SWEP.Primary.PenetrationScale = 1
 SWEP.Primary.Cone = 0.0002
 SWEP.Primary.Delay = RPM(30)
 

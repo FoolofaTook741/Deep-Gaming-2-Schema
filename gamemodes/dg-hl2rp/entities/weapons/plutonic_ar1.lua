@@ -7,6 +7,9 @@ SWEP.Category = "Deep Gaming [Plutonic]"
 SWEP.ViewModelOffset = Vector(0, 0, 0)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)
 
+SWEP.CenteredPos = Vector(-3, -2, -4)
+SWEP.CenteredAng = Angle(3,3,0)
+
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
 
@@ -47,10 +50,10 @@ sound.Add({
 SWEP.Primary.Sound = Sound("LS2.AR1.Single")
 
 SWEP.Primary.Recoil = 0.9 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 18
+SWEP.Primary.Damage = 16.6
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(650)
+SWEP.Primary.Delay = RPM(600)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "AR2"

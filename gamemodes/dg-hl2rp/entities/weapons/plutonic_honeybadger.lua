@@ -33,18 +33,15 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("LS2.HB.Single")
 
-SWEP.Primary.Sound = Sound("LS2.AR15.Single")
-SWEP.Primary.Inside_Sound = Sound("LS2.AR15.Inside")
-
+SWEP.Primary.Sound = "ma85_mw3/silencer/smg_mp5.wav"
 SWEP.Primary.Recoil = 0.03 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 15
+SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.01
-SWEP.Primary.Delay = RPM(675)
-SWEP.UseIronsightsRecoil = false
+SWEP.Primary.Cone = 0.022
+SWEP.Primary.Delay = RPM(900)
 
-SWEP.Primary.Ammo = "SniperRound"
-SWEP.Primary.Automatic = false
+SWEP.Primary.Ammo = "SMG1"
+SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = 30
 SWEP.Primary.DefaultClip = 30
 
@@ -52,6 +49,9 @@ SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
+
+SWEP.CenteredPos = Vector(-2, -2, -3)
+SWEP.CenteredAng = Angle(3,3,0)
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0

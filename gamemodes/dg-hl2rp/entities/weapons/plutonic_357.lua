@@ -51,7 +51,7 @@ SWEP.ReloadSound = Sound("Weapon_357.Reload")
 SWEP.EmptySound = Sound("Weapon_357.Empty")
 
 SWEP.Primary.Recoil = 20 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 60
+SWEP.Primary.Damage = 58
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0002
 SWEP.Primary.Delay = RPM(90)
@@ -71,6 +71,9 @@ SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
+
+SWEP.CenteredPos = Vector(-5, -4, -5.5)
+SWEP.CenteredAng = Angle(3,3,0)
 
 SWEP.UseIronsightsRecoil = false
 

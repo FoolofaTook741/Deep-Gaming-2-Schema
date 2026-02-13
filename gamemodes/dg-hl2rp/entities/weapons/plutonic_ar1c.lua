@@ -40,7 +40,7 @@ SWEP.Primary.Recoil = 0.7 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 18
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(900)
+SWEP.Primary.Delay = RPM(780)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "AR2"
@@ -53,6 +53,9 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.UseIronsightsRecoil = false
+
+SWEP.CenteredPos = Vector(-3, -2, -4)
+SWEP.CenteredAng = Angle(3,3,0)
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0

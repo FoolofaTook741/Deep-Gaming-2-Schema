@@ -17,6 +17,9 @@ SWEP.ViewModelFOV = 55
 SWEP.ViewModelOffset = Vector(2.5, 2, -0.5)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)
 
+SWEP.CenteredPos = Vector(-6.0, -1, -2.55)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 3
 SWEP.SlotPos = 1
 
@@ -55,6 +58,7 @@ SWEP.Primary.Damage = 27
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.009
 SWEP.Primary.Delay = RPM(240)
+SWEP.Primary.PenetrationScale = 1.1
 
 SWEP.Primary.Ammo = "SniperRound"
 SWEP.Primary.Automatic = false

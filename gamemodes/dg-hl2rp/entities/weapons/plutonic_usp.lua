@@ -20,6 +20,9 @@ SWEP.QuickDraw = true
 SWEP.ViewModelOffset = Vector(2.5, 3, -1)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)
 
+SWEP.CenteredPos = Vector(-5, -4, -3)
+SWEP.CenteredAng = Angle(3,0,0)
+
 SWEP.Slot = 3
 SWEP.SlotPos = 1
 
@@ -67,7 +70,7 @@ SWEP.CenteredAng = Angle(0,0,0)
 SWEP.Primary.Sound = Sound("LS2.USP.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.USP.Inside")
 SWEP.Primary.Recoil = 0.6 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 10
+SWEP.Primary.Damage = 11.8
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.018
 SWEP.Primary.Delay = RPM(500)

@@ -21,6 +21,9 @@ SWEP.ViewModel = Model("models/weapons/v_eq_flashbang.mdl")
 SWEP.ViewModelOffset = Vector(0,0,0)
 SWEP.ViewModelFOV = 40
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 

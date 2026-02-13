@@ -60,8 +60,8 @@ sound.Add({
 SWEP.Primary.Sound = Sound("LS2.AR2.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.AR2.Inside")
 
-SWEP.Primary.Recoil = 0.45
-SWEP.Primary.Damage = 10
+SWEP.Primary.Recoil = 0.6
+SWEP.Primary.Damage = 13
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.01 -- base spread value
 SWEP.Primary.Delay = RPM(600)
@@ -80,13 +80,16 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.UseIronsightsRecoil = false
 
+SWEP.CenteredPos = Vector(-3, -2, -4)
+SWEP.CenteredAng = Angle(3,3,0)
+
 SWEP.Spread = {}
 SWEP.Spread.Min = 0.006
 SWEP.Spread.Max = 0.14
 SWEP.Spread.IronsightsMod = 0.65
 SWEP.Spread.CrouchMod = 0.25
 SWEP.Spread.AirMod = 1.6
-SWEP.Spread.RecoilMod = 0.008
+SWEP.Spread.RecoilMod = 0
 SWEP.Spread.VelocityMod = 1.25
 
 SWEP.IronsightsPos = Vector(-1.81, -2.613, 0)

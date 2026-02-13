@@ -33,6 +33,9 @@ SWEP.Primary.Ammo = "molotov"
 SWEP.Primary.ClipSize = 1
 SWEP.Primary.DefaultClip = 1
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Projectile = {}
 SWEP.Projectile.Model = Model("models/props_junk/glassbottle01a.mdl")
 SWEP.Projectile.FireSound = Sound("physics/glass/glass_bottle_break2.wav")

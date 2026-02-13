@@ -15,6 +15,9 @@ SWEP.ViewModel = Model("models/weapons/c_overwatch_sr2_marksmen_rifle.mdl")
 SWEP.ViewModelOffset = Vector(2,0,2)
 SWEP.ViewModelFOV = 45
 
+SWEP.CenteredPos = Vector(-6, 3, -3)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 
@@ -40,7 +43,7 @@ SWEP.Primary.Sound = Sound("CUST.OMR.Single")
 
 SWEP.Primary.Recoil = 5-- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 29
-SWEP.Primary.PenetrationScale = 1.25
+SWEP.Primary.PenetrationScale = 1
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0002
 SWEP.Primary.Delay = RPM(300)

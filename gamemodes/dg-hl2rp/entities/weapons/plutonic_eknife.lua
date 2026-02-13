@@ -25,6 +25,9 @@ SWEP.MuzzleEffect = "muzzleflash_ak74"
 SWEP.BlowbackPos = Vector(0, 0, 0)
 SWEP.BlowbackAngle = Angle(0, 0, 0)
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 sound.Add({
 	name = "LS2.KNIFE.Single",
 	channel = CHAN_WEAPON,

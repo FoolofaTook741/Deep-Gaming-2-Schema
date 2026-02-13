@@ -32,7 +32,7 @@ SWEP.EmptySound = Sound("Weapon_Pistol.Empty")
 SWEP.Primary.Sound = Sound("weapons/darsu_eft/sr25/sr25_fire_outdoor_close.ogg")
 SWEP.Primary.Inside_Sound = Sound("weapons/darsu_eft/sr25/sr25_fire_indoor_close.ogg")
 SWEP.Primary.Recoil = 5 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 22
+SWEP.Primary.Damage = 25
 SWEP.Primary.PenetrationScale = 1
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.009
@@ -47,6 +47,9 @@ SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
+
+SWEP.CenteredPos = Vector(-5, 0, -4)
+SWEP.CenteredAng = Angle(3,3,0)
 
 SWEP.UseIronsightsRecoil = false
 

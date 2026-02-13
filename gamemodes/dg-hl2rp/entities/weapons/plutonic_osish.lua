@@ -14,6 +14,9 @@ SWEP.WorldModel = Model("models/weapons/heavyshotgun/w_shotgun_heavy.mdl")
 SWEP.ViewModel = Model("models/weapons/heavyshotgun/c_shotgun_heavy.mdl")
 SWEP.ViewModelFOV = 65
 
+SWEP.CenteredPos = Vector(-6, -1, -4)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 

@@ -14,6 +14,9 @@ SWEP.WorldModel = Model("models/weapons/arccw_go/w_eq_throwingknife_thrown.mdl")
 SWEP.ViewModel = Model("models/weapons/arccw_go/v_eq_throwingknife.mdl")
 SWEP.ViewModelFOV = 65
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 

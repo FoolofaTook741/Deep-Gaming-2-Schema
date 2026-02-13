@@ -20,6 +20,9 @@ SWEP.WorldModel = Model("models/weapons/w_eq_flashbang.mdl")
 SWEP.ViewModel = Model("models/weapons/cstrike/c_eq_flashbang.mdl")
 SWEP.ViewModelFOV = 50
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 

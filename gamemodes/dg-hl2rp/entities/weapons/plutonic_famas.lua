@@ -14,6 +14,9 @@ SWEP.WorldModel = Model("models/weapons/arccw_go/v_rif_famas.mdl")
 SWEP.ViewModel = Model("models/weapons/arccw_go/v_rif_famas.mdl")
 SWEP.ViewModelFOV = 65
 
+SWEP.CenteredPos = Vector(-6.3, -1, -2.55)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 

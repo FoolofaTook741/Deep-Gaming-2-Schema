@@ -15,6 +15,9 @@ SWEP.WorldModel = ""
 SWEP.ViewModelFOV = 90
 SWEP.UseHands = true
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic = true

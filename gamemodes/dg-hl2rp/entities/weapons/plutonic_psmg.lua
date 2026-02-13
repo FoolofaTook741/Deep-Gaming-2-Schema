@@ -16,6 +16,9 @@ SWEP.WorldModel = Model("models/weapons/psmg/w_psmg.mdl")
 SWEP.ViewModel = Model("models/weapons/psmg/c_psmg.mdl")
 SWEP.ViewModelFOV = 65
 
+SWEP.CenteredPos = Vector(-5, -3, -2.55)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 
@@ -39,19 +42,19 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("CUST.PSMG.Single")
 
-SWEP.Primary.Recoil = 1.5 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 8
+SWEP.Primary.Recoil = 1 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 10
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.03
-SWEP.Primary.Delay = RPM(650)
+SWEP.Primary.Delay = RPM(690)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.UseIronsightsRecoil = false
 
 SWEP.Primary.Ammo = "SMG1"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 30
-SWEP.Primary.DefaultClip = 30
+SWEP.Primary.ClipSize = 40
+SWEP.Primary.DefaultClip = 40
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false

@@ -15,6 +15,9 @@ SWEP.WorldModel = Model("models/props_debris/concrete_chunk05g.mdl")
 SWEP.ViewModel = Model("models/props_debris/concrete_chunk05g.mdl")
 SWEP.ViewModelFOV = 50
 
+SWEP.CenteredPos = Vector(0, 0, 0)
+SWEP.CenteredAng = Angle(0,0,0)
+
 SWEP.Slot = 4
 SWEP.SlotPos = 1
 
