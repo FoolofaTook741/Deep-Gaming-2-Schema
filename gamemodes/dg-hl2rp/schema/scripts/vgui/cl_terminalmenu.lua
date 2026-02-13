@@ -402,7 +402,7 @@ function PANEL:SetupUI()
         self.dispatch:Dock(FILL)
         StyleCombinePanel(self.dispatch, 40)
 
-        if (LocalPlayer():GetTeamClass() == CLASS_DISPATCH) then
+        if (LocalPlayer():GetTeamClass() == CLASS_DISPATCH and LocalPlayer():Team() == TEAM_CP) then
             self.dispatchPlayerButton = vgui.Create("DButton", self.dispatch)
             self.dispatchPlayerButton:SetText("INITIATE DISPATCH BOOTUP SEQUENCE")
             self.dispatchPlayerButton:SetFont("BudgetLabel")
