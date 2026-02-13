@@ -416,6 +416,24 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
             end
         end
 
+        function ragdoll:CheckEmpty()
+            if not IsValid(self) then return end
+
+            local hasLoot = false
+            if self.Inventory then
+                for _, v in pairs(self.Inventory) do
+                    if v > 0 then
+                        hasLoot = true
+                        break
+                    end
+                end
+            end
+
+            if not hasLoot then
+                self:Remove()
+            end
+        end
+
         function ragdoll:TakeItem(itemclass, amount, noUpdate)
             local itemCount = self.Inventory[itemclass]
             if itemCount then
@@ -431,6 +449,7 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
             if not noUpdate then
                 self:UpdateUsers()
             end
+            self:CheckEmpty()
         end
 
         function ragdoll:CanHoldItem(itemclass)
@@ -631,7 +650,7 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
         end        
     end
 end
-
+--[[
 function PLUGIN:KeyPress(ply, key)
     if key ~= IN_USE then return end
 
@@ -670,3 +689,4 @@ function PLUGIN:KeyPress(ply, key)
         end
     end
 end
+--]]

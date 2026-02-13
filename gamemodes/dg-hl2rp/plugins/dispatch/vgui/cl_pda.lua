@@ -729,7 +729,7 @@ or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_ORD) then
 end
 
 
-    if ((LocalPlayer():Team() == TEAM_CP and rank >= RANK_OFC) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_DEPUTY) or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_CCP)) then
+    if ((LocalPlayer():Team() == TEAM_CP and rank >= RANK_OFC) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_DEPUTY) or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_OCP)) then
         if LocalPlayer():IsSuperAdmin() then
             self.citylockdown = vgui.Create("DButton", self.utilPnl)
             self.citylockdown:SetFont("DebugFixed")

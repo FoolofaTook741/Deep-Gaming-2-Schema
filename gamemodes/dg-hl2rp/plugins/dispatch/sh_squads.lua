@@ -15,7 +15,7 @@ function meta:SquadCanMake()
 		return false
 	end
 
-	if t == TEAM_OTA and rank < RANK_ECS then
+	if t == TEAM_OTA and rank < RANK_EOS then
 		if self:GetTeamClass() != CLASS_SENTINEL and self:GetTeamRank() != RANK_EOW then
 			return false
 		end
@@ -93,7 +93,7 @@ function meta:SquadCanClaim()
 		return false
 	end
 
-	if t == TEAM_OTA and rank < RANK_ECS then
+	if t == TEAM_OTA and rank < RANK_EOS then
 		return false
 	end
 

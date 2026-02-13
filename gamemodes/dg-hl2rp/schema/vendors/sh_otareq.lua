@@ -14,10 +14,9 @@ VENDOR.Sell = {
 	["wep_ar2"] = {
 		Desc = "ECHO ECS+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_ECS && ply:GetTeamClass() == CLASS_ECHO then
+			if ply:GetTeamRank() >= RANK_EOS && ply:GetTeamClass() == CLASS_ECHO then
 				return true
 			else return false end
 		end
@@ -35,10 +34,9 @@ VENDOR.Sell = {
 	["wep_omr"] = {
 		Desc = "RANGER CSO+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CSO && ply:GetTeamClass() == CLASS_RANGER then
+			if ply:GetTeamRank() >= RANK_OWS && ply:GetTeamClass() == CLASS_RANGER then
 				return true
 			else return false end
 		end 
@@ -46,10 +44,9 @@ VENDOR.Sell = {
 	["wep_osr"] = {
 		Desc = "RANGER CSO+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CSO && ply:GetTeamClass() == CLASS_RANGER then
+			if ply:GetTeamRank() >= RANK_OWS && ply:GetTeamClass() == CLASS_RANGER then
 				return true
 			else return false end
 		end 
@@ -57,10 +54,9 @@ VENDOR.Sell = {
 	["wep_ar2r"] = {
 		Desc = "RANGER ECS+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_ECS && ply:GetTeamClass() == CLASS_RANGER then
+			if ply:GetTeamRank() >= RANK_EOS && ply:GetTeamClass() == CLASS_RANGER then
 				return true
 			else return false end
 		end
@@ -70,7 +66,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 2,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CSO then
+			if ply:GetTeamRank() >= RANK_OWS then
 				return true
 			else 
 				return false 
@@ -80,7 +76,6 @@ VENDOR.Sell = {
 	["wep_osiprmk1"] = {
 		Desc = "ECHO ORD+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamRank() >= RANK_ORD && ply:GetTeamClass() == CLASS_ECHO) or (ply:GetTeamRank() >= RANK_ORD && ply:GetTeamClass() == CLASS_FIST) then
@@ -91,7 +86,6 @@ VENDOR.Sell = {
 	["wep_osips"] = {
 		Desc = "ECHO Only",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamClass() == CLASS_ECHO then
@@ -102,7 +96,6 @@ VENDOR.Sell = {
 	["wep_osisg"] = {
 		Desc = "MACE Only",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamClass() == CLASS_MACE then
@@ -115,7 +108,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_CCP then
+			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_OCP then
 				return true
 			else return false
 			end
@@ -124,10 +117,9 @@ VENDOR.Sell = {
 	["att_holosight"] = {
 		Desc = "ECHO CCP+",
 		Restricted = true,
-		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_CCP then
+			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_OCP then
 				return true
 			else return false
 			end
@@ -136,10 +128,9 @@ VENDOR.Sell = {
 	["att_huntersight"] = {
 		Desc = "ECHO CCP+",
 		Restricted = true,
-		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_CCP then
+			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_OCP then
 				return true
 			else return false
 			end
@@ -148,10 +139,9 @@ VENDOR.Sell = {
 	["wep_m500"] = {
 		Desc = "MACE CCP+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_MACE && ply:GetTeamRank() >= RANK_CCP then
+			if ply:GetTeamClass() == CLASS_MACE && ply:GetTeamRank() >= RANK_OCP then
 				return true
 			else return false end
 		end
@@ -159,10 +149,9 @@ VENDOR.Sell = {
 	["wep_shotgun"] = {
 		Desc = "MACE CSO+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_MACE && ply:GetTeamRank() >= RANK_CSO then
+			if ply:GetTeamClass() == CLASS_MACE && ply:GetTeamRank() >= RANK_OWS then
 				return true
 			else return false end
 		end
@@ -170,10 +159,9 @@ VENDOR.Sell = {
 	["wep_mp7"] = {
 		Desc = "ECHO CSO+/NOMAD CCP+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamClass() == CLASS_ECHO && ply:GetTeamRank() >= RANK_CSO) or (ply:GetTeamClass() == CLASS_NOMAD and ply:GetTeamRank() >= RANK_CCP) then
+			if (ply:GetTeamClass() == CLASS_ECHO && ply:GetTeamRank() >= RANK_OWS) or (ply:GetTeamClass() == CLASS_NOMAD and ply:GetTeamRank() >= RANK_OCP) then
 				return true
 			else return false end
 		end
@@ -189,7 +177,6 @@ VENDOR.Sell = {
 	["wep_ar2e"] = {
 		Desc = "FIST Only",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamClass() == CLASS_FIST then
@@ -271,7 +258,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_MACE and ply:GetTeamRank() >= RANK_ECS then
+			if ply:GetTeamClass() == CLASS_MACE and ply:GetTeamRank() >= RANK_EOS then
 				return true
 			else return false
 			end
@@ -283,7 +270,7 @@ VENDOR.Sell = {
 		Max = 1,
 		Cooldown = 1200,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_CTL && ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_NOMAD then
+			if (ply:GetTeamRank() >= RANK_OSL && ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_NOMAD then
 				return true
 			else return false end
 		end
@@ -293,7 +280,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_ECS && ply:GetTeamClass() == CLASS_APF then
+			if ply:GetTeamRank() >= RANK_EOS && ply:GetTeamClass() == CLASS_APF then
 				return true
 			else return false end
 		end
@@ -301,10 +288,9 @@ VENDOR.Sell = {
 	["wep_ar3"] = {
 		Desc = "APF CCP+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CCP && ply:GetTeamClass() == CLASS_APF then
+			if ply:GetTeamRank() >= RANK_OCP && ply:GetTeamClass() == CLASS_APF then
 				return true
 			else return false end
 		end
@@ -312,10 +298,9 @@ VENDOR.Sell = {
 	["wep_apf"] = {
 		Desc = "APF ECS+",
 		Restricted = true,
-		ItemType = "primaryWeapon",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_ECS && ply:GetTeamClass() == CLASS_APF then
+			if ply:GetTeamRank() >= RANK_EOS && ply:GetTeamClass() == CLASS_APF then
 				return true
 			else return false end
 		end
@@ -329,7 +314,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CTL then
+			if ply:GetTeamRank() >= RANK_OSL then
 				return true
 			else return false
 			end
@@ -364,7 +349,7 @@ VENDOR.Sell = {
 		Max = 1,
 		Cooldown = 600,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_ORD and ply:GetTeamClass() == CLASS_ECHO) or (ply:GetTeamRank() >= RANK_ECS and ply:GetTeamClass() == CLASS_MACE) or ply:GetTeamClass() == CLASS_FIST then
+			if (ply:GetTeamRank() >= RANK_ORD and ply:GetTeamClass() == CLASS_ECHO) or (ply:GetTeamRank() >= RANK_EOS and ply:GetTeamClass() == CLASS_MACE) or ply:GetTeamClass() == CLASS_FIST then
 				return true
 			else return false
 			end
@@ -424,7 +409,6 @@ VENDOR.Sell = {
 	["att_dragonsbreath"] = {
 		Desc = "MACE ORD+",
 		Restricted = true,
-		ItemType = "weaponAttachments",
 		Max = 1,
 		CanBuy = function(ply)
 			if ply:GetTeamRank() >= RANK_ORD and ply:GetTeamClass() == CLASS_MACE then
@@ -436,10 +420,9 @@ VENDOR.Sell = {
 	["att_slugrounds"] = {
 		Desc = "MACE ECS+",
 		Restricted = true,
-		ItemType = "weaponAttachments",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_ECS and ply:GetTeamClass() == CLASS_MACE then
+			if ply:GetTeamRank() >= RANK_EOS and ply:GetTeamClass() == CLASS_MACE then
 				return true
 			else return false
 			end
@@ -448,10 +431,9 @@ VENDOR.Sell = {
 	["att_reflex"] = {
 		Desc = "ECHO CSO+",
 		Restricted = true,
-		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CSO and ply:GetTeamClass() == CLASS_ECHO then
+			if ply:GetTeamRank() >= RANK_OWS and ply:GetTeamClass() == CLASS_ECHO then
 				return true
 			else return false
 			end
@@ -460,10 +442,9 @@ VENDOR.Sell = {
 	["att_cmore"] = {
 		Desc = "ECHO CSO+",
 		Restricted = true,
-		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CSO and ply:GetTeamClass() == CLASS_ECHO then
+			if ply:GetTeamRank() >= RANK_OWS and ply:GetTeamClass() == CLASS_ECHO then
 				return true
 			else return false
 			end
@@ -472,10 +453,9 @@ VENDOR.Sell = {
 	["att_optic"] = {
 		Desc = "ECHO ECS+/FIST",
 		Restricted = true,
-		ItemType = "weaponOptics",
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_ECS and ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_FIST then
+			if (ply:GetTeamRank() >= RANK_EOS and ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_FIST then
 				return true
 			else return false
 			end
@@ -486,7 +466,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 2,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CCP then
+			if ply:GetTeamRank() >= RANK_OCP then
 				return true
 			else return false
 			end
@@ -497,7 +477,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_CTL or ply:GetTeamClass() == CLASS_FIST then
+			if ply:GetTeamRank() >= RANK_OSL or ply:GetTeamClass() == CLASS_FIST then
 				return true
 			else return false
 			end
@@ -519,7 +499,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_CTL && ply:GetTeamClass() == CLASS_MACE) && impulse.Dispatch.GetCityCode() >= CODE_AJ then
+			if (ply:GetTeamRank() >= RANK_OSL && ply:GetTeamClass() == CLASS_MACE) && impulse.Dispatch.GetCityCode() >= CODE_AJ then
 				return true
 			else return false
 			end
@@ -533,7 +513,13 @@ function VENDOR:CanUse(ply)
 	return ply:Team() == TEAM_OTA and ply:GetTeamClass() != nil
 end
 
-function VENDOR.OnItemPurchased(class, itemclass, ply)
+function VENDOR.OnItemPurchased(class, itemclass, ply) --Update the item removals here: gamemodes\dg-hl2rp\schema\scripts\sh_functions.lua **bottom of the file**
+	itemType = meta.getItemType(itemclass)
+	if itemType ~= nil then
+		for i, val in ipairs(itemType) do
+			ply:TakeInventoryItemClass(val)
+		end
+	end
 end
 
 impulse.RegisterVendor(VENDOR)

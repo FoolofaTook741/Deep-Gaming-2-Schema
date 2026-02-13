@@ -650,136 +650,120 @@ function GM:UpdatePlayerSync(ply)
 end
 
 function GM:DoPlayerDeath(ply, attacker, dmginfo)
-	local vel = ply:GetVelocity()
+    local ragCount = #ents.FindByClass("prop_ragdoll")
+    if ragCount > 64 then
+        print("[impulse] Avoiding ragdoll spawn for performance reasons...")
+        return
+    end
 
-	local ragCount = #ents.FindByClass("prop_ragdoll")
+    local ragdoll = ents.Create("prop_ragdoll")
+    ragdoll:SetModel(ply:GetModel())
+    ragdoll:SetPos(ply:GetPos())
+    ragdoll:SetSkin(ply:GetSkin())
+    ragdoll.DeadPlayer = ply
+    ragdoll.Killer = attacker
+    ragdoll.DmgInfo = dmginfo
+    ragdoll.CanConstrain = false
+    ragdoll.NoCarry = true
 
-	if ragCount > 64 then
-		print("[impulse] Avoiding ragdoll body spawn for performance reasons... (rag count: "..ragCount..")")
-		return
-	end
+    for _, bg in pairs(ply:GetBodyGroups()) do
+        ragdoll:SetBodygroup(bg.id, ply:GetBodygroup(bg.id))
+    end
 
-	local ragdoll = ents.Create("prop_ragdoll")
-	ragdoll:SetModel(ply:GetModel())
-	ragdoll:SetPos(ply:GetPos())
-	ragdoll:SetSkin(ply:GetSkin())
-	ragdoll.DeadPlayer = ply
-	ragdoll.Killer = attacker
-	ragdoll.DmgInfo = dmginfo
+    local lootpackage = ents.Create("impulse_container")
+    lootpackage:SetModel("models/props_junk/cardboard_box004a.mdl")
+    lootpackage:SetPos(ply:GetPos())
+    lootpackage:SetCapacity(75)
+	lootpackage.NoCarry = true
+    lootpackage.DeadPlayer = ply
+    lootpackage.TeamOnDeath = ply:Team()
+    lootpackage.Inventory = {}
+    lootpackage.Users = {}
+    lootpackage.LootPool = {}
 
-	if ply.LastFall and ply.LastFall > CurTime() - 0.5 then
-		ragdoll.FallDeath = true
-	end
-
-	if IsValid(attacker) and attacker:IsPlayer() then
-		local wep = attacker:GetActiveWeapon()
-
-		if IsValid(wep) then
-			ragdoll.DmgWep = wep:GetClass()
-		end	
-	end
-
-	ragdoll.CanConstrain = false
-	ragdoll.NoCarry = true
-
-	for v,k in pairs(ply:GetBodyGroups()) do
-		ragdoll:SetBodygroup(k.id, ply:GetBodygroup(k.id))
-	end
-
-	local deadPlayer = ragdoll.DeadPlayer
-	local nameOnDeath = deadPlayer:Nick()
-
-	local teamOnDeath = deadPlayer:Team()
-	ragdoll.TeamOnDeath = teamOnDeath
-
-	local inventoryOnDeath = deadPlayer:GetInventory()
+	
+    local inventoryOnDeath = ply:GetInventory()
 	local inventoryOnDeathDrop = {}
- 
-	for v, k in pairs(inventoryOnDeath) do
-		if k.restricted then continue end
+    for _, itemData in pairs(inventoryOnDeath) do
+        if itemData.restricted then continue end
 
-		local itemclass = impulse.Inventory.ClassToNetID(k.class)
-		local item = impulse.Inventory.Items[itemclass]
-		if not item then continue end
+        local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemData.class)]
+        if not item then continue end
+        local dropOnDeath = item.DropOnDeath == true
 
-		local isWeapon = item.WeaponClass ~= nil
-		local isEquipped = k.equipped == true
-		local dropOnDeath = item.DropOnDeath == true
+        if dropOnDeath then
+            table.insert(inventoryOnDeathDrop, itemData.class)
+        end
+    end
 
-		if isWeapon and isEquipped then
-			local pos = ply:GetPos()
-			local ent = impulse.Inventory.SpawnItem(k.class, pos)
+	lootpackage.inventoryOnDeath = inventoryOnDeathDrop
 
-			if IsValid(ent) then
-				ent.ItemClip = k.clip
-			end
+    lootpackage:SetNWBool("IsDeadPlayerRagdoll", true)
+    lootpackage:SetNWEntity("DeadPlayer", ply)
+    lootpackage:SetNWString("DeadPlayerName", ply:Nick())
 
-		elseif isWeapon and not isEquipped then
-			table.insert(inventoryOnDeathDrop, k.class)
+    lootpackage:Spawn()
+    ragdoll:Spawn()
+    ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 
-		elseif not isWeapon and dropOnDeath then
-			table.insert(inventoryOnDeathDrop, k.class)
-		end
-	end
+    local velocity = ply:GetVelocity()
+    for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
+        local phys = ragdoll:GetPhysicsObjectNum(i)
+        if IsValid(phys) then
+            phys:SetVelocity(velocity)
+            local boneIndex = ragdoll:TranslatePhysBoneToBone(i)
+            if boneIndex then
+                local pos, ang = ply:GetBonePosition(boneIndex)
+                phys:SetPos(pos)
+                phys:SetAngles(ang)
+            end
+        end
+    end
 
-	ply.NextStorage = 1
-	
-	ragdoll.inventoryOnDeath = inventoryOnDeathDrop
-	--deadPlayer:GetInventory()
-	
-	if IsValid(ragdoll) then
-		ragdoll:SetNWBool("IsDeadPlayerRagdoll", true)
-		ragdoll:SetNWEntity("DeadPlayer", ply)
-		ragdoll:SetNWString("DeadPlayerName", nameOnDeath)
-	end	
+    hook.Run("PlayerRagdollSpawned", ragdoll, ply, attacker)
+    hook.Run("PlayerRagdollPreSpawn", lootpackage, ply, attacker)
 
-	hook.Run("PlayerRagdollPreSpawn", ragdoll, ply, attacker)
-
-	ragdoll:Spawn()
-	ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-
-	local velocity = ply:GetVelocity()
-
-	for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
-		local physObj = ragdoll:GetPhysicsObjectNum(i)
-
-		if IsValid(physObj) then
-			physObj:SetVelocity(velocity)
-
-			local index = ragdoll:TranslatePhysBoneToBone(i)
-
-			if index then
-				local pos, ang = ply:GetBonePosition(index)
-
-				physObj:SetPos(pos)
-				physObj:SetAngles(ang)
+	if IsValid(lootpackage) then
+		local hasLoot = false
+		if lootpackage.Inventory then
+			for _, v in pairs(lootpackage.Inventory) do
+				if v > 0 then
+					hasLoot = true
+					break
+				end
 			end
 		end
-	end
 
-	hook.Run("PlayerRagdollSpawned", ragdoll, ply, attacker)
+		if not hasLoot then
+			lootpackage:Remove()
+		end
+end
 
 	timer.Simple(impulse.Config.BodyDeSpawnTime, function()
-		if ragdoll and IsValid(ragdoll) then
+		if IsValid(lootpackage) then
+			lootpackage:Remove()
+		end
+
+		if IsValid(ragdoll) then
 			ragdoll:Fire("FadeAndRemove", 7)
 
-			timer.Simple(10, function() -- i have a feeling FadeAndRemove won't work with every ragdoll or something
+			timer.Simple(10, function()
 				if IsValid(ragdoll) then
-					ragdoll:Remove() -- just in case
+					ragdoll:Remove()
 				end
 			end)
 		end
 	end)
 
-	timer.Simple(0.1, function()
-		if IsValid(ragdoll) and IsValid(ply) then
-			net.Start("impulseRagdollLink")
-			net.WriteEntity(ragdoll)
-			net.Send(ply)
-		end
-	end)
+    timer.Simple(0.1, function()
+        if IsValid(ragdoll) and IsValid(ply) then
+            net.Start("impulseRagdollLink")
+            net.WriteEntity(ragdoll)
+            net.Send(ply)
+        end
+    end)
 
-	return true
+    return true
 end
 
 function GM:PlayerDeath(ply, killer)

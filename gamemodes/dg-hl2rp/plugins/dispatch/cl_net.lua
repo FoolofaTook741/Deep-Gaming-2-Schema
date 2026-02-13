@@ -359,7 +359,7 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 			if jammer != true then
 				impulse.AddCombineWaypoint("HIGH COMMAND UNIT KILLED", unit:GetPos(), 120, 3, 4, 4, unit)
 			end
-		elseif rank == RANK_CSC and team == TEAM_OTA then
+		elseif rank == RANK_OSC and team == TEAM_OTA then
 			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR TRANSHUMAN COMMANDER: "..unit:Name().. " | LOCATION: "..zonename, Color(50, 0, 0))
 			if jammer != true then
 				impulse.AddCombineWaypoint("COMMANDER GRADE UNIT KILLED", unit:GetPos(), 120, 3, 6, 6, unit)
