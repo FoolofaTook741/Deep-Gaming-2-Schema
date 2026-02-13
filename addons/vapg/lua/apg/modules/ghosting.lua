@@ -26,6 +26,11 @@ APG._SetCollisionGroup = APG._SetCollisionGroup or ENT.SetCollisionGroup
 
 function ENT:SetCollisionGroup( group )
 	local group = group
+	if self:GetClass() == "impulse_container" and self:GetModel() == "models/props_junk/cardboard_box004a.mdl" then
+		APG._SetCollisionGroup( self, group )
+        return
+    end
+	
 
 	local isBadEnt = APG.isBadEnt( self )
 	local hasValidOwner = APG.getOwner( self )
@@ -72,6 +77,10 @@ function PhysObj:EnableMotion( bool )
 	if APG.isBadEnt( ent ) and APG.getOwner( ent ) then
 		ent.APG_Frozen = not bool
 		if not ent.APG_Frozen then
+			if self:GetClass() == "impulse_container" and self:GetModel() == "models/props_junk/cardboard_box004a.mdl" then
+				APG._EnableMotion( self, bool )
+				return
+			end
 			ent:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
 		end
 	end
@@ -116,6 +125,9 @@ function APG.isTrap( ent, fullscan )
 end
 
 function APG.entGhost( ent, noCollide, enforce )
+	if ent:GetClass() == "impulse_container" and ent:GetModel() == "models/props_junk/cardboard_box004a.mdl" then
+        return
+    end
 	if not APG.modules[ mod ] or not APG.isBadEnt( ent ) then return end
 	if APG.cfg["vehAntiGhost"].value and APG.IsVehicle( ent ) then return end
 	if ent.jailWall then return end
@@ -183,6 +195,9 @@ function APG.entGhost( ent, noCollide, enforce )
 end
 
 function APG.entUnGhost( ent, ply, failmsg )
+	if ent:GetClass() == "impulse_container" and ent:GetModel() == "models/props_junk/cardboard_box004a.mdl" then
+        return
+    end
 	if not APG.modules[ mod ] or not APG.isBadEnt( ent ) then return end
 	if ent.APG_Picked or (ent.APG_HeldBy and #ent.APG_HeldBy > 1) then return end
 
