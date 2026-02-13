@@ -674,6 +674,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
     lootpackage:SetModel("models/props_junk/cardboard_box004a.mdl")
     lootpackage:SetPos(ply:GetPos())
     lootpackage:SetCapacity(75)
+	lootpackage.NoCarry = true
     lootpackage.DeadPlayer = ply
     lootpackage.TeamOnDeath = ply:Team()
     lootpackage.Inventory = {}
@@ -722,17 +723,37 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
     hook.Run("PlayerRagdollSpawned", ragdoll, ply, attacker)
     hook.Run("PlayerRagdollPreSpawn", lootpackage, ply, attacker)
 
-    timer.Simple(impulse.Config.BodyDeSpawnTime, function()
-        if IsValid(ragdoll) then
-            ragdoll:Fire("FadeAndRemove", 7)
-            if IsValid(lootpackage) then
-                lootpackage:Remove()
-            end
-            timer.Simple(10, function()
-                if IsValid(ragdoll) then ragdoll:Remove() end
-            end)
-        end
-    end)
+	if IsValid(lootpackage) then
+		local hasLoot = false
+		if lootpackage.Inventory then
+			for _, v in pairs(lootpackage.Inventory) do
+				if v > 0 then
+					hasLoot = true
+					break
+				end
+			end
+		end
+
+		if not hasLoot then
+			lootpackage:Remove()
+		end
+end
+
+	timer.Simple(impulse.Config.BodyDeSpawnTime, function()
+		if IsValid(lootpackage) then
+			lootpackage:Remove()
+		end
+
+		if IsValid(ragdoll) then
+			ragdoll:Fire("FadeAndRemove", 7)
+
+			timer.Simple(10, function()
+				if IsValid(ragdoll) then
+					ragdoll:Remove()
+				end
+			end)
+		end
+	end)
 
     timer.Simple(0.1, function()
         if IsValid(ragdoll) and IsValid(ply) then
