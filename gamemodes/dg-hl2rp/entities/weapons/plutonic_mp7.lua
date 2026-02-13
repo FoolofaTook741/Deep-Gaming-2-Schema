@@ -13,10 +13,10 @@ SWEP.ItemClass = "wep_mp7"
 SWEP.HoldType = "smg"
 
 SWEP.WorldModel = Model("models/weapons/w_smg1.mdl")
-SWEP.ViewModel = Model("models/weapons/v_smg1.mdl")
+SWEP.ViewModel = Model("models/weapons/c_smg1.mdl")
 SWEP.ViewModelFOV = 62
 
-SWEP.ViewModelOffset = Vector(2.5, -2, -1)
+SWEP.ViewModelOffset = Vector(2.5, -2, -2)
 SWEP.ViewModelOffsetAng = Angle(0, 0, 0)
 
 SWEP.Slot = 2
@@ -29,7 +29,7 @@ SWEP.CSMuzzleFlashes = false
 SWEP.BlowbackPos = Vector(0, 0, 0)
 SWEP.BlowbackAngle = Angle(0, 0, 0)
 
-SWEP.ReloadSound = "" -- "weapons/projectmmod_smg1/smg1_reload.wav"
+SWEP.ReloadSound = "weapons/projectmmod_smg1/smg1_reload.wav"
 SWEP.EmptySound = Sound("Weapon_Pistol.Empty")
 
 sound.Add({
@@ -46,7 +46,7 @@ SWEP.Primary.Recoil = 0.7 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 9
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.022
-SWEP.Primary.Delay = RPM(840)
+SWEP.Primary.Delay = RPM(800)
 
 SWEP.ReloadAttach = 1
 
