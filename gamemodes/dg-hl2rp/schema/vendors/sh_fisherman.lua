@@ -42,6 +42,7 @@ VENDOR.RandomTrades = {
 		["util_cloth"] = {Rarity = 400, Cost = {5, 20}, BuyMax = 6},
 		["att_dragonsbreath"] = {Rarity = 900, Cost = {1015, 1520}, BuyMax = 1},
 		["util_energycore"] = {Rarity = 920, Cost = {1600, 2500}, BuyMax = 3},
+		["scrap_ar2"] = {Rarity = 996, Cost = {3000, 4500}, BuyMax = 1},
 	},
 	Buy = {
 		["util_moonshine"] = {Cost = {400, 500}},
