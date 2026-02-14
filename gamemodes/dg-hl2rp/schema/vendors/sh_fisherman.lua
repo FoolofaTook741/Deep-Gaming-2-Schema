@@ -83,18 +83,19 @@ local function fishermanRandomInv(ent)
 	end
 
 	local amount = 0
-	for v,k in RandomPairs(VENDOR.RandomTrades.Sell) do
-		local r = math.random(0, 1000)
+    local targetAmount = math.random(3, 5)
+    for v,k in RandomPairs(VENDOR.RandomTrades.Sell) do
+        local r = math.random(0, 1000)
 
-		if r >= k.Rarity then
-			ent.Vendor.Sell[v] = {Cost = math.random(k.Cost[1], k.Cost[2]), BuyMax = k.BuyMax, TempCooldown = 600, OnPurchased = k.OnPurchased}
-			amount = amount + 1
-		end
+        if r >= k.Rarity or amount < 3 then
+            ent.Vendor.Sell[v] = {Cost = math.random(k.Cost[1], k.Cost[2]), BuyMax = k.BuyMax, TempCooldown = 600, OnPurchased = k.OnPurchased}
+            amount = amount + 1
+        end
 
-		if amount > 5 then
-			break
-		end
-	end
+        if amount >= targetAmount then
+            break
+        end
+    end
 end
 
 local function fishermanAppear(ent)
