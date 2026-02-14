@@ -20,30 +20,47 @@ end
 function SWEP:Reload()
 	if not self:CanReload() then return end
 
-	self:GetOwner():DoReloadEvent()
+	local owner = self:GetOwner()
+	if not IsValid(owner) then return end
 
-	if not self.DoEmptyReloadAnim or self:Clip1() ~= 0 then
+	owner:DoReloadEvent()
+
+	local isEmpty = self:Clip1() == 0 and self.DoEmptyReloadAnim
+
+	if not isEmpty then
 		self:PlayAnim(ACT_VM_RELOAD)
 	else
 		self:PlayAnim(ACT_VM_RELOAD_EMPTY)
 	end
 
 	self:QueueIdle()
-	
+
 	if self.ReloadSound then
-		self:EmitSound(Sound(self.ReloadSound))
+		self:EmitSound(self.ReloadSound)
 	elseif self.OnReload then
-		self.OnReload(self)
+		self:OnReload()
 	end
 
 	if self.ReloadWorldSound and SERVER then 
 		self:EmitWorldSound(self.ReloadWorldSound)
 	end
 
-	self:SetReloading(true)
-	self:SetReloadTime(CurTime() + self:GetOwner():GetViewModel():SequenceDuration())
+	local vm = owner:GetViewModel()
+	local speed = self.ReloadSpeed or 1
 
-	hook.Run("LongswordWeaponReload", self:GetOwner(), self)
+	if IsValid(vm) then
+		vm:SetPlaybackRate(speed)
+	end
+
+	local baseDuration = IsValid(vm) and vm:SequenceDuration() or 0
+	local reloadTime = baseDuration / speed
+
+	self:SetReloading(true)
+	self:SetReloadTime(CurTime() + reloadTime)
+	self:SetNextPrimaryFire(CurTime() + reloadTime)
+	self:SetNextSecondaryFire(CurTime() + reloadTime)
+
+	hook.Run("LongswordWeaponReload", owner, self)
 end
 
 function SWEP:FinishReload()
