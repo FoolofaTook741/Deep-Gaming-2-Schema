@@ -84,11 +84,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_osips"] = {
-		Desc = "ECHO Only",
+		Desc = "ECHO & NOMAD ECS+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO then
+			if (ply:GetTeamClass() == CLASS_ECHO) or (ply:GetTeamClass() == CLASS_NOMAD and ply:GetTeamRank() >= RANK_EOS) then
 				return true
 			else return false end
 		end
