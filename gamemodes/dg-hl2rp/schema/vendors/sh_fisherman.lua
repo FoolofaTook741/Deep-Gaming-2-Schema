@@ -29,6 +29,8 @@ VENDOR.RandomTrades = {
 		-- ["wep_goldendeagle"] = {Rarity = 998, Cost = {9000, 11000}, BuyMax = 1},
 		["wep_bar"] = {Rarity = 795, Cost = {400, 900}, BuyMax = 1},
 		["wep_molotov"] = {Rarity = 740, Cost = {100, 200}, BuyMax = 3},
+		["item_enhancedvial"] = {Rarity = 750, Cost = {150, 300}, BuyMax = 2},
+		["item_healthvial"] = {Rarity = 650, Cost = {95, 200}, BuyMax = 3},
 		["wep_shotgun"] = {Rarity = 720, Cost = {400, 650}, BuyMax = 1},
 		["wep_mg34"] = {Rarity = 890, Cost = {1020, 1470}, BuyMax = 1},
 		["wep_mp7"] = {Rarity = 690, Cost = {320, 550}, BuyMax = 3},
@@ -39,7 +41,7 @@ VENDOR.RandomTrades = {
 		["util_gunpowder"] = {Rarity = 690, Cost = {18, 30}, BuyMax = 10},
 		["util_cloth"] = {Rarity = 400, Cost = {5, 20}, BuyMax = 6},
 		["att_dragonsbreath"] = {Rarity = 900, Cost = {1015, 1520}, BuyMax = 1},
-		["book_russian"] = {Rarity = 850, Cost = {2020, 3520}, BuyMax = 3},
+		["util_energycore"] = {Rarity = 920, Cost = {1600, 2500}, BuyMax = 3},
 	},
 	Buy = {
 		["util_moonshine"] = {Cost = {400, 500}},
