@@ -704,6 +704,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 
     lootpackage:Spawn()
     ragdoll:Spawn()
+	lootpackage:SetCollisionGroup(COLLISION_GROUP_WEAPON)
     ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 
     local velocity = ply:GetVelocity()
