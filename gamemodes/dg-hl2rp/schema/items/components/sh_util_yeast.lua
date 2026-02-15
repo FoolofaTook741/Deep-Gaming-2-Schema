@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_yeast"
 ITEM.Name = "Bag of Yeast"
 ITEM.Desc = "A bag containing yeast."
+ITEM.Category = "Ingredients"
 ITEM.Model = Model("models/props_junk/garbage_bag001a.mdl")
 ITEM.FOV = 33.17335243553
 ITEM.CamPos = Vector(-1.1461317539215, 2.292263507843, 33.237823486328)

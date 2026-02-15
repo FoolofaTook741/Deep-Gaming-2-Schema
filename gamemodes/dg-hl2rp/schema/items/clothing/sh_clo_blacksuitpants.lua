@@ -2,8 +2,8 @@ local ITEM = {}
 
 ITEM.UniqueID = "clo_blacksuitpants"
 ITEM.Name = "Black suit pants"
-ITEM.Desc =  "fancy suit pants for special occasions."
-ITEM.Category = "Clothing Items"
+ITEM.Desc =  "Fancy suit pants for special occasions."
+ITEM.Category = "Pants"
 ITEM.Model = Model("models/willardnetworks/clothingitems/legs_ca_1.mdl")
 ITEM.FOV = 12.213467048711
 ITEM.CamPos = Vector(46.418338775635, 20.630373001099, 32.091690063477)

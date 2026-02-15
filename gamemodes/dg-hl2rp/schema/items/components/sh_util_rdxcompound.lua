@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_rdxcompound"
 ITEM.Name = "RDX Compound"
 ITEM.Desc = "A chemical compound utilized in C4 explosives."
+ITEM.Category = "Components"
 ITEM.Model = Model("models/props_lab/jar01b.mdl")
 ITEM.FOV = 33
 ITEM.NoCenter = true

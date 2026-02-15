@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_lvl2plate"
 ITEM.Name = "Soft Armor Panel"
 ITEM.Desc = "A malleable plastic sheet used for light armor designed to stop stab and light munitions."
+ITEM.Category = "Components"
 ITEM.Model = Model("models/squad/sf_plates/sf_plate2x2.mdl")
 ITEM.Material = "sprops/trans/misc/beam_side"
 ITEM.FOV = 40.250716332378

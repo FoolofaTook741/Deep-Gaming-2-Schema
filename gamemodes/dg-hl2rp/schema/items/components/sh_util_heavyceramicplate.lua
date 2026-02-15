@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_heavyceramicplate"
 ITEM.Name = "Steel Plate"
 ITEM.Desc = "A heavy steel plate, used for more powerful armor. Could fit in a vest."
+ITEM.Category = "Components"
 ITEM.Model = Model("models/hunter/plates/plate05x05.mdl")
 ITEM.Material = "sprops/trans/misc/ls_m2"
 ITEM.FOV = 40.250716332378

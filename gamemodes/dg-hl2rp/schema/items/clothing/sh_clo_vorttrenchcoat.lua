@@ -1,7 +1,7 @@
 ITEM.UniqueID = "clo_vorttrenchcoat"
 ITEM.Name = "Vort Trench Coat"
 ITEM.Desc =  "Brown Leather Duster fitted for a vortigaunt."
-ITEM.Category = "Clothing Items"
+ITEM.Category = "Shirts"
 ITEM.Model = Model("models/willardnetworks/clothingitems/torso_refugee_coat.mdl")
 ITEM.FOV = 12.213467048711
 ITEM.CamPos = Vector(46.418338775635, 20.630373001099, 32.091690063477)

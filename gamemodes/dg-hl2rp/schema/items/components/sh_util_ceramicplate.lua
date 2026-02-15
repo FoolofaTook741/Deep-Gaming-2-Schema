@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_ceramicplate"
 ITEM.Name = "Ceramic Plate"
 ITEM.Desc = "A roughly cut plate of tough material. Could fit in a vest."
+ITEM.Category = "Components"
 ITEM.Model = Model("models/hunter/plates/plate05x05.mdl")
 ITEM.Material = "sprops/trans/misc/beam_side"
 ITEM.FOV = 40.250716332378
