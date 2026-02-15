@@ -19,20 +19,25 @@ VENDOR.RandomTrades = {
 		["ammo_357"] = {Rarity = 850, Cost = {90, 200}, BuyMax = 1},
 		["ammo_smg"] = {Rarity = 800, Cost = {50, 180}, BuyMax = 2},
 		["cos_combatgasmask"] = {Rarity = 890, Cost = {100, 150}, BuyMax = 1},
-		["wep_pistol"] = {Rarity = 780, Cost = {70, 250}, BuyMax = 1},
-		-- ["wep_cz75"] = {Rarity = 660, Cost = {130, 330}, BuyMax = 2},
+		["wep_pistol"] = {Rarity = 400, Cost = {70, 250}, BuyMax = 1},
+		["wep_skeleton"] = {Rarity = 500, Cost = {67, 100}, BuyMax = 1},
+		["wep_stiletto"] = {Rarity = 500, Cost = {130, 330}, BuyMax = 1},
 		["util_rdxcompound"] = {Rarity = 430, Cost = {280, 440}, BuyMax = 4},
+		["util_lvl2plate"] = {Rarity = 400, Cost = {120, 285}, BuyMax = 1},
 		-- ["wep_pickaxe"] = {Rarity = 500, Cost = {50, 101}, BuyMax = 2},
 		["cos_otavest3"] = {Rarity = 890, Cost = {260, 699}, BuyMax = 1},
 		-- ["wep_goldengun"] = {Rarity = 997, Cost = {6000, 9000}, BuyMax = 1},
 		-- ["wep_goldenak47"] = {Rarity = 999, Cost = {15000, 20000}, BuyMax = 1},
 		-- ["wep_goldendeagle"] = {Rarity = 998, Cost = {9000, 11000}, BuyMax = 1},
+		["util_refinedmetalplate"] = {Rarity = 680, Cost = {60, 100}, BuyMax = 5},
+		["util_steel"] = {Rarity = 710, Cost = {140, 230}, BuyMax = 3},
 		["wep_bar"] = {Rarity = 795, Cost = {400, 900}, BuyMax = 1},
 		["wep_molotov"] = {Rarity = 740, Cost = {100, 200}, BuyMax = 3},
-		["item_enhancedvial"] = {Rarity = 750, Cost = {150, 300}, BuyMax = 2},
-		["item_healthvial"] = {Rarity = 650, Cost = {95, 200}, BuyMax = 3},
+		["item_enhancedvial"] = {Rarity = 575, Cost = {150, 300}, BuyMax = 2},
+		["item_healthvial"] = {Rarity = 550, Cost = {95, 200}, BuyMax = 3},
 		["wep_shotgun"] = {Rarity = 720, Cost = {400, 650}, BuyMax = 1},
 		["wep_mg34"] = {Rarity = 890, Cost = {1020, 1470}, BuyMax = 1},
+		["wep_357"] = {Rarity = 890, Cost = {700, 900}, BuyMax = 1},
 		["wep_mp7"] = {Rarity = 690, Cost = {320, 550}, BuyMax = 3},
 		["util_yeast"] = {Rarity = 600, Cost = {6, 13}, BuyMax = 6},
 		-- ["item_padlock"] = {Rarity = 580, Cost = {10, 20}, BuyMax = 2},
@@ -41,8 +46,8 @@ VENDOR.RandomTrades = {
 		["util_gunpowder"] = {Rarity = 690, Cost = {18, 30}, BuyMax = 10},
 		["util_cloth"] = {Rarity = 400, Cost = {5, 20}, BuyMax = 6},
 		["att_dragonsbreath"] = {Rarity = 900, Cost = {1015, 1520}, BuyMax = 1},
-		["util_energycore"] = {Rarity = 920, Cost = {1600, 2500}, BuyMax = 3},
-		["scrap_ar2"] = {Rarity = 996, Cost = {3000, 4500}, BuyMax = 1},
+		["util_energycore"] = {Rarity = 970, Cost = {900, 1750}, BuyMax = 3},
+		["scrap_ar2"] = {Rarity = 998, Cost = {3000, 4500}, BuyMax = 1},
 		["wep_m60"] = {Rarity = 850, Cost = {1900, 2750}, BuyMax = 1},
 	},
 	Buy = {
@@ -84,16 +89,33 @@ local function fishermanRandomInv(ent)
 
 	local amount = 0
     local targetAmount = math.random(3, 5)
+    local attempts = 0
+    local maxAttempts = 100  -- Prevent infinite loop
+
     for v,k in RandomPairs(VENDOR.RandomTrades.Sell) do
         local r = math.random(0, 1000)
 
-        if r >= k.Rarity or amount < 3 then
+        if r >= k.Rarity then
             ent.Vendor.Sell[v] = {Cost = math.random(k.Cost[1], k.Cost[2]), BuyMax = k.BuyMax, TempCooldown = 600, OnPurchased = k.OnPurchased}
             amount = amount + 1
         end
-
-        if amount >= targetAmount then
+        attempts = attempts + 1
+        if amount >= targetAmount or attempts >= maxAttempts then
             break
+        end
+    end
+
+    if amount < 3 then
+        for v,k in RandomPairs(VENDOR.RandomTrades.Sell) do
+            if not ent.Vendor.Sell[v] and k.Rarity < 700 then  
+--Only solution I could think of to fill at least 3 items and maintain some semblance of rarity -FOOL
+                ent.Vendor.Sell[v] = {Cost = math.random(k.Cost[1], k.Cost[2]), BuyMax = k.BuyMax, TempCooldown = 600, OnPurchased = k.OnPurchased}
+                amount = amount + 1
+
+                if amount >= 3 then
+                    break
+                end
+            end
         end
     end
 end
