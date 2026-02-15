@@ -47,61 +47,192 @@ function PANEL:SetupCrafting()
 	self.craftLbl:SetText("Crafting Level: "..LocalPlayer():GetSkillLevel("craft"))
 	self.craftLbl:SizeToContents()
 
-	self.scroll = vgui.Create("DScrollPanel", self)
-	self.scroll:Dock(FILL)
+	self.tabContainer = vgui.Create("DPanel", self)
+	self.tabContainer:SetTall(35)
+	self.tabContainer:Dock(TOP)
+	self.tabContainer:DockMargin(0, 0, 0, 5)
 
-	self.availibleMixes = vgui.Create("DCollapsibleCategory", self.scroll)
-	self.availibleMixes:SetLabel("Unlocked mixes")
-	self.availibleMixes:Dock(TOP)
-
-	function self.availibleMixes:Paint()
-		self:SetBGColor(colInv)
+	function self.tabContainer:Paint(w, h)
+		draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 210))
 	end
-
-	self.availibleMixesLayout = vgui.Create("DListLayout")
-	self.availibleMixesLayout:Dock(FILL)
-	self.availibleMixes:SetContents(self.availibleMixesLayout)
-
-	self.unAvailibleMixes = self.scroll:Add("DCollapsibleCategory")
-	self.unAvailibleMixes:SetLabel("Locked mixes")
-	self.unAvailibleMixes:Dock(TOP)
-
-	function self.unAvailibleMixes:Paint()
-		self:SetBGColor(colInv)
-	end
-
-	self.unAvailibleMixesLayout = vgui.Create("DListLayout")
-	self.unAvailibleMixesLayout:Dock(FILL)
-	self.unAvailibleMixes:SetContents(self.unAvailibleMixesLayout)
 
 	local level = LocalPlayer():GetSkillLevel("craft")
 	local mix = impulse.Inventory.Mixtures[benchType]
-	local sortedMix = {}
+	local categories = {}
+	local categoryMixes = {}
+	local allMixes = {}
 
-	for v,k in pairs(mix) do
-		table.insert(sortedMix, k)
+	local function findItemByUniqueID(uniqueID)
+		for id, itemData in pairs(impulse.Inventory.Items) do
+			if itemData.UniqueID == uniqueID then
+				return itemData
+			end
+		end
+		return nil
 	end
 
-	table.sort(sortedMix, function(a, b)
-		return a.Level < b.Level
-	end)
+	for v, k in pairs(mix) do
+        if k.isSpecial and !k.isSpecial[LocalPlayer():SteamID()] then continue end
 
-	for v,k in pairs(sortedMix) do
-		
-		if k.isSpecial and !k.isSpecial[ LocalPlayer():SteamID() ] then continue end
-		
-		local cat = self.availibleMixesLayout
+        table.insert(allMixes, k)
 
-		if level < k.Level then
-			cat = self.unAvailibleMixesLayout
+        local item = findItemByUniqueID(k.Output)
+        if item and item.Category then
+            local category = item.Category
+
+            if not categories[category] then
+                categories[category] = true
+                categoryMixes[category] = {}
+            end
+
+            table.insert(categoryMixes[category], k)
+        else
+            if not categories["Misc"] then
+                categories["Misc"] = true
+                categoryMixes["Misc"] = {}
+            end
+            table.insert(categoryMixes["Misc"], k)
+        end
+	end
+
+if categoryMixes["Misc"] and table.Count(categoryMixes["Misc"]) == 0 then
+	categories["Misc"] = nil
+	categoryMixes["Misc"] = nil
+end
+
+	local sortedCategories = {}
+	local numCategories = 0
+	for cat, _ in pairs(categories) do
+		table.insert(sortedCategories, cat)
+		numCategories = numCategories + 1
+	end
+	table.sort(sortedCategories)
+
+	local showTabs = numCategories > 1
+	
+	if showTabs then
+		table.insert(sortedCategories, 1, "All")
+	end
+
+	self.tabs = {}
+	self.activeTab = nil
+
+	if showTabs then
+		self.tabScroll = vgui.Create("DHorizontalScroller", self.tabContainer)
+		self.tabScroll:Dock(FILL)
+		self.tabScroll:SetOverlap(-2)
+
+		local padding = 10
+		surface.SetFont("Impulse-Elements18-Shadow")
+
+		for i, category in ipairs(sortedCategories) do
+			local textWidth = surface.GetTextSize(category)
+			local buttonWidth = math.max(60, textWidth + padding * 2)
+
+			local tab = vgui.Create("DButton")
+			tab:SetSize(buttonWidth, 30)
+			tab:SetText(category)
+			tab:SetFont("Impulse-Elements18-Shadow")
+			tab.category = category
+			tab.panel = self
+
+			function tab:Paint(w, h)
+				local bgCol = self.panel.activeTab == self and Color(70, 70, 70, 210) or Color(50, 50, 50, 210)
+				draw.RoundedBox(4, 0, 0, w, h, bgCol)
+				return false
+			end
+
+			function tab:DoClick()
+				self.panel:SwitchTab(self.category)
+			end
+
+			self.tabs[category] = tab
+			self.tabScroll:AddPanel(tab)
+		end
+	else
+		self.tabContainer:Hide()
+	end
+
+	self.contentContainer = vgui.Create("DPanel", self)
+	self.contentContainer:Dock(FILL)
+
+	function self.contentContainer:Paint()
+		return true
+	end
+
+	self.scrollPanels = {}
+	
+	local categoriesToCreate = showTabs and sortedCategories or {"All"}
+	
+	for _, category in ipairs(categoriesToCreate) do
+		local scroll = vgui.Create("DScrollPanel", self.contentContainer)
+		scroll:Dock(FILL)
+		scroll:Hide()
+
+		local availibleMixes = vgui.Create("DCollapsibleCategory", scroll)
+		availibleMixes:SetLabel("Unlocked mixes")
+		availibleMixes:Dock(TOP)
+
+		function availibleMixes:Paint()
+			self:SetBGColor(colInv)
 		end
 
-		local mix = cat:Add("impulseCraftingItem")
-		mix:Dock(TOP)
-		mix:SetMix(k)
-		mix.dad = self
+		local availibleMixesLayout = vgui.Create("DListLayout")
+		availibleMixesLayout:Dock(FILL)
+		availibleMixes:SetContents(availibleMixesLayout)
 
-		table.insert(self.mixes, mix)
+		local unAvailibleMixes = scroll:Add("DCollapsibleCategory")
+		unAvailibleMixes:SetLabel("Locked mixes")
+		unAvailibleMixes:Dock(TOP)
+
+		function unAvailibleMixes:Paint()
+			self:SetBGColor(colInv)
+		end
+
+		local unAvailibleMixesLayout = vgui.Create("DListLayout")
+		unAvailibleMixesLayout:Dock(FILL)
+		unAvailibleMixes:SetContents(unAvailibleMixesLayout)
+
+		local mixesToShow = category == "All" and allMixes or (categoryMixes[category] or {})
+		
+		table.sort(mixesToShow, function(a, b)
+			return a.Level < b.Level
+		end)
+
+		for v, k in pairs(mixesToShow) do
+			local cat = availibleMixesLayout
+
+			if level < k.Level then
+				cat = unAvailibleMixesLayout
+			end
+
+			local mixItem = cat:Add("impulseCraftingItem")
+			mixItem:Dock(TOP)
+			mixItem:SetMix(k)
+			mixItem.dad = self
+
+			table.insert(self.mixes, mixItem)
+		end
+
+		self.scrollPanels[category] = scroll
+	end
+
+	if showTabs then
+		self:SwitchTab("All")
+	else
+		self.scrollPanels["All"]:Show()
+	end
+end
+
+function PANEL:SwitchTab(category)
+	self.activeTab = self.tabs[category]
+	
+	for cat, scroll in pairs(self.scrollPanels) do
+		scroll:Hide()
+	end
+	
+	if self.scrollPanels[category] then
+		self.scrollPanels[category]:Show()
 	end
 end
 
@@ -121,13 +252,29 @@ end
 
 function PANEL:ShowNormal(should)
 	if should then
-		self.scroll:Show()
+		if self.scrollPanels and self.activeTab then
+			self.scrollPanels[self.activeTab.category]:Show()
+		elseif self.scrollPanels and self.scrollPanels["All"] then
+			self.scrollPanels["All"]:Show()
+		end
 		self.craftLbl:Show()
 		self.upper:Show()
+		if self.tabContainer then
+			self.tabContainer:Show()
+		end
+		self.contentContainer:Show()
 	else
-		self.scroll:Hide()
+		if self.scrollPanels then
+			for cat, scroll in pairs(self.scrollPanels) do
+				scroll:Hide()
+			end
+		end
 		self.craftLbl:Hide()
 		self.upper:Hide()
+		if self.tabContainer then
+			self.tabContainer:Hide()
+		end
+		self.contentContainer:Hide()
 	end
 end
 
