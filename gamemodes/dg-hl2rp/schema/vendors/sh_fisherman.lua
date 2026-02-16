@@ -152,7 +152,7 @@ function VENDOR:Initialize()
 
 	self.TimerID = "TravelerSpawn_" .. self:EntIndex()
 
-	timer.Create(self.TimerID, 1800, 0, function()
+	timer.Create(self.TimerID, 2160, 0, function()
 		if not IsValid(self) then
 			timer.Remove(self.TimerID)
 			return
