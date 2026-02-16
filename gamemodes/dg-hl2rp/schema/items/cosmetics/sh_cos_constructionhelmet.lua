@@ -21,7 +21,7 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "head"
 ITEM.CanStack = true
 
-function ITEM:CanEqup(ply)
+function ITEM:CanEquip(ply)
 	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
 		return true
 	end
