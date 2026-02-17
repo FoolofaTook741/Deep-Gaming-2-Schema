@@ -256,11 +256,15 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_357"] = {
-		Desc = "DcO+",
+		Desc = "DcO+/Sword DvL+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			return ply:GetTeamRank() >= RANK_DCO
+            if (ply:GetTeamRank() >= RANK_DCO) or (ply:GetTeamRank() >= RANK_DVL and CLASS_SWORD) then
+                return true
+            else
+                return false
+            end
 		end
 	},
 	["item_camerarepairkit"] = {
