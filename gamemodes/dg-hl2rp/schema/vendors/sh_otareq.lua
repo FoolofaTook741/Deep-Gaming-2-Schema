@@ -355,17 +355,6 @@ VENDOR.Sell = {
 			end
 		end
 	},
-	["wep_rsmoke"] = {
-		Desc = "SWEEPER",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if (ply:GetTeamClass() >= CLASS_APF) then
-				return true
-			else return false
-			end
-		end
-	},
 	["item_slam"] = {
 		Desc = "MACE ECS+ & Research Project",
 		Restricted = true,
