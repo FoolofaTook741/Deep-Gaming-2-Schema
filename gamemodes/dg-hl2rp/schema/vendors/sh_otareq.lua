@@ -473,11 +473,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_rsmoke"] = {
-		Desc = "CTL+ or FIST",
+		Desc = "CTL+/FIST/APF",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_OSL or ply:GetTeamClass() == CLASS_FIST then
+			if ply:GetTeamRank() >= RANK_OSL or ply:GetTeamClass() == CLASS_FIST or ply:GetTeamClass() == CLASS_APF then
 				return true
 			else return false
 			end
