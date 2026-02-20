@@ -133,11 +133,11 @@ end
 
 
 function ReqwestLogMessage(message, webhook)
-
-    if not webhook then
-        impulse.debugPrint("Discord webhooks disabled on development servers")
-        return
-    end
+	
+	local hostname   = GetConVar("hostname"):GetString()
+    local serverName = (hostname == "Deep Gaming 2 | Half Life 2 Roleplay | discord.gg/deepgaming") and "Main" or "Dev"
+	if serverName == "Dev" then return end
+	
     reqwest({
         method = "POST",
         url = webhook,
