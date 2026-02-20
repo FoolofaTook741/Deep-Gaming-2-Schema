@@ -99,7 +99,7 @@ function ReqwestLog(embeddedmessages, webhook)
         return
     end
     local serverName = (hostname == "Deep Gaming 2 | Half Life 2 Roleplay | discord.gg/deepgaming") and "Main" or "Dev"
-
+	if serverName == "Dev" then return end
     for _, embed in ipairs(embeddedmessages) do
         embed.fields = embed.fields or {}
         table.insert(embed.fields, {
