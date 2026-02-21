@@ -2729,7 +2729,7 @@ impulse.RegisterChatClass(51, function(message, speaker)
     elseif speaker:Team() == TEAM_CITIZEN then
         chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", team.GetName(speaker:Team()), ", Loyalist Level: ", tostring(message))
     else
-		if speaker:Team() ~= TEAM_ZOMBIE or speaker:Team() ~= TEAM_STALKER then
+		if speaker:Team() ~= TEAM_ZOMBIE and speaker:Team() ~= TEAM_STALKER then
         	chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", speaker:Name(), ", ", team.GetName(speaker:Team()))
         end
     end
