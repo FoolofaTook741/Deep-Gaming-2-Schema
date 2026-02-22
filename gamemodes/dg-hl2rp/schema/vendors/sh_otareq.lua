@@ -83,6 +83,16 @@ VENDOR.Sell = {
 			else return false end
 		end
 	},
+	["wep_osiprmk1c"] = {
+		Desc = "CSC Only",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if (ply:GetTeamRank() > RANK_ORD) then
+				return true
+			else return false end
+		end
+	},
 	["wep_osips"] = {
 		Desc = "ECHO & NOMAD ECS+",
 		Restricted = true,

@@ -54,13 +54,13 @@ SWEP.Primary.Damage = 14
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.4
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(450)
+SWEP.Primary.Delay = RPM(465)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "AR2"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 30
-SWEP.Primary.DefaultClip = 30
+SWEP.Primary.ClipSize = 35
+SWEP.Primary.DefaultClip = 35
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
@@ -70,7 +70,7 @@ SWEP.UseIronsightsRecoil = false
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.02
+SWEP.Spread.Max = 0.025
 SWEP.Spread.IronsightsMod = 0.4 -- multiply
 SWEP.Spread.CrouchMod = 0.6 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2.5 -- how does if the player is in the air effect spread (multiply)
