@@ -102,6 +102,9 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 	local charName = net.ReadString()
 	local charModel = net.ReadString()
 	local charSkin = net.ReadUInt(8)
+	local charHairColour = net.ReadColor()
+	local charBeard = net.ReadUInt(8)
+	local charHair = net.ReadUInt(8)
 
 	local plyID = ply:SteamID()
 	local plyGroup = ply:GetUserGroup()
@@ -118,6 +121,27 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 	if not table.HasValue(impulse.Config.DefaultMaleModels, charModel) and not table.HasValue(impulse.Config.DefaultFemaleModels, charModel) then
 		return ply:Kick(AUTH_FAILURE)
 	end
+
+	local bHairCorrect = false
+	for k, v in pairs(impulse.Config.DefaultHairColors) do
+		if ( v == charHairColour ) then
+			bHairCorrect = true 
+			break
+		end
+	end
+
+	if ( !bHairCorrect ) then
+		print("[impulse] Invalid hair color: "..tostring(charHairColour))
+		return ply:Kick(AUTH_FAILURE)
+	end
+
+	local skinBlacklist = impulse.Config.DefaultSkinBlacklist[charModel]
+
+	if skinBlacklist and table.HasValue(skinBlacklist, charSkin) then
+		return ply:Kick(AUTH_FAILURE)
+	end
+
+	local charData = {beard = charBeard, hair = charHair, hairColor = charHairColour}
 
 	local skinBlacklist = impulse.Config.DefaultSkinBlacklist[charModel]
 
@@ -140,7 +164,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 		insertQuery:Insert("model", charModel)
 		insertQuery:Insert("skin", charSkin)
 		insertQuery:Insert("firstjoin", timestamp)
-		insertQuery:Insert("data", "[]")
+		insertQuery:Insert("data", util.TableToJSON(charData))
 		insertQuery:Insert("skills", "[]")
 		insertQuery:Callback(function(result, status, lastID)
 			if IsValid(ply) then
@@ -153,10 +177,13 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 					money = impulse.Config.StartingMoney,
 					bankmoney = impulse.Config.StartingBankMoney,
 					model = charModel,
-					data = "[]",
+					data = util.TableToJSON(charData),
 					skills = "[]",
 					skin = charSkin,
-					firstjoin = timestamp
+					firstjoin = timestamp,
+					hairColor = charHairColour,
+					beard = charBeard,
+					hair = charHair
 				}
 
 				print("[impulse] "..plyID.." has been submitted to the database. RP Name: ".. charName)
@@ -1218,10 +1245,16 @@ net.Receive("impulseCharacterEdit", function(len, ply)
 	local newIsFemale = false
 	local newModel = net.ReadString()
 	local newSkin = net.ReadUInt(8)
+	local newHairColour = net.ReadColor(true)
+	local newBeard = net.ReadUInt(8)
+	local newHair = net.ReadUInt(8)
 	local cost = 0
 	local isCurFemale = ply:IsCharacterFemale()
 	local curModel = ply.defaultModel
 	local curSkin = ply.defaultSkin
+	local curHairColour = ply:GetHairColor(true)
+	local curBeard = ply:GetBodygroup(ply:FindBodygroupByName("beard"))
+	local curHair = ply:GetBodygroup(ply:FindBodygroupByName("hair"))
 
 	if not table.HasValue(impulse.Config.DefaultMaleModels, newModel) and not table.HasValue(impulse.Config.DefaultFemaleModels, newModel) then
 		return
@@ -1245,14 +1278,49 @@ net.Receive("impulseCharacterEdit", function(len, ply)
 		cost = cost + impulse.Config.CosmeticModelSkinPrice
 	end
 
+	local bHasCustomHair = true 
+	for k, v in pairs(impulse.Config.DefaultHairColors) do
+		if ( v == ply:GetHairColor() ) then
+			bHasCustomHair = false
+			break
+		end
+	end
+
+	local bHairCorrect = false
+	for k, v in pairs(impulse.Config.DefaultHairColors) do
+		if ( v == newHairColour ) then
+			bHairCorrect = true 
+			break
+		end
+	end
+	
+	if ( newHairColour != ply:GetHairColor() ) then
+		cost = cost + ( impulse.Config.CosmeticHairDyePrice or 30 )
+	end
+
+	if ( curBeard != newBeard ) then
+		cost = cost + ( impulse.Config.CosmeticBeardPrice or 30 )
+	end
+
+	if ( curHair != newHair ) then
+		cost = cost + ( impulse.Config.CosmeticHairPrice or 30 )
+	end
+
 	if cost == 0 then
 		return
 	end
 
 	if ply:CanAfford(cost) then
+
+		local data = ply.impulseData or {}
+		data.hair = newHair
+		data.beard = newBeard
+		data.hairColor = {r = newHairColour.r, g = newHairColour.g, b = newHairColour.b, a = newHairColour.a}
+
 		local query = mysql:Update("impulse_players")
 		query:Update("skin", newSkin)
 		query:Update("model", newModel)
+		query:Update("data", util.TableToJSON(data))
 		query:Where("steamid", ply:SteamID())
 		query:Execute()
 
@@ -1270,10 +1338,14 @@ net.Receive("impulseCharacterEdit", function(len, ply)
 
 		ply:SetModel(ply.defaultModel)
 		ply:SetSkin(ply.defaultSkin)
+		ply:SetHairColor(newHairColour)
 
 		for v,k in pairs(oldBodyGroups) do
 			ply:SetBodygroup(k.id, oldBodyGroupsTemp[k.id])
 		end
+
+		ply:SetBodygroup(ply:FindBodygroupByName("beard"), newBeard)
+		ply:SetBodygroup(ply:FindBodygroupByName("hair"), newHair)
 
 		ply:TakeMoney(cost)
 		ply:Notify("You have changed your appearance for "..impulse.Config.CurrencyPrefix..cost..".")

@@ -463,7 +463,7 @@
             elseif team == TEAM_OTA then
                 if class then
                     if class == CLASS_ECHO then
-                        if rank == RANK_OWG then
+                        if rank == RANK_CGR then
                             if roll <= 4 then
                                 weps = {"scrap_osips"}
                                 wepdrop = true
@@ -634,7 +634,7 @@
                             end 
                         end
                     elseif class == CLASS_MACE then
-                        if rank == RANK_OWG then
+                        if rank == RANK_CGR then
                             if roll <= 4 then
                                 weps = {"scrap_osisg"}
                                 wepdrop = true

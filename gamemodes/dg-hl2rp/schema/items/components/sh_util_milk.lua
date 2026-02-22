@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "ing_milk"
 ITEM.Name = "Carton of Milk"
 ITEM.Desc = "A carton of slightly sour milk."
-ITEM.Category = "Ingredients"
 ITEM.Model = Model("models/props_junk/garbage_milkcarton002a.mdl")
 ITEM.FOV = 35
 ITEM.Weight = 0.8

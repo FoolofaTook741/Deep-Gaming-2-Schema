@@ -49,11 +49,11 @@ SWEP.Primary.Sound = Sound("CUST.MG34.Single")
 SWEP.Primary.Inside_Sound = Sound("CUST.MG34.Inside")
 
 SWEP.Primary.Recoil = 1.3 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 10.4
+SWEP.Primary.Damage = 10
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.5
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(900)
+SWEP.Primary.Delay = RPM(568)
 SWEP.SpeedReduction = 150
 
 SWEP.UseIronsightsRecoil = false
@@ -80,7 +80,7 @@ SWEP.Spread.AirMod = 10.8 -- how does if the player is in the air effect spread 
 SWEP.Spread.RecoilMod = 1 -- how does the recoil effect the spread (sustained fire) (additional)
 SWEP.Spread.VelocityMod = 6.25 -- movement speed effect on spread (additonal)
 
-SWEP.IronsightsPos = Vector(-2.35, 0, 1.0)
+SWEP.IronsightsPos = Vector(3.5, 2, 0)
 SWEP.IronsightsAng = Angle(0, 0, 0)
 SWEP.IronsightsFOV = 0.72
 SWEP.IronsightsSensitivity = 0.8

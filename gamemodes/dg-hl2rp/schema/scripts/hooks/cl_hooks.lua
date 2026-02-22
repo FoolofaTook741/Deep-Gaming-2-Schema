@@ -308,3 +308,202 @@ hook.Add("RenderScreenspaceEffects", "PGHL2RP-Filter", function()
 
     DrawColorModify(tab)
 end)
+
+
+matproxy.Add({
+    name = "HairColor",
+    init = function(self, mat, values)
+        self.ResultTo = values.resultvar
+    end,
+    bind = function(self, mat, ent)
+        mat:SetVector(self.ResultTo, (ent.GetHairColor and ent:GetHairColor():ToVector()) or Vector(1, 1, 1))
+   end
+})
+
+matproxy.Add({
+    name = "PantsColor",
+    init = function(self, mat, values)
+        self.ResultTo = values.resultvar
+    end,
+    bind = function(self, mat, ent)
+        mat:SetVector(self.ResultTo, (ent.GetPantsColor and ent:GetPantsColor():ToVector()) or Vector(1, 1, 1))
+   end
+})
+
+matproxy.Add({
+    name = "TorsoColor",
+    init = function(self, mat, values)
+        self.ResultTo = values.resultvar
+    end,
+    bind = function(self, mat, ent)
+        mat:SetVector(self.ResultTo, (ent.GetTorsoColor and ent:GetTorsoColor():ToVector()) or Vector(1, 1, 1))
+   end
+})
+
+matproxy.Add({
+    name = "ShirtColor",
+    init = function(self, mat, values)
+        self.ResultTo = values.resultvar
+    end,
+    bind = function(self, mat, ent)
+        mat:SetVector(self.ResultTo, (ent.GetShirtColor and ent:GetShirtColor():ToVector()) or Vector(1, 1, 1))
+   end
+})
+
+matproxy.Add({
+    name = "HeadGearColor",
+    init = function(self, mat, values)
+        self.ResultTo = values.resultvar
+    end,
+    bind = function(self, mat, ent)
+        mat:SetVector(self.ResultTo, (ent.GetHeadGearColor and ent:GetHeadGearColor():ToVector()) or Vector(1, 1, 1))
+   end
+})
+
+net.Receive("ixSetHairColor", function()
+    print("[DEBUG] ixSetHairColor received")
+
+    local sid64 = net.ReadString()
+    local color = net.ReadColor(true)
+
+    if not sid64 or sid64 == "" then
+        print("[DEBUG] sid64 missing/empty")
+        return
+    end
+
+    if not color then
+        print("[DEBUG] Color is NIL")
+        return
+    end
+
+    print(string.format(
+        "[DEBUG] Payload: sid64=%s colour=R=%d G=%d B=%d A=%d",
+        sid64,
+        color.r or -1,
+        color.g or -1,
+        color.b or -1,
+        color.a or -1
+    ))
+
+    local timerName = "ixSetHairColor_apply_" .. sid64
+    timer.Remove(timerName)
+
+    local tries = 0
+    timer.Create(timerName, 0.1, 80, function()
+        tries = tries + 1
+
+        local ent = player.GetBySteamID64(sid64)
+        if IsValid(ent) then
+            print("[DEBUG] Resolved player after tries=", tries, "->", ent:Nick())
+            ent:SetHairColor(color)
+            timer.Remove(timerName)
+        elseif tries % 10 == 0 then
+            print("[DEBUG] Waiting for player entity sid64=", sid64, "tries=", tries)
+        end
+    end)
+end)
+
+net.Receive("ixSetPantsColor", function()
+    local ent = net.ReadEntity()
+    if ( !IsValid(ent) ) then return end
+
+    local color = net.ReadColor(true)
+
+    if ( IsValid(ent) ) then
+        ent:SetPantsColor(color)
+    end
+end)
+
+net.Receive("ixSetTorsoColor", function()
+    local ent = net.ReadEntity()
+    if ( !IsValid(ent) ) then return end
+
+    local color = net.ReadColor(true)
+
+    if ( IsValid(ent) ) then
+        ent:SetTorsoColor(color)
+    end
+end)
+
+net.Receive("ixSetShirtColor", function()
+    local ent = net.ReadEntity()
+    if ( !IsValid(ent) ) then return end
+
+    local color = net.ReadColor(true)
+
+    if ( IsValid(ent) ) then
+        ent:SetShirtColor(color)
+    end
+end)
+
+net.Receive("ixSetHeadGearColor", function()
+    local ent = net.ReadEntity()
+    if ( !IsValid(ent) ) then return end
+
+    local color = net.ReadColor(true)
+
+    if ( IsValid(ent) ) then
+        ent:SetHeadGearColor(color)
+    end
+end)
+
+net.Receive("impulse.HairDye", function()
+    local dframe = vgui.Create("DFrame")
+    dframe:Center()
+    dframe:MakePopup()
+    dframe:SetTitle("Hair Dye")
+    dframe:SetSize(500, 400)
+
+    local characterPreview = dframe:Add("DModelPanel")
+    characterPreview:Dock(LEFT)
+    characterPreview:SetWide(200)
+    characterPreview:SetFOV(30)
+    characterPreview:SetModel(LocalPlayer():GetModel())
+    characterPreview.Entity:SetSkin(LocalPlayer():GetSkin())
+    
+    local bodygroups = LocalPlayer():GetBodyGroups()
+    for i = 0, #bodygroups do
+        characterPreview.Entity:SetBodygroup(i, LocalPlayer():GetBodygroup(i))
+    end
+
+    local colourMixer = dframe:Add("DColorMixer")
+    colourMixer:Dock(TOP)
+    colourMixer:SetColor(LocalPlayer():GetHairColor())
+
+    characterPreview.LayoutEntity = function(t, entity)
+        entity:SetAngles(Angle(0, 45, 0))
+        entity:SetHairColor(colourMixer:GetColor())
+    end
+    
+    local button = dframe:Add("DButton")
+    button:SetText("Dye Hair")
+    button:Dock(BOTTOM)
+    button.DoClick = function()
+        local colour = colourMixer:GetColor()
+        net.Start("impulse.HairDye")
+            net.WriteColor(colour, true)
+        net.SendToServer()
+
+        dframe:Remove()
+    end
+end)
+
+
+net.Receive("impulse.SyncColours", function()
+    local target = net.ReadPlayer()
+    local hairColour = net.ReadColor()
+    local torsoColour = net.ReadColor()
+    local shirtColour = net.ReadColor()
+    local headGearColour = net.ReadColor()
+    local pantsColour = net.ReadColor()
+
+    if ( IsValid(target) ) then
+        target:SetHairColor(hairColour)
+        target:SetTorsoColor(torsoColour)
+        target:SetShirtColor(shirtColour)
+        target:SetHeadGearColor(headGearColour)
+        target:SetPantsColor(pantsColour)
+    end
+end)
+
+

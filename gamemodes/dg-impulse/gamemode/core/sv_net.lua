@@ -49,14 +49,14 @@ util.AddNetworkString("impulseHL2RPUseLocker")
         local plyrank = ply:GetTeamWhitelist(team)
         if plyrank >= ranktwo then
             if ply:CanBecomeTeamClass(division, true) then
-                if rank == RANK_OWG && (division == CLASS_MACE or division == CLASS_ECHO) then
+                if rank == RANK_CGR && (division == CLASS_MACE or division == CLASS_ECHO) then
                     ply:ClearInventory(1)
                     ply:SetTeamClass(division)
                     ply:SetTeamRank(rank)
                     ply:EmitSound( "ambient/levels/prison/radio_random12.wav", SNDLVL_NORM)
                     ply:EmitSound( "items/suitchargeok1.wav", SNDLVL_NORM)
                     ply:Notify( "You have changed your rank and division.")
-                elseif rank != RANK_OWG then
+                elseif rank != RANK_CGR then
                     ply:ClearInventory(1)
                     ply:SetTeamClass(division)
                     ply:SetTeamRank(rank)

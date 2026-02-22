@@ -7,10 +7,9 @@ MIX.Bench = "tech"
 
 MIX.Output = "item_mine"
 MIX.Input = {
-	["util_gunpowder"] = {take = 5},
+	["util_gunpowder"] = {take = 20},
 	["util_electronics"] = {take = 3},
 	["util_steel"] = {take = 2},
-	["util_rdxcompound"] = {take = 1}
 }
 
 impulse.RegisterMixture(MIX)

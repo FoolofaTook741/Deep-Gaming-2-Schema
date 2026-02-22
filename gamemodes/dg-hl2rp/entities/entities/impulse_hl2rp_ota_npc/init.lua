@@ -3,7 +3,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self:SetModel("models/nemez/combine_soldiers/combine_soldier_h.mdl")
+	self:SetModel("models/dg_models/dg_combinepack/dg_grunt/combine_grunt.mdl")
 	self:SetUseType(SIMPLE_USE)
 	self:SetMoveType(MOVETYPE_NONE)
 	self:SetSolid(SOLID_BBOX)

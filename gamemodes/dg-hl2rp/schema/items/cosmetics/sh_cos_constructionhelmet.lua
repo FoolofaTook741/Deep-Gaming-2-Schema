@@ -4,7 +4,7 @@ ITEM.UniqueID = "cos_constructionhelmet"
 ITEM.Name = "Construction Helmet"
 ITEM.Desc =  "A bright yellow helmet that protects you from falling objects, it can also (very poorly) protect you from light munitions. Offers 10% protection."
 ITEM.Category = "Clothing"
-ITEM.Model = Model("models/willardnetworks/update_items/workercap_item.mdl")
+ITEM.Model = Model("models/willardnetworks/clothingitems/workercap_item.mdl")
 ITEM.FOV = 17.929799426934
 ITEM.CamPos = Vector(33.237823486328, 25, 9)
 ITEM.Weight = 1
@@ -21,8 +21,8 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "head"
 ITEM.CanStack = true
 
-function ITEM:CanEquip(ply)
-	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_CA then
+function ITEM:CanEqup(ply)
+	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
 		return true
 	end
 	return false

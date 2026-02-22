@@ -19,7 +19,7 @@ ITEM.CanStack = true
 
 ITEM.UseName = "Load"
 
-local AmmoAmount = 12
+local AmmoAmount = 24
 local AmmoType = "357"
 
 function ITEM:OnUse(ply)

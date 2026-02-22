@@ -4,7 +4,7 @@ ITEM.UniqueID = "ing_cream"
 ITEM.Name = "Tray of Cream"
 ITEM.Desc = "A sweet topping for many dishes"
 ITEM.Category = "Components"
-ITEM.Model = Model("models/mosi/fallout4/props/food/foodpaste.mdl")
+ITEM.Model = Model("models/mosi/fnv/props/food/sweetroll.mdl")
 ITEM.FOV = 40
 ITEM.Weight = 0.3
 

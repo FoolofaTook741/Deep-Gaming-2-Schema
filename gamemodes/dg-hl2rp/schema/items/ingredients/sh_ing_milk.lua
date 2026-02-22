@@ -4,7 +4,7 @@ ITEM.UniqueID = "ing_milk"
 ITEM.Name = "Milk"
 ITEM.Desc = "A carton of milk."
 ITEM.Category = "Components"
-ITEM.Model = Model("models/props_junk/garbage_milkcarton002a.mdl")
+ITEM.Model = Model("models/mosi/fallout4/props/drink/milkbottle.mdl")
 ITEM.FOV = 40
 ITEM.Weight = 0.2
 

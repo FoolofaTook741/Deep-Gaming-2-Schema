@@ -397,30 +397,11 @@ function impulse.Anim.GetModelClass(model)
 	return class
 end
 
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/hdpolice.mdl", "metrocop")
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/hdpolice.mdl", "metrocop")
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/civil_medic.mdl", "metrocop")
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/hl2beta_police.mdl", "metrocop")
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/retrocop.mdl", "metrocop")
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/elite_police.mdl", "metrocop")
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/policetrench.mdl", "metrocop")
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/hl2concept.mdl", "metrocop")
-impulse.Anim.SetModelClass("models/combine_soldier_prisonGuard.mdl", "overwatch")
-impulse.Anim.SetModelClass("models/combine_soldier_prisonGuard.mdl", "overwatch")
-impulse.Anim.SetModelClass("models/combine_soldier_prisonGuard.mdl", "overwatch")
 impulse.Anim.SetModelClass("models/vortigaunt.mdl", "vort")
 impulse.Anim.SetModelClass("models/vortigaunt_blue.mdl", "vort")
 impulse.Anim.SetModelClass("models/vortigaunt_doctor.mdl", "vort")
 impulse.Anim.SetModelClass("models/vortigaunt_slave.mdl", "vort")
 impulse.Anim.SetModelClass("models/vortiblue1.mdl", "vort")
-impulse.Anim.SetModelClass("models/dpfilms/metropolice/police_fragger.mdl", "metrocop")
-
-impulse.Anim.SetModelClass("models/wn/ota_shotgunner.mdl", "overwatch")
-impulse.Anim.SetModelClass("models/wn/ota_skylegion.mdl", "overwatch")
-impulse.Anim.SetModelClass("models/wn/ota_soldier.mdl", "overwatch")
-
---impulse.Anim.SetModelClass("models/breen.mdl", "player")
---impulse.Anim.SetModelClass("models/nicrobe/gallahan.mdl", "player")
 
 hook.Run("LoadAnimationClasses")
 

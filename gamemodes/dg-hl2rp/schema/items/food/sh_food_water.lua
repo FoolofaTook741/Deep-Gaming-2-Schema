@@ -4,7 +4,7 @@ ITEM.UniqueID = "food_water"
 ITEM.Name = "Water"
 ITEM.Desc =  "A can of Combine issued water. Can be purchased from a vending machine."
 ITEM.Category = "Food"
-ITEM.Model = Model("models/props_junk/popcan01a.mdl")
+ITEM.Model = Model("models/mosi/fallout4/props/drink/water.mdl")
 ITEM.FOV = 18
 ITEM.Weight = 0.4
 

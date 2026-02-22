@@ -212,7 +212,7 @@ function SCHEMA:PlayerHurt(victim)
 
 		if victim:IsPlayer() and victim:Team() == TEAM_OTA then
 			local rank = victim:GetTeamRank()
-			if rank == nil or rank == RANK_OWG then
+			if rank == nil or rank == RANK_CGR then
 				victim:EmitSound(gruntpainsounds[math.random(1, 10)])
 			elseif victim:GetTeamClass() == CLASS_APF then 
 				victim:EmitSound(apfpainsounds[math.random(1, 10)])
@@ -276,7 +276,7 @@ end
 function SCHEMA:PlayerDeath(ply)
 	if ply:IsPlayer() and ply:Team() == TEAM_OTA then
 		local rank = ply:GetTeamRank()
-		if rank == nil or rank == RANK_OWG then
+		if rank == nil or rank == RANK_CGR then
 			ply:EmitBudgetSound(gruntdeathsounds[math.random(1, 10)])
 		elseif ply:GetTeamClass() == CLASS_APF then
 			ply:EmitBudgetSound(apfdeathsounds[math.random(1, 10)])

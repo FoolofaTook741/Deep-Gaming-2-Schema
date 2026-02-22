@@ -7,6 +7,7 @@ SWEP.Category = "Deep Gaming [Plutonic]"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
+SWEP.QuickDraw = true
 
 SWEP.HoldType = "revolver"
 
@@ -50,20 +51,23 @@ SWEP.Primary.Inside_Sound = Sound("LS2.357.Inside")
 SWEP.ReloadSound = Sound("Weapon_357.Reload")
 SWEP.EmptySound = Sound("Weapon_357.Empty")
 
-SWEP.Primary.Recoil = 20 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 58
+SWEP.Primary.Recoil = 2.9 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 32
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0002
-SWEP.Primary.Delay = RPM(90)
-SWEP.Primary.PenetrationScale = 1
+SWEP.Primary.Delay = RPM(160)
+SWEP.ReloadSpeed = 2
+SWEP.Primary.PenetrationScale = 1.7
 
-SWEP.DamageFalloff = true
+--[[
+SWEP.DamageFalloff = false
 SWEP.MinDistance = 35 * 39.37
 SWEP.MaxDistance = 35 * 39.37 -- 50 meters i fucking hate this
 SWEP.MinDamageMultiplier = 0.7917
+]]--
 
 SWEP.Primary.Ammo = "357"
-SWEP.Primary.Automatic = false
+SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = 6
 SWEP.Primary.DefaultClip = 6
 
@@ -79,12 +83,12 @@ SWEP.UseIronsightsRecoil = false
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.1
+SWEP.Spread.Max = 0.002
 SWEP.Spread.IronsightsMod = 0.4 -- multiply
 SWEP.Spread.CrouchMod = 0.5 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2 -- how does if the player is in the air effect spread (multiply)
 SWEP.Spread.RecoilMod = 0.03 -- how does the recoil effect the spread (sustained fire) (additional)
-SWEP.Spread.VelocityMod = 1.8 -- movement speed effect on spread (additonal)
+SWEP.Spread.VelocityMod = 1.4 -- movement speed effect on spread (additonal)
 
 SWEP.IronsightsPos = Vector(-4.6, 0, 0.52)
 SWEP.IronsightsAng = Angle(0.2, -0.201, 0)

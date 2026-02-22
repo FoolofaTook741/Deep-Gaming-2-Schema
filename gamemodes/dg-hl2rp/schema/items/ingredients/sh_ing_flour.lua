@@ -4,7 +4,7 @@ ITEM.UniqueID = "ing_flour"
 ITEM.Name = "Flour"
 ITEM.Desc = "A common baking ingredient."
 ITEM.Category = "Components"
-ITEM.Model = Model("models/props_junk/garbage_bag001a.mdl")
+ITEM.Model = Model("models/hls/hawke/bag_flour_1.mdl")
 ITEM.FOV = 40
 ITEM.Weight = 0.3
 

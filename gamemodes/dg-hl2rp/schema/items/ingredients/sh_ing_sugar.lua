@@ -4,7 +4,7 @@ ITEM.UniqueID = "ing_sugar"
 ITEM.Name = "Can of Sugar"
 ITEM.Desc = "A sweet surprise."
 ITEM.Category = "Components"
-ITEM.Model = Model("models/props_junk/garbage_metalcan002a.mdl")
+ITEM.Model = Model("models/hls/hawke/metal_box_1.mdl")
 ITEM.FOV = 40
 ITEM.Weight = 0.2
 

@@ -94,8 +94,8 @@ SWEP.EmptySound = Sound("weapons/mosin_nagant/mosin_empty.wav")
 
 SWEP.Primary.Sound = Sound("Mosin.Single")
 SWEP.Primary.Recoil = 8
-SWEP.Primary.Damage = 60
-SWEP.Primary.PenetrationScale = 1.25
+SWEP.Primary.Damage = 49
+SWEP.Primary.PenetrationScale = 1.65
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0001
 SWEP.Primary.Delay = Plutonic.FireRate.RPM(40)
@@ -103,8 +103,8 @@ SWEP.Primary.Piercing = true
 
 SWEP.Primary.Ammo = "SniperPenetratedRound"
 SWEP.Primary.Automatic = false
-SWEP.Primary.ClipSize = 6
-SWEP.Primary.DefaultClip = 6
+SWEP.Primary.ClipSize = 5
+SWEP.Primary.DefaultClip = 5
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false

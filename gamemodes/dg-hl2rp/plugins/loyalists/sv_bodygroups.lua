@@ -10,11 +10,11 @@ local function GiveCitizenOutfit(ply)
 
     local lvl = ply:GetTeamWhitelist("TEAM_CITIZEN") or 0
     local desired
-    if lvl == 1 then
+    if lvl == 1 or lvl == 2 then
         desired = "loyalistoutfit_1"
-    elseif lvl == 2 then
+    elseif lvl == 3 or lvl == 4 then
         desired = "loyalistoutfit_2"
-    elseif lvl == 3 then
+    elseif lvl >= 5 then
         desired = "loyalistoutfit_3"
     else
         desired = "citizenoutfit"
@@ -30,23 +30,28 @@ local function GiveCitizenOutfit(ply)
     end
 end
 
-    --[[
+
+--Loyalist bodygroups need work before this can be uncommented out.
+
+--[[
 hook.Add("PlayerChangedTeam", "civoutfit_change", function(ply, oldTeam, newTeam)
-	
+    
     if newTeam ~= TEAM_CITIZEN then return end
 
     timer.Simple(0.5, function()
         GiveCitizenOutfit(ply)
-        ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
-    end
+        --ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
+    end)
 
 end)
---[[
+
 hook.Add("PostSetupPlayer", "civoutfit_change_initial", function(ply)
     if newTeam ~= TEAM_CITIZEN then return end
     timer.Simple(0.5, function()
         GiveCitizenOutfit(ply)
-        ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
+        --ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
     end)
 end)
---]]
+]]--
+
+

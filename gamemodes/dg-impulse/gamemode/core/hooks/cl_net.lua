@@ -174,7 +174,8 @@ net.Receive("impulseInvMove", function()
 		impulse_storage:SetupItems(invScroll, invStorageScroll)
 
 		if (NEXT_MOVENOISE or 0) < CurTime() then -- to stop ear rape when mass moving items
-			surface.PlaySound("foley/inventory/inv_move"..math.random(1,3)..".wav")
+			--surface.PlaySound("foley/inventory/inv_move"..math.random(1,3)..".wav")
+			surface.PlaySound("physics/wood/wood_crate_impact_hard2.wav")
 		end
 
 		NEXT_MOVENOISE = CurTime() + 0.2
@@ -300,6 +301,11 @@ end)
 net.Receive("impulseUpdateDefaultModelSkin", function()
 	impulse_defaultModel = net.ReadString()
 	impulse_defaultSkin = net.ReadUInt(8)
+
+	impulse_defaultHairColor = net.ReadColor(true)
+
+	impulse_defaultBeard = net.ReadUInt(8)
+	impulse_defaultHair = net.ReadUInt(8)
 end)
 
 net.Receive("impulseConfiscateCheck", function()

@@ -1,3 +1,4 @@
+--[[
 local ITEM = {}
 
 ITEM.UniqueID = "util_radio"
@@ -44,3 +45,4 @@ function ITEM:UnEquip(ply)
 end
 
 impulse.RegisterItem(ITEM)
+--]]

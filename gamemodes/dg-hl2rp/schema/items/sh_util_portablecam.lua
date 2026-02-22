@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "portablecam"
 ITEM.Name = "Portable Camera"
-ITEM.Category = "Tools"
+ITEM.Category = "Espionage"
 ITEM.Desc =  "A camera used to spy on things."
 ITEM.Model = Model("models/bo/weapons/camera spike.mdl")
 ITEM.FOV = 18

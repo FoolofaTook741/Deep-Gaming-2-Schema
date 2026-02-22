@@ -4,7 +4,7 @@ VENDOR.UniqueID = "otareq"
 VENDOR.Name = "C.T.A. Quartermaster"
 VENDOR.Desc = "Supplies soldiers with their equipment."
 
-VENDOR.Model = "models/hlvr/characters/combine_captain_night/combine_captain_night.mdl"
+VENDOR.Model = "models/dg_models/dg_combinepack/dg_soldier/dg_combine_soldier.mdl"
 VENDOR.Skin = 1
 VENDOR.Sequence = "idle_unarmed"
 VENDOR.Gender = "cp" -- male, female, cp
@@ -101,17 +101,6 @@ VENDOR.Sell = {
 			if ply:GetTeamClass() == CLASS_MACE then
 				return true
 			else return false end
-		end
-	},
-	["wep_ar15"] = {
-		Desc = "ECHO CCP+",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_OCP then
-				return true
-			else return false
-			end
 		end
 	},
 	["att_holosight"] = {
@@ -355,6 +344,17 @@ VENDOR.Sell = {
 			end
 		end
 	},
+	["wep_rsmoke"] = {
+		Desc = "SWEEPER",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if (ply:GetTeamClass() >= CLASS_APF) then
+				return true
+			else return false
+			end
+		end
+	},
 	["item_slam"] = {
 		Desc = "MACE ECS+ & Research Project",
 		Restricted = true,
@@ -462,11 +462,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_rsmoke"] = {
-		Desc = "CTL+/FIST/APF",
+		Desc = "CTL+ or FIST",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_OSL or ply:GetTeamClass() == CLASS_FIST or ply:GetTeamClass() == CLASS_APF then
+			if ply:GetTeamRank() >= RANK_OSL or ply:GetTeamClass() == CLASS_FIST then
 				return true
 			else return false
 			end

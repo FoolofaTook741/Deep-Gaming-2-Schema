@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_moonshine"
 ITEM.Name = "Moonshine"
 ITEM.Desc =  "An unlicensed alcoholic drink."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/props_junk/glassjug01.mdl")
 ITEM.FOV = 30
 ITEM.NoCenter = true

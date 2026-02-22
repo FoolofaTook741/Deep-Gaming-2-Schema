@@ -3,76 +3,23 @@ AddCSLuaFile("cl_init.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self:SetModel("models/props_combine/combine_dispenser.mdl")
-	self:SetSolid(SOLID_BBOX)
-	self:SetUseType(SIMPLE_USE)
-	self:SetPlaybackRate(1)
-	self:SetLight(3)
-	self.rationsactive = true
-	self.Enhanced = false
-
-	self.dispenseAnim = self:LookupSequence("dispense_package")
-end
-
-local rationModels = {
-	[TEAM_CITIZEN] = "models/weapons/w_package.mdl",
-	[TEAM_CWU] = "models/weapons/w_package.mdl",
-	[TEAM_CP] = "models/weapons/w_package.mdl",
-	[TEAM_OTA] = "models/weapons/w_package.mdl",
-	[TEAM_CA] = "models/weapons/w_package.mdl",
-	[TEAM_VORT] = "models/weapons/w_package.mdl"
-}
-
-local rationItemsMarginal = {
-	[TEAM_CITIZEN] = "card_civ_marginal",
-	[TEAM_CITIZEN] = "card_1_marginal",
-	[TEAM_CITIZEN] = "card_2_marginal",
-	[TEAM_CITIZEN] = "card_3_marginal",
-	[TEAM_CWU] = "card_cwu_marginal",
-	[TEAM_CP] = "card_cp_marginal",
-	[TEAM_OTA] = "card_ota_marginal",
-	[TEAM_CA] = "card_ca",
-	[TEAM_VORT] = "card_vort_marginal"
-}
-
-local rationFood = {
-	[TEAM_CITIZEN] = "food_civilianration",
-	[TEAM_CWU] = "food_civilianration",
-	[TEAM_CP] = "food_ration",
-	[TEAM_OTA] = "food_ration",
-	[TEAM_CA] = "food_ration",
-	[TEAM_VORT] = "food_civilianrationmarginal"
-}
-
-local rationItems = {
-	[TEAM_CITIZEN] = "card_civ",
-	[TEAM_CITIZEN] = "card_1",
-	[TEAM_CITIZEN] = "card_2",
-	[TEAM_CITIZEN] = "card_3",
-	[TEAM_CWU] = "card_cwu",
-	[TEAM_CP] = "card_cp",
-	[TEAM_OTA] = "card_ota",
-	[TEAM_CA] = "card_ca",
-	[TEAM_VORT] = "card_vort"
-}
-
-local rationFoodMarginal = {
-	[TEAM_CITIZEN] = "food_civilianrationmarginal",
-	[TEAM_CWU] = "food_civilianrationmarginal",
-	[TEAM_CP] = "food_ration",
-	[TEAM_OTA] = "food_ration",
-	[TEAM_CA] = "food_ration",
-	[TEAM_VORT] = "food_sardines"
-}
-
-function ENT:Initialize()
     self:SetModel("models/props_combine/combine_dispenser.mdl")
+    self:PhysicsInitBox(
+        Vector(-8, -8, 0),
+        Vector(8, 8, 48)
+    )
+
+    self:SetCollisionBounds(
+        Vector(-8, -8, 0),
+        Vector(8, 8, 48)
+    )
     self:SetSolid(SOLID_BBOX)
     self:SetUseType(SIMPLE_USE)
     self:SetPlaybackRate(1)
     self:SetLight(3)
     self.rationsactive = true
     self.Enhanced = false
+
     self.dispenseAnim = self:LookupSequence("dispense_package")
 end
 
@@ -87,9 +34,9 @@ local rationModels = {
 
 local rationItemsMarginal = {
     [TEAM_CITIZEN] = "card_civ_marginal",
-	[TEAM_CITIZEN] = "card_1_marginal",
-	[TEAM_CITIZEN] = "card_2_marginal",
-	[TEAM_CITIZEN] = "card_3_marginal",
+    [TEAM_CITIZEN] = "card_1_marginal",
+    [TEAM_CITIZEN] = "card_2_marginal",
+    [TEAM_CITIZEN] = "card_3_marginal",
     [TEAM_CWU] = "card_cwu_marginal",
     [TEAM_CP] = "card_cp_marginal",
     [TEAM_OTA] = "card_ota_marginal",
@@ -107,10 +54,72 @@ local rationFood = {
 }
 
 local rationItems = {
-	[TEAM_CITIZEN] = "card_civ",
-	[TEAM_CITIZEN] = "card_1",
-	[TEAM_CITIZEN] = "card_2",
-	[TEAM_CITIZEN] = "card_3",
+    [TEAM_CITIZEN] = "card_civ",
+    [TEAM_CITIZEN] = "card_1",
+    [TEAM_CITIZEN] = "card_2",
+    [TEAM_CITIZEN] = "card_3",
+    [TEAM_CWU] = "card_cwu",
+    [TEAM_CP] = "card_cp",
+    [TEAM_OTA] = "card_ota",
+    [TEAM_CA] = "card_ca",
+    [TEAM_VORT] = "card_vort"
+}
+
+local rationFoodMarginal = {
+    [TEAM_CITIZEN] = "food_civilianrationmarginal",
+    [TEAM_CWU] = "food_civilianrationmarginal",
+    [TEAM_CP] = "food_ration",
+    [TEAM_OTA] = "food_ration",
+    [TEAM_CA] = "food_ration",
+    [TEAM_VORT] = "food_sardines"
+}
+--[[
+function ENT:Initialize()
+    self:SetModel("models/props_combine/combine_dispenser.mdl")
+    self:SetSolid(SOLID_BBOX)
+    self:SetUseType(SIMPLE_USE)
+    self:SetPlaybackRate(1)
+    self:SetLight(3)
+    self.rationsactive = true
+    self.Enhanced = false
+    self.dispenseAnim = self:LookupSequence("dispense_package")
+end ]]--
+
+local rationModels = {
+    [TEAM_CITIZEN] = "models/weapons/w_package.mdl",
+    [TEAM_CWU] = "models/weapons/w_package.mdl",
+    [TEAM_CP] = "models/weapons/w_package.mdl",
+    [TEAM_OTA] = "models/weapons/w_package.mdl",
+    [TEAM_CA] = "models/weapons/w_package.mdl",
+    [TEAM_VORT] = "models/weapons/w_package.mdl"
+}
+
+local rationItemsMarginal = {
+    [TEAM_CITIZEN] = "card_civ_marginal",
+    [TEAM_CITIZEN] = "card_1_marginal",
+    [TEAM_CITIZEN] = "card_2_marginal",
+    [TEAM_CITIZEN] = "card_3_marginal",
+    [TEAM_CWU] = "card_cwu_marginal",
+    [TEAM_CP] = "card_cp_marginal",
+    [TEAM_OTA] = "card_ota_marginal",
+    [TEAM_CA] = "card_ca",
+    [TEAM_VORT] = "card_vort_marginal"
+}
+
+local rationFood = {
+    [TEAM_CITIZEN] = "food_civilianration",
+    [TEAM_CWU] = "food_civilianration",
+    [TEAM_CP] = "food_ration",
+    [TEAM_OTA] = "food_ration",
+    [TEAM_CA] = "food_ration",
+    [TEAM_VORT] = "food_civilianrationmarginal"
+}
+
+local rationItems = {
+    [TEAM_CITIZEN] = "card_civ",
+    [TEAM_CITIZEN] = "card_1",
+    [TEAM_CITIZEN] = "card_2",
+    [TEAM_CITIZEN] = "card_3",
     [TEAM_CWU] = "card_cwu",
     [TEAM_CP] = "card_cp",
     [TEAM_OTA] = "card_ota",

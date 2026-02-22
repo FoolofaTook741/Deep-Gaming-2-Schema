@@ -100,79 +100,38 @@ impulse.Anim.hunter = {
 }
 
 hook.Add("LoadAnimationClasses", "impulseHL2RPAnimClasses", function()
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/hdpolice.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/civil_medic.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/hl2beta_police.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/retrocop.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/elite_police.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/phoenix_police.mdl", "metrocop") -- 
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/police_bt.mdl", "metrocop") 
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/policetrench.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/hl2concept.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/blacop.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_coordinator_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_urban_shotgunner_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_border_patrol_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_h.mdl","overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_elite_h.mdl","overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_recon_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/cfe_ragdoll/cfe_female_ragdoll/cfe_female_01_ragdoll.mdl","metrocop")
-	impulse.Anim.SetModelClass("models/cfe_ragdoll/cfe_male_ragdoll/cfe_male_01_ragdoll.mdl","metrocop")
-	impulse.Anim.SetModelClass("models/cultist/hl_a/combine_grunt/npc/combine_grunt.mdl","overwatch")
-	impulse.Anim.SetModelClass("models/vortiblue1.mdl", "vort")
-	impulse.Anim.SetModelClass("models/willardnetworks/vortigaunt.mdl", "vort")
-	impulse.Anim.SetModelClass("models/jq/hlvr/characters/combine/combine_captain/combine_captain_hlvr_npc.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/jq/hlvr/characters/combine/grunt/combine_grunt_hlvr_npc.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/jq/hlvr/characters/combine_soldier/combine_soldier_new_content_npc.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/jq/hlvr/characters/combine_soldier/combine_soldier_new_content_super_npc.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/jq/theparrygod/transition_period_overwatch_soldier_npc.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/hlvr/human/corpse/zombie/zombie_common_2.mdl", "zombie")
-	impulse.Anim.SetModelClass("models/wn/ordinal.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/humans/suitfem/female_02.mdl","ca")
-	impulse.Anim.SetModelClass("models/taggart/gallahan.mdl","ca")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_01.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_02.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_03.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_04.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_05.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_06.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_07.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_08.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_09.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/male_10.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn7new/metropolice/female_01.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/earlbolat_customs/npc/vlk_male_1.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_recon_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_elite_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_urban_shotgunner_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_urban_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_coordinator_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/cultist/hl_a/vannila_combine/npc/combine_soldier.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/wn/suppressor.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/wn/soldier.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/jq/hlvr/characters/combine/suppressor/combine_suppressor_hlvr_npc.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/wn/ota_elite_summit.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_elite_wpu_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/theparrygod/transition_shotgunner_npc.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/cultist/hl_a/combine_grunt/npc/combine_grunt.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/cultist/hl_a/combine_commander/npc/combine_commander.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/dpfilms/metropolice/resistance_police.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/wn/dg/ordinal.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/nemez/combine_soldiers/combine_soldier_nova_h.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/cultist/hl_a/combine_suppresor/npc/combine_suppresor.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/hlvr/characters/combine_captain_night/combine_captain_night.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/wn/wallhammer.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/stalker.mdl", "stalker")
-	impulse.Anim.SetModelClass("models/renderng_regression_test_hunter.mdl", "hunter")
+
+	--Citizen Anims
+	for i = 1, 10 do
+		impulse.Anim.SetModelClass((i != 10 and "models/willardnetworks/citizens/male_0" .. i or "models/willardnetworks/citizens/male_10") .. ".mdl", "citizen_male")
+	end
+
+	for i = 1, 6 do
+		impulse.Anim.SetModelClass("models/willardnetworks/citizens/female_0" .. i .. ".mdl", "citizen_female")
+	end
+
+	--CTA Anims
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl", "overwatch")
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl", "overwatch")
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl", "overwatch")
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl", "overwatch")
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl", "overwatch")
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl", "overwatch")
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_etl/dg_etl.mdl", "overwatch")
+
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier_coordinator.mdl", "overwatch")
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_mace/dg_combine_mace.mdl", "overwatch") 
+	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_ranger/dg_combine_ranger.mdl", "overwatch")
+
+	--MPF Anims
+	for i = 1, 9 do
+		impulse.Anim.SetModelClass("models/wn7new/metropolice/male_0" .. i .. ".mdl", "metrocop")
+	end
+
+	--MISC ANIMS
 	impulse.Anim.SetModelClass("models/hunter.mdl", "hunter")
 	impulse.Anim.SetModelClass("models/advisor.mdl", "advisor")
-	impulse.Anim.SetModelClass("models/transition/soldiers/ordinal-eow/ordinal-eow.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/transition/soldiers/suppressor-eow/suppressor-eow.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/transition/soldiers/transition-suppressor/transition-suppressor.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/transition/soldiers/transition-wallhammer/transition-wallhammer.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/transition/soldiers/wallhammer-eow/wallhammer-eow.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/transition/soldiers/transition-ordinal/transition-ordinal.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/ma/hla/terranovapolice.mdl", "metrocop")
-	impulse.Anim.SetModelClass("models/willardupgrades/civilprotection.mdl", "metrocop")
+
+	--Vort Anims
+	impulse.Anim.SetModelClass("models/willardnetworks/vortigaunt.mdl", "vort")
 end)

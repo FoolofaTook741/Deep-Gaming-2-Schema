@@ -134,6 +134,8 @@ function GM:PlayerInitialSpawnLoaded(ply) -- called once player is full loaded
 		net.WriteUInt(table.Count(bans), 8)
 		net.Send(ply)
 	end
+
+	ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
 end
 
 function GM:PlayerSpawn(ply)
@@ -385,6 +387,9 @@ function impulse.SetupPlayer(ply, dbData)
 	ply:SetTeam(impulse.Config.DefaultTeam)
 	--ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
 	ply:AllowFlashlight(true)
+
+	ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard)
+	ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair)
 
 	local id = ply.impulseID
 	impulse.Inventory.Data[id] = {}
@@ -1187,7 +1192,7 @@ local curTime = CurTime
 function GM:Think()
 	local ctime = curTime()
 	local allPlayers = player.GetAll()
-	--[[
+
 	for v,k in pairs(allPlayers) do
 		if not k.nextHungerUpdate then k.nextHungerUpdate = ctime + impulse.Config.HungerTime end
 
@@ -1220,12 +1225,14 @@ function GM:Think()
 				end
 			end
 		end
+		--[[
 		if not k.nextHearUpdate or k.nextHearUpdate < CurTime() then -- optimized version of canhear hook based upon darkrp
 			canHearCheck(k)
 			k.nextHearUpdate = ctime + 0.65
 		end
+		--]]
 	end
-	--]]
+
 	for v,k in pairs(impulse.Arrest.Dragged) do
 		if not IsValid(v) then
 			impulse.Arrest.Dragged[v] = nil

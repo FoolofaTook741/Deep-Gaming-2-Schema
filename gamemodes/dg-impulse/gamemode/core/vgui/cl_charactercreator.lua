@@ -1,14 +1,15 @@
 local PANEL = {}
 
 function PANEL:Init()
-	self:SetSize(600, 400)
+	self:SetSize(600, 420)
 	self:Center()
 	self:SetTitle("Character Creation")
 	self:MakePopup()
 	self:SetBackgroundBlur(true)
 
+	local hairColour = impulse.Config.DefaultHairColors[table.GetKeys(impulse.Config.DefaultHairColors)[1]]
 	self.nextButton = vgui.Create("DButton", self)
-	self.nextButton:SetPos(530,370)
+	self.nextButton:SetPos(530,390)
 	self.nextButton:SetSize(60,20)
 	self.nextButton:SetText("Finish")
 	self.nextButton:SetDisabled(false)
@@ -17,6 +18,10 @@ function PANEL:Init()
 		local characterGender = self.genderBox:GetValue():lower()
 		local characterModel = self.characterPreview.Entity:GetModel()
 		local characterSkin = self.characterPreview.Entity:GetSkin()
+		local characterHairColour = self.characterPreview.Entity.HairColor
+		local characterBeard = self.characterPreview.Entity:GetBodygroup( self.characterPreview.Entity:FindBodygroupByName("beard"))
+		local characterHair = self.characterPreview.Entity:GetBodygroup( self.characterPreview.Entity:FindBodygroupByName("hair"))
+		local character
 
 		local msg = Derma_Message
 
@@ -36,6 +41,11 @@ function PANEL:Init()
 			net.WriteString(characterName)
 			net.WriteString(characterModel)
 			net.WriteUInt(characterSkin, 8)
+
+			net.WriteColor(hairColour)
+
+			net.WriteUInt(characterBeard, 8)
+			net.WriteUInt(characterHair, 8)
 			net.SendToServer()
 
     		LocalPlayer():ScreenFade(SCREENFADE.IN, color_black, 4, 0.3)
@@ -57,17 +67,31 @@ function PANEL:Init()
 		end, "No, take me back")
 	end
 
+	
+
 	self.characterPreview = vgui.Create("DModelPanel", self)
 	self.characterPreview:SetSize(600,400)
 	self.characterPreview:SetPos(0,30)
 	self.characterPreview:SetModel(impulse.Config.DefaultMaleModels[1])
 	self.characterPreview:MoveToBack()
 	self.characterPreview:SetCursor("arrow")
-	self.characterPreview:SetFOV(70)
+	self.characterPreview:SetFOV(40)
 	self.characterPreview:SetCamPos(Vector(52, 52, 52))
- 	function self.characterPreview:LayoutEntity(ent) 
-  		ent:SetAngles(Angle(0,40,0))
- 	end
+	self.characterPreview.Entity.hairBodygroupID = self.characterPreview.Entity:FindBodygroupByName("hair")
+	self.characterPreview.Entity.beardBodygroupID = self.characterPreview.Entity:FindBodygroupByName("beard")
+
+	function self.characterPreview:LayoutEntity(ent)
+		ent:SetAngles(Angle(0,45,0))
+
+		local headPos = ent:GetBonePosition(ent:LookupBone("ValveBiped.Bip01_Head1") or 0)
+
+		if headPos then
+			self:SetLookAt(headPos)
+			self:SetCamPos(headPos + Vector(30, 30, 5))
+		end
+
+		ent.HairColor = hairColour
+	end
 
  	local characterPreview = self.characterPreview
 
@@ -98,14 +122,44 @@ function PANEL:Init()
   		if value == "Male" then
   			self:PopulateModels(impulse.Config.DefaultMaleModels)
   			characterPreview:SetModel(impulse.Config.DefaultMaleModels[1])
-  			self.skinSlider:SetValue(0)
-  			self.skinSlider:SetMax(characterPreview.Entity:SkinCount())
+  			
   		else
   			self:PopulateModels(impulse.Config.DefaultFemaleModels)
   			characterPreview:SetModel(impulse.Config.DefaultFemaleModels[1])
-  			self.skinSlider:SetValue(0)
-  			self.skinSlider:SetMax(characterPreview.Entity:SkinCount())
+			self.beardSlider:SetValue(0)
   		end
+
+		characterPreview.Entity.beardBodygroupID = characterPreview.Entity:FindBodygroupByName("beard")
+		characterPreview.Entity.hairBodygroupID = characterPreview.Entity:FindBodygroupByName("hair")
+
+		self.skinSlider:SetValue(0)
+		self.skinSlider:SetMax(characterPreview.Entity:SkinCount() - 1)
+
+		self.beardSlider:SetValue(0)
+		self.beardSlider:SetMax(characterPreview.Entity.beardBodygroupID == -1 and 0 or characterPreview.Entity:GetBodygroupCount(characterPreview.Entity.beardBodygroupID)-1)
+		
+		self.hairSlider:SetValue(0)
+		self.hairSlider:SetMax(characterPreview.Entity.hairBodygroupID == -1 and 0 or characterPreview.Entity:GetBodygroupCount(characterPreview.Entity.hairBodygroupID)-1)
+  	end
+
+	self.hairColourLbl = vgui.Create("DLabel", self)
+	self.hairColourLbl:SetFont("Impulse-Elements18-Shadow")
+	self.hairColourLbl:SetText("Hair Colour:")
+	self.hairColourLbl:SizeToContents()
+	self.hairColourLbl:SetPos(10,150)
+
+	self.hairColourBox = self:Add("DComboBox")
+	self.hairColourBox:SetPos(10,170)
+  	self.hairColourBox:SetSize(180,23)
+
+	for hairName, hairColor in pairs(impulse.Config.DefaultHairColors) do
+		self.hairColourBox:AddChoice(hairName, hairColor)
+	end
+
+	self.hairColourBox:SetValue(self.hairColourBox:GetOptionText(1))
+
+  	function self.hairColourBox.OnSelect(panel, index, value, data)
+		hairColour = data
   	end
 
 	self.modelLbl = vgui.Create("DLabel", self)
@@ -132,7 +186,48 @@ function PANEL:Init()
 	self.skinSlider.TextArea:SetTextColor(color_white)
 
 	function self.skinSlider:OnValueChanged(newSkin)
-		characterPreview.Entity:SetSkin(newSkin)
+    	characterPreview.Entity:SetSkin(math.floor(newSkin))
+	end
+
+	self.beardLbl = vgui.Create("DLabel", self)
+	self.beardLbl:SetFont("Impulse-Elements18-Shadow")
+	self.beardLbl:SetText("Beard Type:")
+	self.beardLbl:SizeToContents()
+	self.beardLbl:SetPos(400, 300)
+
+	local beardBodygroupID = characterPreview.Entity:FindBodygroupByName("beard")
+	self.beardSlider = vgui.Create("DNumSlider", self)
+	self.beardSlider:SetMin(0)
+	self.beardSlider:SetDecimals(0)
+	self.beardSlider:SetMax(characterPreview.Entity.beardBodygroupID == -1 and 0 or characterPreview.Entity:GetBodygroupCount(characterPreview.Entity.beardBodygroupID)-1)
+	self.beardSlider:SetSize(395,20)
+	self.beardSlider:SetPos(230, 320)
+	self.beardSlider:SetValue(0)
+	self.beardSlider.TextArea:SetTextColor(color_white)
+
+	function self.beardSlider:OnValueChanged(newSkin)
+		characterPreview.Entity:SetBodygroup(characterPreview.Entity.beardBodygroupID, newSkin)
+	end
+
+	self.hairLbl = vgui.Create("DLabel", self)
+	self.hairLbl:SetFont("Impulse-Elements18-Shadow")
+	self.hairLbl:SetText("Hair Type:")
+	self.hairLbl:SizeToContents()
+	self.hairLbl:SetPos(400,340)
+
+	local hairBodygroupID = characterPreview.Entity:FindBodygroupByName("hair")
+	self.hairSlider = vgui.Create("DNumSlider", self)
+	self.hairSlider:SetMin(0)
+	self.hairSlider:SetDecimals(0)
+	self.hairSlider:SetMax(characterPreview.Entity.hairBodygroupID == -1 and 0 or characterPreview.Entity:GetBodygroupCount(characterPreview.Entity.hairBodygroupID)-1)
+	self.hairSlider:SetSize(395,20)
+	self.hairSlider:SetPos(230, 360)
+	self.hairSlider:SetValue(0)
+	self.hairSlider.TextArea:SetTextColor(color_white)
+
+	
+	function self.hairSlider:OnValueChanged(newSkin)
+		characterPreview.Entity:SetBodygroup(characterPreview.Entity.hairBodygroupID, newSkin)
 	end
 end
 
@@ -155,8 +250,19 @@ function PANEL:PopulateModels(modelTable)
     	modelIcon.savedModel = model
     	modelIcon.DoClick = function()
     		self.characterPreview:SetModel(modelIcon.savedModel)
+
+			self.characterPreview.Entity.beardBodygroupID = self.characterPreview.Entity:FindBodygroupByName("beard")
+			self.characterPreview.Entity.hairBodygroupID = self.characterPreview.Entity:FindBodygroupByName("hair")
+
     		self.skinSlider:SetValue(0)
     		self.skinSlider:SetMax(self.characterPreview.Entity:SkinCount()-1)
+
+			self.hairSlider:SetValue(0)
+			self.hairSlider:SetMax(self.characterPreview.Entity.hairBodygroupID == -1 and 0 or self.characterPreview.Entity:GetBodygroupCount(self.characterPreview.Entity.hairBodygroupID)-1)
+
+			self.beardSlider:SetValue(0)
+			self.beardSlider:SetMax(self.characterPreview.Entity.beardBodygroupID == -1 and 0 or self.characterPreview.Entity:GetBodygroupCount(self.characterPreview.Entity.beardBodygroupID)-1)
+
     	end
   	end
 end

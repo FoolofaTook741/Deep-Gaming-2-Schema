@@ -322,18 +322,25 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			dmginfo:ScaleDamage(0.65)
 		end
 		if hitgroup == HITGROUP_HEAD then
-			if ply.HasReinforcedCPMask == true and ply.HasCPMask == true then
-                local rank = ply.GetTeamRank and ply:GetTeamRank() or 0
-				ply:EmitSound("player/bhit_helmet-1.wav")
-                dmginfo:ScaleDamage(0.85)
+			local rank = ply.GetTeamRank and ply:GetTeamRank() or 0
+			if rank >= RANK_DCO then
+				dmginfo:ScaleDamage(0.85)
+			elseif rank >= RANK_DVL then
+				dmginfo:ScaleDamage(0.88)
+			elseif rank >= RANK_OFC then
+				dmginfo:ScaleDamage(0.90)
+			elseif rank >= RANK_I1 then
+				dmginfo:ScaleDamage(0.93)
+			else
+				dmginfo:ScaleDamage(0.95)
 			end
 		end
 	else
-		if ply.HasHelmet1 and hitgroup == HITGROUP_HEAD and ply:Team() ~= TEAM_CA then
+		if ply.HasHelmet1 and hitgroup == HITGROUP_HEAD then
 			dmginfo:ScaleDamage(0.9)
 			ply:EmitSound("player/bhit_helmet-1.wav")
 		elseif ply.HasHelmet2 == true and hitgroup == HITGROUP_HEAD then
-			dmginfo:ScaleDamage(0.8)
+			dmginfo:ScaleDamage(0.775)
 			ply:EmitSound("player/bhit_helmet-1.wav")
 		elseif ply.HasHelmet3 == true and hitgroup == HITGROUP_HEAD then
 			dmginfo:ScaleDamage(0.6)
@@ -700,3 +707,46 @@ hook.Add("PlayerDeath", "GiveAchKuma", function(victim, inflictor, attacker)
         attacker:AchievementGive("ach_kuma")
     end
 end)
+
+util.AddNetworkString("ixSetHairColor")
+util.AddNetworkString("ixSetPantsColor")
+util.AddNetworkString("ixSetTorsoColor")
+util.AddNetworkString("ixSetShirtColor")
+util.AddNetworkString("ixSetHeadGearColor")
+util.AddNetworkString("impulse.HairDye")
+
+net.Receive("impulse.HairDye", function(length, client)
+    if ( !client:HasInventoryItem("item_hairdye") ) then return end
+
+    local newColour = net.ReadColor()
+
+    client.impulseData = client.impulseData or {}
+    client.impulseData.hairColor = newColour
+
+    client:SetHairColor(newColour)
+
+    local query = mysql:Update("impulse_players")
+        query:Update("data", util.TableToJSON(client.impulseData))
+        query:Where("steamid", client:SteamID())
+    query:Execute()
+
+    hook.Run("PlayerChangedHairColor", client, newColour)
+
+    client:TakeInventoryItemClass("item_hairdye")
+end)
+
+util.AddNetworkString("impulse.SyncColours")
+function SCHEMA:PlayerSpawn(ply, transition)
+    for k, v in player.Iterator() do
+        if ( v == ply ) then continue end
+
+        net.Start("impulse.SyncColours")
+            net.WritePlayer(v)
+            net.WriteColor(v:GetHairColor())
+            net.WriteColor(v:GetTorsoColor())
+            net.WriteColor(v:GetShirtColor())
+            net.WriteColor(v:GetHeadGearColor())
+            net.WriteColor(v:GetPantsColor())
+        net.Send(ply)
+    end
+end

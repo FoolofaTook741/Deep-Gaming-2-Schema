@@ -62,11 +62,11 @@ sound.Add({
 SWEP.Primary.Sound = Sound("CUST.MP5.Single")
 SWEP.Primary.Inside_Sound = Sound("CUST.MP5.Inside")
 
-SWEP.Primary.Recoil = 1 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 9
+SWEP.Primary.Recoil = .8 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 7
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.001
-SWEP.Primary.Delay = RPM(560)
+SWEP.Primary.Cone = 0.023
+SWEP.Primary.Delay = RPM(635)
 
 SWEP.UseIronsightsRecoil = false
 
@@ -82,7 +82,7 @@ SWEP.Secondary.DefaultClip = -1
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.01
+SWEP.Spread.Max = 0.04
 SWEP.Spread.IronsightsMod = 0.1 -- multiply
 SWEP.Spread.CrouchMod = 0.1 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 10.2 -- how does if the player is in the air effect spread (multiply)

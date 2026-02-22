@@ -47,7 +47,7 @@ SWEP.Primary.Sound = Sound("CUST.OSIS.Single")
 SWEP.Primary.Recoil = 3.25 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 7
 SWEP.Primary.NumShots = 8
-SWEP.Primary.Cone = 0.072
+SWEP.Primary.Cone = 0.067
 SWEP.Primary.Delay = RPM(180)
 
 SWEP.Primary.Ammo = "buckshot"
@@ -69,7 +69,7 @@ SWEP.UseIronsightsRecoil = false
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0.035
-SWEP.Spread.Max = 0.18
+SWEP.Spread.Max = 0.095
 SWEP.Spread.IronsightsMod = 1 -- multiply
 SWEP.Spread.CrouchMod = 1 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2 -- how does if the player is in the air effect spread (multiply)

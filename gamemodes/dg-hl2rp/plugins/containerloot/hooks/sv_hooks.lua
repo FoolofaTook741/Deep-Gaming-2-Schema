@@ -154,7 +154,7 @@ impulse.RagdollContainer.ScrapWeapons = {
             ["scrap_ar2e"] = {Rarity = 650},
             ["scrap_rappel"] = {Rarity = 750},
             ["scrap_osips"] = {Rarity = 800},
-			["scrap_ar15"] = {Rarity = 800},
+			["scrap_mini14"] = {Rarity = 800},
             ["scrap_xm1014"] = {Rarity = 800},
             ["scrap_omr"] = {Rarity = 800},
 		}
@@ -171,7 +171,7 @@ impulse.RagdollContainer.ScrapWeapons = {
             ["scrap_deagle"] = {Rarity = 750},
             ["scrap_sw500"] = {Rarity = 999},
 			["scrap_hb"] = {Rarity = 800},
-            ["scrap_ar15"] = {Rarity = 800},
+            ["scrap_mini14"] = {Rarity = 800},
             ["scrap_p90"] = {Rarity = 500},
             ["scrap_xm1014"] = {Rarity = 800},
 		}
@@ -219,7 +219,7 @@ impulse.RagdollContainer.AmmoDrops = {
             ["wep_mp7"] = true,
             ["wep_mp7a8"] = true,
             ["wep_p90"] = true,
-            ["wep_ar15"] = true,
+            ["wep_mini14"] = true,
             ["wep_honeybadger"] = true,
         }
     },

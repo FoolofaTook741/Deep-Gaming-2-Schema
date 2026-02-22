@@ -18,12 +18,12 @@ ITEM.CanStack = true
 
 ITEM.UseName = "Load"
 
-local AmmoAmount = 45
+local AmmoAmount = 50
 local AmmoType = "SMG1"
 ITEM.ConfiscateReward = 3
 
 function ITEM:OnUse(ply)
-	ply:GiveAmmo(45, "SMG1")
+	ply:GiveAmmo(50, "SMG1")
 	ply:GiveInventoryItem("empty"..ITEM.UniqueID)
 	return true
 end

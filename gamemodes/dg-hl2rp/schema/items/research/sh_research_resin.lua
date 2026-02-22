@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_resin"
 ITEM.Name = "Resin"
 ITEM.Desc = "A tightly compacted cluster of Resin, ready for use in the Fabricator."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/props_lab/jar01b.mdl")
 ITEM.FOV = 44.061604584527
 ITEM.CamPos = Vector(-6.8767910003662, 4.0114612579346, 28.080228805542)

@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_steel"
 ITEM.Name = "Piece of Steel"
 ITEM.Desc = "A heavily refined piece of metal used in the construction of buildings."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/props_pipes/pipe02_connector01.mdl")
 ITEM.FOV = 40
 ITEM.Weight = 0.3

@@ -76,9 +76,14 @@ function impulse.Dispatch.GetCityCode()
 end
 
 local function findAndFire(pos)
-    for v,k in pairs(ents.FindByClass("func_button")) do
-        if pos:DistToSqr(k:GetPos()) < (9 ^ 2) then
-            k:Fire("use")
+    local radius = 64
+    local radiusSqr = radius * radius
+    for _, ent in ipairs(ents.GetAll()) do
+        local class = ent:GetClass()
+        if (class == "func_button" or class == "func_door") then
+            if pos:DistToSqr(ent:GetPos()) < radiusSqr then
+                ent:Fire("use")
+            end
         end
     end
 end

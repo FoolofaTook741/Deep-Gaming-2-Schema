@@ -23,10 +23,10 @@ function ENT:Use(caller, activator)
 end
 
 
-function ENT:StartC4()
+function ENT:StartC4(jam)
     local id = self:GetCreationID()
 
-    timer.Create(id .. "DeepPWCBox", 2, math.floor(impulse.Config.PreWarCacheTime), function()
+    timer.Create(id .. "DeepPWCBox", 2, math.floor(impulse.Config.PreWarCacheTime / 2), function()
         self:EmitSound("buttons/button17.wav")
     end)
     timer.Create("PWCCooldown", 900, 1, function()
@@ -41,7 +41,7 @@ function ENT:StartC4()
        end 
     end
 
-    if jammer == true then
+    if jam == true then
         timer.Simple(20, function()
             net.Start("DeepPWCRaid")
             net.WriteVector(self:GetPos())
@@ -60,7 +60,7 @@ function ENT:StartC4()
 
         self:EmitBudgetSound("ambient/explosions/explode_1.wav")
 
-        local items, count = impulse.Loot.GenerateFromPool("prewarcache")
+        local items, count = impulse.Loot.GenerateFromPools({"prewarweaponcache", "prewarammocache", "prewararmorcache", "prewarmedcache"})
         local total = count * 0.9
         local x = 0.5
         local f, r, u = self:GetForward(), self:GetRight(), self:GetUp()

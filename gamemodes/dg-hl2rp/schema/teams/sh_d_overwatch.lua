@@ -184,8 +184,8 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "ECHO",
 			description = "ECHO units are highly trained medium-range combat units. ECHO units are a jack of all trades, master of none. They have access to a mix of close and medium range weaponry.",
-			model = "models/nemez/combine_soldiers/combine_soldier_h.mdl",
-			skin = 0,
+			model = "models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl",
+			skin = 1,
 			itemsAdd = {
 				{class = "wep_osips", amount = 1},
 				{class = "item_vocoder", amount = 1}
@@ -196,7 +196,7 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "MACE",
 			description = "MACE units are close-quaters engagement specialists. They are ineffective at medium and long ranges however they excel at close-quaters due to their SPAS-12 shotgun and heavy armour. MACE units are excellent at performing raids and bruteforcing into enemy strongholds.",
-			model = "models/nemez/combine_soldiers/combine_soldier_h.mdl",
+			model = "models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl",
 			skin = 1,
 			itemsAdd = {
 				{class = "wep_osisg", amount = 1},
@@ -208,8 +208,8 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "RANGER",
 			description = "RANGER units have a diversified arsenal and the primary skillset in long range engagements. Utilizing your O.M.R. or O.S.R. you can effectively dispatch hostiles at ranges of up to 500 meters.",
-			model = "models/nemez/combine_soldiers/combine_soldier_recon_h.mdl",
-			skin = 5000,
+			model = "models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl",
+			skin = 2,
 			itemsAdd = {
 				{class = "wep_omr", amount = 1},
 				{class = "att_optic", amount = 1},
@@ -222,7 +222,7 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "FIST",
 			description = "FIST units, also known as Combine Elites, are deployed to high risk situations.",
-			model = "models/nemez/combine_soldiers/combine_soldier_elite_h.mdl",
+			model = "models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl",
 			skin = 0,
 			itemsAdd = {
 				{class = "wep_ar2e", amount = 1},
@@ -240,8 +240,8 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "SWEEPER",
 			description = "SWEEPER units, also known as APF, specialize in engagements that require significant concentrated fire to lock down an enemy position.",
-			model = "models/cultist/hl_a/combine_suppresor/npc/combine_suppresor.mdl",
-			skin = 0,
+			model = "models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl",
+			skin = 1,
 			itemsAdd = {
 				{class = "wep_apf", amount = 1},
 				{class = "item_vocoder", amount = 1}
@@ -257,8 +257,8 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "NOMAD",
 			description = "NOMAD units serve as vehicle operators of the Combine Transhuman Arm, they utilize Hunters and APCs for their duties.",
-			model = "models/wn/soldier.mdl",
-			skin = 0,
+			model = "models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl",
+			skin = 6,
 			itemsAdd = {
 				{class = "wep_osips", amount = 1},
 				{class = "item_vocoder", amount = 1}
@@ -274,7 +274,7 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "PAYBACK",
 			description = "PAYBACK units, also known as Wallhammer, they have extremely powerful armor and a close range shotgun.",
-			model = "models/transition/soldiers/transition-wallhammer/transition-wallhammer.mdl",
+			model = "models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl",
 			skin = 0,
 			itemsAdd = {
 				{class = "wep_osihs", amount = 1},
@@ -297,17 +297,14 @@ TEAM_OTA = impulse.Teams.Define({
 			description = "owg",
 			xp = 0,
 			onBecome = function(ply, rank)
-				ply:SetModel("models/cultist/hl_a/combine_grunt/npc/combine_grunt.mdl")
+				ply:SetModel("models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl")
 				ply:SetRPName("CTA:CGR." .. tagtable[ply:GetTeamClass()] .. "-" ..math.random(10, 999))
 				if ply:GetTeamClass() == CLASS_ECHO then
-					ply:SetSkin(0)
+					ply:SetSkin(1)
 					ply:SetArmor(80)
 					ply:SetMaxArmor(80)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(0,0)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_MACE then
 					ply:SetSkin(1)
@@ -329,19 +326,16 @@ TEAM_OTA = impulse.Teams.Define({
 			whitelistLevel = 1,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_ECHO then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
 					ply:SetSkin(0)
 					ply:SetArmor(100)
 					ply:SetMaxArmor(100)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_MACE then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
 					ply:SetSkin(1)
 					ply:SetArmor(110)
 					ply:SetMaxArmor(110)
@@ -353,19 +347,16 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_APF then
-					ply:SetModel("models/cultist/hl_a/combine_suppresor/npc/combine_suppresor.mdl")
-					ply:SetSkin(0)
+					ply:SetModel("models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl")
+					ply:SetSkin(1)
 					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetArmor(150)
 					ply:SetMaxArmor(150)
 					ply:SetRunSpeed(170)
 					ply:SetModelScale(1)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_RANGER then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_recon_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
 					ply:SetArmor(90)
 					ply:SetMaxArmor(90)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
@@ -376,7 +367,7 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_elite_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl")
 					ply:SetArmor(140)
 					ply:SetMaxArmor(140)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
@@ -387,19 +378,17 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_NOMAD then
-					ply:SetModel("models/wn/soldier.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(6)
 					ply:SetArmor(100)
 					ply:SetMaxArmor(100)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 					ply:Give("weapon_lvsrepair")
 				elseif ply:GetTeamClass() == CLASS_PAYBACK then
-					ply:SetModel("models/transition/soldiers/transition-wallhammer/transition-wallhammer.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
 					ply:SetHealth(150)
 					ply:SetMaxHealth(150)
 					ply:SetModelScale(1.1)
@@ -408,9 +397,6 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetRunSpeed(160)
 					ply:SetWalkSpeed(80)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 				end
 				ply:SetRPName("CTA:CSO." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
@@ -422,54 +408,42 @@ TEAM_OTA = impulse.Teams.Define({
 			whitelistLevel = 2,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_ECHO then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
 					ply:SetSkin(0)
 					ply:SetArmor(120)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetMaxArmor(120)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetModelScale(1)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_MACE then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
 					ply:SetSkin(1)
 					ply:SetArmor(135)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
 					ply:SetMaxArmor(135)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetModelScale(1)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_RANGER then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_recon_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
 					ply:SetArmor(105)
 					ply:SetMaxArmor(105)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetModelScale(1)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_APF then
-					ply:SetModel("models/cultist/hl_a/combine_suppresor/npc/combine_suppresor.mdl")
-					ply:SetSkin(0)
+					ply:SetModel("models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl")
+					ply:SetSkin(1)
 					ply:SetArmor(175)
 					ply:SetMaxArmor(175)
 					ply:SetRunSpeed(170)
 					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetModelScale(1)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_elite_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl")
 					ply:SetArmor(140)
 					ply:SetMaxArmor(140)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
@@ -480,19 +454,17 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_NOMAD then
-					ply:SetModel("models/wn/soldier.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(6)
 					ply:SetArmor(120)
 					ply:SetMaxArmor(120)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 					ply:Give("weapon_lvsrepair")
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_PAYBACK then
-					ply:SetModel("models/transition/soldiers/transition-wallhammer/transition-wallhammer.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
 					ply:SetHealth(150)
 					ply:SetMaxHealth(150)
 					ply:SetModelScale(1.1)
@@ -501,9 +473,6 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetRunSpeed(160)
 					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetWalkSpeed(80)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
 				end
 				ply:SetRPName("CTA:ECS." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
@@ -518,7 +487,8 @@ TEAM_OTA = impulse.Teams.Define({
 			whitelistLevel = 3,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_ECHO then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_coordinator_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(0)
 					ply:SetArmor(140)
 					ply:SetMaxArmor(140)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
@@ -529,7 +499,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_MACE then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_urban_shotgunner_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(1)
 					ply:SetArmor(150)
 					ply:SetMaxArmor(150)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
@@ -540,7 +511,7 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_APF then
-					ply:SetModel("models/transition/soldiers/transition-suppressor/transition-suppressor.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl")
 					ply:SetSkin(1)
 					ply:SetArmor(225)
 					ply:SetMaxArmor(225)
@@ -552,7 +523,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_RANGER then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_urban_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(0)
 					ply:SetArmor(130)
 					ply:SetMaxArmor(130)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
@@ -563,7 +535,7 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_elite_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl")
 					ply:SetArmor(160)
 					ply:SetMaxArmor(160)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
@@ -574,7 +546,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_NOMAD then
-					ply:SetModel("models/wn/soldier.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(6)
 					ply:SetArmor(140)
 					ply:SetMaxArmor(140)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
@@ -586,7 +559,7 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:Give("weapon_lvsrepair")
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_PAYBACK then
-					ply:SetModel("models/wn/wallhammer.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
 					ply:SetHealth(150)
 					ply:SetMaxHealth(150)
 					ply:SetModelScale(1.1)
@@ -614,7 +587,8 @@ TEAM_OTA = impulse.Teams.Define({
 			whitelistLevel = 4,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_ECHO then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_coordinator_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(0)
 					ply:SetArmor(160)
 					ply:SetMaxArmor(160)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
@@ -625,7 +599,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_MACE then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_urban_shotgunner_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(1)
 					ply:SetArmor(170)
 					ply:SetMaxArmor(170)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
@@ -636,7 +611,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_RANGER then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_urban_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(0)
 					ply:SetArmor(150)
 					ply:SetMaxArmor(150)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
@@ -646,8 +622,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_APF then
-					ply:SetModel("models/transition/soldiers/transition-suppressor/transition-suppressor.mdl")
-					ply:SetSkin(0)
+					ply:SetModel("models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl")
+					ply:SetSkin(1)
 					ply:SetArmor(225)
 					ply:SetMaxArmor(225)
 					ply:SetRunSpeed(170)
@@ -658,7 +634,7 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
-					ply:SetModel("models/nemez/combine_soldiers/combine_soldier_elite_h.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl")
 					ply:SetArmor(180)
 					ply:SetMaxArmor(180)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
@@ -668,7 +644,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(2,0)
 				elseif ply:GetTeamClass() == CLASS_NOMAD then
-					ply:SetModel("models/wn/soldier.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(6)
 					ply:SetArmor(160)
 					ply:SetMaxArmor(160)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
@@ -679,7 +656,7 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetBodygroup(2,0)
 					ply:Give("weapon_lvsrepair")
 				elseif ply:GetTeamClass() == CLASS_PAYBACK then
-					ply:SetModel("models/wn/wallhammer.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
 					ply:SetHealth(150)
 					ply:SetMaxHealth(150)
 					ply:SetModelScale(1.1)
@@ -700,174 +677,183 @@ TEAM_OTA = impulse.Teams.Define({
 			description = "ord",
 			xp = 0,
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
-			--[[canPromote = {
-				[RANK_OWG] = true,
-				[RANK_EOS] = true,
-				[RANK_OCP] = true,
-			},]]
 			whitelistLevel = 5,
 			onBecome = function(ply, rank)
-				if ply:GetTeamClass() != CLASS_FIST && ply:GetTeamClass() != CLASS_APF && ply:GetTeamClass() != CLASS_NOMAD && ply:GetTeamClass() != CLASS_PAYBACK then
-					if ply:GetTeamClass() == CLASS_MACE then
-						ply:SetModel("models/hlvr/characters/combine_captain_night/combine_captain_night.mdl")
-						ply:SetSkin(0)
-						ply:SetBodygroup(1,0)
-						ply:SetBodygroup(2,0)
-						ply:SetBodygroup(3,0)
-						ply:SetBodygroup(4,0)
-						ply:SetBodygroup(5,0)
-						ply:SetBodygroup(6,0)
-						ply:SetBodygroup(7,0)
-						ply:SetBodygroup(8,0)
-						ply:SetBodygroup(9,0)
-						ply:SetBodygroup(10,0)
-						ply:SetBodygroup(11,0)
-						ply:SetBodygroup(12,0)
-						ply:SetWalkSpeed(impulse.Config.WalkSpeed)
-					else
-						ply:SetModel("models/wn/ordinal.mdl")
-					end
-					ply:SetArmor(200)
-					ply:SetMaxArmor(200)
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:SetModel("models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl")
+					ply:SetSkin(0)
+					ply:SetArmor(180)
+					ply:SetMaxArmor(180)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
-					ply:SetRPName("CTA:ORD." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetBodygroup(0,0)
 					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
 					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
+					ply:SetBodygroup(2,1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetModel("models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl")
+					ply:SetSkin(0)
+					ply:SetArmor(190)
+					ply:SetMaxArmor(190)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_RANGER then
+					ply:SetModel("models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl")
+					ply:SetSkin(0)
+					ply:SetArmor(170)
+					ply:SetMaxArmor(170)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,1)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_APF then
-					ply:SetModel("models/transition/soldiers/suppressor-eow/suppressor-eow.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl")
+					ply:SetSkin(1)
 					ply:SetArmor(250)
 					ply:SetMaxArmor(250)
 					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetModelScale(1)
 					ply:SetRunSpeed(170)
-					ply:SetRPName("CTA:ADL." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetModelScale(1)
 					ply:SetBodygroup(0,0)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
-					ply:SetModel("models/wn/ota_elite_summit.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_etl/dg_etl.mdl")
 					ply:SetArmor(200)
 					ply:SetMaxArmor(200)
-					ply:SetModelScale(1)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
-					ply:SetRPName("CTA:ETL." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999)) 
+					ply:SetModelScale(1)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetBodygroup(0,0)
 					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
+					ply:SetBodygroup(2,1)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_NOMAD then
-					ply:SetModel("models/transition/soldiers/transition-ordinal/transition-ordinal.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(6)
 					ply:SetArmor(180)
 					ply:SetMaxArmor(180)
-					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
-					ply:SetSkin(3)
-					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
-					ply:SetRPName("CTA:ABL." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999)) 
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:Give("weapon_lvsrepair")
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_PAYBACK then
-					ply:SetSkin(0)
-                    ply:SetModel("models/transition/soldiers/wallhammer-eow/wallhammer-eow.mdl")
-					ply:SetHealth(175)
-					ply:SetMaxHealth(175)
+					ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
+					ply:SetHealth(200)
+					ply:SetMaxHealth(200)
 					ply:SetModelScale(1.1)
 					ply:SetArmor(350)
-					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetRPName("CTA:WDL." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999)) 
 					ply:SetMaxArmor(350)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetRunSpeed(160)
 					ply:SetWalkSpeed(80)
 					ply:SetBodygroup(0,0)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(2,0)
 				end
+				ply:SetRPName("CTA:ORD." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
 		},
 		{
 			name = "CSC",
-			description = "osc",
+			description = "csc",
 			xp = 0,
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
-			--[[canPromote = {
-				[RANK_OWG] = true,
-				[RANK_EOS] = true,
-				[RANK_OCP] = true,
-				[RANK_OSL] = true,
-				[RANK_ORD] = true,
-			},]]
 			whitelistLevel = 6,
 			onBecome = function(ply, rank)
-				if ply:GetTeamClass() != CLASS_FIST && ply:GetTeamClass() != CLASS_APF && ply:GetTeamClass() != CLASS_NOMAD && ply:GetTeamClass() != CLASS_PAYBACK then
-					ply:SetModel("models/wn/dg/ordinal.mdl")
-					ply:SetArmor(240)
-					ply:SetMaxArmor(240)
-					ply:SetRunSpeed(impulse.Config.JogSpeed) 
-					ply:SetBodygroup(0,0)
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:SetModel("models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl")
+					ply:SetSkin(3)
+					ply:SetArmor(200)
+					ply:SetMaxArmor(200)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
 					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
+					ply:SetBodygroup(2,1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetModel("models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl")
+					ply:SetSkin(3)
+					ply:SetArmor(210)
+					ply:SetMaxArmor(210)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_RANGER then
+					ply:SetModel("models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl")
+					ply:SetSkin(3)
+					ply:SetArmor(190)
+					ply:SetMaxArmor(190)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,1)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_APF then
-					ply:SetModel("models/wn/suppressor.mdl")
-					ply:SetArmor(300)
-					ply:SetMaxArmor(300)
-					ply:SetRunSpeed(170)
+					ply:SetModel("models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl")
+					ply:SetSkin(1)
+					ply:SetArmor(275)
+					ply:SetMaxArmor(275)
 					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetBodygroup(0,0)
+					ply:SetRunSpeed(170)
 					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(2,0)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
-					ply:SetModel("models/wn/ota_elite_summit.mdl")
-					ply:SetArmor(225)
-					ply:SetMaxArmor(225)
+					ply:SetModel("models/DG_models/DG_combinepack/DG_etl/dg_etl.mdl")
+					ply:SetArmor(220)
+					ply:SetMaxArmor(220)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
-					ply:SetBodygroup(0,0)
-					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
-					ply:SetBodygroup(1,0)
 					ply:SetModelScale(1)
-					ply:SetBodygroup(2,0)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,1)
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_NOMAD then
-					ply:SetModel("models/wn/soldier.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl")
+					ply:SetSkin(6)
 					ply:SetArmor(200)
 					ply:SetMaxArmor(200)
-					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
-					ply:SetBodygroup(0,0)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(2,0)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:Give("weapon_lvsrepair")
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_PAYBACK then
-					ply:SetModel("models/transition/soldiers/wallhammer-eow/wallhammer-eow.mdl")
+					ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
 					ply:SetHealth(200)
 					ply:SetMaxHealth(200)
 					ply:SetModelScale(1.1)
 					ply:SetArmor(400)
 					ply:SetMaxArmor(400)
-					ply:SetRunSpeed(160)
 					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(160)
 					ply:SetWalkSpeed(80)
 					ply:SetBodygroup(0,0)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(2,0)
-				end
-				if ply:GetTeamClass() == CLASS_ECHO then
-					ply:Give("plutonic_ar1c")
 				end
 				ply:SetRPName("CTA:CSC." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end

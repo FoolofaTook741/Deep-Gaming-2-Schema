@@ -4,7 +4,7 @@ ITEM.UniqueID = "ing_grapes"
 ITEM.Name = "Grapes"
 ITEM.Desc = "A healthy fruit that can also be used for wine."
 ITEM.Category = "Components"
-ITEM.Model = Model("models/props_junk/garbage_metalcan002a.mdl")
+ITEM.Model = Model("models/mosi/fallout4/props/food/tarberry.mdl")
 ITEM.FOV = 40
 ITEM.Weight = 0.2
 

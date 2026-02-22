@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_electronics"
 ITEM.Name = "Circuit Board"
 ITEM.Desc = "A old restored circuit board."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/props/cs_office/projector_p6.mdl")
 ITEM.FOV = 6.4971346704871
 ITEM.CamPos = Vector(81.948425292969, 100, 60.744987487793)

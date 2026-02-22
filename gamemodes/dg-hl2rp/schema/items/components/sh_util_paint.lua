@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_paint"
 ITEM.Name = "Paint"
 ITEM.Desc = "A bucket of paint."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/props_junk/metal_paintcan001a.mdl")
 ITEM.FOV = 40
 ITEM.Weight = 1

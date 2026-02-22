@@ -44,17 +44,17 @@ SWEP.Primary.Sound = Sound("LS2.SCAR.Single")
 SWEP.ReloadSound = "weapons/ar2/ar2_reload.wav"
 SWEP.EmptySound = "weapons/clipempty_pistol.wav"
 
-SWEP.Primary.Recoil = 1.7 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 7
-SWEP.Primary.PenetrationScale = 2
+SWEP.Primary.Recoil = 2.15 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 15
+SWEP.Primary.PenetrationScale = 1.55
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(650)
+SWEP.Primary.Cone = 0.001
+SWEP.Primary.Delay = RPM(420)
 
 SWEP.Primary.Ammo = "SniperRound"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 40
-SWEP.Primary.DefaultClip = 40
+SWEP.Primary.ClipSize = 25
+SWEP.Primary.DefaultClip = 25
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
@@ -62,8 +62,8 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 
 SWEP.Spread = {}
-SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.2
+SWEP.Spread.Min = 0.005
+SWEP.Spread.Max = 0.15
 SWEP.Spread.IronsightsMod = 0.5 -- multiply
 SWEP.Spread.CrouchMod = 0.2 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 1.5 -- how does if the player is in the air effect spread (multiply)

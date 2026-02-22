@@ -155,7 +155,7 @@ VENDOR.Sell = {
 			return false
 		end
 	},
-	["wep_mini14"] = {
+	["wep_g3a3"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
 		Max = 1,

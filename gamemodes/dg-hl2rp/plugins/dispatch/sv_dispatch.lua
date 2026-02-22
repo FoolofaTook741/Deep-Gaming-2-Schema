@@ -174,35 +174,6 @@ net.Receive("impulseHL2RPDispatchCityCode", function(len, ply)
 		end
 	end
 
-	if code == 1 then
-		for _, ply in ipairs(player.GetAll()) do
-			if ply:Team() ~= TEAM_CP then continue end
-			if not ply:HasInventoryItem("clo_reinforcedcphelmet") then continue end
-
-			local class = ply:GetTeamClass()
-			local rank  = ply:GetTeamRank()
-
-			local allowed = (class == CLASS_SWORD and rank >= RANK_SQL) or (rank == RANK_CMD)
-
-			if not allowed then
-				ply:TakeInventoryItemClass("clo_reinforcedcphelmet")
-				local targetID
-				local inv = impulse.Inventory.Data[ply.impulseID]
-				if inv and inv[1] then
-				    for id, item in pairs(inv[1]) do
-				        if item.class == "clo_cphelmet" then
-				            targetID = id
-				            break
-				        end
-				    end
-				end
-
-				if targetID then
-				    ply:SetInventoryItemEquipped(targetID, true)
-				end
-			end
-		end
-	end
 
 	nextCityCodeChange = CurTime() + 90
 

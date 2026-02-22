@@ -53,15 +53,15 @@ SWEP.Primary.Inside_Sound = Sound("LS2.M2.Inside")
 SWEP.Primary.Recoil = 2.6 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 15
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.04
-SWEP.Primary.Delay = RPM(410)
-SWEP.SpeedReduction = 170
+SWEP.Primary.Cone = 0.015
+SWEP.Primary.Delay = RPM(400)
+SWEP.SpeedReduction = 200
 SWEP.Primary.PenetrationScale = 1.55
 
 SWEP.Primary.Ammo = "AlyxGun"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 150
-SWEP.Primary.DefaultClip = 150
+SWEP.Primary.ClipSize = 75
+SWEP.Primary.DefaultClip = 75
 
 SWEP.UseIronsightsRecoil = false
 
@@ -75,12 +75,12 @@ SWEP.CenteredAng = Angle(3,3,0)
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
-SWEP.Spread.Max = 4
+SWEP.Spread.Max = 40
 SWEP.Spread.IronsightsMod = 0.85 -- multiply
 SWEP.Spread.CrouchMod = 0.2 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 10.8 -- how does if the player is in the air effect spread (multiply)
-SWEP.Spread.RecoilMod = 0.01 -- how does the recoil effect the spread (sustained fire) (additional)
-SWEP.Spread.VelocityMod = 16.25 -- movement speed effect on spread (additonal)
+SWEP.Spread.RecoilMod = 0.001 -- how does the recoil effect the spread (sustained fire) (additional)
+SWEP.Spread.VelocityMod = 200 -- movement speed effect on spread (additonal)
 
 SWEP.IronsightsPos = Vector(-1.6, 0, -1)
 SWEP.IronsightsAng = Angle(0, 3, 0)
@@ -104,7 +104,7 @@ SWEP.Attachments = {
 		},
 		ModSetup = function(e)
 			e.Primary.Delay = RPM(600)
-			e.Primary.Recoil = 8
+			e.Primary.Recoil = 4
 		end,
 		ModCleanup = function(e)
 			e.Primary.Delay = copyDelay

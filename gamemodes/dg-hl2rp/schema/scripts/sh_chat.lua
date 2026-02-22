@@ -108,8 +108,11 @@ local applyCommand = {
 	requiresArg = false,
 	requiresAlive = true,
 	onRun = function(ply)
-		local message = ply:GetTeamWhitelist("TEAM_CITIZEN") or 0
-
+		local message = ply.ApplyLevel or 0
+		--print(ply.ApplyLevel)
+		if ply:Team() == TEAM_CITIZEN and ply:GetTeamWhitelist("TEAM_CITIZEN") >= 1 then
+			message = ply:GetTeamWhitelist("TEAM_CITIZEN") or 0
+		end
 		for v,k in pairs(player.GetAll()) do
 			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.TalkDistance ^ 2) then
 				k:SendChatClassMessage(51, message, ply)
@@ -117,6 +120,7 @@ local applyCommand = {
 		end
 	end
 }
+
 impulse.RegisterChatCommand("/apply", applyCommand)
 
 local radioCmdCommand = {
@@ -2715,26 +2719,24 @@ if CLIENT then
 		chat.AddText(broadcastColor, "[CITY BROADCAST] ", speaker:Name(), ": ", talkCol, message)
 	end)
 
-impulse.RegisterChatClass(51, function(message, speaker)
-    if not IsValid(speaker) then return end
-
-    if speaker:Team() == TEAM_CWU then
-        local cwuclasses = {"of Maintenance", "of Commerce", "of Medicine", "of Refinery", "of I.C.T.", "of R&D"}
-        local cwranks = {"Intern", "Employee", "Supervisor", "Director", "Minister"}
-        if speaker:GetTeamRank() >= 1 then
-            chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: " .. (cwranks[speaker:GetTeamRank()] or "Unknown") .. " " .. (cwuclasses[speaker:GetTeamClass()] or "Unknown") .. ", Loyalist Level: " .. tostring(message))
-        else
-            chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", team.GetName(speaker:Team()) .. ", Branch: Unassigned. Loyalist Level: " .. tostring(message))
-        end
-    elseif speaker:Team() == TEAM_CITIZEN then
-        chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", team.GetName(speaker:Team()), ", Loyalist Level: ", tostring(message))
-    else
-		if speaker:Team() ~= TEAM_ZOMBIE and speaker:Team() ~= TEAM_STALKER then
-        	chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", speaker:Name(), ", ", team.GetName(speaker:Team()))
-        end
-    end
-end)
-
+	impulse.RegisterChatClass(51, function(message, speaker)
+		if level == nil then
+			level = 0
+		end
+		if speaker:Team() == TEAM_CWU then
+			local cwuclasses = {"Ministry of Labor - Maintenance", "Ministry of Commerce", "Ministry of Health - Medicine", "Ministry of Labor - Refinery", "Ministry of Health - I.C.T.", "Ministry of Research - R&D" }
+			local cwranks = {"Intern", "Employee", "Supervisor", "Director", "Minister"}
+			if speaker:GetTeamRank() >= 1 then
+				chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", speaker:Name(), ", ", team.GetName(speaker:Team()) .. ", Rank + Branch: " .. cwranks[speaker:GetTeamRank()] .. cwuclasses[speaker:GetTeamClass()])
+			else
+				chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", speaker:Name(), ", ", team.GetName(speaker:Team()) .. ", Branch: Unassigned")
+			end
+		elseif speaker:Team() == TEAM_CITIZEN then
+			chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", speaker:Name(), ", ", team.GetName(speaker:Team()), ", Loyalist Status: Tier ", message, ".")
+		else
+			chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", speaker:Name(), ", ", team.GetName(speaker:Team()))
+		end
+	end)
 
 	impulse.RegisterChatClass(52, function(message, speaker)
 		impulse.customChatFont = "Impulse-ChatRadio"

@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_cloth"
 ITEM.Name = "Piece of Cloth"
 ITEM.Desc = "A piece of cloth."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/props_junk/garbage_newspaper001a.mdl")
 ITEM.Material = "models/props_c17/FurnitureFabric003a"
 ITEM.FOV = 23.918338108883

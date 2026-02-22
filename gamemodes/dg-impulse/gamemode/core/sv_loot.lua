@@ -43,3 +43,18 @@ function impulse.Loot.GenerateFromPool(pool)
 
 	return loot, count
 end
+
+function impulse.Loot.GenerateFromPools(pools)
+	local totalLoot = {}
+	local totalCount = 0
+
+	for _, pool in ipairs(pools) do
+		local loot, count = impulse.Loot.GenerateFromPool(pool)
+		totalCount = totalCount + count
+		for item, itemCount in pairs(loot) do
+			totalLoot[item] = (totalLoot[item] or 0) + itemCount
+		end
+	end
+	
+	return totalLoot, totalCount
+end

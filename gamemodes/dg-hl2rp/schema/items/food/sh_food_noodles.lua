@@ -4,7 +4,7 @@ ITEM.UniqueID = "food_noodles"
 ITEM.Name = "Noodles"
 ITEM.Desc =  "Cheap microwaved noodles. Tasty..."
 ITEM.Category = "Food"
-ITEM.Model = Model("models/props_junk/garbage_takeoutcarton001a.mdl")
+ITEM.Model = Model("models/willardnetworks/food/noodles.mdl")
 ITEM.FOV = 33
 ITEM.Weight = 0.7
 

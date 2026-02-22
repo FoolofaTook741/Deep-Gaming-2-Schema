@@ -155,7 +155,19 @@ VENDOR.Sell = {
 			return false
 		end
 	},
-	["wep_mini14"] = {
+	["wep_g3a3"] = {
+		Desc = "CWU/Citizen Only",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+				return true
+			end
+
+			return false
+		end
+	},
+	["wep_ppsh41"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
 		Max = 1,
@@ -168,6 +180,18 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_scarh"] = {
+		Desc = "CWU/Citizen Only",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+				return true
+			end
+
+			return false
+		end
+	},
+	["wep_rsass"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
 		Max = 1,

@@ -60,11 +60,12 @@ sound.Add({
 SWEP.Primary.Sound = Sound("LS2.AR2.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.AR2.Inside")
 
-SWEP.Primary.Recoil = 0.6
-SWEP.Primary.Damage = 13
+SWEP.Primary.Recoil = 2
+SWEP.Primary.Damage = 14
 SWEP.Primary.NumShots = 1
+SWEP.Primary.PenetrationScale = 1.4
 SWEP.Primary.Cone = 0.01 -- base spread value
-SWEP.Primary.Delay = RPM(600)
+SWEP.Primary.Delay = RPM(450)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.BulletModel = Model("models/weapons/rifleshell.mdl")

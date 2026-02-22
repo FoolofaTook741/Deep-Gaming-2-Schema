@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_pipe"
 ITEM.Name = "Metal Pipe"
 ITEM.Desc = "A metal pipe."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/props_lab/pipesystem03a.mdl")
 ITEM.FOV = 43
 ITEM.Weight = 1

@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_metalplate"
 ITEM.Name = "Metal Plate"
 ITEM.Desc = "A metal plate."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/gibs/metal_gib4.mdl")
 ITEM.FOV = 17.113180515759
 ITEM.CamPos = Vector(-6.3037247657776, 24.641834259033, 9.7421207427979)

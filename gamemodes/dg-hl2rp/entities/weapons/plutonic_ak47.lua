@@ -61,12 +61,12 @@ sound.Add({
 SWEP.Primary.Sound = Sound("LS2.AK47.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.AK47.Inside")
 
-SWEP.Primary.Recoil = 2.3 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 12
-SWEP.Primary.PenetrationScale = 1.68
+SWEP.Primary.Recoil = 1.9 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 10
+SWEP.Primary.PenetrationScale = 2.4
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.013
-SWEP.Primary.Delay = RPM(570)
+SWEP.Primary.Cone = 0.001
+SWEP.Primary.Delay = RPM(500)
 
 SWEP.Primary.Ammo = "Rifle"
 SWEP.Primary.Automatic = true
@@ -89,7 +89,7 @@ SWEP.Spread.CrouchMod = 0.5 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 1.9
 SWEP.Spread.RecoilMod = 0.02 -- how does the recoil effect the spread (sustained fire) (additional)
 SWEP.Spread.RecoilAcceleration = 1
-SWEP.Spread.VelocityMod = 1.35
+SWEP.Spread.VelocityMod = 1.25
 
 SWEP.IronsightsPos = Vector(-3.883, 0, 0.769)
 SWEP.IronsightsAng = Angle(0.28, 0, 0)
@@ -161,6 +161,7 @@ SWEP.Attachments = {
 		end,
 		Behaviour = "extendedmagazine"
 	},
+--[[
 	rifle_foregrip = {
 		Cosmetic = {
 			Model = "sheem",
@@ -182,7 +183,7 @@ SWEP.Attachments = {
 			e.Primary.Recoil = copyrecoil
 		end,
 		Behaviour = "foregrip"
-	},
+	}, ]]--
 	holographic_sight = {
 		Cosmetic = {
 			Model = "models/weapons/arccw_go/atts/eotech.mdl",

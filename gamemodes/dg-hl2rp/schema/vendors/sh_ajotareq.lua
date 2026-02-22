@@ -4,7 +4,7 @@ VENDOR.UniqueID = "ajotareq"
 VENDOR.Name = "Emergency Supplies Quartermaster [C.T.A.]"
 VENDOR.Desc = "Distributes emergency equipment in the event of Autonomous Judgment."
 
-VENDOR.Model = "models/wn/ordinal.mdl"
+VENDOR.Model = "models/dg_models/dg_combinepack/dg_ordinal/dg_combine_ordinal.mdl"
 VENDOR.Skin = 1
 VENDOR.Sequence = "idle_unarmed"
 VENDOR.Gender = "cp" -- male, female, cp
@@ -33,17 +33,6 @@ VENDOR.Sell = {
 			if ply:GetTeamRank() >= RANK_OSL && ply:GetTeamClass() == CLASS_ECHO then
 				return true
 			else return false end
-		end
-	},
-	["wep_ar15"] = {
-		Desc = "ECHO ECS+",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_EOS then
-				return true
-			else return false
-			end
 		end
 	},
 	["wep_m500"] = {

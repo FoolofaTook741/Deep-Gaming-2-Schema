@@ -41,17 +41,17 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("CUST.OMR.Single")
 
-SWEP.Primary.Recoil = 5-- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Recoil = 4-- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 29
-SWEP.Primary.PenetrationScale = 1
+SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0002
-SWEP.Primary.Delay = RPM(300)
+SWEP.Primary.Delay = RPM(180)
 
 SWEP.Primary.Ammo = "AR2"
 SWEP.Primary.Automatic = false
-SWEP.Primary.ClipSize = 10
-SWEP.Primary.DefaultClip = 10
+SWEP.Primary.ClipSize = 15
+SWEP.Primary.DefaultClip = 15
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Secondary.Ammo = "none"
@@ -75,7 +75,7 @@ SWEP.IronsightsAng = Angle(0, 0, 0)
 SWEP.IronsightsFOV = 0.7
 SWEP.IronsightsSensitivity = 0.2
 SWEP.IronsightsCrosshair = true
-SWEP.IronsightsRecoilVisualMultiplier = 0.25
+SWEP.IronsightsRecoilVisualMultiplier = 2
 
 SWEP.LoweredPos = Vector(0, -7, -11)
 SWEP.LoweredAng = Angle(20, 45, 0)

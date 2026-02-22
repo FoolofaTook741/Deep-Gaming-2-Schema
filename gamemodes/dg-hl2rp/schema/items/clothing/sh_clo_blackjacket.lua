@@ -3,7 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "clo_blackjacket"
 ITEM.Name = "Black jacket"
 ITEM.Desc =  "Black jacket to keep you warm."
-ITEM.Category = "Shirts"
+ITEM.Category = "Clothing Items"
 ITEM.Model = Model("models/willardnetworks/clothingitems/torso_alyxcoat1.mdl")
 ITEM.FOV = 12.213467048711
 ITEM.CamPos = Vector(46.418338775635, 20.630373001099, 32.091690063477)
@@ -23,7 +23,7 @@ function ITEM:CanEquip(ply)
 end
 
 function ITEM:OnEquip(ply)
-    ply:SetBodygroup(2, 15)
+    ply:SetBodygroup(2, 19)
 	ply.HasJacket = true
 end
 

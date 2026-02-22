@@ -18,11 +18,11 @@ ITEM.DropOnDeathIfRestricted = true
 ITEM.CraftIfRestricted = false
 ITEM.ConfiscateReward = 25
 
-ITEM.UseName = "Convert to M4A1"
+ITEM.UseName = "Convert to G3A3"
 
 function ITEM:OnUse(ply)
-	ply:GiveInventoryItem("wep_mini14", 1)
-    ply:GiveInventoryItem("wep_mini14", 1)
+	ply:GiveInventoryItem("wep_g3a3", 1)
+    ply:GiveInventoryItem("wep_g3a3", 1)
 	return true
 end
 

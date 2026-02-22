@@ -51,17 +51,19 @@ SWEP.MuzzleHide = true
 SWEP.Primary.Sound = Sound("PLUTONIC.AR2E.Single")
 SWEP.Primary.Inside_Sound = Sound("weapons/ar2/fire1.wav")
 
-SWEP.Primary.Recoil = 0.6 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 15
+
+SWEP.Primary.Recoil = 1.1
+SWEP.Primary.Damage = 14
 SWEP.Primary.NumShots = 1
+SWEP.Primary.PenetrationScale = 1.4
 SWEP.Primary.Cone = 0.0085 -- base spread value
-SWEP.Primary.Delay = RPM(600)
+SWEP.Primary.Delay = RPM(450)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "ar2"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 35
-SWEP.Primary.DefaultClip = 35
+SWEP.Primary.ClipSize = 40
+SWEP.Primary.DefaultClip = 40
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
@@ -74,13 +76,13 @@ SWEP.CenteredAng = Angle(3,3,0)
 SWEP.UseIronsightsRecoil = false
 
 SWEP.Spread = {}
-SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.009
-SWEP.Spread.IronsightsMod = 0.3 -- multiply
-SWEP.Spread.CrouchMod = 0.3 -- crouch effect (multiply)
-SWEP.Spread.AirMod = 1.4 -- how does if the player is in the air effect spread (multiply)
-SWEP.Spread.RecoilMod = 0.1 -- how does the recoil effect the spread (sustained fire) (additional)
-SWEP.Spread.VelocityMod = 1.16 -- movement speed effect on spread (additonal)
+SWEP.Spread.Min = 0.006
+SWEP.Spread.Max = 0.14
+SWEP.Spread.IronsightsMod = 0.65
+SWEP.Spread.CrouchMod = 0.25
+SWEP.Spread.AirMod = 1.6
+SWEP.Spread.RecoilMod = 0
+SWEP.Spread.VelocityMod = 1.25
 
 SWEP.IronsightsPos = Vector(-1.81, -2.613, 0)
 SWEP.IronsightsAng = Angle(0, 0, 0)

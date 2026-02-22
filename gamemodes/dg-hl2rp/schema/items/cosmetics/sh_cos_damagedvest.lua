@@ -4,7 +4,7 @@ ITEM.UniqueID = "cos_otavest3"
 ITEM.Name = "Damaged Level 4 D.M.I. Ballistic Armor"
 ITEM.Desc =  "This Level 4 ballistic armor has been damaged by unknown means, although it can still be worn and provide a protection of 7.5%, perhaps it can be repaired for more formidable use."
 ITEM.Category = "Clothing"
-ITEM.Model = Model("models/combine_vests/zombineshotgunnervest.mdl")
+ITEM.Model = Model("models/combine_vests/zombineregularvest.mdl")
 ITEM.FOV = 50
 ITEM.NoCenter = true
 ITEM.Weight = 3
@@ -19,7 +19,7 @@ ITEM.EquipGroup = "chest"
 ITEM.CanStack = true
 
 ITEM.CosmeticData = {
-	model = Model("models/combine_vests/zombineshotgunnervest.mdl"),
+	model = Model("models/combine_vests/zombineregularvest.mdl"),
 	pos = Vector(-3, -11, 0),
 	ang = Angle(0, 90, 270),
 	scale = 1,

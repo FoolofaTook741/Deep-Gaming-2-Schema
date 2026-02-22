@@ -1172,7 +1172,7 @@ end
 
         self.hbbutton = vgui.Create("DButton", self.scPnl)
         self.hbbutton:SetFont("BudgetLabel")
-        self.hbbutton:SetText("AR-15 .50 [160 SC]")
+        self.hbbutton:SetText("Mini-14 [160 SC]")
         self.hbbutton:Dock(TOP)
 
         function self.hbbutton:Paint(w, h)
@@ -1180,13 +1180,13 @@ end
             surface.DrawRect(0, 0, w, h)
             surface.SetDrawColor(COMBINE_ACCENT_SOFT)
             surface.DrawOutlinedRect(0, 0, w, h)
-            draw.SimpleText("AR-15 .50 [160 SC]", "BudgetLabel", w / 2, h / 2, COMBINE_TEXT, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Mini-14 [160 SC]", "BudgetLabel", w / 2, h / 2, COMBINE_TEXT, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
         function self.hbbutton:DoClick()
             net.Start("DeepSterilizedCreditsPurchase")
             net.WriteString("Item")
-            net.WriteString("wep_ar15")
+            net.WriteString("wep_mini14")
             net.WriteInt(160, 16)
             net.SendToServer()
             self:GetParent():GetParent():Remove()

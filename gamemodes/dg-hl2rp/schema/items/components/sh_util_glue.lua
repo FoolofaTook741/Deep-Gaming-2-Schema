@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_glue"
 ITEM.Name = "Glue"
 ITEM.Desc = "A small tube of sticky liquid..."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/items/battery.mdl")
 ITEM.FOV = 6.769340974212
 ITEM.CamPos = Vector(-100, 21.776504516602, 29.226360321045)

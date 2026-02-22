@@ -3,8 +3,8 @@ local ITEM = {}
 ITEM.UniqueID = "clo_blackpeacoat"
 ITEM.Name = "Black Peacoat"
 ITEM.Desc =  "A fancy jacket for special occasions."
-ITEM.Category = "Shirts"
-ITEM.Model = Model("models/willardnetworks/update_items/peacoat_item.mdl")
+ITEM.Category = "Clothing Items"
+ITEM.Model = Model("models/willardnetworks/clothingitems/peacoat_item.mdl")
 ITEM.FOV = 12.213467048711
 ITEM.CamPos = Vector(46.418338775635, 20.630373001099, 32.091690063477)
 ITEM.NoCenter = true
@@ -23,7 +23,7 @@ function ITEM:CanEquip(ply)
 end
 
 function ITEM:OnEquip(ply)
-    ply:SetBodygroup(2, 40)
+    ply:SetBodygroup(2, 27)
 	ply.HasJacket = true
 end
 

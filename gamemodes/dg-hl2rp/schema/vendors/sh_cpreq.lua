@@ -140,7 +140,7 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_shotgun"] = {
-		Desc = "SWORD i1+/UNION i1+/DvL+/Grid i2+",
+		Desc = "SWORD i1+/UNION i1+/DvL+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
@@ -211,17 +211,6 @@ VENDOR.Sell = {
 			end
 		end
 	},
-	["wep_ar15"] = {
-		Desc = "GHOST Only",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_GHOST then
-				return true
-			else return false
-			end
-		end
-	},
 	["wep_honeybadger"] = {
 		Desc = "GHOST Only",
 		Restricted = true,
@@ -256,15 +245,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_357"] = {
-		Desc = "DcO+/Sword DvL+",
+		Desc = "DcO+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-            if (ply:GetTeamRank() >= RANK_DCO) or (ply:GetTeamRank() >= RANK_DVL and ply:GetTeamClass() == CLASS_SWORD) then
-                return true
-            else
-                return false
-            end
+			return ply:GetTeamRank() >= RANK_DCO
 		end
 	},
 	["item_camerarepairkit"] = {
@@ -693,24 +678,6 @@ VENDOR.Sell = {
 	["util_nvgs"] = {
 		Restricted = true,
 		Max = 1
-	},
-	["clo_reinforcedcphelmet"] = {
-		Desc = "UNION/SWORD i3+ (MARGINAL+) | SWORD SqL+ (Any Code)",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_SWORD and ply:GetTeamRank() >= RANK_SQL then
-				return true
-			end
-
-			if impulse.Dispatch.GetCityCode() < CODE_UNREST then return false end
-
-			if (ply:GetTeamClass() == CLASS_UNION or ply:GetTeamClass() == CLASS_SWORD) and ply:GetTeamRank() >= RANK_I3 then
-				return true
-			end
-
-			return false
-		end
 	}
 }
 

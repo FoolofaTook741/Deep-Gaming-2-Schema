@@ -51,6 +51,11 @@ if SERVER then
         },
     }
     --PrintTable(vortSkills.Skills)
+    meta = FindMetaTable("Player")
+
+    local function roundToTenth(num)
+        return math.floor(num * 10 + 0.5) / 10
+    end
 
     local function SendFullSkillData(ply)
         local vortData = ply:GetData().vort_skills or { availableSkillPoints = 0, lastReset = 0, skills = {} }
@@ -117,7 +122,7 @@ if SERVER then
 
         local availablePoints = tonumber(vortData.availableSkillPoints) or 0
         if availablePoints >= 1 then
-            vortData.availableSkillPoints = availablePoints - 1
+            vortData.availableSkillPoints = roundToTenth(availablePoints - 1)
             vortData.skills[skillID] = currentLevel + 1
 
             ply.impulseData.vort_skills = vortData
@@ -159,7 +164,7 @@ net.Receive("vortResetSkills", function(len, ply)
             return
         end
 
-        vortData.availableSkillPoints = (vortData.availableSkillPoints or 0) + refund
+        vortData.availableSkillPoints = roundToTenth((vortData.availableSkillPoints or 0) + refund)
         vortData.lastReset = os.time()
 
         ply.impulseData.vort_skills = vortData
@@ -198,7 +203,7 @@ function meta:vortAddSkillPoints(points)
     end
 
     local pointsToAdd = math.min(points, VORTMAXSKILLS - total)
-    data.availableSkillPoints = data.availableSkillPoints + pointsToAdd
+    data.availableSkillPoints = roundToTenth(data.availableSkillPoints + pointsToAdd)
 
     self:SaveData()
     self:Notify("You have received " .. pointsToAdd .. " Vortigaunt skill point(s).")
@@ -206,7 +211,7 @@ function meta:vortAddSkillPoints(points)
     local vortData = self:GetData().vort_skills or { availableSkillPoints = 0, lastReset = 0, skills = {} }
     net.Start("vortUpdateSkills")
         net.WriteTable({
-            availableSkillPoints = vortData.availableSkillPoints,
+            availableSkillPoints = math.floor(vortData.availableSkillPoints * 10 + 0.5) / 10,
             lastReset = vortData.lastReset or 0,
             skills = vortData.skills,
             skillsTable = vortSkills.Skills

@@ -97,7 +97,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(2,5)
 					ply:SetBodygroup(3,0)
 				else
-					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
+					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl")
 					ply:SetSkin(0)
 				end
 				if ply:GetTeamClass() != CLASS_ICT and ply:GetTeamClass() != CLASS_MEDIC and ply:GetTeamClass() != CLASS_RESEARCH then
@@ -138,7 +138,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(3,0)
 					table.insert(ply.DoorGroups, 7) -- Add Research Doorgroup
 				else
-					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
+					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl")
 					ply:SetSkin(0)
 				end
 				if ply:GetTeamClass() != CLASS_ICT and ply:GetTeamClass() != CLASS_MEDIC and ply:GetTeamClass() != CLASS_RESEARCH then
@@ -180,7 +180,7 @@ TEAM_CWU = impulse.Teams.Define({
 				else
 					ply:SetBodygroup(1,1)
 					ply:SetBodygroup(2,0)
-					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
+					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl")
 					ply:SetSkin(1)
 				end
 				if ply:GetTeamClass() != CLASS_ICT and ply:GetTeamClass() != CLASS_MEDIC and ply:GetTeamClass() != CLASS_RESEARCH then
@@ -202,7 +202,7 @@ TEAM_CWU = impulse.Teams.Define({
 			doorGroup = {1},
 			whitelistLevel = 3,
 			--[[canPromote = {
-				[RANK_OWG] = true
+				[RANK_CGR] = true
 			},]]
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_MEDIC then
@@ -223,7 +223,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(3,0)
 					table.insert(ply.DoorGroups, 7) -- Add Research Doorgroup
 				else
-					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
+					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl")
 					ply:SetSkin(2)
 				end
 				if ply:GetTeamClass() != CLASS_ICT and ply:GetTeamClass() != CLASS_MEDIC and ply:GetTeamClass() != CLASS_RESEARCH then
@@ -246,7 +246,7 @@ TEAM_CWU = impulse.Teams.Define({
 			doorGroup = {1, 2, 7},
 			whitelistLevel = 4,
 			--[[canPromote = {
-				[RANK_OWG] = true,
+				[RANK_CGR] = true,
 				[RANK_OWS] = true,
 			},]]
 			onBecome = function(ply, rank)
@@ -257,7 +257,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(2,5)
 					ply:SetBodygroup(3,0)
 				else
-					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
+					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl")
 					ply:SetSkin(2)
 				end
 				if ply:GetTeamClass() != CLASS_ICT and ply:GetTeamClass() != CLASS_RESEARCH then

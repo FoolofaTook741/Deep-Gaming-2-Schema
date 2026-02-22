@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_gunpowder"
 ITEM.Name = "Jar of Gunpowder"
 ITEM.Desc = "A jar full of gunpowder."
-ITEM.Category = "Components"
 ITEM.Model = Model("models/props_lab/jar01b.mdl")
 ITEM.FOV = 33
 ITEM.Weight = 0.1

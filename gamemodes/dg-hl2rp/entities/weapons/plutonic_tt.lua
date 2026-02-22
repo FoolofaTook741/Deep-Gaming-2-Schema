@@ -32,16 +32,16 @@ SWEP.EmptySound = Sound("Weapon_Pistol.Empty")
 SWEP.Primary.Sound = Sound("weapons/darsu_eft/sr25/sr25_fire_outdoor_close.ogg")
 SWEP.Primary.Inside_Sound = Sound("weapons/darsu_eft/sr25/sr25_fire_indoor_close.ogg")
 SWEP.Primary.Recoil = 5 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 25
+SWEP.Primary.Damage = 24
 SWEP.Primary.PenetrationScale = 1
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.009
-SWEP.Primary.Delay = RPM(240)
+SWEP.Primary.Cone = 0.0085
+SWEP.Primary.Delay = RPM(177)
 
 SWEP.Primary.Ammo = "AirboatGun"
-SWEP.Primary.Automatic = false
-SWEP.Primary.ClipSize = 7
-SWEP.Primary.DefaultClip = 7
+SWEP.Primary.Automatic = true
+SWEP.Primary.ClipSize = 8
+SWEP.Primary.DefaultClip = 8
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
@@ -56,8 +56,8 @@ SWEP.UseIronsightsRecoil = false
 SWEP.QuickDraw = true
 
 SWEP.Spread = {}
-SWEP.Spread.Min = 0.008
-SWEP.Spread.Max = 0.1
+SWEP.Spread.Min = 0.007
+SWEP.Spread.Max = 0.02
 SWEP.Spread.IronsightsMod = 0.9 -- multiply
 SWEP.Spread.CrouchMod = 0.75 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2 -- how does if the player is in the air effect spread (multiply)

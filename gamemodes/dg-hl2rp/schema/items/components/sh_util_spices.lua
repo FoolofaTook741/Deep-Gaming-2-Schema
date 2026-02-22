@@ -3,7 +3,6 @@ local ITEM = {}
 ITEM.UniqueID = "util_spices"
 ITEM.Name = "Box of Spices"
 ITEM.Desc = "A box containing a mix of spices."
-ITEM.Category = "Ingredients"
 ITEM.Model = Model("models/props_junk/cardboard_box003a.mdl")
 ITEM.FOV = 50
 ITEM.Weight = 0.2

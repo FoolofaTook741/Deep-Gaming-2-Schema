@@ -46,14 +46,14 @@ SWEP.Primary.Recoil = 0.7 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 9
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.022
-SWEP.Primary.Delay = RPM(800)
+SWEP.Primary.Delay = RPM(660)
 
 SWEP.ReloadAttach = 1
 
 SWEP.Primary.Ammo = "smg1"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 40
-SWEP.Primary.DefaultClip = 40
+SWEP.Primary.ClipSize = 35
+SWEP.Primary.DefaultClip = 35
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false

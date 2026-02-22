@@ -132,7 +132,7 @@ impulse.Config.InventoryStorageMaxWeight = 200
 impulse.Config.InventoryStorageMaxWeightVIP = 400
 impulse.Config.InventoryItemDeSpawnTime = 300
 impulse.Config.InventoryStorageModel = "models/props/CS_militia/footlocker01_closed.mdl"
-impulse.Config.InventoryStoragePublicModel = "models/props_c17/lockers001a.mdl"
+impulse.Config.InventoryStoragePublicModel = "models/hls/alyxports/mailbox_2.mdl"
 
 impulse.Config.GroupMakeCost = 2500
 impulse.Config.GroupXPRequirement = 250
@@ -147,7 +147,8 @@ impulse.Config.AutoModMaxRisk = 15
 
 impulse.Config.MaxPillPresses = 4
 
-impulse.Config.PreWarCacheTime = 210
+impulse.Config.PreWarCacheTime = 300
+impulse.Config.MPFCacheTime = 210 --time for the cache to open after triggering
 
 impulse.Config.CommunityURL = "https://deepgaming2.com/news"
 impulse.Config.PanelURL = "https://deepgaming2.com/news"
@@ -611,29 +612,29 @@ impulse.Config.TrashSpawns = {}
 impulse.Config.DefaultTeam = TEAM_CITIZEN
 
 impulse.Config.DefaultMaleModels = {
-	Model("models/willardnetworks_custom/citizens/male01.mdl"),
-	Model("models/willardnetworks_custom/citizens/male02.mdl"),
-	Model("models/willardnetworks_custom/citizens/male03.mdl"),
-	Model("models/willardnetworks_custom/citizens/male04.mdl"),
-	Model("models/willardnetworks_custom/citizens/male05.mdl"),
-	Model("models/willardnetworks_custom/citizens/male06.mdl"),
-	Model("models/willardnetworks_custom/citizens/male07.mdl"),
-	Model("models/willardnetworks_custom/citizens/male08.mdl"),
-	Model("models/willardnetworks_custom/citizens/male09.mdl"),
-	Model("models/willardnetworks_custom/citizens/male10.mdl"),
+	Model("models/willardnetworks/citizens/male_01.mdl"),
+	Model("models/willardnetworks/citizens/male_02.mdl"),
+	Model("models/willardnetworks/citizens/male_03.mdl"),
+	Model("models/willardnetworks/citizens/male_04.mdl"),
+	Model("models/willardnetworks/citizens/male_05.mdl"),
+	Model("models/willardnetworks/citizens/male_06.mdl"),
+	Model("models/willardnetworks/citizens/male_07.mdl"),
+	Model("models/willardnetworks/citizens/male_08.mdl"),
+	Model("models/willardnetworks/citizens/male_09.mdl"),
+	Model("models/willardnetworks/citizens/male_10.mdl"),
 }
 
 impulse.Config.DefaultFemaleModels = {
-	Model("models/willardnetworks_custom/citizens/female_01.mdl"),
-	Model("models/willardnetworks_custom/citizens/female_02.mdl"),
-	Model("models/willardnetworks_custom/citizens/female_03.mdl"),
-	Model("models/willardnetworks_custom/citizens/female_04.mdl"),
-	--Model("models/willardnetworks_custom/citizens/female_05.mdl"),
-	Model("models/willardnetworks_custom/citizens/female_06.mdl"),
-	Model("models/willardnetworks_custom/citizens/female_07.mdl"),
+	Model("models/willardnetworks/citizens/female_01.mdl"),
+	Model("models/willardnetworks/citizens/female_02.mdl"),
+	Model("models/willardnetworks/citizens/female_03.mdl"),
+	Model("models/willardnetworks/citizens/female_04.mdl"),
+	Model("models/willardnetworks/citizens/female_05.mdl"),
+	Model("models/willardnetworks/citizens/female_06.mdl"),
 }
 
 impulse.Config.DefaultSkinBlacklist = {
+	["models/willardnetworks/citizens/male_02.mdl"] = {14, 22, 6} -- bloody eye skins banned
 }
 
 --
@@ -821,6 +822,7 @@ impulse.Config.LootPools = {
 	},
 	["ammobox"] = {
 		Items = {
+			["item_ar2ammocrate"] = {Rarity = 800, Rep = 1},
 			["bl_ar2e"] = {Rarity = 765, Rep = 2},
 			["bl_ar2r"] = {Rarity = 695, Rep = 2},
 			["bl_ar2"] = {Rarity = 610, Rep = 1},
@@ -841,6 +843,7 @@ impulse.Config.LootPools = {
 	},
 	["hardpointammobox"] = {
 		Items = {
+			["item_ar2ammocrate"] = {Rarity = 800, Rep = 1},
 			["wep_shotgun"] = {Rarity = 600},
 			["bl_ar2e"] = {Rarity = 765, Rep = 2},
 			["bl_ar2"] = {Rarity = 620, Rep = 1},
@@ -879,28 +882,102 @@ impulse.Config.LootPools = {
 	},
 	]]
 
-	["prewarcache"] = {
+	["prewarweaponcache"] = {
 		Items = {
-			["ammo_rifle"] = {Rarity = 300, Rep = 1},
-			["ammo_54r"] = {Rarity = 500, Rep = 1},
-			["wep_357"] = {Rarity = 400, Rep = 2},
-			["wep_mp7"] = {Rarity = 500, Rep = 1},
+			["wep_p90"] = {Rarity = 700, Rep = 2},
+			["wep_357"] = {Rarity = 500, Rep = 1},
 			["wep_scarh"] = {Rarity = 900, Rep = 1},
 			["wep_famas"] = {Rarity = 830, Rep = 1},
-			["wep_m4a1"] = {Rarity = 640, Rep = 4},
-			["wep_shotgun"] = {Rarity = 780, Rep = 3},
+			["wep_m4a1"] = {Rarity = 640, Rep = 3},
+			["wep_shotgun"] = {Rarity = 780, Rep = 1},
+			["wep_m500"] = {Rarity = 780, Rep = 1},
 			["item_drill"] = {Rarity = 720, Rep = 1},
 			["wep_ak47"] = {Rarity = 630, Rep = 3},
 			["wep_m60"] = {Rarity = 900, Rep = 1},
+			["wep_mosin"] = {Rarity = 900, Rep = 1},
 			["wep_mg34"] = {Rarity = 840, Rep = 1},
-			["util_heavyceramicplate"] = {Rarity = 500, Rep = 1},
-			["item_ammocrate"] = {Rarity = 820, Rep = 3},
-			["wep_mini14"] = {Rarity = 820, Rep = 2},
-			["util_ceramicplate"] = {Rarity = 820, Rep = 2},
-			["att_dragonsbreath"] = {Rarity = 990, Rep = 1},
+			["wep_mini14"] = {Rarity = 800, Rep = 2},
 		},
-		MaxItems = 10,
-		MinItems = 6
+		MaxItems = 8,
+		MinItems = 5
+	},
+	["prewarammocache"] = {
+		Items = {
+			["item_54rammocrate"] = {Rarity = 600, Rep = 2},
+			["item_357ammocrate"] = {Rarity = 750, Rep = 1},
+			["item_lmgammocrate"] = {Rarity = 850, Rep = 2},
+			["item_rifleammocrate"] = {Rarity = 500, Rep = 2},
+			["item_buckshotammocrate"] = {Rarity = 750, Rep = 1},
+			["item_sniperammocrate"] = {Rarity = 850, Rep = 2},
+			["item_ammocrate"] = {Rarity = 900, Rep = 2},
+		},
+		MaxItems = 4,
+		MinItems = 3
+	},
+	["prewararmorcache"] = {
+		Items = {
+			["cos_parahelmet"] = {Rarity = 400, Rep = 2},
+			["cos_otavest"] = {Rarity = 600, Rep = 2},	
+			["cos_novavest"] = {Rarity = 800, Rep = 1},
+		},
+		MaxItems = 4,
+		MinItems = 3
+	},
+	["prewarmedcache"] = {
+		Items = {
+			["wep_medkit"] = {Rarity = 850, Rep = 1},
+			["item_emptymedkit"] = {Rarity = 750, Rep = 2},	
+			["item_enhancedvialcrate"] = {Rarity = 500, Rep = 3},
+		},
+		MaxItems = 3,
+		MinItems = 2
+	},
+	["mpfweaponcache"] = {
+		Items = {
+			["wep_osisg"] = {Rarity = 900, Rep = 1},
+			["wep_sw500"] = {Rarity = 950, Rep = 1},
+			["att_dragonsbreath"] = {Rarity = 985, Rep = 1},
+			["wep_p90"] = {Rarity = 700, Rep = 2},
+			["wep_mp7a8"] = {Rarity = 500, Rep = 2},	
+			["wep_357"] = {Rarity = 650, Rep = 2},
+			["wep_m500"] = {Rarity = 650, Rep = 1},
+			["wep_shotgun"] = {Rarity = 600, Rep = 2},
+			["wep_honeybadger"] = {Rarity = 800, Rep = 1},
+			["wep_mini14"] = {Rarity = 640, Rep = 1},
+			["item_c4"] = {Rarity = 350, Rep = 1},
+			["wep_mp7"] = {Rarity = 700, Rep = 1},
+		},
+		MaxItems = 5,
+		MinItems = 3
+	},
+	["mpfammocache"] = {
+		Items = {
+			["item_357ammocrate"] = {Rarity = 500, Rep = 1},
+			["item_smgammocrate"] = {Rarity = 750, Rep = 1},
+			["item_rifleammocrate"] = {Rarity = 500, Rep = 1},
+			["item_buckshotammocrate"] = {Rarity = 500, Rep = 1},
+		},
+		MaxItems = 3,
+		MinItems = 2
+	},
+	["mpfarmorcache"] = {
+		Items = {
+			["cos_parahelmet"] = {Rarity = 400, Rep = 2},
+			["util_ceramicplate"] = {Rarity = 600, Rep = 2},	
+			["util_lvl2plate"] = {Rarity = 700, Rep = 2},
+		},
+		MaxItems = 4,
+		MinItems = 3
+	},
+	["mpfmedcache"] = {
+		Items = {
+			["wep_medkit"] = {Rarity = 920, Rep = 1},
+			["item_emptymedkit"] = {Rarity = 800, Rep = 1},	
+			["item_vialcrate"] = {Rarity = 250, Rep = 4},
+			["item_enhancedvialcrate"] = {Rarity = 300, Rep = 3},
+		},
+		MaxItems = 4,
+		MinItems = 2
 	},
 	["scrapHighBig"] = {
 		Items = {
@@ -1004,4 +1081,12 @@ impulse.Config.PainSounds = {
 
 
 impulse.Config.Chairs = {}
+
+impulse.Config.DefaultHairColors = {
+	["Brown"] 	= 	Color(155, 90, 50),
+  	["Black"] 	= 	Color(35, 35, 35),
+	["Ginger"] 	= 	Color(208, 135, 54),
+	["Gray"] 	= 	Color(151, 146, 139),
+	["Blonde"] 	= 	Color(240,226,182)
+}
 

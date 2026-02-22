@@ -32,8 +32,8 @@ SWEP.Primary.Sound = Sound("weapons/stunstick/stunstick_swing1.wav")
 SWEP.Primary.ImpactSound = Sound("weapons/stunstick/stunstick_impact2.wav")
 SWEP.Primary.ImpactEffect = "StunstickImpact"
 SWEP.Primary.FlashTime = 1
-SWEP.Primary.Recoil = 0 --keep at 0 else you get weird viewmodel animation issues
-SWEP.Primary.Damage = 15 --not used in this swep
+SWEP.Primary.Recoil = 1.2 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 15 -- not used in this swep
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.7
 SWEP.Primary.Range = 85
@@ -52,6 +52,7 @@ end
 
 function SWEP:ExtraHolster()
 	self.Owner:StopSound("lsStunstickBuzz")
+
 	self:SetMode(1)
 end
 
@@ -63,17 +64,23 @@ end
 
 function SWEP:OnLowered()
 	self:SetMode(1)
+
+
 	self.Owner:StopSound("lsStunstickBuzz")
 end
 
 function SWEP:PrePrimaryAttack()
+
 	local vm = self.Owner:GetViewModel()
-	--debug print statement for weird swing sequence issues.. I think it was because of the recoil which I have now set to 0
-	--[[
-	if IsValid(vm) then
-		print("[StunBaton] Sequence: " .. tostring(vm:GetSequenceName(vm:GetSequence())))
-	end
-	]]--
+    if not IsValid(vm) then return end
+
+    local seq = vm:LookupSequence("misscenter1")
+    if seq and seq > 0 then
+        vm:SendViewModelMatchingSequence(seq)
+
+        self.NextIdle = CurTime() + vm:SequenceDuration(seq)
+    end
+
 	local mode = self:GetMode()
 
 	if mode == 1 then
@@ -95,6 +102,31 @@ function SWEP:PrePrimaryAttack()
 		self.Primary.Sound = Sound("weapons/stunstick/stunstick_swing1.wav")
 		self.Primary.ImpactSound = Sound("weapons/stunstick/stunstick_impact2.wav")
 	end
+end
+
+function SWEP:PrimaryAttack()
+    if self.PrePrimaryAttack then
+        self:PrePrimaryAttack()
+    end
+
+    self:EmitSound(self.Primary.Sound)
+    self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
+
+    local hitDelay = self.Primary.HitDelay or 0.1
+    timer.Simple(hitDelay, function()
+        if IsValid(self) and IsValid(self:GetOwner()) then
+            self:ClubAttack()
+            self:ViewPunch()
+        end
+    end)
+
+    local vm = self.Owner:GetViewModel()
+    if IsValid(vm) then
+        local seqDuration = vm:SequenceDuration()
+        self:SetNextIdle(CurTime() + seqDuration)
+    end
+
+    self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 end
 
 function SWEP:SecondaryAttack()
@@ -151,10 +183,17 @@ function SWEP:SecondaryAttack()
 			direction.z = 0
 
 			ent:SetVelocity(direction)
+
+			--[[if self.Owner:Team() == TEAM_CP then
+				self.Owner:ForceSequence("pushplayer")
+			end]]--
+
 			self:SetNextSecondaryFire(CurTime() + 2)
 		end
 	end
 end
+
+-- based on NS sunstick effects:
 
 local STUNSTICK_GLOW_MATERIAL = Material("effects/stunstick")
 local STUNSTICK_GLOW_MATERIAL2 = Material("effects/blueflare1")
@@ -182,7 +221,7 @@ function SWEP:ExtraDrawWorldModel()
 	local color = Color(glow, glow, glow)
 	local attachment = self:GetAttachment(1)
 
-	if attachment then
+	if (attachment) then
 		local position = attachment.Pos
 
 		render.SetMaterial(STUNSTICK_GLOW_MATERIAL2)
@@ -194,17 +233,20 @@ function SWEP:ExtraDrawWorldModel()
 end
 
 local NUM_BEAM_ATTACHEMENTS = 9
-local BEAM_ATTACH_CORE_NAME = "sparkrear"
+local BEAM_ATTACH_CORE_NAME	= "sparkrear"
 
-local CopyViewModelOrigin = SWEP.ViewModelFOV
-function SWEP:PostDrawViewModel(viewmodel, player)
-	self.ViewModelFOV = CopyViewModelOrigin + impulse.GetSetting("firstperson_fov")
-
+function SWEP:PostDrawViewModel()
 	local mode = self:GetMode()
-	if not mode or mode < 2 then return end
+
+	if not mode or mode < 2 then
+		return
+	end
 
 	local vm = LocalPlayer():GetViewModel()
-	if not IsValid(vm) then return end
+
+	if not IsValid(vm) then
+		return
+	end
 
 	cam.Start3D(EyePos(), EyeAngles())
 		local size
@@ -218,27 +260,38 @@ function SWEP:PostDrawViewModel(viewmodel, player)
 		local color = Color(11, 181, 255, 100 + math.sin(RealTime() * 2)*20)
 
 		STUNSTICK_GLOW_MATERIAL_NOZ:SetFloat("$alpha", color.a / 255)
+
 		render.SetMaterial(STUNSTICK_GLOW_MATERIAL_NOZ)
 
 		local attachment = vm:GetAttachment(vm:LookupAttachment(BEAM_ATTACH_CORE_NAME))
-		if attachment then
+
+		if (attachment) then
 			render.DrawSprite(attachment.Pos, size * 10, size * 15, color)
 		end
 
 		for i = 1, NUM_BEAM_ATTACHEMENTS do
-			local attachA = vm:GetAttachment(vm:LookupAttachment("spark"..i.."a"))
+			local attachment = vm:GetAttachment(vm:LookupAttachment("spark"..i.."a"))
+
 			size = math.Rand(2.5, 5.0)
-			if attachA and attachA.Pos then
-				render.DrawSprite(attachA.Pos, size, size, color)
+
+			if (attachment and attachment.Pos) then
+				render.DrawSprite(attachment.Pos, size, size, color)
 			end
 
-			local attachB = vm:GetAttachment(vm:LookupAttachment("spark"..i.."b"))
+			local attachment = vm:GetAttachment(vm:LookupAttachment("spark"..i.."b"))
+
 			size = math.Rand(2.5, 5.0)
-			if attachB and attachB.Pos then
-				render.DrawSprite(attachB.Pos, size, size, color)
+
+			if (attachment and attachment.Pos) then
+				render.DrawSprite(attachment.Pos, size, size, color)
 			end
 		end
 	cam.End3D()
 end
 
 SWEP.Attachments = {}
+
+local CopyViewModelOrigin = SWEP.ViewModelFOV
+function SWEP:PostDrawViewModel(viewmodel, player)
+    self.ViewModelFOV = CopyViewModelOrigin + impulse.GetSetting("firstperson_fov")
+end
