@@ -795,7 +795,7 @@ net.Receive("impulseHL2RPUseLocker", function(lem, ply)
 	end
 
 	if ply.IsARebel then
-		ply:SetBodygroup(2, ply.lastTorsoBodygroup)
+		ply:SetBodygroup(2, ply.lastTorsoBodygroup) 
 		ply:SetBodygroup(3, ply.lastLegBodgroup)
 		ply.HasJacket = false
 		ply.IsARebel = false
