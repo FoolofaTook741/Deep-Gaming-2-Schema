@@ -69,7 +69,7 @@ function PANEL:Init()
 			self.suit = 1
 		elseif val == "Rebel" then
 
-			local bodygroup2 = 11
+			local bodygroup2 = 10
 			local bodygroup3 = 6
 			if ply:Team() == TEAM_CWU and teamClass == CLASS_MEDIC then
 				bodygroup2 = 9
