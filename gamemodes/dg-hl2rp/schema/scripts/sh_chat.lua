@@ -2417,7 +2417,7 @@ local setRogueCommand = {
 				targ.IsRogue = true
 				ply:Notify("Rogue status added for unit: " .. targ:Name())
 				if targ:Team() == TEAM_CP then
-					targ:SetModel("models/dpfilms/metropolice/resistance_police.mdl")
+					targ:SetModel("models/player/police_fem.mdl")
 				end
 				targ:SetRPName("Autonomous Unit - "..targ:Name())
 				for k,v in pairs(player.GetAll()) do
@@ -2482,7 +2482,7 @@ local declareRogueCommand = {
 				ply.IsRogue = true
 				ply:Notify("You have declared rogue status.")
 				if targ:Team() == TEAM_CP then
-					targ:SetModel("models/dpfilms/metropolice/resistance_police.mdl")
+					targ:SetModel("models/player/police_fem.mdl")
 				end
 				hook.Run("OnRogueDeclare")
 				targ:SetRPName("Autonomous Unit - "..targ:Name())
