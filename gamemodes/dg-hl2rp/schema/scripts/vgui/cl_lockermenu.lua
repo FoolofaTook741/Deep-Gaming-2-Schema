@@ -70,7 +70,7 @@ function PANEL:Init()
 		elseif val == "Rebel" then
 
 			local bodygroup2 = 10
-			local bodygroup3 = 6
+			local bodygroup3 = 3
 			if ply:Team() == TEAM_CWU and teamClass == CLASS_MEDIC then
 				bodygroup2 = 9
 				
