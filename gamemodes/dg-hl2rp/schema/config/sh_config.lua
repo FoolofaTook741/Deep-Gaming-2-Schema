@@ -902,7 +902,7 @@ impulse.Config.LootPools = {
 			["wep_m60"] = {Rarity = 900, Rep = 1},
 			["wep_mosin"] = {Rarity = 900, Rep = 1},
 			["wep_mg34"] = {Rarity = 840, Rep = 1},
-			["wep_mini14"] = {Rarity = 800, Rep = 2},
+			["wep_g3a3"] = {Rarity = 800, Rep = 2},
 		},
 		MaxItems = 8,
 		MinItems = 5
