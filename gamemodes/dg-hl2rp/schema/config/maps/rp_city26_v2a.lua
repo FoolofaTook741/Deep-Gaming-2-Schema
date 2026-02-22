@@ -618,4 +618,5 @@ resource.AddWorkshop( "417428923" ) -- Episodic Pill Pack
 resource.AddWorkshop( "950845673" ) -- Parakeet's Pill Pack
 resource.AddWorkshop( "2840031720" ) -- TFA Base
 resource.AddWorkshop( "2043900984" ) -- [Half Life: Alyx] Infestation Control props
+resource.AddWorkshop( "3668479326" ) -- Half-Life 2 RP | City 26 V2
 end
