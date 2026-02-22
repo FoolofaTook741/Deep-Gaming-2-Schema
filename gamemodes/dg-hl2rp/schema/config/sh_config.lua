@@ -148,7 +148,7 @@ impulse.Config.AutoModMaxRisk = 15
 impulse.Config.MaxPillPresses = 4
 
 impulse.Config.PreWarCacheTime = 300
-impulse.Config.MPFCacheTime = 210 --time for the cache to open after triggering
+impulse.Config.MPFCacheTime = 180 --time for the cache to open after triggering
 
 impulse.Config.CommunityURL = "https://deepgaming2.com/news"
 impulse.Config.PanelURL = "https://deepgaming2.com/news"
