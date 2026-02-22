@@ -128,7 +128,7 @@ impulse.Config.Zones = {
 	{name = "Stabilization Jurisdiction 1", pos1 = Vector(7272.3872070313, 7686.3442382813, 535.45599365234), pos2 = Vector(6494.3637695313, 6509.701171875, -6.717472076416)}
 }
 
-impulse.Config.BulkCrateSpawn = Vector(-279.53720092773, 3037.5583496094, 136.03125)
+impulse.Config.BulkCrateSpawn = Vector(-6475.1879882813, 1331.1889648438, 0.03125)
 
 impulse.Config.ScannerSpawnPos = Vector(-3799.0588378906, 4477.1201171875, 493.03393554688)
 
