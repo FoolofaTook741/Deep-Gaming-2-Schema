@@ -361,23 +361,23 @@ matproxy.Add({
 })
 
 net.Receive("ixSetHairColor", function()
-    print("[DEBUG] ixSetHairColor received")
+    --print("[DEBUG] ixSetHairColor received")
 
     local sid64 = net.ReadString()
     local color = net.ReadColor(true)
 
     if not sid64 or sid64 == "" then
-        print("[DEBUG] sid64 missing/empty")
+        --print("[DEBUG] sid64 missing/empty")
         return
     end
 
     if not color then
-        print("[DEBUG] Color is NIL")
+        --print("[DEBUG] Color is NIL")
         return
     end
 
     print(string.format(
-        "[DEBUG] Payload: sid64=%s colour=R=%d G=%d B=%d A=%d",
+        --"[DEBUG] Payload: sid64=%s colour=R=%d G=%d B=%d A=%d",
         sid64,
         color.r or -1,
         color.g or -1,
@@ -394,11 +394,11 @@ net.Receive("ixSetHairColor", function()
 
         local ent = player.GetBySteamID64(sid64)
         if IsValid(ent) then
-            print("[DEBUG] Resolved player after tries=", tries, "->", ent:Nick())
+            --print("[DEBUG] Resolved player after tries=", tries, "->", ent:Nick())
             ent:SetHairColor(color)
             timer.Remove(timerName)
         elseif tries % 10 == 0 then
-            print("[DEBUG] Waiting for player entity sid64=", sid64, "tries=", tries)
+            --print("[DEBUG] Waiting for player entity sid64=", sid64, "tries=", tries)
         end
     end)
 end)
