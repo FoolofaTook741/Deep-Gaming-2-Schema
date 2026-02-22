@@ -884,6 +884,9 @@ function GM:OnPlayerChangedTeam(ply) -- get rid of it logging team changes to co
 			end
 		end
 	end
+	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+		ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
+	end
 end
 
 function GM:SetupPlayerVisibility(ply)
