@@ -3111,3 +3111,39 @@ local scaleChatCommand = {
 }
 
 impulse.RegisterChatCommand("/scale", scaleChatCommand)
+
+
+
+local addFundsCommand = {
+    description = "(Superadmin only) Adds credits to the OCAAB treasury. /addfunds [amount]",
+    requiresArg = true,
+    superAdminOnly = true,
+    onRun = function(ply, arg, rawText)
+        if not ply:IsSuperAdmin() then
+            ply:Notify("You cannot use this command.")
+            return
+        end
+
+        local amount = tonumber(arg[1])
+        if not amount then
+            ply:Notify("Invalid amount.")
+            return
+        end
+
+        if amount <= 0 then
+            ply:Notify("Amount must be greater than 0.")
+            return
+        end
+
+        OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS + amount
+        ply:Notify("Added " .. amount .. " credits to the treasury. New balance: " .. OCAAB_CUR_FUNDS .. " credits.")
+
+        for _, v in pairs(player.GetAll()) do
+            if v:IsAdmin() then
+                v:Notify("[Treasury] " .. ply:Name() .. " added " .. amount .. " credits. New balance: " .. OCAAB_CUR_FUNDS)
+            end
+        end
+    end
+}
+
+impulse.RegisterChatCommand("/addfunds", addFundsCommand)
