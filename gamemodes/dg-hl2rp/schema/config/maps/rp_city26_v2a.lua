@@ -405,6 +405,11 @@ impulse.Config.LoadScript = function()
 			end
 		end
 	end
+
+	local ent = ents.GetMapCreatedEntity(2653) -- MapCreationID / HammerID
+	if IsValid(ent) then	
+		ent:Remove()
+	end
 	
 end
 
