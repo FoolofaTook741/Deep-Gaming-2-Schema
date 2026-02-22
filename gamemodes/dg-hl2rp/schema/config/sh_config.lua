@@ -573,6 +573,12 @@ impulse.Config.Achievements = {
 		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
 		Points = 20
 	},
+	["ach_fucki24"] = {
+		Name = "Operation: Fuck I24",
+		Desc = "The last time we use this dogshit map",
+		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
+		Points = 20
+	},
 }
 
 impulse.Config.ModQuickReplies = {
