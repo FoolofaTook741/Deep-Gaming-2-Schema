@@ -689,18 +689,16 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 	
     local inventoryOnDeath = ply:GetInventory()
 	local inventoryOnDeathDrop = {}
-    for _, itemData in pairs(inventoryOnDeath) do
-        if itemData.restricted then continue end
-
-        local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemData.class)]
-        if not item then continue end
-        local dropOnDeath = item.DropOnDeath == true
-
-        if dropOnDeath then
-            table.insert(inventoryOnDeathDrop, itemData.class)
-        end
-    end
-
+	for _, itemData in pairs(inventoryOnDeath) do
+	    if itemData.restricted then continue end
+	    local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemData.class)]
+	    if not item then continue end
+	    local dropOnDeath = item.DropOnDeath == true
+	    -- Skip if CP (non-rogue, non-CA) since PlayerDeath handles their drops separately
+	    if dropOnDeath and not (ply:IsCP() and ply:Team() != TEAM_CA and not ply.IsRogue) then
+	        table.insert(inventoryOnDeathDrop, itemData.class)
+	    end
+	end
 	lootpackage.inventoryOnDeath = inventoryOnDeathDrop
 
     lootpackage:SetNWBool("IsDeadPlayerRagdoll", true)
