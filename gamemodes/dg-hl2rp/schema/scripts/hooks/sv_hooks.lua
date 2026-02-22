@@ -743,3 +743,20 @@ function SCHEMA:PlayerSpawn(ply, transition)
         net.Send(ply)
     end
 end
+
+
+hook.Add("InitPostEntity", "LVSWarmup", function()  --hook to initialize LVS on startup
+    timer.Simple(5, function()
+        local warmup = ents.Create("lvs_wheeldrive_hl2_combine_apc_armed")
+        if IsValid(warmup) then
+            warmup:SetPos(Vector(0, 0, -10000))
+            warmup:Spawn()
+            warmup:Activate()
+            timer.Simple(1, function()
+                if IsValid(warmup) then
+                    warmup:Remove()
+                end
+            end)
+        end
+    end)
+end)
