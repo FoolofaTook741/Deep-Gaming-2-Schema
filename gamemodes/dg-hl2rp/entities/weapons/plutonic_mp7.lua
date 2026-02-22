@@ -70,8 +70,8 @@ SWEP.Spread.Max = .25
 SWEP.Spread.IronsightsMod = 0.975 -- multiply
 SWEP.Spread.CrouchMod = .8 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 1.2 -- how does if the player is in the air effect spread (multiply)
-SWEP.Spread.RecoilMod = .012 -- how does the recoil effect the spread (sustained fire) (additional)
-SWEP.Spread.VelocityMod = 0.13 -- movement speed effect on spread (additonal)
+SWEP.Spread.RecoilMod = .003 -- how does the recoil effect the spread (sustained fire) (additional)
+SWEP.Spread.VelocityMod = 0.18 -- movement speed effect on spread (additonal)
 
 SWEP.SwayLevel = 0.01
 SWEP.SwayIdle = 0.01
