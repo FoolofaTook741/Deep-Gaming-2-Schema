@@ -814,7 +814,7 @@ net.Receive("impulseHL2RPUseLocker", function(lem, ply)
 		end
 		ply.HasRadio = true
 		ply.Frequency = 1
-		ply:SetBodygroup(3, 6)
+		ply:SetBodygroup(3, 3)
 		ply.IsARebel = true
 		ply.HasJacket = true
 
