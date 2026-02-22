@@ -807,9 +807,9 @@ net.Receive("impulseHL2RPUseLocker", function(lem, ply)
 		ply.lastLegBodgroup = ply:GetBodygroup(3)
 		if ply:Team() == TEAM_CWU and ply.GetTeamClass and ply:GetTeamClass() == CLASS_MEDIC then
 			ply:SetBodygroup(2, 9)
-			ply:SetBodygroup(3, 6)
+			ply:SetBodygroup(3, 2)
 		else
-			ply:SetBodygroup(2, 11)
+			ply:SetBodygroup(2, 10)
 			ply:SetBodygroup(3, 6)
 		end
 		ply.HasRadio = true
