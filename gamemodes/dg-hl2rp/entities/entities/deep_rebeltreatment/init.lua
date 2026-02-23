@@ -48,7 +48,7 @@ function ENT:Use( activator, caller )
 				activator:Notify("You have used the station to cure your wounds.")
 			end
 		else
-			activator:Notify("You lack the required medical supplies and xen extract.")
+			activator:Notify("You need 2 Medical Supplies and 1 Xen Extract to use this.")
 		end
 	else
 		activator:Notify("You cannot interact with this item.")
