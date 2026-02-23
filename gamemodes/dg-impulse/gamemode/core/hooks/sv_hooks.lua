@@ -1202,7 +1202,7 @@ local curTime = CurTime
 function GM:Think()
 	local ctime = curTime()
 	local allPlayers = player.GetAll()
-
+	--[[
 	for v,k in pairs(allPlayers) do
 		if not k.nextHungerUpdate then k.nextHungerUpdate = ctime + impulse.Config.HungerTime end
 
@@ -1235,13 +1235,13 @@ function GM:Think()
 				end
 			end
 		end
-		--[[
+		
 		if not k.nextHearUpdate or k.nextHearUpdate < CurTime() then -- optimized version of canhear hook based upon darkrp
 			canHearCheck(k)
 			k.nextHearUpdate = ctime + 0.65
 		end
-		--]]
-	end
+		
+	end ]]--
 
 	for v,k in pairs(impulse.Arrest.Dragged) do
 		if not IsValid(v) then
