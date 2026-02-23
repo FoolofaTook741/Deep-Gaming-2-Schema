@@ -32,7 +32,7 @@ util.AddNetworkString("cuffsDoSearch")
 util.AddNetworkString("DeepSetRent")
 util.AddNetworkString("deepupdatedoorprice")
 
-print("test11")
+print("test111")
 
 OCA_CustomDoorPrice = impulse.Config.DoorPrice
 TEAM_COOLDOWN_BYPASS = {
