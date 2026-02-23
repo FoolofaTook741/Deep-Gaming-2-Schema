@@ -187,8 +187,8 @@ end
 
 
 
-DG_PMWH = "https://discord.com/api/webhooks/1471354392790700153/lhbA4DrvzW3CX_GhaYsJP91tfiFMfFiahV8xckHe7zEKMlE6vN6gsS3HHMQqz2CmiKiC"
-DG_DMWH = "https://discord.com/api/webhooks/1471354595614658661/L4HOTAsANz-ZzEjxAY2U_3mI5TWeg79q70uSaa9bKszEKpw6u7nrClyy5oMq5slgo9Bv"
+DG_PMWH = "https://discord.com/api/webhooks/1473703432035631176/2wywjuUOBwsPyBH6ggAdAm1az_U6wG35KQPP07rc0Tka0oy5FHR4-FkCsXOMDDL9EBpZ" -- Promotions
+DG_DMWH = "https://discord.com/api/webhooks/1473703572150550648/T229z82u4B3mnh6wp9z2pF8nkyaWkA9tcAEQVMoX2A9USOhMxNx8r5zwcnInCtIYGV6H" -- Demotions
 DG_BLWH = "https://discord.com/api/webhooks/1471354974410772574/P6iCRjKu21CBuiu676kndmdEMonMX_JI6BCrYj0C67UQgDltXRpTl8MrUbtzRND21TXw"
 DG_CWWH = "https://discord.com/api/webhooks/1471355156179321023/Jf1gEJonVbTdTmwVyjRbN6udHkDE7f0GUsYO-4D8a2tzrvX6Nk9qRwLQu40VtJNkliHM"
 DG_LYL = "https://discord.com/api/webhooks/1471355421188030587/XFSWDj6FAzB_MJjp6l-kDRNi8jeQK0lwsd0I3rbQEElPL3qzTlexQZv1h-l8WJzNmKkp"
