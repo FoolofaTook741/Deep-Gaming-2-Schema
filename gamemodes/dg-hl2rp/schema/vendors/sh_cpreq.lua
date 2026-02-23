@@ -700,7 +700,6 @@ VENDOR.Sell = {
 
 			return false
 		end
-		}
 	}
 }
 
