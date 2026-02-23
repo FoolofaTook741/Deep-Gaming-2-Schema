@@ -22,7 +22,7 @@ impulse.Business.Define("Large Crate", {
 
 impulse.Business.Define("Huge Crate", {
     entity = "impulse_container",
-    model = "models/props_junk/wood_crate002a_half.mdl"
+    model = "models/props_junk/wood_crate002a_half.mdl",
     --model = "models/props_junk/wood_crate001a.mdl", -- old: models/props_junk/wood_crate002a.mdl
     description = "Can store 180kg worth of items.",
     price = 300,
