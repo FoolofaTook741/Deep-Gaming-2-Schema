@@ -13,7 +13,7 @@ SWEP.AdminOnly = false
 SWEP.HoldType = "smg"
 
 SWEP.WorldModel = Model("models/weapons/ocipr/w_ocipr.mdl")
-SWEP.ViewModel = Model("models/weapons/c_ordinalrifle.mdl")
+SWEP.ViewModel = Model("models/weapons/ocipr/c_ocipr.mdl")
 SWEP.ViewModelFOV = 65
 
 SWEP.ViewModelOffset = Vector(2.5, -2, -1)
