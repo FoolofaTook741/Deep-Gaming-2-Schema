@@ -202,5 +202,5 @@ DG_OPS = "https://discord.com/api/webhooks/1471356832277598251/23yavNPNxs5a837E0
 DG_LUA = "https://discord.com/api/webhooks/1471356930902720684/8Mzip3Ak0QqFSMXhbcXRxp_fORq6jICYgA8qSBqpe8ZutIizraec5l3n3SM9ZNABMBGR"
 PG_STAFFLOGS = "https://discord.com/api/webhooks/1471357087421566997/Dm2E-4T1bf8BC-DBYdw41YjlaOYYPua96-hyGgCjVQDWZURMvuPuE1GJL-f-50N4Bu31"
 PG_HIGHVALUE = "https://discord.com/api/webhooks/1471357239024554114/_oxqoQ3shquqdFipQv1dbymcwd1soxFAw2jchZyRrTi-p53bta3Nc8AYoYj_vhp0RM0z"
-PG_DIVISIONAL_WHITELIST = "https://discord.com/api/webhooks/1471357412102373500/YYG6c8tTJrMzp3VvBi6rXSsdck5oCgnZH1CvqIqWhV84vO35cffM8KFqKQE3_i_MbVJh"
+PG_DIVISIONAL_WHITELIST = "https://discord.com/api/webhooks/1473702072594464790/fAVaEmzChBoVh0S2wXBSrXiYw5hKSSaom6qhJxnofe7COxswYtPnak--Mtm-NQLKcpWf" -- Self Explanatory
 DG_E2 = "https://discord.com/api/webhooks/1471357515391570100/Pp3e6FMqiP3pOl5ZogoLmZW8HJcDD-dVbGD9xcgtYBHybiUZU69vDy0g3ANGUKQdtwEy"
