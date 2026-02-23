@@ -701,6 +701,7 @@ VENDOR.Sell = {
 			return false
 		end
 		}
+	}
 }
 
 VENDOR.Buy = {
