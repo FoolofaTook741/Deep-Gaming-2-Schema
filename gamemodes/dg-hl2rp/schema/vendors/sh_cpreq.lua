@@ -153,20 +153,6 @@ VENDOR.Sell = {
 			end
 		end
 	},
-	["wep_m500"] = {
-		Desc = "GRID i1+",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			local teamClass = ply:GetTeamClass()
-			local teamRank = ply:GetTeamRank()
-			if (teamClass == CLASS_GRID and teamRank >= RANK_I1) then
-				return true
-			else
-				return false
-			end
-		end
-	},
 	["att_slugrounds"] = {
 		Desc = "UNION RL+/DVL+",
 		Restricted = true,
