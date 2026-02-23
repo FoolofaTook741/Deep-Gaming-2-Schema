@@ -189,13 +189,13 @@ end
 
 DG_PMWH = "https://discord.com/api/webhooks/1473703432035631176/2wywjuUOBwsPyBH6ggAdAm1az_U6wG35KQPP07rc0Tka0oy5FHR4-FkCsXOMDDL9EBpZ" -- Promotions
 DG_DMWH = "https://discord.com/api/webhooks/1473703572150550648/T229z82u4B3mnh6wp9z2pF8nkyaWkA9tcAEQVMoX2A9USOhMxNx8r5zwcnInCtIYGV6H" -- Demotions
-DG_BLWH = "https://discord.com/api/webhooks/1471354974410772574/P6iCRjKu21CBuiu676kndmdEMonMX_JI6BCrYj0C67UQgDltXRpTl8MrUbtzRND21TXw"
-DG_CWWH = "https://discord.com/api/webhooks/1471355156179321023/Jf1gEJonVbTdTmwVyjRbN6udHkDE7f0GUsYO-4D8a2tzrvX6Nk9qRwLQu40VtJNkliHM"
-DG_LYL = "https://discord.com/api/webhooks/1471355421188030587/XFSWDj6FAzB_MJjp6l-kDRNi8jeQK0lwsd0I3rbQEElPL3qzTlexQZv1h-l8WJzNmKkp"
-DG_CAL = "https://discord.com/api/webhooks/1471355586741403871/kpja8xz-Pot9VwzTz5_ywf3xj2SP7rNSKt8UFMvPzp49j_jI-Hz_F-fkgFEaIwF05W9V"
-DG_MER = "https://discord.com/api/webhooks/1471355775841730560/HgR-XHQrPmzLXfxUP0gatBPUQ-7piJlG_-cEwXWtaCvdhu7vjqydzqK0On7JRWEupyzF"
-DG_DMER = "https://discord.com/api/webhooks/1471355972130963518/CTj_rQW_oJ91OSFTnKOBaxu6ZSPJqCOlVEPqzHlrLSXJH_H-D6rChAABGZacsnNAq3aW"
-DG_TMER = "https://discord.com/api/webhooks/1471356174107672669/ShqEcxw5zdVkDZM85jpSMTefIDp3gQuaD8xkCnBnKlB54a2yA0iTFD-Ok70Z_cjpFLGS"
+DG_BLWH = "https://discord.com/api/webhooks/1473703704820584570/NR44xA9hBZ2jLaVIE5MAsR-4LAU4IBDxFJrWcwnTKMpCZEQ3F7wNiF56TFwrtXUmXkXP" -- Blacklists
+DG_CWWH = "https://discord.com/api/webhooks/1473703873767018607/5EmSsE3-OXLqBmtW0OzLoasednW9yDeh0bHd1Uh3NxApQ2IboocsYcUgCAQ46uI3QomF" -- CW Rank changes
+DG_LYL = "https://discord.com/api/webhooks/1473704316094124186/Gn5JIXOSYNnxp_aZj-IOBy36XFwwmmuMRzo6OBmEQE6c3j1l0DYxrDJzWuuEKkjubREb" -- Loyalist Levels
+DG_CAL = "https://discord.com/api/webhooks/1473700636766769371/Xm8oiCUaqKl3NPyeg0Ug7RMvZ0fSr1XBb9GWzsbymt8NjLk8w5IHtvJWn8Mm4IooGy06" -- City Code status
+DG_MER = "https://discord.com/api/webhooks/1473704515050934405/ZFkfBb1OHmnblUlKlEz1lCUfTV1SvAm5XShFbmGh0rfbOYkClmIylTNvK61JRfAaFs8E" -- Supervisory Merits
+DG_DMER = "https://discord.com/api/webhooks/1473704693816365302/e4f0HA3bsAa5yVBtI69QxJhpmCz9eAE2XYi30ZIthDg3KaY1NIoVEyoTSD7vlRlk-x5c" -- Supervisory Demerits
+DG_TMER = "https://discord.com/api/webhooks/1473705106909434030/mz6Muh4wbelBqm-kM7LIrfb1DanGrP6yHIopjT6hTM4c974UVx6PbFtViyTBL6ZRSM5S" -- Training Merits
 DG_SENT = "https://discord.com/api/webhooks/1471356433634427021/nJ2kWPNoHyHjbNJhCpdGZH0gjNzj3LR__HBQr_KtHZT2kUoELHxAeAdbjyVQgPEMkfos"
 DG_NME = "https://discord.com/api/webhooks/1471356717475434536/AfWQpUWUQfGiiV3e9xNCtM2xIdYN_9GmMXepHPZMNSR0l6sS4c8jqYzVdjJOQ8lnvpri"
 DG_OPS = "https://discord.com/api/webhooks/1471356832277598251/23yavNPNxs5a837E0WP2n5JP4VnDRSQB2wsGsGaAUeJDf8kXjlKbUrqQOmNhedk6D9rN"
