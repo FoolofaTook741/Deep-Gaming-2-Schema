@@ -682,7 +682,6 @@ VENDOR.Sell = {
 	["util_nvgs"] = {
 		Restricted = true,
 		Max = 1
-	}
 	},
 	["clo_reinforcedcphelmet"] = {
 		Desc = "UNION/SWORD i3+ (MARGINAL+) | SWORD SqL+ (Any Code)",
