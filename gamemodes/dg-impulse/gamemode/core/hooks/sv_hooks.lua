@@ -135,7 +135,16 @@ function GM:PlayerInitialSpawnLoaded(ply) -- called once player is full loaded
 		net.Send(ply)
 	end
 
-	ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
+	if ply.impulseData and ply.impulseData.hairColor then
+		local c = ply.impulseData.hairColor
+
+		ply:SetHairColor(Color(
+			c.r or 255,
+			c.g or 255,
+			c.b or 255,
+			c.a or 255
+		))
+	end
 end
 
 function GM:PlayerSpawn(ply)
