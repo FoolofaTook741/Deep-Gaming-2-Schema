@@ -13,13 +13,13 @@ VENDOR.Talk = false
 
 VENDOR.Sell = {
 	["item_emptybag"] = {
-		Cost = 30,
+		Cost = 20,
 		BuyMax = 12,
 		Restricted = true,
 		TempCooldown = 300
 	},
     ["item_ictbox"] = {
-		Cost = 30,
+		Cost = 20,
 		BuyMax = 1,
 		Restricted = true,
 		TempCooldown = 300
@@ -31,7 +31,7 @@ VENDOR.Sell = {
 		TempCooldown = 300
 	},
     ["item_sporeanalyzer"] = {
-		Cost = 70,
+		Cost = 50,
 		BuyMax = 1,
 		Restricted = true,
 		TempCooldown = 300
@@ -52,16 +52,13 @@ VENDOR.Sell = {
 
 VENDOR.Buy = {
     ["item_fullbag"] = {
-		Cost = 50 * GL_ICT_MULT
-	},
-	["item_fullbag"] = {
-		Cost = 50 * GL_ICT_MULT
+		Cost = 90 * GL_ICT_MULT
 	},
 	["item_fullbag_spore"] = {
-		Cost = 200 * GL_ICT_MULT
+		Cost = 250 * GL_ICT_MULT
 	},
 	["item_fullbag_barnacle"] = {
-		Cost = 200 * GL_ICT_MULT
+		Cost = 250 * GL_ICT_MULT
 	},
     ["item_grubcrate"] = {
 		Cost = 70 * GL_ICT_MULT
