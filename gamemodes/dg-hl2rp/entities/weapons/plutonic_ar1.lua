@@ -75,7 +75,7 @@ SWEP.Spread.IronsightsMod = 0.4 -- multiply
 SWEP.Spread.CrouchMod = 0.6 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2.5 -- how does if the player is in the air effect spread (multiply)
 SWEP.Spread.RecoilMod = 0 -- how does the recoil effect the spread (sustained fire) (additional)
-SWEP.Spread.VelocityMod = .003 -- movement speed effect on spread (additonal)
+SWEP.Spread.VelocityMod = .02 -- movement speed effect on spread (additonal)
 
 SWEP.IronsightsPos = Vector(-1.81, -2.613, 0)
 SWEP.IronsightsAng = Angle(0, 0, 0)
