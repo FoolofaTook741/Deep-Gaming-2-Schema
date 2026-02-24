@@ -70,7 +70,7 @@ SWEP.UseIronsightsRecoil = false
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.04
+SWEP.Spread.Max = 0.12
 SWEP.Spread.IronsightsMod = 0.8 -- multiply
 SWEP.Spread.CrouchMod = 0.75 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2.5 -- how does if the player is in the air effect spread (multiply)
