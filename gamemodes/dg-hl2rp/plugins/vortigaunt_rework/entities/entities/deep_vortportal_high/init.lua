@@ -3,7 +3,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-    self:SetModel("models/jq/hlvr/props/xenpack/xen_flat_blob01_barrel_mush01.mdl")
+    self:SetModel("models/props_interiors/pot02a.mdl")
     self:SetNoDraw(true)
     self:DrawShadow(false)
 

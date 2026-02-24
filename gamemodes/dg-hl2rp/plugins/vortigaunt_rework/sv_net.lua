@@ -1,3 +1,7 @@
+local function roundToTenth(num)
+    return math.floor(num * 10 + 0.5) / 10
+end
+
 if SERVER then
 
 	VORTMAXSKILLS = 15
@@ -52,10 +56,6 @@ if SERVER then
     }
     --PrintTable(vortSkills.Skills)
     meta = FindMetaTable("Player")
-
-    local function roundToTenth(num)
-        return math.floor(num * 10 + 0.5) / 10
-    end
 
     local function SendFullSkillData(ply)
         local vortData = ply:GetData().vort_skills or { availableSkillPoints = 0, lastReset = 0, skills = {} }
