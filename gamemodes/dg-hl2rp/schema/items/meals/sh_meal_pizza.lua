@@ -1,10 +1,10 @@
 local ITEM = {}
 
 ITEM.UniqueID = "meal_pizza"
-ITEM.Name = "Pizza [MEAL]"
-ITEM.Desc =  "A perfectly cooked pizza wth lots of toppings. This is a meal item, consuming it will block hunger loss for 10 minutes. Meal items can be purchased from C.W. members."
+ITEM.Name = "Calzone [MEAL]"
+ITEM.Desc =  "A folded pizza. This is a meal item, consuming it will block hunger loss for 10 minutes. Meal items can be purchased from C.W. members."
 ITEM.Category = "Meals"
-ITEM.Model = Model("models/foodnhouseholditems/pizza.mdl")
+ITEM.Model = Model("models/mosi/fnv/props/food/mirelurkcake.mdl")
 ITEM.FOV = 5
 ITEM.CamPos = Vector(100, 100, 0)
 ITEM.NoCenter = true
