@@ -50,11 +50,11 @@ sound.Add({
 SWEP.Primary.Sound = Sound("LS2.AR1.Single")
 
 SWEP.Primary.Recoil = 1.35 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 14
+SWEP.Primary.Damage = 12
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.4
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(465)
+SWEP.Primary.Delay = RPM(525)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "AR2"
@@ -74,8 +74,8 @@ SWEP.Spread.Max = 0.025
 SWEP.Spread.IronsightsMod = 0.4 -- multiply
 SWEP.Spread.CrouchMod = 0.6 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2.5 -- how does if the player is in the air effect spread (multiply)
-SWEP.Spread.RecoilMod = 0.12 -- how does the recoil effect the spread (sustained fire) (additional)
-SWEP.Spread.VelocityMod = 1.2 -- movement speed effect on spread (additonal)
+SWEP.Spread.RecoilMod = 0 -- how does the recoil effect the spread (sustained fire) (additional)
+SWEP.Spread.VelocityMod = .003 -- movement speed effect on spread (additonal)
 
 SWEP.IronsightsPos = Vector(-1.81, -2.613, 0)
 SWEP.IronsightsAng = Angle(0, 0, 0)
