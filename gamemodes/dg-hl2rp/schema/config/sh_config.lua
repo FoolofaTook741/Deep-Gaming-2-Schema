@@ -723,7 +723,7 @@ impulse.Config.BrewingTime = 900
 
 impulse.Config.FactoryLaundryReward = 20
 impulse.Config.VendingRefillReward = 20
-impulse.Config.MaxVendingMachines = 1
+impulse.Config.MaxVendingMachines = 2
 
 impulse.Config.ApartmentCost = 15 -- one time purchase amount
 
