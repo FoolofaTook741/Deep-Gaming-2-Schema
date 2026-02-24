@@ -790,7 +790,7 @@ net.Receive("impulseHL2RPUseLocker", function(lem, ply)
 	if not (ply:Team() == TEAM_CITIZEN or (ply:Team() == TEAM_CWU and ply.GetTeamClass and ply:GetTeamClass() == CLASS_MEDIC)) then return end
 	if not IsValid(ply.currentLocker) then return end
 	if (ply:GetPos() - ply.currentLocker:GetPos()):LengthSqr() > (120 ^ 2) then return end
-	if ply.HasTier1Vest == true or ply.HasTier2Vest == true or ply.HasTier3Vest == true then
+	if ply.HasTier1Vest == true or ply.HasTier2Vest == true or ply.HasTier3Vest == true or ply.HasConscriptArmor == true then
 		return
 	end
 
