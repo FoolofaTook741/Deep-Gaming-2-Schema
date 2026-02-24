@@ -687,7 +687,7 @@ local groupChatCommand = {
 impulse.RegisterChatCommand("/group", groupChatCommand)
 impulse.RegisterChatCommand("/g", groupChatCommand)
 
-mpulse.RegisterChatCommand("/unshackle", {
+impulse.RegisterChatCommand("/unshackle", {
     description = "Removes shackles from a vortigaunt by Steam ID.",
     leadAdminOnly = true,
     requiresArg = true,
