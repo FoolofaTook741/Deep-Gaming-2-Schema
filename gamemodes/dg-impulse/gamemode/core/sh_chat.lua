@@ -687,6 +687,60 @@ local groupChatCommand = {
 impulse.RegisterChatCommand("/group", groupChatCommand)
 impulse.RegisterChatCommand("/g", groupChatCommand)
 
+mpulse.RegisterChatCommand("/unshackle", {
+    description = "Removes shackles from a vortigaunt by Steam ID.",
+    leadAdminOnly = true,
+    requiresArg = true,
+    onRun = function(ply, args, rawText)
+        local targetSID = args[1]
+
+        if not targetSID then
+            ply:Notify("Usage: /unshackle <steamid>")
+            return
+        end
+
+        local target = nil
+        for _, p in pairs(player.GetAll()) do
+            if p:SteamID() == targetSID then
+                target = p
+                break
+            end
+        end
+
+        if not target then
+            ply:Notify("Could not find a player with Steam ID: " .. targetSID)
+            return
+        end
+
+        if target:Team() ~= TEAM_VORT or target:GetBodygroup(7) ~= 1 then
+            ply:Notify(target:Nick() .. " is not a shackled vortigaunt.")
+            return
+        end
+
+        target:SetBodygroup(7, 0)
+        target:SetBodygroup(8, 0)
+        target:Notify("You have had your shackles removed by " .. ply:Nick() .. ".")
+
+        if target:HasWeapon("plutonic_broom") then
+            target:StripWeapon("plutonic_broom")
+        end
+
+        target:Give("plutonic_vort")
+        target.IsARebel = true
+        target:SetRPName(target:GetSavedRPName())
+
+        ply:Notify("You have unshackled " .. target:Nick() .. ".")
+    end
+})
+
+impulse.RegisterChatCommand("/checkbodygroups", {
+    description = "Prints your current bodygroups to chat.",
+    onRun = function(ply, args, rawText)
+        for _, group in pairs(ply:GetBodyGroups()) do
+            ply:Notify("Bodygroup " .. group.id .. " (" .. group.name .. "): " .. ply:GetBodygroup(group.id))
+        end
+    end
+})
 
 if CLIENT then
 	local infoCol = Color(135, 206, 250)
