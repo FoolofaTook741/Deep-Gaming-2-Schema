@@ -69,7 +69,7 @@ SWEP.Secondary.DefaultClip = -1
 SWEP.UseIronsightsRecoil = false
 
 SWEP.Spread = {}
-SWEP.Spread.Min = 0
+SWEP.Spread.Min = 0.01
 SWEP.Spread.Max = 0.12
 SWEP.Spread.IronsightsMod = 0.8 -- multiply
 SWEP.Spread.CrouchMod = 0.75 -- crouch effect (multiply)
