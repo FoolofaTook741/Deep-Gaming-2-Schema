@@ -38,11 +38,11 @@ SWEP.BlowbackAngle = Angle(0, 0, 0)
 SWEP.Primary.Sound = Sound("weapons/hlvr/irifle/fire1.wav")
 
 SWEP.Primary.Recoil = 1.25 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 14
+SWEP.Primary.Damage = 12
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.4
 SWEP.Primary.Cone = 0.02
-SWEP.Primary.Delay = RPM(480)
+SWEP.Primary.Delay = RPM(545)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "AR2"
@@ -60,13 +60,13 @@ SWEP.CenteredPos = Vector(-3, -2, -4)
 SWEP.CenteredAng = Angle(3,3,0)
 
 SWEP.Spread = {}
-SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.02
-SWEP.Spread.IronsightsMod = 0.4 -- multiply
-SWEP.Spread.CrouchMod = 0.6 -- crouch effect (multiply)
+SWEP.Spread.Min = 0.01
+SWEP.Spread.Max = 0.12
+SWEP.Spread.IronsightsMod = 0.7 -- multiply
+SWEP.Spread.CrouchMod = 0.69 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2.5 -- how does if the player is in the air effect spread (multiply)
 SWEP.Spread.RecoilMod = 0.12 -- how does the recoil effect the spread (sustained fire) (additional)
-SWEP.Spread.VelocityMod = 1.2 -- movement speed effect on spread (additonal)
+SWEP.Spread.VelocityMod = .15 -- movement speed effect on spread (additonal)
 
 SWEP.IronsightsPos = Vector(-1.81, -2.613, 0)
 SWEP.IronsightsAng = Angle(0, 0, 0)
