@@ -23,7 +23,7 @@ local bg
 
 function ITEM:CanEquip(ply)
 	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
-		if ply.IsARebel or ply:GetBodygroup(2) == 38 or ply:GetBodygroup(2) == 39 or (ply:GetBodygroup(2) >= 7 and ply:GetBodygroup(2) <= 12) then
+		if ply.IsARebel or ply:GetBodygroup(2) == 7 or ply:GetBodygroup(2) == 7 or (ply:GetBodygroup(2) >= 7 and ply:GetBodygroup(2) <= 12) then
 			return true
 		end
 	end
@@ -31,8 +31,8 @@ end
 
 function ITEM:OnEquip(ply)
 	bg = ply:GetBodygroup(2)
-	if ply:GetBodygroup(2) == 12 then
-		ply:SetBodygroup(2, 10)
+	if ply:GetBodygroup(2) == 11 then
+		ply:SetBodygroup(2, 7)
 	elseif ply:GetBodygroup(2) == 11 then
 		ply:SetBodygroup(2, 8)
 	elseif ply:GetBodygroup(2) == 10 then
