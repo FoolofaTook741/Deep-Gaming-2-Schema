@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "item_camerarepairkit"
 ITEM.Name = "Repair Kit"
-ITEM.Desc =  "This kit contains replacement parts and tools to repair damaged electronics."
+ITEM.Desc = "This kit contains replacement parts and tools to repair damaged electronics."
 ITEM.Category = "Combine Tools"
 ITEM.Model = Model("models/combine_turrets/floor_turret_gib1.mdl")
 ITEM.FOV = 20.379656160458
@@ -12,7 +12,6 @@ ITEM.Weight = 0.2
 
 ITEM.Droppable = true
 ITEM.DropOnDeath = false
-
 ITEM.Illegal = false
 ITEM.CanStack = true
 
@@ -22,60 +21,115 @@ ITEM.CraftIfRestricted = false
 
 ITEM.UseName = "Repair Appliances"
 
+local CAMERA_REPAIR_COOLDOWN = 120
+local CAMERA_POSITION_TOLERANCE = 100
+
+impulse.CameraRepairCooldowns = impulse.CameraRepairCooldowns or {}
+
 function ITEM:OnUse(ply)
-	local pos = ply:GetPos()
+    local pos = ply:GetPos()
+    local now = CurTime()
 
-    for v,k in pairs(ents.FindByClass("npc_combine_camera")) do
-    	if not k:IsCameraEnabled() and k:GetPos():DistToSqr(pos) < (500 ^ 2) then
-    		ply:EmitSound("ambient/energy/weld2.wav")
-            ply:Notify("You have repaired a broken camera.")
+    for _, cam in pairs(ents.FindByClass("npc_combine_camera")) do
+        if cam:GetPos():DistToSqr(pos) < (500 ^ 2) then
+            local camPos = cam:GetPos()
 
-    		k:RepairCombineCamera()
-			if ply:Team() == TEAM_CWU then
-				ply:GiveMoney(200)
-				ply:Notify("You have received 200 credits for repairing this camera.")
-				ply:AddSkillXP("metabolism", math.random(5,15))
-			end
-    		return true
-    	end
+            for _, data in pairs(impulse.CameraRepairCooldowns) do
+                if camPos:DistToSqr(data.pos) <= CAMERA_POSITION_TOLERANCE then
+                    local elapsed = now - data.time
+
+                    if elapsed < CAMERA_REPAIR_COOLDOWN then
+                        local remaining = math.ceil(CAMERA_REPAIR_COOLDOWN - elapsed)
+                        local minutes = math.floor(remaining / 60)
+                        local seconds = remaining % 60
+
+                        if minutes > 0 then
+                            ply:Notify(string.format(
+                                "This camera has massive faults. Wait %d minute(s) and %d second(s).",
+                                minutes,
+                                seconds
+                            ))
+                        else
+                            ply:Notify(string.format(
+                                "This camera has massive faults. Wait %d second(s).",
+                                seconds
+                            ))
+                        end
+
+                        return false
+                    end
+                end
+            end
+
+            if not cam:IsCameraEnabled() then
+                table.insert(impulse.CameraRepairCooldowns, {
+                    pos = camPos,
+                    time = now
+                })
+
+                ply:EmitSound("ambient/energy/weld2.wav")
+                ply:Notify("You have repaired a broken camera.")
+
+                cam:RepairCombineCamera()
+
+                if ply:Team() == TEAM_CWU then
+                    ply:GiveMoney(200)
+                    ply:Notify("You have received 200 credits for repairing this camera.")
+                    ply:AddSkillXP("metabolism", math.random(5, 15))
+                end
+
+                return true
+            end
+        end
     end
 
-	for v,k in pairs(ents.FindByClass("deep_commsuplink")) do
-		if k:GetPos():DistToSqr(pos) < (500 ^ 2) && impulse.CommsNetWorkOn != true then 
-    		impulse.CommsNetWorkOn = true
-			if !timer.Exists("emphackcooldown") then 
-				timer.Remove("emphackcooldown") 
-			end
-			ply:EmitSound("ambient/energy/weld2.wav")
-			ply:Notify("You have repaired the Combine Comms Uplink.")
-    		for k, v in pairs(player.GetAll()) do 
-				v:SendCombineMessage("COMBINE COMMS NETWORK REPAIRED BY " .. ply:Name(), Color(0, 150, 0))
-			end
-			if ply:Team() == TEAM_CWU then
-				ply:GiveMoney(400)
-				ply:Notify("You have received 400 credits for repairing the comms network.")
-				ply:AddSkillXP("metabolism", math.random(20,100))
-			end
-			return true
-		end
+    for _, uplink in pairs(ents.FindByClass("deep_commsuplink")) do
+        if uplink:GetPos():DistToSqr(pos) < (500 ^ 2) and impulse.CommsNetWorkOn != true then
+            impulse.CommsNetWorkOn = true
+
+            if timer.Exists("emphackcooldown") then
+                timer.Remove("emphackcooldown")
+            end
+
+            ply:EmitSound("ambient/energy/weld2.wav")
+            ply:Notify("You have repaired the Combine Comms Uplink.")
+
+            for _, v in pairs(player.GetAll()) do
+                v:SendCombineMessage(
+                    "COMBINE COMMS NETWORK REPAIRED BY " .. ply:Name(),
+                    Color(0, 150, 0)
+                )
+            end
+
+            if ply:Team() == TEAM_CWU then
+                ply:GiveMoney(400)
+                ply:Notify("You have received 400 credits for repairing the comms network.")
+                ply:AddSkillXP("metabolism", math.random(20, 100))
+            end
+
+            return true
+        end
     end
 
-	for v,k in pairs(ents.FindByClass("impulse_hl2rp_terminal")) do
-		if k:GetPos():DistToSqr(pos) < (500 ^ 2) && k.Emped == true then
-			ply:EmitSound("ambient/energy/weld2.wav") 
-			k.Emped = false
-			ply:Notify("You have repaired a broken terminal.")
-			if ply:Team() == TEAM_CWU then
-				ply:GiveMoney(200)
-				ply:Notify("You have received 200 credits for repairing a terminal.")
-				ply:AddSkillXP("metabolism", math.random(10,30))
-			end
-			return true
-		end
+    for _, term in pairs(ents.FindByClass("impulse_hl2rp_terminal")) do
+        if term:GetPos():DistToSqr(pos) < (500 ^ 2) and term.Emped == true then
+            ply:EmitSound("ambient/energy/weld2.wav")
+
+            term.Emped = false
+            ply:Notify("You have repaired a broken terminal.")
+
+            if ply:Team() == TEAM_CWU then
+                ply:GiveMoney(200)
+                ply:Notify("You have received 200 credits for repairing a terminal.")
+                ply:AddSkillXP("metabolism", math.random(10, 30))
+            end
+
+            return true
+        end
     end
 
     ply:Notify("No broken devices found nearby.")
-	return false
+    return false
 end
 
 impulse.RegisterItem(ITEM)
