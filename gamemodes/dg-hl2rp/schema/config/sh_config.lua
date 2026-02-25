@@ -843,6 +843,7 @@ impulse.Config.LootPools = {
 			["util_energycore"] = {Rarity = 730, Rep = 2},
 			["util_particleaccelerator"] = {Rarity = 980, Rep = 1},
 			["item_ammocrate"] = {Rarity = 600, Rep = 3},
+			["cos_conscriptarmor"] = {Rarity = 450, Rep = 2},
 		},
 		MaxItems = 20,
 		MinItems = 12
@@ -862,6 +863,7 @@ impulse.Config.LootPools = {
 			["bl_ar3"] = {Rarity = 930, Rep = 1},
 			["util_energycore"] = {Rarity = 730, Rep = 6},
 			["item_ammocrate"] = {Rarity = 600, Rep = 5},
+			["cos_conscriptarmor"] = {Rarity = 500, Rep = 2},
 		},
 		MaxItems = 18,
 		MinItems = 9
@@ -925,6 +927,7 @@ impulse.Config.LootPools = {
 			["cos_parahelmet"] = {Rarity = 400, Rep = 2},
 			["cos_otavest"] = {Rarity = 600, Rep = 2},	
 			["cos_novavest"] = {Rarity = 800, Rep = 1},
+			["cos_conscriptarmor"] = {Rarity = 950, Rep = 1},
 		},
 		MaxItems = 4,
 		MinItems = 3
