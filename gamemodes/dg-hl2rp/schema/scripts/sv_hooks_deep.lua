@@ -163,7 +163,7 @@ impulse.CityLockdownServer = false
 impulse.SegregationServer = false
 
 OCAAB_CUR_FUNDS = 0
-OCAAB_MAX_FUNDS = 35000
+OCAAB_MAX_FUNDS = 30000
 OCAAB_INCENDIARY_UPGRADE = false
 OCAAB_HEALTHVIALS_UPGRADE = false
 OCAAB_CIV_TAXRATE = 0
