@@ -515,10 +515,10 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
         
             for _, itemClass in pairs(ragdoll.inventoryOnDeath) do
                 if ragdoll:CanHoldItem(itemClass) then
-                    if ArmorItems[itemClass] then
-                        continue
-                    else
+                    if not ArmorItems[itemClass] then
                         ragdoll:AddItem(itemClass, 1, false)
+                    elseif itemClass == "cos_conscriptarmor" then
+                        ragdoll:AddItem("scrap_conscriptarmor", 1, true)
                     end
                 else
                     break
