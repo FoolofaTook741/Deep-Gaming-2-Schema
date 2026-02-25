@@ -426,20 +426,23 @@ end
 
 function meta:calcGroupStorageWeight()
     local groupid = self:GetGroupID()
-    if not groupid or not impulse.Inventory.Group.Data[groupid] or not impulse.Inventory.Group.Data[groupid][3] then 
-         if impulse.Inventory.Group.Data[groupid] then
-             impulse.Inventory.Group.Data[groupid].Weight = 0
-         end
-         return 0
+    if not groupid then return 0 end
+
+    local gdata = impulse.Inventory.Group.Data and impulse.Inventory.Group.Data[groupid]
+    if not gdata or not gdata[3] then
+        if gdata then gdata.Weight = 0 end
+        return 0
     end
+
     local total = 0
-    for k, item in pairs(impulse.Inventory.Group.Data[groupid][3]) do
-         local itemID = impulse.Inventory.ClassToNetID(item.class)
-         local w = tonumber(impulse.Inventory.Items[itemID].Weight) or 0
-         total = total + w
+    for _, item in pairs(gdata[3]) do
+        local itemID = impulse.Inventory.ClassToNetID(item.class)
+        local w = tonumber((impulse.Inventory.Items[itemID] or {}).Weight) or 0
+        total = total + w
     end
-	total = math.Round(total, 1)
-    impulse.Inventory.Group.Data[groupid].Weight = total
+
+    total = math.Round(total, 1)
+    gdata.Weight = total
     return total
 end
 

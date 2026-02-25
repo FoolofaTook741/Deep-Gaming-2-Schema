@@ -138,8 +138,9 @@ net.Receive("deepGroupInvContainerDoMoveMass", function(len, ply)
     ply:MoveInventoryItemGroupMass(itemclass, from, to, amount)
 
     local gid = ply:GetGroupID()
-    local grpData = impulse.Inventory.Group.Data[gid] or {}
-    grpData.Register    = grpData.Register or {}
+    impulse.Inventory.Group.Data[gid] = impulse.Inventory.Group.Data[gid] or {}
+    local grpData = impulse.Inventory.Group.Data[gid]
+    grpData.Register = grpData.Register or {}
 
     if from == 1 then
         grpData.Register[itemclass] = (grpData.Register[itemclass] or 0) + amount
@@ -190,10 +191,10 @@ function SyncGroupStorageForGroup(groupid, ply, delete)
 			groupItems = impulse.Inventory.Group.Data[groupid][3]
 		end
 
-		if impulse.Inventory.Group.Data[groupid] then
-			 impulse.Inventory.Group.Data[groupid].Weight = nil
-			 ply.calcGroupStorageWeight({GetGroupID = function() return groupid end})
-		end
+        if impulse.Inventory.Group.Data[groupid] then
+            impulse.Inventory.Group.Data[groupid].Weight = nil
+            ply:calcGroupStorageWeight()
+        end
 		
 		local cnt = 0
 		for _ in pairs(groupItems) do cnt = cnt + 1 end
@@ -231,7 +232,7 @@ hook.Add("PlayerGroupDeleted", "CleanupGroupInventory", function(groupName, grou
     local query = mysql:Delete("impulse_group_inventory")
     query:Where("groupid", groupID)
     query:Execute()
-	SyncGroupStorageForGroup(groupID,ply)
+	SyncGroupStorageForGroup(groupID,ply,true)
 
 end)
 
