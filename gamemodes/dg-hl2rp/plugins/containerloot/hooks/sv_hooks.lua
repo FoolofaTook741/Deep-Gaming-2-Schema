@@ -64,7 +64,8 @@ local ArmorItems = {
     ["cos_elitevest"] = true,
     ["cos_otavest2"] = true,
     ["cos_otavest"] = true,
-    ["cos_lightvest"] = true
+    ["cos_lightvest"] = true,
+    ['cos_conscriptarmor'] = true
 }
 
 local ANTICRASH_ATTEMPTS = 0
