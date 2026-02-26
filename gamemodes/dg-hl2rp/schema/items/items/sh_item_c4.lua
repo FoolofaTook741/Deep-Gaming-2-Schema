@@ -30,7 +30,7 @@ ITEM.UseWorkBarSound = "weapons/c4/c4_disarm.wav"
 function ITEM:OnUse(ply, ent)
 	local pc = GetPlayerCount()
 	local cc = GetCombineCount()
-	if GetPlayerCount() < 30 and GetOTACount() < 7 and ply:IsSuperAdmin() == false then
+	if GetPlayerCount() < 30 and GetOTACount() < 5 and ply:IsSuperAdmin() == false then
 		ply:Notify("There are not enough players online (30).")
 		return false
 	elseif GetOTACount() >= 7 then
