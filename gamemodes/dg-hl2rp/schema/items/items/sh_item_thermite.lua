@@ -33,7 +33,7 @@ function ITEM:OnUse(ply, ent)
 	if GetPlayerCount() < 30 and GetCPCount() < 8 and ply:IsSuperAdmin() == false then
 		ply:Notify("There are not enough players online (30).")
 		return false
-	elseif GetCPCount() >= 10 then
+	elseif GetCPCount() >= 8 then
 		if timer.Exists(ent:GetCreationID() .. "DeepMPFCBox") then
 			ply:Notify("This cache already being raided...")
 			return
