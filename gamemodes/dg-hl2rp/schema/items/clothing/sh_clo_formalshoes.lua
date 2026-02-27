@@ -1,7 +1,7 @@
 local ITEM = {}
 
 ITEM.UniqueID = "clo_formalshoes"
-ITEM.Name = "Formal shoes"
+ITEM.Name = "Shoes"
 ITEM.Desc =  "A pair of black fancy shoes."
 ITEM.Category = "Clothing Items"
 ITEM.Model = Model("models/willardnetworks/clothingitems/shoes_formal.mdl")

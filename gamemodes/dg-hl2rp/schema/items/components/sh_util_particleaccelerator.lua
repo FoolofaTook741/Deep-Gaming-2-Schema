@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_particleaccelerator"
 ITEM.Name = "Particle Accelerator Core"
 ITEM.Desc = "A key component in the Tau Cannon."
+ITEM.Category = "Components"
 ITEM.Model = Model("models/maxofs2d/hover_rings.mdl")
 ITEM.FOV = 15.4025787965616
 ITEM.CamPos = Vector(100, -26.934097290039, 2.8653295040131)

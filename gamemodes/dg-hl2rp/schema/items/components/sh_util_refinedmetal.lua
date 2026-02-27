@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_refinedmetalplate"
 ITEM.Name = "Refined Metal Plate"
 ITEM.Desc = "A refined metal plate made of an alloy."
+ITEM.Category = "Components"
 ITEM.Model = Model("models/gibs/scanner_gib02.mdl")
 ITEM.FOV = 40
 ITEM.Weight = 0.8

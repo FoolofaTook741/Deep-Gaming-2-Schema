@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_energycore"
 ITEM.Name = "Energy Core"
 ITEM.Desc = "A powerful core that can be used to repair Combine weapons or create and charge the powerful Tau Cannon."
+ITEM.Category = "Components"
 ITEM.Model = Model("models/Items/combine_rifle_ammo01.mdl")
 ITEM.FOV = 8.4025787965616
 ITEM.CamPos = Vector(100, -26.934097290039, 2.8653295040131)

@@ -3,6 +3,7 @@ local ITEM = {}
 ITEM.UniqueID = "util_extract"
 ITEM.Name = "Larval Extract"
 ITEM.Desc = "A jar full of Larval Extract. The Vorts say it was a commodity for them."
+ITEM.Category = "Components"
 ITEM.Model = Model("models/props_lab/jar01b.mdl")
 ITEM.FOV = 33
 ITEM.Weight = 0.1
