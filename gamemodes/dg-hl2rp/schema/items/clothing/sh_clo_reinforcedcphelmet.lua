@@ -32,12 +32,16 @@ function ITEM:OnEquip(ply)
     end
     ply.HasCPMask = true
     ply.HasReinforcedCPMask = true
+    ply:SetBodygroup(ply:FindBodygroupByName("beard"), 0)
+    ply:SetBodygroup(ply:FindBodygroupByName("hair"), 15)
 end
 
 function ITEM:UnEquip(ply)
 	ply:SetBodygroup(3, 0)
     ply.HasCPMask = false
     ply.HasReinforcedCPMask = false
+    ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 end
 
 impulse.RegisterItem(ITEM)
