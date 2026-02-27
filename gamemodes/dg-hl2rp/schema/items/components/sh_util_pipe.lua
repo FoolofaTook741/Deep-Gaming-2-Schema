@@ -5,7 +5,7 @@ ITEM.Name = "Metal Pipe"
 ITEM.Desc = "A metal pipe."
 ITEM.Model = Model("models/props_lab/pipesystem03a.mdl")
 ITEM.FOV = 43
-ITEM.Weight = 1
+ITEM.Weight = .5
 
 ITEM.Droppable = true
 ITEM.DropOnDeath = true
@@ -25,10 +25,10 @@ ITEM.UseWorkBarSound = "impulse/bone2.wav"
 
 function ITEM:OnUse(ply)
 	local amount = math.random(1,3)
-	if ply:GetSkillLevel("scrapping") >= 3 then
-        amount = math.random(2,3)
-    elseif ply:GetSkillLevel("scrapping") >= 7 then
+	if ply:GetSkillLevel("scrapping") >= 7 then
         amount = math.random(2,4)
+    elseif ply:GetSkillLevel("scrapping") >= 4 then
+        amount = math.random(2,3)
     end
     local meeman = 0
     while meeman < amount do
