@@ -175,7 +175,7 @@ VENDOR.Sell = {
 		BuyMax = 2,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_COUNCILMAN && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
