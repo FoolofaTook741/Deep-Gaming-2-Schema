@@ -49,9 +49,9 @@ net.Receive("impulseHL2RPDeployScanner",function(len,ply)
     scanner:Spawn()
     scanner:setPilot(ply)
 
-    if (ply:GetTeamRank() >= RANK_OFC and ply:Team() == TEAM_CP) then
-	ply:SetRPName(impulse.MakeScannerTagline("disp"),false)
-        scanner:SetHP(75)
+    if (ply:GetTeamClass() == CLASS_DISPATCH and ply:Team() == TEAM_CP) then
+        ply:SetRPName(impulse.MakeScannerTagline("disp"),false)
+        scanner.health = 75
     end
 
     if ply:Team() == TEAM_OTA and ply:GetTeamClass() == CLASS_NOMAD then

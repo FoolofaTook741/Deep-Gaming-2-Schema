@@ -275,7 +275,7 @@ TEAM_CP = impulse.Teams.Define({
 		{ -- 7
 			name = "DISPATCH",
 			description = "DISPATCH units are responsible for coordinating and managing field operations.",
-			model = "models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl",
+			model = "models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl",
 			xp = 0,
 			limit = 5,
 			noMenu = true,
@@ -362,17 +362,25 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 0)
-					ply:SetBodygroup(0, 0)
+					ply:SetBodygroup(1, 1)
 					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 					return
 				end
-				ply:SetRPName("MPF:i4." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+				if ply:GetTeamClass() ~= CLASS_DISPATCH then
+					ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+				end
 			end
 		},
 		{
@@ -458,16 +466,24 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 0)
-					ply:SetBodygroup(0, 0)
+					ply:SetBodygroup(1, 1)
 					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
-				ply:SetRPName("MPF:i3." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+				if ply:GetTeamClass() ~= CLASS_DISPATCH then
+					ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+				end
 			end
 		},
 		{
@@ -570,16 +586,24 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 0)
-					ply:SetBodygroup(0, 0)
+					ply:SetBodygroup(1, 1)
 					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
-				ply:SetRPName("MPF:i2." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+				if ply:GetTeamClass() ~= CLASS_DISPATCH then
+					ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+				end
 			end
 		},
 		{
@@ -667,16 +691,24 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("clo_cphelmet", 1, true)
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 0)
-					ply:SetBodygroup(0, 0)
+					ply:SetBodygroup(1, 1)
 					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
-				ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+				if ply:GetTeamClass() ~= CLASS_DISPATCH then
+					ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+				end
 			end
 		},
 		{
@@ -769,13 +801,19 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 					ply:SetRPName("MPF:OfC." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
 					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 1)
-					ply:SetBodygroup(0,1)
-					ply:SetBodygroup(3,1)
+					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
 			end
@@ -870,13 +908,19 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 					ply:SetRPName("MPF:SqL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
 					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 1)
-					ply:SetBodygroup(0,1)
-					ply:SetBodygroup(3,1)
+					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
 			end
@@ -976,13 +1020,19 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 					ply:SetRPName("MPF:DvL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
 					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 1)
-					ply:SetBodygroup(0,1)
-					ply:SetBodygroup(3,1)
+					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
 			end
@@ -1080,13 +1130,19 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 					ply:SetRPName("MPF:DcO." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
 					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 1)
-					ply:SetBodygroup(0,1)
-					ply:SetBodygroup(3,1)
+					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
 			end
@@ -1153,17 +1209,21 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetBodygroup(6, 1)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 0)
-				elseif ply:GetTeamClass() == CLASS_GHOST then
+				elseif ply:GetTeamClass() == CLASS_DISPATCH then
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
 					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
 					ply:SetBodygroup(1, 1)
 					ply:SetBodygroup(3, 0)
 					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
 					ply:SetBodygroup(7, 0)
 					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
+					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
 				ply:SetRPName("MPF:VCmD." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
@@ -1261,13 +1321,19 @@ TEAM_CP = impulse.Teams.Define({
 					ply:GiveInventoryItem("item_vocoder", 1, true)
 					ply:SetRPName("MPF:CmD." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
+					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
 					ply:SetMaxArmor(0)
 					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
 					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 1)
-					ply:SetBodygroup(0,1)
-					ply:SetBodygroup(3,1)
+					ply:SetBodygroup(3, 0)
+					ply:SetBodygroup(4, 0)
+					ply:SetBodygroup(5, 1)
+					ply:SetBodygroup(6, 0)
+					ply:SetBodygroup(7, 0)
+					ply:SetBodygroup(8, 0)
+					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
 			end
