@@ -1699,7 +1699,7 @@ hook.Add( "PlayerDeath", "otainfection", function(victim, inflictor, attacker)
 	    bomb2:SetPos( victim:GetPos() + Vector(25, -25, -5) )
 	    bomb2:Spawn()
 	    bomb2:Activate()
-
+ 
         local bomb3 = ents.Create( name )
 	    bomb3:SetPos( victim:GetPos() + Vector(-25, 25, -5) )
 	    bomb3:Spawn()
@@ -1749,7 +1749,6 @@ hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
     if not IsValid(target) then return end
 
     local cls = target:GetClass()
-
     -- Grab attacker/weapon ONCE
     local attacker = dmginfo:GetAttacker()
     local wep
@@ -1762,7 +1761,7 @@ hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
     end
 
     -- =========================
-    -- VEHICLE-LIKE DAMAGE LOGIC
+    -- VEHICLE-LIKE DAMAGE LOGIC    wep_ptrs41   wep_tau   
     -- =========================
     if IsVehicleLike(target, cls) then
         if dmginfo:IsExplosionDamage() then
@@ -1780,7 +1779,11 @@ hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
 
         -- PTRS
         if wepClass == "plutonic_ptrs" or wepClass == "plutonic_ptrs41" then
-            dmginfo:AddDamage(2000)
+            if string.StartWith(cls, "lvs_helicopter_hl2_combine_dropship") then
+                dmginfo:AddDamage(8800)
+            else
+                dmginfo:AddDamage(2000)
+            end
             return
         end
 
