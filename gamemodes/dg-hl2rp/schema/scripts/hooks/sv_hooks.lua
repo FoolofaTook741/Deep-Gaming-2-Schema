@@ -323,7 +323,6 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		end
 		if hitgroup == HITGROUP_HEAD then
 			if ply.HasReinforcedCPMask == true and ply.HasCPMask == true then
-                local rank = ply.GetTeamRank and ply:GetTeamRank() or 0
 				ply:EmitSound("player/bhit_helmet-1.wav")
                 dmginfo:ScaleDamage(0.85)
 			end
@@ -345,8 +344,6 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			dmginfo:ScaleDamage(0.75)
 		elseif ply.HasTier2Vest == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) and ply:Team() != TEAM_CP then
 			dmginfo:ScaleDamage(0.60)
-		elseif ply.HasTier2Vest == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) and ply:Team() == TEAM_CP then
-			dmginfo:ScaleDamage(0.7)
 		elseif ply.HasTier3Vest == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
 			dmginfo:ScaleDamage(0.4)
 		elseif ply.HasTier0Vest == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
