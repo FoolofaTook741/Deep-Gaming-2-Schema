@@ -57,10 +57,6 @@ function PLUGIN:PlayerButtonDown(ply,btn)
                         end
                     end
                 end)
-                    if IsValid(trg) and trg:IsPlayer() then
-                        net.Start("impulseHL2RPScannerBlind")
-                        net.Send(trg)
-                    end
                 timer.Simple(3, function()
                     if trg:IsRebel() and !trg:IsCP() then
                         local filter = RecipientFilter()
