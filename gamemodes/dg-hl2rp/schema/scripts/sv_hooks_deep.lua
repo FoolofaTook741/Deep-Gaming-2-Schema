@@ -1433,6 +1433,7 @@ hook.Add( "PlayerChangedTeam", "resetbuyables", function(ply, oldTeam, newTeam)
     ply.RecyclerCount = 0
     ply.SignCount = 0
     ply.IsRogue = false
+    ply.NextStorage = 0
 	local loyalistLevel = 0
 	
     if newTeam == TEAM_CITIZEN and ply.Whitelists then
