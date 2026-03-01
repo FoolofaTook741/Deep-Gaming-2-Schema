@@ -1795,7 +1795,12 @@ hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
 
         -- Tau Cannon
         if wepClass == "weapon_taucannon_wal" then
-            dmginfo:AddDamage(1500)
+            if string.StartWith(cls, "lvs_helicopter_hl2_combine_dropship") then
+                dmginfo:AddDamage(3000)
+            else
+                dmginfo:AddDamage(1500)
+            end
+            
             return
         end
 
