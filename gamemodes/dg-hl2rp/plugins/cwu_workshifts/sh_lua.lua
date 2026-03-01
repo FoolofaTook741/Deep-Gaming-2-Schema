@@ -28,7 +28,7 @@ net.Receive("DeepStartWorkshift", function(len, ply)
     local workshift = net.ReadString()
 
     if workshift == "mining" then
-        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to the Industrial District for Refinery work cycle completion. Participation is mandatory."
+        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to the Production Block 2 for Refinery work cycle completion. Participation is mandatory."
         sound = "pa_speaker/workforce_startshift.wav"
         WORKSHIFT_MINING = true
         timer.Create("MiningWorkshift", 1800, 1, function()
@@ -42,7 +42,7 @@ net.Receive("DeepStartWorkshift", function(len, ply)
             end
         end)
     elseif workshift == "medical" then
-        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to Residential District 1 for Medical work cycle completion. Participation is mandatory."
+        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to Production Block 2 for Medical work cycle completion. Participation is mandatory."
         sound = "pa_speaker/workforce_startshift.wav"
         WORKSHIFT_MEDICAL = true
         GL_MED_DISC = 1
@@ -58,7 +58,7 @@ net.Receive("DeepStartWorkshift", function(len, ply)
             end
         end)
     elseif workshift == "ict" then
-        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to Residential District 1 for I.C.T. work cycle completion. Participation is mandatory."
+        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to Production Block 2 for I.C.T. work cycle completion. Participation is mandatory."
         sound = "pa_speaker/workforce_startshift.wav"
         WORKSHIFT_ICT = true
         GL_ICT_MULT = 1.5
@@ -74,7 +74,7 @@ net.Receive("DeepStartWorkshift", function(len, ply)
             end
         end)
     elseif workshift == "outlands" then
-        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to Alderwood Street for Outlands Cleanup work cycle completion. Participation is mandatory."
+        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to Politi-Control 4 for Outlands Cleanup work cycle completion. Participation is mandatory."
         sound = "pa_speaker/workforce_startshift.wav"
         WORKSHIFT_OUTLANDS = true
         timer.Create("OutlandsWorkshift", 1800, 1, function()
@@ -88,7 +88,7 @@ net.Receive("DeepStartWorkshift", function(len, ply)
             end
         end)
     elseif workshift == "laundry" then
-        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to Residential District 1 for Laundromat work cycle completion. Participation is mandatory."
+        message = "Attention Please. Mandatory work cycle is now in progress, please relocate to Production Block 2 for Laundromat work cycle completion. Participation is mandatory."
         sound = "pa_speaker/workforce_startshift.wav"
         WORKSHIFT_LAUNDRY = true
         timer.Create("OutlandsWorkshift", 1800, 1, function()
