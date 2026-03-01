@@ -2,7 +2,6 @@ net.Receive("Plutonic.AttachmentEquip", function()
 	local wep = net.ReadEntity()
 	local own = net.ReadEntity()
 	local att = net.ReadString()
-	print("Debug cl-attachments.lua - Received.")
 	if not IsValid(wep) then return end
 	if not wep.IsPlutonic then return end
 	if IsValid(own) and own ~= LocalPlayer() then return end
