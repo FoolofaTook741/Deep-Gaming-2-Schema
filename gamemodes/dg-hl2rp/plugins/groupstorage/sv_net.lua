@@ -236,11 +236,21 @@ hook.Add("PlayerGroupDeleted", "CleanupGroupInventory", function(groupName, grou
 
 end)
 
-hook.Add("GroupDataLoaded", "SyncPlayerGroupStorage", function(ply,name,rank)
-    local groupid = impulse.Group.Groups[name].ID
-    if groupid then
-        SyncGroupStorageForGroup(groupid, ply)
-		impulse.debugPrint("Synced group storage for player: " .. ply:Nick().. " Group ID: "..groupid.." Group Name "..name)
-        ply:calcGroupStorageWeight()
-    end
+hook.Add("GroupDataLoaded", "SyncPlayerGroupStorage", function(ply, name, rank)
+    -- Defer
+    timer.Simple(0, function()
+        if not IsValid(ply) then return end
+        if not name then return end
+
+        local grp = impulse.Group and impulse.Group.Groups and impulse.Group.Groups[name]
+        if not grp or not grp.ID then return end
+
+        SyncGroupStorageForGroup(grp.ID, ply)
+
+        impulse.debugPrint("Synced group storage for player: " .. ply:Nick() .." Group ID: " .. grp.ID .. " Group Name " .. name)
+
+        if ply.calcGroupStorageWeight then
+            ply:calcGroupStorageWeight()
+        end
+    end)
 end)
