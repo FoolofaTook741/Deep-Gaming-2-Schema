@@ -379,7 +379,7 @@ TEAM_CP = impulse.Teams.Define({
 					return
 				end
 				if ply:GetTeamClass() ~= CLASS_DISPATCH then
-					ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetRPName("MPF:i4." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				end
 			end
 		},
@@ -482,7 +482,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
 				if ply:GetTeamClass() ~= CLASS_DISPATCH then
-					ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetRPName("MPF:i3." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				end
 			end
 		},
@@ -602,7 +602,7 @@ TEAM_CP = impulse.Teams.Define({
 					ply:SetRPName("Operator "..ply:GetSavedRPName())
 				end
 				if ply:GetTeamClass() ~= CLASS_DISPATCH then
-					ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
+					ply:SetRPName("MPF:i2." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 				end
 			end
 		},
