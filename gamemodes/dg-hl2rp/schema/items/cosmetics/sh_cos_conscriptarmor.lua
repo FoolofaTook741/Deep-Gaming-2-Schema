@@ -10,9 +10,11 @@ ITEM.NoCenter = true
 ITEM.Weight = 10
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 ITEM.ConfiscateReward = 80
 
+ITEM.EquipTime = 5
+ITEM.UnEquipTime = 5
 ITEM.Illegal = true
 ITEM.Equipable = true
 ITEM.EquipGroup = "chest"

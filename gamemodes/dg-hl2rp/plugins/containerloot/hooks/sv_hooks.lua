@@ -65,7 +65,7 @@ local ArmorItems = {
     ["cos_otavest2"] = true,
     ["cos_otavest"] = true,
     ["cos_lightvest"] = true,
-    ['cos_conscriptarmor'] = true
+    ["cos_conscriptarmor"] = true
 }
 
 local ANTICRASH_ATTEMPTS = 0
@@ -518,7 +518,7 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
                     if not ArmorItems[itemClass] then
                         ragdoll:AddItem(itemClass, 1, false)
                     elseif itemClass == "cos_conscriptarmor" then
-                        ragdoll:AddItem("scrap_conscriptarmor", 1, true)
+                        ragdoll:AddItem("scrap_conscriptarmor", 1, false)
                     end
                 else
                     break
