@@ -83,6 +83,7 @@ TEAM_CWU = impulse.Teams.Define({
 				if ply:GetTeamClass() == CLASS_MEDIC then
 					ply:SetBodygroup(2,3)
 					ply:SetBodygroup(3,0)
+					ply:SetBodygroup(5,3)
 				elseif ply:GetTeamClass() == CLASS_INDUST then
 					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
 					ply:GiveInventoryItem("item_ictvocoder", 1, true)
@@ -123,6 +124,7 @@ TEAM_CWU = impulse.Teams.Define({
 				if ply:GetTeamClass() == CLASS_MEDIC then
 					ply:SetBodygroup(2,3)
 					ply:SetBodygroup(3,0)
+					ply:SetBodygroup(5,3)
 				elseif ply:GetTeamClass() == CLASS_INDUST then
 					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
 					ply:GiveInventoryItem("item_ictvocoder", 1, true)
@@ -163,8 +165,10 @@ TEAM_CWU = impulse.Teams.Define({
 				if ply:GetTeamClass() == CLASS_MEDIC then
 					ply:SetBodygroup(2,3)
 					ply:SetBodygroup(3,0)
+					ply:SetBodygroup(5,3)
 				elseif ply:GetTeamClass() == CLASS_INDUST then
 					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
+					ply:SetBodygroup(0,1)
 					ply:GiveInventoryItem("item_ictvocoder", 1, true)
 					ply:GiveInventoryItem("util_nvgs", 1, true)
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
@@ -208,10 +212,12 @@ TEAM_CWU = impulse.Teams.Define({
 				if ply:GetTeamClass() == CLASS_MEDIC then
 					ply:SetBodygroup(2,3)
 					ply:SetBodygroup(3,0)
+					ply:SetBodygroup(5,3)
 				elseif ply:GetTeamClass() == CLASS_INDUST then
 					ply:GiveInventoryItem("item_ictvocoder", 1, true)
 					ply:GiveInventoryItem("util_nvgs", 1, true)
 					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
+					ply:SetBodygroup(0,1)
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
@@ -251,8 +257,19 @@ TEAM_CWU = impulse.Teams.Define({
 			},]]
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() != CLASS_ICT then
-					ply:SetBodygroup(2,28)
-					ply:SetBodygroup(3,9)
+					if ply:GetTeamClass() == CLASS_INDUST then
+						ply:GiveInventoryItem("item_ictvocoder", 1, true)
+						ply:GiveInventoryItem("util_nvgs", 1, true)
+						ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
+						ply:SetBodygroup(0,1)
+					elseif ply:GetTeamClass() == CLASS_MEDIC then
+						ply:SetBodygroup(2,3)
+						ply:SetBodygroup(3,0)
+						ply:SetBodygroup(5,3)
+					else	
+						ply:SetBodygroup(2,28)
+						ply:SetBodygroup(3,9)
+					end
 				elseif ply:GetTeamClass() == CLASS_RESEARCH then
 					ply:SetBodygroup(2,5)
 					ply:SetBodygroup(3,0)
