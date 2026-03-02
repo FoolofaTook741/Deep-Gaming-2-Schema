@@ -419,28 +419,16 @@ local function _drawItemInfo( target, alpha )
 end
 
 
-local color_yellow = Color(255, 215, 0)
 local function DrawRagdollInfo(target, alpha)
-    local localPly = LocalPlayer()
-    if localPly:GetPos():DistToSqr(target:GetPos()) > (100 ^ 2) then return end
-
-    local chestBone = target:LookupBone("ValveBiped.Bip01_Spine2")
-        or target:LookupBone("ValveBiped.Bip01_Spine1")
-        or target:LookupBone("ValveBiped.spine3")
-        or target:LookupBone("ValveBiped.spine2")
-
-    local bonePos
-    if chestBone then
-        bonePos = target:GetBonePosition(chestBone)
-    else
-        bonePos = target:LocalToWorld(target:OBBCenter())
-    end
-
-    local pos = (bonePos + Vector(0, 0, 5)):ToScreen()
+    local pos = target:LocalToWorld(target:OBBCenter()):ToScreen()
+    local hudCol = target.HUDColour or impulse.Config.InteractColour
 
     if IsValid(target) and target:IsRagdoll() and target:GetNWBool("IsDeadPlayerRagdoll", false) then
+        local deadPlayer = target:GetNWEntity("DeadPlayer", nil)
         local deadPlayerName = target:GetNWString("DeadPlayerName") or "Unknown"
-        draw.DrawText(deadPlayerName.."'s corpse.", "Impulse-Elements18-Shadow", pos.x, pos.y + 20, ColorAlpha(color_yellow, alpha), 1)
+
+        draw.DrawText("Dead Corpse", "Impulse-Elements14-Shadow", pos.x, pos.y, ColorAlpha(hudCol, alpha), 1)
+		draw.DrawText("This corpse seems to be "..deadPlayerName.."'s body.", "Impulse-Elements14-Shadow", pos.x, pos.y + 20, ColorAlpha(color_white, alpha), 1)
     end
 end
 
