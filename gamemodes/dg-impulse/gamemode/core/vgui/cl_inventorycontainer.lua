@@ -25,9 +25,9 @@ function PANEL:Init()
         self.isLoot = self.container:GetLoot()
     end
 
-    --if IsValid(tr.Entity) and tr.Entity:GetClass() == "prop_ragdoll" then
-        --self:SetTitle("Ragdoll Container")
-    if IsValid(self.container) and self.container:GetClass() == "impulse_container" then
+    if IsValid(tr.Entity) and tr.Entity:GetClass() == "prop_ragdoll" then
+        self:SetTitle("Ragdoll Container")
+    elseif IsValid(self.container) and self.container:GetClass() == "impulse_container" then
         if self.isLoot then
             self:SetTitle("Loot Container")
         else
@@ -50,13 +50,11 @@ function PANEL:PaintOver(w, h)
     draw.SimpleText("Container", "Impulse-Elements23-Shadow", w - 5, 30, grey, TEXT_ALIGN_RIGHT)
     if self.storageWeight and self.container then
         local capacity = 0
-		--[[]
         if self.container:GetClass() == "prop_ragdoll" then
             capacity = self.container:GetNWInt("Capacity", 0)
-		else
-			--]]
+        else
             capacity = self.container:GetCapacity()
-        --end
+        end
         draw.SimpleText(self.storageWeight.."kg/"..capacity.."kg", "Impulse-Elements18-Shadow", 355, 35, grey, TEXT_ALIGN_LEFT)
     end
 end

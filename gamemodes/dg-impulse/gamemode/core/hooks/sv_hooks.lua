@@ -181,6 +181,14 @@ function GM:PlayerSpawn(ply)
 		return
 	end
 	
+	if ply.beenSetup then
+	    for _, group in pairs(ply:GetBodyGroups()) do
+	        if group.name != "hair" and group.name != "beard" then
+	            ply:SetBodygroup(group.id, 0)
+	        end
+	    end
+	end
+
 	if ply:GetSyncVar(SYNC_ARRESTED, false) == true then
 		ply:SetSyncVar(SYNC_ARRESTED, false, true)
 	end
@@ -671,119 +679,134 @@ function GM:UpdatePlayerSync(ply)
 	end
 end
 
-function GM:DoPlayerDeath(ply, attacker, dmginfo)
-    local ragCount = #ents.FindByClass("prop_ragdoll")
-    if ragCount > 64 then
-        print("[impulse] Avoiding ragdoll spawn for performance reasons...")
-        return
+local function IsRagdollLimitReached()
+    local ragdolls = ents.FindByClass("prop_ragdoll")
+    local count = #ragdolls
+    if count > 64 then
+        print(("[impulse] Avoiding ragdoll body spawn for performance reasons... (rag count: %d)"):format(count))
+        return true
     end
+    return false
+end
 
+local function CreateRagdollFromPlayer(ply)
     local ragdoll = ents.Create("prop_ragdoll")
     ragdoll:SetModel(ply:GetModel())
     ragdoll:SetPos(ply:GetPos())
     ragdoll:SetSkin(ply:GetSkin())
-    ragdoll.DeadPlayer = ply
-    ragdoll.Killer = attacker
-    ragdoll.DmgInfo = dmginfo
-    ragdoll.CanConstrain = false
-    ragdoll.NoCarry = true
-
-    for _, bg in pairs(ply:GetBodyGroups()) do
-        ragdoll:SetBodygroup(bg.id, ply:GetBodygroup(bg.id))
+    for _, group in pairs(ply:GetBodyGroups()) do
+        ragdoll:SetBodygroup(group.id, ply:GetBodygroup(group.id))
     end
-
-    local lootpackage = ents.Create("impulse_container")
-    lootpackage:SetModel("models/props_junk/cardboard_box004a.mdl")
-    lootpackage:SetPos(ply:GetPos())
-    lootpackage:SetCapacity(75)
-	lootpackage.NoCarry = true
-    lootpackage.DeadPlayer = ply
-    lootpackage.TeamOnDeath = ply:Team()
-    lootpackage.Inventory = {}
-    lootpackage.Users = {}
-    lootpackage.LootPool = {}
-
-	
-    local inventoryOnDeath = ply:GetInventory()
-	local inventoryOnDeathDrop = {}
-	for _, itemData in pairs(inventoryOnDeath) do
-	    if itemData.restricted then continue end
-	    local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemData.class)]
-	    if not item then continue end
-	    local dropOnDeath = item.DropOnDeath == true
-	    -- Skip if CP (non-rogue, non-CA) since PlayerDeath handles their drops separately
-	    if dropOnDeath and not (ply:IsCP() and ply:Team() != TEAM_CA and not ply.IsRogue) then
-	        table.insert(inventoryOnDeathDrop, itemData.class)
-	    end
-	end
-	lootpackage.inventoryOnDeath = inventoryOnDeathDrop
-
-    lootpackage:SetNWBool("IsDeadPlayerRagdoll", true)
-    lootpackage:SetNWEntity("DeadPlayer", ply)
-    lootpackage:SetNWString("DeadPlayerName", ply:Nick())
-
-    lootpackage:Spawn()
-    ragdoll:Spawn()
-	lootpackage:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-    ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-
-    local velocity = ply:GetVelocity()
-    for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
-        local phys = ragdoll:GetPhysicsObjectNum(i)
-        if IsValid(phys) then
-            phys:SetVelocity(velocity)
-            local boneIndex = ragdoll:TranslatePhysBoneToBone(i)
-            if boneIndex then
-                local pos, ang = ply:GetBonePosition(boneIndex)
-                phys:SetPos(pos)
-                phys:SetAngles(ang)
-            end
-        end
-    end
-
-    hook.Run("PlayerRagdollSpawned", ragdoll, ply, attacker)
-    hook.Run("PlayerRagdollPreSpawn", lootpackage, ply, attacker)
-
-	if IsValid(lootpackage) then
-		local hasLoot = false
-		if lootpackage.Inventory then
-			for _, v in pairs(lootpackage.Inventory) do
-				if v > 0 then
-					hasLoot = true
-					break
-				end
-			end
-		end
-
-		if not hasLoot then
-			lootpackage:Remove()
-		end
+    return ragdoll
 end
 
-	timer.Simple(impulse.Config.BodyDeSpawnTime, function()
-		if IsValid(lootpackage) then
-			lootpackage:Remove()
-		end
+local function ApplyDeathMetadata(ragdoll, ply, attacker, dmginfo)
+    ragdoll.DeadPlayer   = ply
+    ragdoll.Killer       = attacker
+    ragdoll.DmgInfo      = dmginfo
+    ragdoll.CanConstrain = false
+    ragdoll.NoCarry      = true
+    ragdoll.TeamOnDeath  = ply:Team()
 
-		if IsValid(ragdoll) then
-			ragdoll:Fire("FadeAndRemove", 7)
+    if ply.LastFall and ply.LastFall > CurTime() - 0.5 then
+        ragdoll.FallDeath = true
+    end
 
-			timer.Simple(10, function()
-				if IsValid(ragdoll) then
-					ragdoll:Remove()
-				end
-			end)
-		end
-	end)
-
-    timer.Simple(0.1, function()
-        if IsValid(ragdoll) and IsValid(ply) then
-            net.Start("impulseRagdollLink")
-            net.WriteEntity(ragdoll)
-            net.Send(ply)
+    if IsValid(attacker) and attacker:IsPlayer() then
+        local wep = attacker:GetActiveWeapon()
+        if IsValid(wep) then
+            ragdoll.DmgWep = wep:GetClass()
         end
+    end
+end
+
+local function ApplyNetworkFields(ragdoll, ply)
+    ragdoll:SetNWBool("IsDeadPlayerRagdoll", true)
+    ragdoll:SetNWEntity("DeadPlayer", ply)
+    ragdoll:SetNWString("DeadPlayerName", ply:Nick())
+end
+
+local function ApplyPhysicsState(ragdoll, ply)
+    ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+    local velocity = ply:GetVelocity()
+
+    for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
+        local physObj = ragdoll:GetPhysicsObjectNum(i)
+        if not IsValid(physObj) then continue end
+
+        physObj:SetVelocity(velocity)
+
+        local boneIndex = ragdoll:TranslatePhysBoneToBone(i)
+        if boneIndex then
+            local pos, ang = ply:GetBonePosition(boneIndex)
+            physObj:SetPos(pos)
+            physObj:SetAngles(ang)
+        end
+    end
+end
+
+local function ResolveDeathInventory(ply)
+    local toDrop = {}
+
+    for _, item in pairs(ply:GetInventory()) do
+        if item.restricted then continue end
+
+        local itemclass = impulse.Inventory.ClassToNetID(item.class)
+        local itemDef   = impulse.Inventory.Items[itemclass]
+        if not itemDef then continue end
+
+        if itemDef.WeaponClass then
+            if item.equipped then
+                local ent = impulse.Inventory.SpawnItem(item.class, ply:GetPos())
+                if IsValid(ent) then
+                    ent.ItemClip = item.clip
+                end
+            else
+                table.insert(toDrop, item.class)
+            end
+        elseif itemDef.DropOnDeath then
+            table.insert(toDrop, item.class)
+        end
+    end
+
+    return toDrop
+end
+
+local function ScheduleRagdollCleanup(ragdoll, ply)
+    timer.Simple(impulse.Config.BodyDeSpawnTime, function()
+        if not IsValid(ragdoll) then return end
+        ragdoll:Fire("FadeAndRemove", 7)
+        timer.Simple(10, function()
+            if IsValid(ragdoll) then ragdoll:Remove() end
+        end)
     end)
 
+    timer.Simple(0.1, function()
+        if not IsValid(ragdoll) or not IsValid(ply) then return end
+        net.Start("impulseRagdollLink")
+        net.WriteEntity(ragdoll)
+        net.Send(ply)
+    end)
+end
+
+
+function GM:DoPlayerDeath(ply, attacker, dmginfo)
+    if IsRagdollLimitReached() then return end
+
+    local ragdoll = CreateRagdollFromPlayer(ply)
+    ApplyDeathMetadata(ragdoll, ply, attacker, dmginfo)
+
+    ragdoll.inventoryOnDeath = ResolveDeathInventory(ply)
+    ply.NextStorage = 1
+
+    hook.Run("PlayerRagdollPreSpawn", ragdoll, ply, attacker)
+    ragdoll:Spawn()
+
+    ApplyNetworkFields(ragdoll, ply)
+    ApplyPhysicsState(ragdoll, ply)
+    hook.Run("PlayerRagdollSpawned", ragdoll, ply, attacker)
+
+    ScheduleRagdollCleanup(ragdoll, ply)
     return true
 end
 
@@ -901,6 +924,13 @@ function GM:OnPlayerChangedTeam(ply) -- get rid of it logging team changes to co
 	end
 	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
 		ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
+	end
+	if ply:Team() == TEAM_VORT then
+	    for _, group in pairs(ply:GetBodyGroups()) do
+	        if group.name ~= "collar" and group.name ~= "hooks" and group.name ~= "shackles" then
+	            ply:SetBodygroup(group.id, 0)
+	        end
+	    end
 	end
 end
 
