@@ -92,7 +92,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
 				elseif ply:GetTeamClass() == CLASS_REFINERY then
-					ply:SetBodygroup(2,2)
+					ply:SetBodygroup(2,6)
 					ply:SetBodygroup(3,0)
 				elseif ply:GetTeamClass() == CLASS_RESEARCH then
 					ply:SetBodygroup(2,5)
@@ -133,7 +133,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
 				elseif ply:GetTeamClass() == CLASS_REFINERY then
-					ply:SetBodygroup(2,2)
+					ply:SetBodygroup(2,6)
 					ply:SetBodygroup(3,0)
 				elseif ply:GetTeamClass() == CLASS_RESEARCH then
 					ply:SetBodygroup(2,5)
@@ -175,7 +175,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
 				elseif ply:GetTeamClass() == CLASS_REFINERY then
-					ply:SetBodygroup(2,2)
+					ply:SetBodygroup(2,6)
 					ply:SetBodygroup(3,0)
 				elseif ply:GetTeamClass() == CLASS_RESEARCH then
 					ply:SetBodygroup(2,5)
@@ -222,7 +222,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
 				elseif ply:GetTeamClass() == CLASS_REFINERY then
-					ply:SetBodygroup(2,2)
+					ply:SetBodygroup(2,6)
 					ply:SetBodygroup(3,0)
 				elseif ply:GetTeamClass() == CLASS_RESEARCH then
 					ply:SetBodygroup(2,5)
