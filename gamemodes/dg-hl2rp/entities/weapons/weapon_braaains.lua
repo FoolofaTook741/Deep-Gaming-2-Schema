@@ -105,7 +105,12 @@ function SWEP:SecondaryAttack()
     end
     
     self:PrimaryAttack( true )
-    self.Owner:AddSkillXP("strength", 1)
+    
+    if self.Owner.AddSkillXP then
+        self.Owner:AddSkillXP("strength", 1)
+    elseif self.Owner.GetSkillXP and self.Owner.SetSkillXP then
+        self.Owner:SetSkillXP("strength", (self.Owner:GetSkillXP("strength") or 0) + 1)
+    end
 end
 
 local phys_pushscale = GetConVar( "phys_pushscale" )
