@@ -68,11 +68,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_ysmoke"] = {
-		Desc = "GRID Only",
+		Desc = "GRID i2+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I3 then
+			if ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I2 then
 				return true
 			end
 
@@ -122,18 +122,18 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID) or ply:GetTeamClass() == CLASS_SWORD then
+			if (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_GRID) or ply:GetTeamClass() == CLASS_SWORD then
 				return true
 			else return false
 			end
 		end
 	},
 	["wep_teargas"] = {
-		Desc = "GRID i2+",
+		Desc = "GRID i1+",
 		Restricted = true,
 		Max = 3,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID then
+			if ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_GRID then
 				return true
 			else return false
 			end
@@ -165,22 +165,22 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_osisg"] = {
-		Desc = "UNION i2+/Grid i3+",
+		Desc = "UNION i1+/Grid i2+",
 		Restricted = true, 
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() == RANK_I2 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I3 and ply:GetTeamClass() == CLASS_GRID) then
+			if (ply:GetTeamRank() == RANK_I1 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID) then
 				return true
 			else return false
 			end
 		end
 	},
 	["wep_mp7"] = {
-		Desc = "U i3+/i1+/GHOST/i3 AJ+",
+		Desc = "U i2+/i1+/GHOST/i2 AJ+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamClass() == CLASS_UNION && ply:GetTeamRank() >= RANK_I3) or (ply:GetTeamRank() >= RANK_I1 or ply:GetTeamClass() == CLASS_GHOST) or (ply:GetTeamRank() >= RANK_I3 && impulse.Dispatch.GetCityCode() >= CODE_JW) then
+			if (ply:GetTeamClass() == CLASS_UNION && ply:GetTeamRank() >= RANK_I2) or (ply:GetTeamRank() >= RANK_I1 or ply:GetTeamClass() == CLASS_GHOST) or (ply:GetTeamRank() >= RANK_I2 && impulse.Dispatch.GetCityCode() >= CODE_JW) then
 				return true
 			else return false
 			end
@@ -209,22 +209,22 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_pm63"] = {
-		Desc = "i3+",
+		Desc = "i2+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I3 then
+			if ply:GetTeamRank() >= RANK_I2 then
 				return true
 			else return false
 			end
 		end
 	},
 	["wep_p90"] = {
-		Desc = "UNION i3+/AJ:UNION i4+ /i2+",
+		Desc = "UNION i2+/AJ:UNION i3+ /i1+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_I2) or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I3) or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I4 and impulse.Dispatch.GetCityCode() >= CODE_JW) then
+			if (ply:GetTeamRank() >= RANK_I1) or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I2) or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I3 and impulse.Dispatch.GetCityCode() >= CODE_JW) then
 				return true
 			else return false
 			end
@@ -265,11 +265,11 @@ VENDOR.Sell = {
 		end
 	},
 	["item_healthvial"] = {
-		Desc = "i3+",
+		Desc = "i2+",
 		Restricted = true,
 		Max = 3,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I3 then
+			if ply:GetTeamRank() >= RANK_I2 then
 				return true
 			else return false
 			end
@@ -310,11 +310,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_sledgehammer"] = {
-		Desc = "GRID i2+",
+		Desc = "GRID i1+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I2 then
+			if ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I1 then
 				return true
 			else return false
 			end
@@ -352,7 +352,7 @@ VENDOR.Sell = {
 			else return false
 			end
 		end
-	},
+	}, --[[
 	["att_rifle_silencer"] = {
 		Desc = "GHOST Only",
 		Restricted = true,
@@ -407,13 +407,13 @@ VENDOR.Sell = {
 			else return false
 			end
 		end
-	},
+	}, ]]--
 	["grenade_flashbang"] = {
-		Desc = "GHOST/SqL+/SWORD/GRID i2+",
+		Desc = "GHOST/SqL+/SWORD/GRID i1+",
 		Restricted = true,
 		Max = 2,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_GHOST or ply:GetTeamRank() >= RANK_SQL or ply:GetTeamClass() == CLASS_SWORD or (ply:GetTeamClass() == CLASS_UNION && ply:GetTeamRank() >= RANK_I2) then
+			if ply:GetTeamClass() == CLASS_GHOST or ply:GetTeamRank() >= RANK_SQL or ply:GetTeamClass() == CLASS_SWORD or (ply:GetTeamClass() == CLASS_UNION && ply:GetTeamRank() >= RANK_I1) then
 				return true
 			else return false
 			end
@@ -472,30 +472,30 @@ VENDOR.Sell = {
 		BuyMax = 2,
 		TempCooldown = 600,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_HELIX then
+			if ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_HELIX then
 				return true
 			else return false
 			end
 		end
 	},
 	["item_stimshot"] = {
-		Desc = "HELIX i3+",
+		Desc = "HELIX i2+",
 		Restricted = true,
 		BuyMax = 4,
 		TempCooldown = 600,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I3 and ply:GetTeamClass() == CLASS_HELIX then
+			if ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_HELIX then
 				return true
 			else return false
 			end
 		end
 	},
 	["cos_cpvest1"] = {
-		Desc = "i3+",
+		Desc = "i2+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I3 then
+			if ply:GetTeamRank() >= RANK_I2 then
 				return true
 			end
 
@@ -543,12 +543,12 @@ VENDOR.Sell = {
 		Max = 1	
 	},
 	["item_portablehpcharger"] = {
-		Desc = "HELIX i2+",
+		Desc = "HELIX i1+",
 		Restricted = true,
 		Max = 1,
 		Cooldown = 600,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_HELIX && ply:GetTeamRank() >= RANK_I2 then
+			if ply:GetTeamClass() == CLASS_HELIX && ply:GetTeamRank() >= RANK_I1 then
 				return true
 			else return false
 			end
@@ -589,12 +589,12 @@ VENDOR.Sell = {
 		end
 	},
 	["item_combinelock"] = {
-		Desc = "GRID I1+",
+		Desc = "GRID I2+",
 		Restricted = true,
 		Cooldown = 900,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_GRID && ply:GetTeamRank() >= RANK_I3  then
+			if ply:GetTeamClass() == CLASS_GRID && ply:GetTeamRank() >= RANK_I2  then
 				return true
 			else 
 				return false
@@ -602,24 +602,24 @@ VENDOR.Sell = {
 		end
 	},
 	["util_turret"] = {
-		Desc = "GRID Turret [GRID I2+ Only]",
+		Desc = "GRID Turret [GRID I1+ Only]",
 		BuyMax = 1,
 		Restricted = true,
 		TempCooldown = 600,
 		CanBuy = function(ply)
-			if (ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I2) then
+			if (ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I1) then
 				return true
 			else return false
 			end
 		end
 	},
 	["util_conduit"] = {
-		Desc = "Conduit Deployer [GRID Only]",
+		Desc = "Conduit Deployer [GRID i1+ Only]",
 		BuyMax = 1,
 		TempCooldown = 600,
 		Restricted = true,
 		CanBuy = function(ply)
-			if (ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I2 ) then
+			if (ply:GetTeamClass() == CLASS_GRID and ply:GetTeamRank() >= RANK_I1 ) then
 				return true
 			else return false
 			end
@@ -663,14 +663,14 @@ VENDOR.Sell = {
 	["food_noodles"] = {
 		Restricted = true,
 		Max = 1,
-		Cooldown = 720
+		Cooldown = 600
 	},
 	["util_nvgs"] = {
 		Restricted = true,
 		Max = 1
 	},
 	["clo_reinforcedcphelmet"] = {
-		Desc = "UNION/SWORD i3+ (MARGINAL+) | SWORD SqL+ (Any Code)",
+		Desc = "UNION/SWORD i2+ (MARGINAL+) | SWORD SqL+ (Any Code)",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
@@ -680,7 +680,7 @@ VENDOR.Sell = {
 
 			if impulse.Dispatch.GetCityCode() < CODE_UNREST then return false end
 
-			if (ply:GetTeamClass() == CLASS_UNION or ply:GetTeamClass() == CLASS_SWORD) and ply:GetTeamRank() >= RANK_I3 then
+			if (ply:GetTeamClass() == CLASS_UNION or ply:GetTeamClass() == CLASS_SWORD) and ply:GetTeamRank() >= RANK_I2 then
 				return true
 			end
 

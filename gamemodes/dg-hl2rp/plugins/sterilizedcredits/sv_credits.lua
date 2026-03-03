@@ -84,8 +84,8 @@ net.Receive("DeepSterilizedCreditsPurchase", function(len, ply)
         ply:Notify("You must be a Civil Protection officer to make purchases.")
         return
     end
-    if ply:GetTeamRank() < RANK_I3 then
-        ply:Notify("You must be rank I3 or higher to make purchases.")
+    if ply:GetTeamRank() < RANK_I2 then
+        ply:Notify("You must be rank I2 or higher to make purchases.")
         return
     end
     if not ply:CanPurchaseSCCombat() then
