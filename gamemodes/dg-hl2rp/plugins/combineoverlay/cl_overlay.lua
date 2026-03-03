@@ -572,6 +572,7 @@ local bootCmds = {
     ".....",
     "......",
     "JESUS IS KING (OOC VOID BIND)",
+    "FOOL OF A TOOK!",
     "completed boot sequence! (last serviceID: 4349271)"
 }
 
