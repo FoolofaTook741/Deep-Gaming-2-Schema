@@ -129,7 +129,8 @@ impulse.RegisterChatCommand("/setteam", setTeamCommand)
 
 local forceUnlockCommand = {
     description = "Unlocks the door you are looking at.",
-    adminOnly = true,
+	gameMasterOnly = true
+    adminOnly = false,
     onRun = function(ply, arg, rawText)
 		local door = ply:GetEyeTrace().Entity
 
@@ -146,7 +147,8 @@ impulse.RegisterChatCommand("/forceunlock", forceUnlockCommand)
 
 local forceLockCommand = {
     description = "Locks the door you are looking at.",
-    adminOnly = true,
+	gameMasterOnly = true
+    adminOnly = false,
     onRun = function(ply, arg, rawText)
 		local door = ply:GetEyeTrace().Entity
 
