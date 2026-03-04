@@ -151,12 +151,12 @@ impulse.Config.PreWarCacheTime = 240
 impulse.Config.MPFCacheTime = 180 --time for the cache to open after triggering
 
 impulse.Config.CommunityURL = "https://deepgaming2.com/news"
-impulse.Config.PanelURL = "https://deepgaming2.com/news"
+impulse.Config.PanelURL = "https://deepgaming2.com/user"
 impulse.Config.DonateURL = "https://deepgaming2.com/shop"
 impulse.Config.DiscordURL = "https://discord.gg/ftM9jcztCt"
-impulse.Config.SupportURL = "https://deepgaming2.com/news" -- this can just be the forum url
+impulse.Config.SupportURL = "https://deepgaming2.com/forum" -- this can just be the forum url
 
-impulse.Config.RulesURL = "https://deepgaming2.com/news"
+impulse.Config.RulesURL = "https://deepgaming2.com/forum/thread/919f6310-7349-4f8e-9123-dccc29f2590c"
 impulse.Config.TutorialURL = "https://deepgaming2.com/news"
 
 impulse.Config.WordPressURL = "https://deepgaming2.com/news"
@@ -587,7 +587,7 @@ impulse.Config.ModQuickReplies = {
 	"We cannot accommodate refund requests unless this ticket pertains to your last death. Please submit a request on https://deepgaming2.com",
 	"Do you have a clip available? Witness testimony will not be deemed credible unless supported by a verifiable clip.",
 	"We have decided to not grant you rogue permission, please do not make another request for at least 1 hour.",
-	"You have been granted rogue permission. Please remember, you may only be an i4 or i5. Furthermore, you may only kill in absolute self-defense situations.",
+	"You have been granted rogue permission. Please remember, you may only be an i3 or i4. Furthermore, you may only kill in absolute self-defense situations.",
 	"Apologies for the delay in responding to this report.",
 	"Thank you for your report.",
 	"Unfortunately I will have to close this report as it is too old to be dealt with. Feel free to submit a ban request at https://deepgaming2.com",
