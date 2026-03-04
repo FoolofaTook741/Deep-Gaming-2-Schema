@@ -659,7 +659,7 @@ local authRogue = {
     requiresArg = true,
     adminOnly = true,
     onRun = function(ply, arg, rawText)
-        if !ply:IsGameMaster() and !ply:IsAdmin() then
+        if not ply:IsGameMaster() and not ply:IsAdmin() then
             ply:Notify("You cannot use this command unless you are a Admin.")
             return
         end
@@ -669,8 +669,8 @@ local authRogue = {
 			if targ:Team() ~= TEAM_CP then 
 				ply:Notify("You can only use this command on MPF units")
 				return 
-			elseif targ.GetTeamRank and targ:GetTeamRank() ~= RANK_I4 then
-				ply:Notify("You can only use this command on I4 units")
+			elseif targ.GetTeamRank and targ:GetTeamRank() > RANK_I3 then
+				ply:Notify("You can only use this command on i3 or i4 units")
 				return
 			elseif AUTHEDROGUES[targ:SteamID()] then
 				ply:Notify("This player is already authed as rogue. They must die before you can auth them again.")
@@ -678,32 +678,35 @@ local authRogue = {
 			end
 			
 			local ClassName = "Unknown"
-			if targ.GetTeamClass and targ:GetTeamClass() == CLASS_UNION then
-				targ:GiveInventoryItem("wep_pm63", 1, true)
-				targ:GiveInventoryItem("grenade_flashbang", 1, true)
-				targ:GiveInventoryItem("grenade_9bang", 1, true)
-				targ:GiveInventoryItem("wep_incendiaryb", 1, true)
-				targ:GiveInventoryItem("wep_wsmoke", 1, true)
+            if targ:GetTeamRank() == RANK_I4 then
+                ClassName = "I4"
+            else
+    			if targ.GetTeamClass and targ:GetTeamClass() == CLASS_UNION then
+    				targ:GiveInventoryItem("wep_pm63", 1, true)
+    				targ:GiveInventoryItem("grenade_flashbang", 1, true)
+    				--targ:GiveInventoryItem("grenade_9bang", 1, true)
+    				targ:GiveInventoryItem("wep_incendiaryb", 1, true)
+    				targ:GiveInventoryItem("wep_wsmoke", 1, true)
 
-				targ:TakeInventoryItemClass("wep_mp7")
-				targ:TakeInventoryItemClass("wep_shotgun")
-				targ:TakeInventoryItemClass("wep_mp7a8")
-				targ:TakeInventoryItemClass("wep_osisg")
-				targ:TakeInventoryItemClass("wep_p90")
-				targ:TakeInventoryItemClass("wep_m500")
-				ClassName = "Union"
-			elseif targ.GetTeamClass and targ:GetTeamClass() == CLASS_HELIX then
-				targ:GiveInventoryItem("item_portablehpcharger", 1, true)
-				ClassName = "Helix"
-			elseif targ.GetTeamClass and targ:GetTeamClass() == CLASS_GRID then
-				targ:GiveInventoryItem("wep_sledgehammer", 1, true)
-				targ:GiveInventoryItem("item_emp", 1, true)
-				targ:GiveInventoryItem("item_lockpick", 1, true)
-				ClassName = "Grid"
-			else
-				return ply:Notify("You can only use this command on GRID, UNION and HELIX MPF units")
-			end
-
+    				targ:TakeInventoryItemClass("wep_mp7")
+    				targ:TakeInventoryItemClass("wep_shotgun")
+    				targ:TakeInventoryItemClass("wep_mp7a8")
+    				targ:TakeInventoryItemClass("wep_osisg")
+    				targ:TakeInventoryItemClass("wep_p90")
+    				targ:TakeInventoryItemClass("wep_m500")
+    				ClassName = "Union"
+    			elseif targ.GetTeamClass and targ:GetTeamClass() == CLASS_HELIX then
+    				targ:GiveInventoryItem("item_portablehpcharger", 1, true)
+    				ClassName = "Helix"
+    			elseif targ.GetTeamClass and targ:GetTeamClass() == CLASS_GRID then
+    				targ:GiveInventoryItem("wep_sledgehammer", 1, true)
+    				targ:GiveInventoryItem("item_emp", 1, true)
+    				targ:GiveInventoryItem("item_lockpick", 1, true)
+    				ClassName = "Grid"
+    			else
+    				return ply:Notify("You can only use this command on GRID, UNION and HELIX MPF units")
+    			end
+            end
 			AUTHEDROGUES[targ:SteamID()] = true
 
             local sid = targ:SteamID()

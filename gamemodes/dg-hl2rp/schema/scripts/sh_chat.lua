@@ -2473,7 +2473,7 @@ local declareRogueCommand = {
 		if ply:Team() != TEAM_CP then
 			return
 		end
-		if ply:GetTeamRank() > RANK_I4 then
+		if ply:GetTeamRank() > RANK_I3 then
 			return
 		end
 		local targ = ply
