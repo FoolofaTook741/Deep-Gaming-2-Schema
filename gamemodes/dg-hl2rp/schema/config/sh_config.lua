@@ -787,8 +787,10 @@ impulse.Config.LootPools = {
 			--["util_plastic"] = {Rarity = 900, Rep = 2},
 			["util_glue"] = {Rarity = 620, Rep = 4},
 			["util_paint"] = {Rarity = 820, Rep = 1},
-			["wep_pistol"] = {Rarity = 950, Rep = 1},
+			["wep_pistol"] = {Rarity = 960, Rep = 1},
 			["item_vortessence"] = {Rarity = 910, Rep = 1},
+			["item_enrichedvortessence"] = {Rarity = 990, Rep = 1},
+			["wep_molotov"] = {Rarity = 999, Rep = 1}
 			["util_medicalsupplies"] = {Rarity = 880, Rep = 1},
 			["util_rdxcompound"] = {Rarity = 980, Rep = 1},
 			["util_xenextract"] = {Rarity = 820, Rep = 1},
@@ -808,7 +810,7 @@ impulse.Config.LootPools = {
 			["util_refinedmetalplate"] = {Rarity = 980, Rep = 2},
 			["util_pipe"] = {Rarity = 810, Rep = 2},
 			["ammo_pistol"] = {Rarity = 930},
-			["wep_cz75"] = {Rarity = 980, Rep = 1},
+			["scrap_mp7"] = {Rarity = 990, Rep = 1},
 			["util_gear"] = {Rarity = 890}
 		},
 		MinItems = 3,
