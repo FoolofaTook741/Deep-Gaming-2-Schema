@@ -431,12 +431,17 @@ function meta:GroupLoad(groupid, rank)
 		self:SetSyncVar(SYNC_GROUP_RANK, rank, true)
 
 		impulse.Group.NetworkRank(name, self, rank)
-
+		if self:GroupHasPermission(99) then
+			impulse.Group.DBUpdateMaxMembers(groupid, 100)
+			impulse.Group.Groups[name].MaxSize = 100
+		end
+		hook.Run("GroupDataLoaded", self, name, rank)
+		--[[
 		if self:IsDonator() and self:GroupHasPermission(99) and impulse.Group.Groups[name].MaxSize < impulse.Config.GroupMaxMembersVIP then
 			impulse.Group.DBUpdateMaxMembers(groupid, impulse.Config.GroupMaxMembersVIP)
 			impulse.Group.Groups[name].MaxSize = impulse.Config.GroupMaxMembersVIP
 		end
-		hook.Run("GroupDataLoaded", self, name, rank)
+		hook.Run("GroupDataLoaded", self, name, rank) ]]--
 	end)
 end
 
