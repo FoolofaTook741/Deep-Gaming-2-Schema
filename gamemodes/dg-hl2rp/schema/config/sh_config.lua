@@ -790,7 +790,7 @@ impulse.Config.LootPools = {
 			["wep_pistol"] = {Rarity = 960, Rep = 1},
 			["item_vortessence"] = {Rarity = 910, Rep = 1},
 			["item_enrichedvortessence"] = {Rarity = 990, Rep = 1},
-			["wep_molotov"] = {Rarity = 999, Rep = 1}
+			["wep_molotov"] = {Rarity = 999, Rep = 1},
 			["util_medicalsupplies"] = {Rarity = 880, Rep = 1},
 			["util_rdxcompound"] = {Rarity = 980, Rep = 1},
 			["util_xenextract"] = {Rarity = 820, Rep = 1},
