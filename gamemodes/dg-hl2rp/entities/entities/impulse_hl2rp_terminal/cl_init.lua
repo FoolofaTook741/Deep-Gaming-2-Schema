@@ -211,7 +211,7 @@ function ENT:Draw()
 
         local iy = y + 54
 
-        draw.SimpleText("INDICES", "Terminal_Sub", x, iy, Color(220, 230, 255))
+        draw.SimpleText("STATUS", "Terminal_Sub", x, iy, Color(220, 230, 255))
 
         local function DrawIndex(label, value, yPos, active)
             local col = StatusColor(active)
