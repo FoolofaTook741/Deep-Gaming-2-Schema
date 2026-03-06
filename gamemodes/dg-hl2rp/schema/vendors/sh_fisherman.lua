@@ -165,7 +165,7 @@ function VENDOR:Initialize()
 end
 
 function VENDOR:OnRemove()
-	if self.TimerID then
+	if self.TimerID and timer.Exists(self.TimerID) then
 		timer.Remove(self.TimerID)
 	end
 end
