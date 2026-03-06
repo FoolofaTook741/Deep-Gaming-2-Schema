@@ -16,7 +16,7 @@ impulse.Config.BlacklistEnts = {
 }
 
 impulse.Config.Zone404Name = "Condemned District"
-impulse.Config.BulkCrateSpawn = Vector(4603.280273, 3668.424561, 264.031250)
+impulse.Config.BulkCrateSpawn = Vector(806.60943603516, -1532.5759277344, -160.96875)
 
 impulse.Config.SporeClusters = {
 	Vector(5342.197265625, 2622.9311523438, 8176.498046875),
