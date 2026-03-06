@@ -136,7 +136,7 @@ impulse.Config.InventoryStoragePublicModel = "models/hls/alyxports/mailbox_2.mdl
 
 impulse.Config.GroupMakeCost = 2500
 impulse.Config.GroupXPRequirement = 250
-impulse.Config.GroupMaxMembers = 50
+impulse.Config.GroupMaxMembers = 100
 impulse.Config.GroupMaxMembersVIP = 100
 impulse.Config.GroupMaxRanks = 10
 impulse.Config.GroupMaxRanksVIP = 20

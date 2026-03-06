@@ -432,8 +432,8 @@ function meta:GroupLoad(groupid, rank)
 
 		impulse.Group.NetworkRank(name, self, rank)
 		if self:GroupHasPermission(99) then
-			impulse.Group.DBUpdateMaxMembers(groupid, 100)
-			impulse.Group.Groups[name].MaxSize = 100
+			impulse.Group.DBUpdateMaxMembers(groupid, impulse.Config.GroupMaxMembers)
+			impulse.Group.Groups[name].MaxSize = impulse.Config.GroupMaxMembersVIP
 		end
 		hook.Run("GroupDataLoaded", self, name, rank)
 		--[[
