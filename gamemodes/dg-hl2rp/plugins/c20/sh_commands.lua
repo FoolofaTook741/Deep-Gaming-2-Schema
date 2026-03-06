@@ -1,4 +1,3 @@
---[[
 local outlandsgateCommand = {
 	description = "Opens the Outlands Gate. (Combine only)",
 	requiesAlive = true,
@@ -87,7 +86,7 @@ if game.GetMap() == "rp_c18_dg" then
 		requiesAlive = true,
 		onRun = function(ply, arg, rawText)
 			if (ply:Team() != TEAM_OTA) or (ply:Team() == TEAM_CP and ply:GetTeamClass() < CLASS_OFC) then
-				ply:Notify("You must be a member of the OTA or CP RL+ to use this.")
+				ply:Notify("You must be a member of the OTA or CP OFC+ to use this.")
 				return
 			end
 
@@ -126,4 +125,3 @@ if game.GetMap() == "rp_c18_dg" then
 	}
 	impulse.RegisterChatCommand("/outlandsgate", outlandsgateCommand)
 end
---]]
