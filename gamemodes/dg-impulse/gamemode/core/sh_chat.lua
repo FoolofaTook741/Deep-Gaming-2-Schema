@@ -742,6 +742,35 @@ impulse.RegisterChatCommand("/checkbodygroups", {
     end
 })
 
+impulse.RegisterChatCommand("/gotov", {
+    description = "Teleports you to a specified vector position.",
+    superAdminOnly = true,
+    requiresArg = true,
+    onRun = function(ply, args, rawText)
+        local joined = table.concat(args, " ")
+        local x, y, z = string.match(joined, "Vector%(([%-%d%.]+),%s*([%-%d%.]+),%s*([%-%d%.]+)%)")
+
+        if not x or not y or not z then
+            x, y, z = string.match(rawText, "Vector%(([%-%d%.]+),%s*([%-%d%.]+),%s*([%-%d%.]+)%)")
+        end
+
+        if not x or not y or not z then
+            ply:Notify("Usage: /gotov Vector(x, y, z)")
+            return
+        end
+
+        local pos = Vector(tonumber(x), tonumber(y), tonumber(z))
+
+        if not pos or not isvector(pos) then
+            ply:Notify("Invalid vector provided.")
+            return
+        end
+
+        ply:SetPos(pos)
+        ply:Notify("Teleported to " .. tostring(pos) .. ".")
+    end
+})
+
 if CLIENT then
 	local infoCol = Color(135, 206, 250)
 	local oocCol = color_white
