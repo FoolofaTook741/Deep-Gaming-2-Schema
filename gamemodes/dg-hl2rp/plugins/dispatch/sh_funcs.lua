@@ -211,7 +211,7 @@ function impulse.Dispatch.SetupCityCode(code)
         end
 
 
-        /*if lastCityCode == CODE_AJ or lastCityCode == CODE_LOST or lastCityCode == CODE_JW then
+        if lastCityCode == CODE_AJ or lastCityCode == CODE_LOST or lastCityCode == CODE_JW then
             for k, v in pairs(player.GetAll()) do
                 v:ConCommand("stopsound")
             end
@@ -231,9 +231,9 @@ function impulse.Dispatch.SetupCityCode(code)
                 globalsound( "ambient/levels/labs/machine_stop1.wav")
             end)
             timer.Simple(12, function() globalsound( "ambient/machines/wall_move1.wav") end)
-        end     */
-
-        /*if lastCityCode == CODE_JW and code < CODE_AJ then
+        end     
+--[[
+        if lastCityCode == CODE_JW and code < CODE_AJ then
             timer.Remove("city8jwbuzzer")
             timer.Remove("city18buzzer")
             for k, v in pairs(player.GetAll()) do
@@ -241,21 +241,21 @@ function impulse.Dispatch.SetupCityCode(code)
             end
             timer.Simple(7, function() 
                 for k, v in pairs(player.GetAll()) do
-                    v:SendLua([[surface.PlaySound("ambient/levels/labs/machine_stop1.wav")]])
+                    v:SendLua([[surface.PlaySound("ambient/levels/labs/machine_stop1.wav"))
                 end
             end)
             timer.Simple(10, function() 
                 for k, v in pairs(player.GetAll()) do
-                    v:SendLua([[surface.PlaySound("ambient/levels/labs/machine_stop1.wav")]])
+                    v:SendLua([[surface.PlaySound("ambient/levels/labs/machine_stop1.wav"))
                 end
             end)
             timer.Simple(11, function() 
                 for k, v in pairs(player.GetAll()) do
-                    v:SendLua([[surface.PlaySound("ambient/levels/labs/machine_stop1.wav")]])
+                    v:SendLua([[surface.PlaySound("ambient/levels/labs/machine_stop1.wav"))
                 end
             end)
-        end*/
-
+        end
+    ]]--
         if lastCityCode >= CODE_JW and code < CODE_JW then
             timer.Remove("rationnotice")
             timer.Pause("rationcycle")
@@ -287,7 +287,7 @@ function impulse.Dispatch.SetupCityCode(code)
                 end
             end
 
-            /*if code == CODE_AJ then
+            if code == CODE_AJ then
                 if lastCityCode == CODE_JW or lastCityCode == CODE_AJ then
                     for k, v in pairs(player.GetAll()) do
                         v:ConCommand("stopsound")
@@ -300,22 +300,22 @@ function impulse.Dispatch.SetupCityCode(code)
                     end
                     timer.Simple(5, function() 
                         for k, v in pairs(player.GetAll()) do
-                        v:SendLua([[surface.PlaySound("npc/overwatch/cityvoice/f_protectionresponse_5_spkr.wav")]]) 
+                            v:SendLua([[surface.PlaySound("npc/overwatch/cityvoice/f_protectionresponse_5_spkr.wav")]]) 
                         end
                     end)
                     timer.Simple(8, function() 
                         for k, v in pairs(player.GetAll()) do
-                        v:SendLua([[surface.PlaySound( "ambient/machines/wall_move1.wav")]])
+                            v:SendLua([[surface.PlaySound( "ambient/machines/wall_move1.wav")]])
                         end
                     end) 
                     timer.Simple(12, function() 
                         for k, v in pairs(player.GetAll()) do
-                        v:SendLua([[surface.PlaySound( "ambient/levels/citadel/weaponstrip1_adpcm.wav")]])
+                            v:SendLua([[surface.PlaySound( "ambient/levels/citadel/weaponstrip1_adpcm.wav")]])
                         end
                     end)
                     timer.Simple(26, function() 
                         for k, v in pairs(player.GetAll()) do
-                        v:SendLua([[surface.PlaySound( "ambient/levels/citadel/portal_open1_adpcm.wav")]]) 
+                            v:SendLua([[surface.PlaySound( "ambient/levels/citadel/portal_open1_adpcm.wav")]]) 
                         end
                     end)
                     if impulse.Config.OverworldPortalModel and impulse.Config.OverworldPortalPos then
@@ -339,14 +339,14 @@ function impulse.Dispatch.SetupCityCode(code)
                     end)
                     timer.Create("ajbuzzer1", 30.5, 2500, function() 
                         for k, v in pairs(player.GetAll()) do
-                        v:SendLua([[surface.PlaySound( "ambient/citadel_alert_loop2.wav" )]])  
+                            v:SendLua([[surface.PlaySound( "ambient/citadel_alert_loop2.wav" )]])  
                         end
                     end)
                     impulse.OOCClosed = true
                 end)
-            end   */
+            end
 
-            /*if code == CODE_JW then
+            if code == CODE_JW then
                 timer.Simple(3, function()
                     for k, v in pairs(player.GetAll()) do
                         v:SendLua([[surface.PlaySound( "ambient/machines/wall_move1.wav" )]])  
@@ -369,7 +369,7 @@ function impulse.Dispatch.SetupCityCode(code)
                         end
                     end)
                 end)
-            end*/
+            end
 
             if code == CODE_UNREST or code == CODE_CIVIL then
                 timer.Remove("city18buzzer")
@@ -379,11 +379,11 @@ function impulse.Dispatch.SetupCityCode(code)
             if code == CODE_LOST then 
                 timer.Remove("city18buzzer")
                 for k, v in pairs(player.GetAll()) do 
-                v:SendLua([[surface.PlaySound( "ambient/machines/wall_move1.wav" )]]) 
+                    v:SendLua([[surface.PlaySound( "ambient/machines/wall_move1.wav" )]]) 
                 end
                 timer.Create("lostbuzzer2", 6, 2500, function() 
                     for k, v in pairs(player.GetAll()) do
-                    v:SendLua([[surface.PlaySound( "city8/city8-jwbuzzer.wav" )]])
+                        v:SendLua([[surface.PlaySound( "city8/city8-jwbuzzer.wav" )]])
                     end
                 end) 
                 timer.Simple(8, function() 
@@ -396,7 +396,7 @@ function impulse.Dispatch.SetupCityCode(code)
                         v:SendLua([[surface.PlaySound( "ambient/machines/wall_move1.wav" )]])
                     end 
                 end)
-                timer.Simple(3,  function() 
+                timer.Simple(3, function() 
                     for k, v in pairs(player.GetAll()) do
                         v:SendLua([[surface.PlaySound("ambient/levels/labs/machine_stop1.wav")]])
                     end 
@@ -441,7 +441,6 @@ function impulse.Dispatch.SetupCityCode(code)
         end) 
     end
 
- 
     LAST_CITYCODE = code
     nextCityCodeSetup = CurTime() + 10
 end 
@@ -449,4 +448,3 @@ end
 function impulse.Dispatch.SetCityCode(code)
     return SetGlobalInt("CityCode", code)
 end
-  
