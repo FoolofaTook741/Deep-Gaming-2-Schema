@@ -244,12 +244,12 @@ impulse.Config.ScannerSpawnPos = Vector(3991.4018554688, -4766.7504882813, 325.0
 impulse.Config.ClawScannerSpawnPos = Vector(11408.573242188, -2292.0515136719, 9250.1962890625)
 impulse.Config.DealerLocations = {
 	{pos = Vector(3247.6079101563, -1398.4295654297, -715.96875), ang = Angle(0, 66, 0)},
-	{pos = Vector(2245.3195800781, 1085.93359375, -715.96875), ang = Angle(0,35,0)},
+	{pos = Vector(-6911.79296875, -3164.96875, -10267.068359375), ang = Angle(0.33195251226425, 89.782356262207, 0)},
 	{pos = Vector(907.59118652344, -1531.9603271484, -447.96875), ang = Angle(0, -23, 0)},
 	{pos = Vector(656.94903564453, 125.88054656982, -1023.4157714844), ang = Angle(0, 89, 0)},
 }
-impulse.Config.FishermanPos = Vector(-2280.0205078125, 502.17880249023, -10571.96875)
-impulse.Config.FishermanAng = Angle(2.6400985717773, 0.44422841072083, 0)
+impulse.Config.FishermanPos = Vector(-7943.7333984375, -2887.7290039063, -10251.0703125)
+impulse.Config.FishermanAng = Angle(25.451826095581, -1.6225823163986, 0)
 impulse.Config.PrisonAngle = Angle(1.8799510002136, -177.92010498047, 0)
 impulse.Config.PrisonCells = { Vector(4787.095703125, -6582.3154296875, -447.96875),
     Vector(4775.47265625, -6704.732421875, -447.96875),
