@@ -193,18 +193,18 @@ function SCHEMA:Think()
 		end)
 	end
 
-if GetTrashCount() <= 8 then
-	SpawnTrash(math.random(1,#impulse.Config.TrashSpawns))
+if impulse.NextTrashNotify == nil then
+    impulse.NextTrashNotify = CurTime() + 1200 
+end
 
-	if CurTime() >= impulse.NextTrashNotify then
-		for k, v in pairs(player.GetAll()) do
-			if v:Team() == TEAM_CWU and v:GetTeamClass() == CLASS_MAINTENANCE then
-				v:Notify("Some complaints have come in about the trash piling up in the city, please clean it up.")
-			end
-		end
+if CurTime() >= impulse.NextTrashNotify then
+    for k, v in pairs(player.GetAll()) do
+        if IsValid(v) and v:Team() == TEAM_CWU and v:GetTeamClass() == CLASS_MAINTENANCE then
+            v:Notify("Some complaints have come in about the trash piling up in the city, please clean it up.")
+        end
+    end
 
-		impulse.NextTrashNotify = CurTime() + 1200
-	end
+    impulse.NextTrashNotify = CurTime() + 1200 
 end
 
 	nextThink = CurTime() + 2
