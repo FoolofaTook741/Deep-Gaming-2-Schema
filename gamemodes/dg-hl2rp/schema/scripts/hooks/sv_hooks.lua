@@ -193,19 +193,18 @@ function SCHEMA:Think()
 		end)
 	end
 
-if impulse.NextTrashNotify == nil then
-    impulse.NextTrashNotify = CurTime() + 1200 
-end
-
-if CurTime() >= impulse.NextTrashNotify then
-    for k, v in pairs(player.GetAll()) do
-        if IsValid(v) and v:Team() == TEAM_CWU and v:GetTeamClass() == CLASS_MAINTENANCE then
-            v:Notify("Some complaints have come in about the trash piling up in the city, please clean it up.")
-        end
-    end
-
-    impulse.NextTrashNotify = CurTime() + 1200 
-end
+	if not impulse.NextTrashNotify or CurTime() < impulse.NextTrashNotify then
+	    if not impulse.NextTrashNotify then
+	        impulse.NextTrashNotify = CurTime() + 1200
+	    end
+	else
+	    for k, v in pairs(player.GetAll()) do
+	        if IsValid(v) and v:Team() == TEAM_CWU and v:GetTeamClass() == CLASS_MAINTENANCE then
+	            v:Notify("Some complaints have come in about the trash piling up in the city, please clean it up.")
+	        end
+	    end
+	    impulse.NextTrashNotify = CurTime() + 1200
+	end
 
 	nextThink = CurTime() + 2
 end
