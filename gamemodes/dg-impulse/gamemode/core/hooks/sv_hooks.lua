@@ -746,6 +746,7 @@ local function ApplyPhysicsState(ragdoll, ply)
 end
 
 local function ResolveDeathInventory(ply)
+	if ply:Team() == TEAM_STALKER then return {} end
     local toDrop = {}
 
     for _, item in pairs(ply:GetInventory()) do
@@ -797,6 +798,15 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
     ApplyDeathMetadata(ragdoll, ply, attacker, dmginfo)
 
     ragdoll.inventoryOnDeath = ResolveDeathInventory(ply)
+    if ply:Team() == TEAM_STALKER then
+        local stalkerItems = {}
+        for _, item in pairs(ply:GetInventory()) do
+            if not item.restricted then
+                table.insert(stalkerItems, item.class)
+            end
+        end
+        ragdoll.stalkerInventory = stalkerItems
+    end
     ply.NextStorage = 1
 
     hook.Run("PlayerRagdollPreSpawn", ragdoll, ply, attacker)

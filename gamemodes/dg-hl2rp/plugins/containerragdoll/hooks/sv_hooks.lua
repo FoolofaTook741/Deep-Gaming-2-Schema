@@ -463,6 +463,8 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
         for itemName, itemCount in pairs(loot) do
             ragdoll:AddItem(itemName, itemCount, true)
         end
+    elseif team == TEAM_STALKER then
+        if ragdoll.FallDeath then return end
     end
 end
 
