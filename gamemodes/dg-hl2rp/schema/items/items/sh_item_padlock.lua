@@ -8,7 +8,7 @@ ITEM.Model = Model("models/props_wasteland/prison_padlock001a.mdl")
 ITEM.FOV = 27.457020057307
 ITEM.CamPos = Vector(-10, 25, 9)
 ITEM.NoCenter = true
-ITEM.Weight = 1
+ITEM.Weight = 0.1
 
 ITEM.Droppable = true
 ITEM.DropOnDeath = true
