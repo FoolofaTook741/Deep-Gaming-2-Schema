@@ -25,7 +25,7 @@ function ENT:Draw()
 	cam.Start3D2D(position + f*17.33 + r*-19.5 + u*5.75, angles, 0.06)
 		draw.SimpleText("Regular", "Impulse-Elements13", 0, 0, color_white, 0, 0)
 		draw.SimpleText("Sparkling", "Impulse-Elements13", 0, 36, color_white, 0, 0)
-		draw.SimpleText("Special Water", "Impulse-Elements13", 0, 72, color_white, 0, 0)
+		draw.SimpleText("Enhanced Water", "Impulse-Elements13", 0, 72, color_white, 0, 0)
 		draw.SimpleText("Cola", "Impulse-Elements13", 0, 72 + 36, color_white, 0, 0)
 	cam.End3D2D()
 
