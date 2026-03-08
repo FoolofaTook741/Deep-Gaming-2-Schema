@@ -248,8 +248,8 @@ impulse.Config.DealerLocations = {
 	{pos = Vector(907.59118652344, -1531.9603271484, -447.96875), ang = Angle(0, -23, 0)},
 	{pos = Vector(656.94903564453, 125.88054656982, -1023.4157714844), ang = Angle(0, 89, 0)},
 }
-impulse.Config.FishermanPos = Vector(-7939.919921875, -2882.4741210938, -10251.0703125)
-impulse.Config.FishermanAng = Angle(4.2876081466675, -4.8425669670105, 0)
+impulse.Config.FishermanPos = Vector(-7949.5693359375, -3029.2626953125, -10251.0703125)
+impulse.Config.FishermanAng = Angle(8.6035528182983, -0.74795073270798, 0)
 impulse.Config.PrisonAngle = Angle(1.8799510002136, -177.92010498047, 0)
 impulse.Config.PrisonCells = { Vector(4787.095703125, -6582.3154296875, -447.96875),
     Vector(4775.47265625, -6704.732421875, -447.96875),
