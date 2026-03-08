@@ -364,7 +364,7 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
         local count = inv and table.Count(inv) or 0
 
         for v in pairs(self.Users) do
-            if IsValid(v) and pos:DistToSqr(v:GetPos()) < 52900 then -- 230^2 pre-computed
+            if IsValid(v) and pos:DistToSqr(v:GetPos()) < 52900 then
                 net.Start("impulseInvContainerUpdate")
                 net.WriteUInt(count, 8)
                 if inv then
@@ -463,8 +463,15 @@ function PLUGIN:PlayerRagdollPreSpawn(ragdoll, ply, attacker)
         for itemName, itemCount in pairs(loot) do
             ragdoll:AddItem(itemName, itemCount, true)
         end
+
     elseif team == TEAM_STALKER then
         if ragdoll.FallDeath then return end
+
+        for _, itemClass in pairs(ragdoll.stalkerInventory or {}) do
+            if ragdoll:CanHoldItem(itemClass) then
+                ragdoll:AddItem(itemClass, 1, true)
+            end
+        end
     end
 end
 
@@ -479,7 +486,7 @@ hook.Add("KeyPress", "impulseRagdollContainerUse", function(ply, key)
     if not ply:Alive() then return end
 
     local src = ply:GetShootPos()
-    if ent:NearestPoint(src):DistToSqr(src) > 6400 then return end -- 80^2 pre-computed
+    if ent:NearestPoint(src):DistToSqr(src) > 6400 then return end
 
     if ply:GetSyncVar(SYNC_ARRESTED, false) then
         return ply:Notify("You cannot access a container when detained.")

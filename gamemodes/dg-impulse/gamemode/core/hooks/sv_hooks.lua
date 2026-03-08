@@ -746,7 +746,8 @@ local function ApplyPhysicsState(ragdoll, ply)
 end
 
 local function ResolveDeathInventory(ply)
-	if ply:Team() == TEAM_STALKER then return {} end
+    if ply:Team() == TEAM_STALKER then return {} end
+
     local toDrop = {}
 
     for _, item in pairs(ply:GetInventory()) do
@@ -756,16 +757,7 @@ local function ResolveDeathInventory(ply)
         local itemDef   = impulse.Inventory.Items[itemclass]
         if not itemDef then continue end
 
-        if itemDef.WeaponClass then
-            if item.equipped then
-                local ent = impulse.Inventory.SpawnItem(item.class, ply:GetPos())
-                if IsValid(ent) then
-                    ent.ItemClip = item.clip
-                end
-            else
-                table.insert(toDrop, item.class)
-            end
-        elseif itemDef.DropOnDeath then
+        if (itemDef.WeaponClass and not item.equipped) or itemDef.DropOnDeath then
             table.insert(toDrop, item.class)
         end
     end
@@ -798,15 +790,12 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
     ApplyDeathMetadata(ragdoll, ply, attacker, dmginfo)
 
     ragdoll.inventoryOnDeath = ResolveDeathInventory(ply)
+
     if ply:Team() == TEAM_STALKER then
-        local stalkerItems = {}
-        for _, item in pairs(ply:GetInventory()) do
-            if not item.restricted then
-                table.insert(stalkerItems, item.class)
-            end
-        end
-        ragdoll.stalkerInventory = stalkerItems
+        ragdoll.stalkerInventory = ply.stalkerDeathInventory or {}
+        ply.stalkerDeathInventory = nil
     end
+
     ply.NextStorage = 1
 
     hook.Run("PlayerRagdollPreSpawn", ragdoll, ply, attacker)
@@ -844,40 +833,34 @@ function GM:PlayerDeath(ply, killer)
 
 	local inv = ply:GetInventory()
 	local restorePoint = {}
-	local pos = ply.LocalToWorld(ply, ply:OBBCenter())
-	local dropped = 0
+
+	if ply:Team() == TEAM_STALKER then
+		local stalkerItems = {}
+		for _, k in pairs(inv) do
+			if not k.restricted then
+				table.insert(stalkerItems, k.class)
+			end
+		end
+		ply.stalkerDeathInventory = stalkerItems
+	end
 
 	for v,k in pairs(inv) do
 		if ply:IsCP() and ply:Team() != TEAM_CA and !ply.IsRogue then
- 			local itemclass = impulse.Inventory.ClassToNetID(k.class)
-			local item = impulse.Inventory.Items[itemclass]
-
-			if not k.restricted then
-				table.insert(restorePoint, k.class)
-			end
-
-			if item.DropOnDeath and not k.restricted then
-				local ent = impulse.Inventory.SpawnItem(k.class, pos)
-				ent.ItemClip = k.clip
-
-				dropped = dropped + 1
-
-				if dropped > 4 then
-					break
-				end
-			end
-		elseif ply:Team() != TEAM_ZOMBIE and ply:Team() != TEAM_STALKER then
 			local itemclass = impulse.Inventory.ClassToNetID(k.class)
 			local item = impulse.Inventory.Items[itemclass]
 
 			if not k.restricted then
 				table.insert(restorePoint, k.class)
 			end
+		elseif ply:Team() != TEAM_ZOMBIE and ply:Team() != TEAM_STALKER then
+			if not k.restricted then
+				table.insert(restorePoint, k.class)
+			end
 		end
 	end
-	
+
 	if ply:IsCP() then
-		hook.Run("PlayerDropDeathItems", ply, killer, pos, dropped, inv)
+		hook.Run("PlayerDropDeathItems", ply, killer, nil, 0, inv)
 	end
 
 	ply:ClearInventory(1)
@@ -988,64 +971,33 @@ function GM:KeyPress(ply, key)
 end
 
 function GM:PlayerUse(ply, entity)
-    --impulse.debugPrint("PlayerUse called")
-    --impulse.debugPrint("Player: %s (%s)", ply:Nick(), ply:SteamID())
-    --impulse.debugPrint("Entity: %s, Class: %s", entity, entity:GetClass())
-    
     if (ply.useNext or 0) > CurTime() then 
-        --impulse.debugPrint("Use cooldown active. Time remaining: %.2f seconds", (ply.useNext or 0) - CurTime())
         return false 
     end
     
     ply.useNext = CurTime() + 0.3
-    --impulse.debugPrint("Setting useNext to: %.2f", ply.useNext)
     
     local btnKey = entity.ButtonCheck
-    --impulse.debugPrint("ButtonCheck value: %s", tostring(btnKey))
     
     if btnKey and impulse.Config.Buttons[btnKey] then
-        --impulse.debugPrint("Button key found in config: %s", btnKey)
         local btnData = impulse.Config.Buttons[btnKey]
         
-        --impulse.debugPrint("Button data - DoorGroup: %s", tostring(btnData.doorgroup))
-        
         if btnData.customCheck and not btnData.customCheck(ply, entity) then
-            --impulse.debugPrint("customCheck failed for button: %s", btnKey)
             ply.useNext = CurTime() + 1
-            --impulse.debugPrint("Setting extended cooldown (1 second)")
             return false
-        else
-            --impulse.debugPrint("customCheck passed or not defined")
         end
         
         if btnData.doorgroup then
-            --impulse.debugPrint("Button requires door group: %s", btnData.doorgroup)
             local teamDoorGroups = ply.DoorGroups
             
-            if teamDoorGroups then
-                --impulse.debugPrint("Player has %d door groups", #teamDoorGroups)
-                --impulse.debugPrint("Player door groups: %s", table.concat(teamDoorGroups, ", "))
-            else
-                --impulse.debugPrint("Player has no door groups (nil)")
-            end
-            
             if not teamDoorGroups or not table.HasValue(teamDoorGroups, btnData.doorgroup) then
-                --impulse.debugPrint("Access DENIED - Player lacks required door group")
                 ply.useNext = CurTime() + 1
-                --impulse.debugPrint("Setting extended cooldown (1 second)")
                 ply:Notify("You don't have access to use this button.")
                 return false
-            else
-                --impulse.debugPrint("Access GRANTED - Player has required door group")
             end
-        else
-            --impulse.debugPrint("No door group requirement for this button")
         end
-    else
-        --impulse.debugPrint("No button config found or no ButtonCheck")
     end
     
-    --impulse.debugPrint("Use allowed - returning true (default)")
     return true
 end
 
@@ -1058,102 +1010,41 @@ end
 impulse.ActiveButtons = {}
 
 local function LoadButtons()
-    --impulse.debugPrint("LoadButtons", "LoadButtons called")
-    
-    -- First, clear all ButtonCheck properties
-    --impulse.debugPrint("LoadButtons", "Clearing existing ButtonCheck properties from all func_button entities")
     local buttonCount = 0
     for a,button in pairs(ents.FindByClass("func_button")) do
         if button.ButtonCheck then
-            --impulse.debugPrint("LoadButtons", "Clearing ButtonCheck from button #%d at %s", button:EntIndex(), tostring(button:GetPos()))
             button.ButtonCheck = nil
             buttonCount = buttonCount + 1
         end
     end
-    --impulse.debugPrint("LoadButtons", "Cleared ButtonCheck from %d buttons", buttonCount)
     
-    -- Check if impulse.Config.Buttons exists
     if not impulse.Config.Buttons then
-        --impulse.debugPrint("LoadButtons", "impulse.Config.Buttons is nil or empty, skipping button assignment")
         return
     end
     
-    --impulse.debugPrint("LoadButtons", "impulse.Config.Buttons contains %d button configurations", table.Count(impulse.Config.Buttons))
-    
-    -- Print all button configs for debugging
-    --impulse.debugPrint("LoadButtons", "Available button configurations:")
-    for v,k in pairs(impulse.Config.Buttons) do
-        --impulse.debugPrint("LoadButtons", "Button ID: %s, Position: %s, DoorGroup: %s", tostring(v), tostring(k.pos), tostring(k.doorgroup))
-    end
-    
-    -- Assign button configurations to physical buttons
-    --impulse.debugPrint("LoadButtons", "Searching for func_button entities to assign configurations...")
-    local assignedCount = 0
-    local totalButtons = 0
-    
     for a,button in pairs(ents.FindByClass("func_button")) do
-        totalButtons = totalButtons + 1
-        
-        -- Skip if already assigned
-        if button.ButtonCheck then
-            --impulse.debugPrint("LoadButtons", "Button #%d already has ButtonCheck: %s", button:EntIndex(), button.ButtonCheck)
-            continue
-        end
+        if button.ButtonCheck then continue end
         
         local buttonPos = button:GetPos()
-        local assigned = false
         
-        -- Try to match this button with a configuration
         for v,k in pairs(impulse.Config.Buttons) do
             if k.pos and k.pos:DistToSqr(buttonPos) < (9 ^ 2) then -- 81 unit squared radius
                 button.ButtonCheck = v
                 impulse.ActiveButtons[button:EntIndex()] = v
-                assigned = true
-                assignedCount = assignedCount + 1
                 
-                --impulse.debugPrint("✓ Matched button #%d at %s with config '%s' at %s (distance: %.2f units)", 
-                --    button:EntIndex(), tostring(buttonPos), v, tostring(k.pos), math.sqrt(k.pos:DistToSqr(buttonPos)))
-                
-                -- Run init function if defined
                 if k.init then
-                    --impulse.debugPrint("LoadButtons", "Running init function for button '%s'", v)
                     k.init(button)
                 end
                 
-                break -- Found a match, stop searching
+                break
             end
-        end
-        
-        if not assigned then
-            --impulse.debugPrint("LoadButtons", "✗ Button #%d at %s has no matching configuration", button:EntIndex(), tostring(buttonPos))
-        end
-    end
-    
-    --impulse.debugPrint("LoadButtons", "Button assignment complete:")
-    --impulse.debugPrint("LoadButtons", "Total func_button entities: %d", totalButtons)
-    --impulse.debugPrint("LoadButtons", "Successfully assigned: %d", assignedCount)
-    --impulse.debugPrint("LoadButtons", "impulse.ActiveButtons count: %d", table.Count(impulse.ActiveButtons))
-    
-    -- Debug: Print all active buttons
-    --impulse.debugPrint("LoadButtons", "Active buttons mapping:")
-    for buttonID, configID in pairs(impulse.ActiveButtons) do
-        local button = ents.GetByIndex(buttonID)
-        if IsValid(button) then
-            --impulse.debugPrint("LoadButtons", "Button #%d -> Config '%s' at %s", buttonID, configID, tostring(button:GetPos()))
-        else
-            --impulse.debugPrint("LoadButtons", "Button #%d (INVALID) -> Config '%s'", buttonID, configID)
         end
     end
 end
 
 function GM:InitPostEntity()
-    --impulse.debugPrint("GM:InitPostEntity", "GM:InitPostEntity called")
-    
     impulse.Doors.Load()
-    --impulse.debugPrint("GM:InitPostEntity", "Doors loaded")
     
-    -- Clean up old entities
-    --impulse.debugPrint("GM:InitPostEntity", "Cleaning up old impulse entities...")
     local removedCount = 0
     for v,k in pairs(ents.GetAll()) do
         if k.impulseSaveEnt or k.IsZoneTrigger then
@@ -1161,53 +1052,33 @@ function GM:InitPostEntity()
             removedCount = removedCount + 1
         end
     end
-    --impulse.debugPrint("GM:InitPostEntity", "Removed %d old impulse entities", removedCount)
     
-    -- Run config load script if exists
     if impulse.Config.LoadScript then
-        --impulse.debugPrint("GM:InitPostEntity", "Running impulse.Config.LoadScript")
         impulse.Config.LoadScript()
     end
     
-    -- Create zone triggers
     if impulse.Config.Zones then
-        --impulse.debugPrint("GM:InitPostEntity", "Creating zone triggers...")
-        local zoneCount = 0
         for v,k in pairs(impulse.Config.Zones) do
-            --impulse.debugPrint("GM:InitPostEntity", "Creating zone: %s", tostring(v))
             local zone = ents.Create("impulse_zone")
             zone:SetBounds(k.pos1, k.pos2)
             zone.Zone = v
-            zoneCount = zoneCount + 1
         end
-        --impulse.debugPrint("GM:InitPostEntity", "Created %d zone triggers", zoneCount)
     end
     
-    -- Remove blacklisted entities
     if impulse.Config.BlacklistEnts then
-        --impulse.debugPrint("GM:InitPostEntity", "Removing blacklisted entities...")
-        local blacklistCount = 0
         for v,k in pairs(ents.GetAll()) do
             if impulse.Config.BlacklistEnts[k:GetClass()] then
                 k:Remove()
-                blacklistCount = blacklistCount + 1
             end
         end
-        --impulse.debugPrint("GM:InitPostEntity", "Removed %d blacklisted entities", blacklistCount)
     end
     
     LoadSaveEnts()
-    --impulse.debugPrint("GM:InitPostEntity", "Save entities loaded")
-    
     LoadButtons()
-    --impulse.debugPrint("GM:InitPostEntity", "Buttons loaded")
     
     hook.Run("PostInitPostEntity")
-    --impulse.debugPrint("GM:InitPostEntity", "GM:InitPostEntity complete")
 end
 
--- Initial call to LoadButtons
---impulse.debugPrint("Initial", "Initial call to LoadButtons")
 LoadButtons()
 
 function GM:PostCleanupMap()
@@ -1250,46 +1121,6 @@ local curTime = CurTime
 function GM:Think()
 	local ctime = curTime()
 	local allPlayers = player.GetAll()
-	--[[
-	for v,k in pairs(allPlayers) do
-		if not k.nextHungerUpdate then k.nextHungerUpdate = ctime + impulse.Config.HungerTime end
-
-		if k:Alive() then
-			if k.nextHungerUpdate < ctime then
-				local shouldTakeHunger = hook.Run("PlayerShouldGetHungry", k)
-
-				if shouldTakeHunger == nil or shouldTakeHunger then
-					k:FeedHunger(-1)
-				end
-
-				if k:GetSyncVar(SYNC_HUNGER, 100) < 1 then
-					if k:Health() >= 5 then
-						k:TakeDamage(1, k, k)
-					end
-					k.nextHungerUpdate = ctime + 1
-				else
-					k.nextHungerUpdate = ctime + impulse.Config.HungerTime
-				end
-			end
-
-			if (k.nextHungerHeal or 0) < ctime then
-				local hunger = k:GetSyncVar(SYNC_HUNGER, 10)
-
-				if hunger >= 90 and k:Health() < 75 then
-					k:SetHealth(math.Clamp(k:Health() + 1, 0, 75))
-					k.nextHungerHeal = ctime + impulse.Config.HungerHealTime
-				else
-					k.nextHungerHeal = ctime + 2
-				end
-			end
-		end
-		
-		if not k.nextHearUpdate or k.nextHearUpdate < CurTime() then -- optimized version of canhear hook based upon darkrp
-			canHearCheck(k)
-			k.nextHearUpdate = ctime + 0.65
-		end
-		
-	end ]]--
 
 	for v,k in pairs(impulse.Arrest.Dragged) do
 		if not IsValid(v) then
@@ -1613,7 +1444,6 @@ function GM:CanTool(ply, tr, tool)
 	return true
 end
 
-
 local bannedDupeEnts = {
 	["gmod_wire_explosive"] = true,
 	["gmod_wire_simple_explosive"] = true,
@@ -1749,21 +1579,6 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 	if ( hitgroup == HITGROUP_RIGHTLEG or hitgroup == HITGROUP_LEFTLEG ) then
 		dmginfo:ScaleDamage( 0.25 - DR )
 	end
-	
---[[
-	-- Less damage if we're shot in the arms or legs
-	if ( hitgroup == HITGROUP_LEFTARM ||
-		 hitgroup == HITGROUP_RIGHTARM ||
-		 hitgroup == HITGROUP_LEFTLEG ||
-		 hitgroup == HITGROUP_RIGHTLEG ||
-		 hitgroup == HITGROUP_GEAR ) then
-
-		dmginfo:ScaleDamage( 0.25 )
-
-	end
-
-	Pulled from the base gamemode just disabled the 0.25 scaledamage
-	]]--
 end
 
 function GM:PlayerShouldTakeDamage(ply, attacker)
