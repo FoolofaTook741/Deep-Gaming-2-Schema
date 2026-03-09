@@ -344,6 +344,7 @@ end)
 -- im too lazy to fix this fucking disaster
 
 net.Receive("impulseHL2RPBioDeath", function(len, ply)
+	if not IsValid(LocalPlayer()) then return end
 	local unit = net.ReadUInt(8)
 	local zone = net.ReadUInt(8)
 	local rank = net.ReadUInt(8) or 0
@@ -351,6 +352,7 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 	local jammer = net.ReadBool()
 	zone = impulse.Config.Zones[zone]
 	unit = Entity(unit)
+	if not IsValid(unit) then return end
 	local zonename = string.upper(zone.name) or "404 ZONE"
 
 	if zone == 255 then
