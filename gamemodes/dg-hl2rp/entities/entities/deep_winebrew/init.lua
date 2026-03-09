@@ -52,7 +52,7 @@ function ENT:Use(activator, caller)
         return
     end
 
-    ply:Notify("Brewing, return in 150 seconds.")
+    ply:Notify("Brewing, return in 240 seconds.")
     ent:EmitSound("physics/metal/metal_canister_impact_soft2.wav")
     ply:TakeInventoryItemClass("ing_sugar")
     ply:TakeInventoryItemClass("ing_grapes")
@@ -63,7 +63,7 @@ function ENT:Use(activator, caller)
         end
     end)
 
-    timer.Create(timerName, 150, 1, function()
+    timer.Create(timerName, 240, 1, function()
         impulse.Inventory.SpawnItem("food_wine", dropPos)
         if IsValid(ply) then ply:Notify("Brewing complete!") end
         if IsValid(ent) then ent:StopSound("ambient/machines/lab_loop1.wav") end
