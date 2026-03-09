@@ -1495,7 +1495,7 @@ local cpWhitelistCommand = {
         end)
         query:Execute()
 
-        local newrank = getRankNameByWhitelistLevel(impulse.Teams.Data[TEAM_CP], level)
+        local newrank = getRankNameByWhitelistLevel(impulse.Teams.Data[TEAM_CP], level - 1)
 		FetchSteamName(steamid, function(name, err)
 			local steamname = name or "Unknown"
 			local embeds = {{
