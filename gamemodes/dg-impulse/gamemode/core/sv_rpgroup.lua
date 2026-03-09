@@ -207,6 +207,7 @@ function impulse.Group.NetworkMetaData(to, name)
 		net.WriteColor(Color(0, 0, 0))
 	end
 
+	net.WriteUInt(grp.StorageTier or 0, 4)
 	net.Send(to)
 end
 
@@ -226,6 +227,7 @@ function impulse.Group.NetworkMetaDataToOnline(name)
 	net.Start("impulseGroupMetadata")
 	net.WriteString(grp.Data.Info or "")
 	net.WriteColor(grp.Data.Col or Color(0, 0, 0))
+	net.WriteUInt(grp.StorageTier or 0, 4)
 	net.Send(rf)
 end
 
@@ -469,6 +471,7 @@ function impulse.Group.Load(id, onLoaded)
 	query:Select("maxstorage")
 	query:Select("ranks")
 	query:Select("data")
+	query:Select("storageupgrade")
 	query:Where("id", id)
 	query:Callback(function(result)
 		if type(result) == "table" and #result > 0 then
@@ -484,7 +487,9 @@ function impulse.Group.Load(id, onLoaded)
 				Type = data.type,
 				MaxSize = data.maxsize,
 				MaxStorage = data.maxstorage,
+				StorageTier = tonumber(data.storageupgrade) or 0,
 				Ranks = pon.decode(data.ranks),
+
 				Data = (data.data and pon.decode(data.data) or {})
 			}
 

@@ -617,6 +617,7 @@ end)
 net.Receive("impulseGroupMetadata", function()
 	local info = net.ReadString()
 	local col = net.ReadColor()
+	local storageTier = net.ReadUInt(4)
 
 	impulse.Group.Groups[1] = impulse.Group.Groups[1] or {}
 
@@ -627,6 +628,7 @@ net.Receive("impulseGroupMetadata", function()
 	end
 
 	impulse.Group.Groups[1].Info = info
+	impulse.Group.Groups[1].StorageTier = storageTier
 
 	if IsValid(impulse.groupEditor) then
 		impulse.groupEditor:Refresh()

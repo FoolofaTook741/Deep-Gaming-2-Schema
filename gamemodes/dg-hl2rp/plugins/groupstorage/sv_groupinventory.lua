@@ -49,14 +49,19 @@ function meta:MaxGroupInventoryWeight()
     local groupName = self:GetSyncVar(SYNC_GROUP_NAME)
     if not groupName then return 0 end
 
+    local group = impulse.Group.Groups[groupName]
+
     local members = 0
-    for _ in pairs( impulse.Group.Groups[groupName].Members or {} ) do
+    for _ in pairs(group.Members or {}) do
         members = members + 1
     end
     members = math.min(members, 50)
 
     local kgPerMember = 5
-    return members * kgPerMember
+    local baseMax = members * kgPerMember
+
+    local tier = group.StorageTier or 0
+    return baseMax + (tier * 50)
 end
 
 function meta:CanHoldItemGroupStorage(itemclass, amount)

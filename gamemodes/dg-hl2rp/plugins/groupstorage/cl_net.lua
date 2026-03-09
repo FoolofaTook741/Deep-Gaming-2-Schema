@@ -92,4 +92,16 @@ net.Receive("deepGroupinvMove", function()
   end
 end)
 
+net.Receive("impulseGroupStorageTierSync", function()
+    local tier = net.ReadUInt(4)
+
+    if impulse.Group.Groups[1] then
+        impulse.Group.Groups[1].StorageTier = tier
+    end
+
+    if IsValid(impulse.groupEditor) then
+        impulse.groupEditor:Refresh()
+    end
+end)
+
 

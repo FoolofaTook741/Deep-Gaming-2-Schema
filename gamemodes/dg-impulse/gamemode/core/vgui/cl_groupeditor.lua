@@ -297,6 +297,7 @@ function PANEL:ShowGroup()
 	end
 
 	self:ShowInfo()
+	self:ShowUpgrades()
 
 	if LocalPlayer():GroupHasPermission(6) then
 		self:ShowRanks()
@@ -612,6 +613,103 @@ function PANEL:ShowAdmin()
 				panel:Remove()
 			end, nil, "Delete forever")
 	end
+end
+
+function PANEL:ShowUpgrades()
+	local group = impulse.Group.Groups[1]
+	local sheet = self:AddSheet("Upgrades", "icon16/briefcase.png")
+	local darkText = Color(150, 150, 150, 210)
+	local panel = self
+
+	local currentTier = group.StorageTier or 0
+
+	local lblTitle = vgui.Create("DLabel", sheet)
+	lblTitle:SetText("Group Storage Upgrades")
+	lblTitle:SetFont("Impulse-Elements19-Shadow")
+	lblTitle:SetTextColor(darkText)
+	lblTitle:Dock(TOP)
+	lblTitle:SetTall(30)
+	lblTitle:DockMargin(0, 5, 0, 0)
+
+	local lblTier = vgui.Create("DLabel", sheet)
+	lblTier:SetText("Current Tier: " .. currentTier .. " / 4  (" .. (currentTier * 50) .. "kg bonus storage)")
+	lblTier:SetFont("Impulse-Elements18-Shadow")
+	lblTier:SetTextColor(Color(100, 200, 100))
+	lblTier:Dock(TOP)
+	lblTier:SetTall(25)
+	lblTier:DockMargin(0, 0, 0, 10)
+
+	local tiers = {
+		{ name = "Group Storage Tier I",   kg = 50,  tier = 1 },
+		{ name = "Group Storage Tier II",  kg = 100, tier = 2 },
+		{ name = "Group Storage Tier III", kg = 150, tier = 3 },
+		{ name = "Group Storage Tier IV",  kg = 200, tier = 4 },
+	}
+
+	for _, t in ipairs(tiers) do
+		local row = vgui.Create("DPanel", sheet)
+		row:Dock(TOP)
+		row:SetTall(50)
+		row:DockMargin(0, 5, 0, 0)
+		row.Paint = function(self, w, h)
+			draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 180))
+		end
+
+		local lbl = vgui.Create("DLabel", row)
+		lbl:SetText(t.name .. "  (+50kg  |  total: " .. t.kg .. "kg)")
+		lbl:SetFont("Impulse-Elements18-Shadow")
+		lbl:SetPos(10, 0)
+		lbl:SetSize(350, 50)
+		lbl:SetContentAlignment(4) -- left, vertically centered
+
+		local btn = vgui.Create("DButton", row)
+		btn:SetSize(140, 30)
+		btn:SetPos(row:GetWide() - 120, 13)
+
+		local alreadyOwned = currentTier >= t.tier
+		local isNext       = currentTier == t.tier - 1
+		local cost         = impulse.Config.GroupStorageUpgradeCost
+
+		if alreadyOwned then
+			btn:SetText("✔ Purchased")
+			btn:SetDisabled(true)
+			btn:SetTextColor(Color(100, 200, 100))
+		elseif isNext then
+			btn:SetText("Purchase (" .. impulse.Config.CurrencyPrefix .. cost .. ")")
+			btn:SetDisabled(false)
+			function btn:DoClick()
+				Derma_Query(
+					"Purchase " .. t.name .. " for " .. impulse.Config.CurrencyPrefix .. cost .. "?\nThis will add 50kg to your group's storage capacity.",
+					"impulse",
+					"Confirm",
+					function()
+						net.Start("impulseGroupDoStorageUpgrade")
+						net.WriteUInt(t.tier, 4)
+						net.SendToServer()
+					end,
+					"Cancel"
+				)
+			end
+		else
+			btn:SetText("Locked")
+			btn:SetDisabled(true)
+			btn:SetTextColor(Color(120, 120, 120))
+		end
+
+		row:InvalidateLayout(true)
+		row.PerformLayout = function(self, w, h)
+			btn:SetPos(w - 150, 10)
+		end
+	end
+
+	local lblNote = vgui.Create("DLabel", sheet)
+	lblNote:SetText("Upgrades are permanent and shared by all group members.")
+	lblNote:SetFont("Impulse-Elements14-Shadow")
+	lblNote:SetTextColor(darkText)
+	lblNote:Dock(TOP)
+	lblNote:SetTall(20)
+	lblNote:DockMargin(0, 15, 0, 0)
+	lblNote:SetContentAlignment(5)
 end
 
 vgui.Register("impulseGroupEditor", PANEL, "DFrame")

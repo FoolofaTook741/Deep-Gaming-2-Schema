@@ -5,6 +5,8 @@ util.AddNetworkString("deepGroupInvContainerDoMoveMass")
 util.AddNetworkString("deepGroupinvMove")
 util.AddNetworkString("deepGroupLogsRequest")
 util.AddNetworkString("deepGroupLogsSend")
+util.AddNetworkString("impulseGroupDoStorageUpgrade")
+util.AddNetworkString("impulseGroupStorageTierSync")
 
 net.Receive("deepGroupInvContainerDoMove", function(len, ply)
     if (ply.nextInvMove or 0) > CurTime() then return end
@@ -181,6 +183,58 @@ net.Receive("deepGroupLogsRequest", function(len, ply)
     net.Send(ply)
 end)
 
+local STORAGE_TIER_BONUS = 50
+
+net.Receive("impulseGroupDoStorageUpgrade", function(len, ply)
+    if not ply:Alive() then return end
+    if ply:IsCP() then return end
+
+    local tier = net.ReadUInt(4)
+    if tier < 1 or tier > 4 then return end
+
+    local groupName = ply:GetSyncVar(SYNC_GROUP_NAME, nil)
+    if not groupName then return end
+
+    if not ply:GroupHasPermission(99) then
+        return ply:Notify("You do not have permission to purchase storage upgrades.")
+    end
+
+    local group = impulse.Group.Groups[groupName]
+    if not group then return end
+
+    local currentTier = group.StorageTier or 0
+
+    if tier != currentTier + 1 then
+        return ply:Notify("You must purchase storage upgrades in order.")
+    end
+
+    local cost = impulse.Config.GroupStorageUpgradeCost
+    if not ply:CanAfford(cost) then
+        return ply:Notify("Your group cannot afford this storage upgrade.")
+    end
+
+    ply:TakeMoney(cost)
+
+    group.StorageTier = tier
+
+    local query = mysql:Update("impulse_rpgroups")
+    query:Update("storageupgrade", tier)
+    query:Where("id", group.ID)
+    query:Execute()
+
+    local rf = RecipientFilter()
+    for _, p in pairs(player.GetAll()) do
+        if p:GetSyncVar(SYNC_GROUP_NAME, nil) == groupName then
+            rf:AddPlayer(p)
+        end
+    end
+
+    net.Start("impulseGroupStorageTierSync")
+    net.WriteUInt(tier, 4)
+    net.Send(rf)
+
+    ply:Notify("Storage upgraded to Tier " .. tier .. "! (+" .. (tier * STORAGE_TIER_BONUS) .. "kg bonus storage)")
+end)
 function SyncGroupStorageForGroup(groupid, ply, delete)
     local groupItems = {}
 	net.Start("deepGroupStorageSync")
