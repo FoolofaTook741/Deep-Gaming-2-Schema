@@ -208,7 +208,6 @@ function impulse.Group.NetworkMetaData(to, name)
 	end
 
 	net.WriteUInt(grp.StorageTier or 0, 4)
-	net.WriteUInt(grp.GroupBank or 0, 32)
 	net.Send(to)
 end
 
@@ -229,7 +228,6 @@ function impulse.Group.NetworkMetaDataToOnline(name)
 	net.WriteString(grp.Data.Info or "")
 	net.WriteColor(grp.Data.Col or Color(0, 0, 0))
 	net.WriteUInt(grp.StorageTier or 0, 4)
-	net.WriteUInt(grp.GroupBank or 0, 32)
 	net.Send(rf)
 end
 
@@ -449,13 +447,6 @@ function meta:GroupLoad(groupid, rank)
 	end)
 end
 
-function impulse.Group.DBUpdateGroupBank(groupid, amount)
-    local query = mysql:Update("impulse_rpgroups")
-    query:Update("groupbank", amount)
-    query:Where("id", groupid)
-    query:Execute()
-end
-
 function impulse.Group.IsNameUnique(name, callback)
 	local query = mysql:Select("impulse_rpgroups")
 	query:Select("name")
@@ -498,7 +489,7 @@ function impulse.Group.Load(id, onLoaded)
 				MaxStorage = data.maxstorage,
 				StorageTier = tonumber(data.storageupgrade) or 0,
 				Ranks = pon.decode(data.ranks),
-				GroupBank = tonumber(data.groupbank) or 0,
+
 				Data = (data.data and pon.decode(data.data) or {})
 			}
 

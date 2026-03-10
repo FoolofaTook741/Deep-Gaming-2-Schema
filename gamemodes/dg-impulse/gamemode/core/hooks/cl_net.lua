@@ -615,26 +615,24 @@ net.Receive("impulseGroupInvite", function()
 end)
 
 net.Receive("impulseGroupMetadata", function()
-    local info = net.ReadString()
-    local col = net.ReadColor()
-    local storageTier = net.ReadUInt(4)
-    local groupBank = net.ReadUInt(32)
+	local info = net.ReadString()
+	local col = net.ReadColor()
+	local storageTier = net.ReadUInt(4)
 
-    impulse.Group.Groups[1] = impulse.Group.Groups[1] or {}
+	impulse.Group.Groups[1] = impulse.Group.Groups[1] or {}
 
-    if col.r == 0 and col.g == 0 and col.b == 0 then
-        impulse.Group.Groups[1].Color = nil
-    else
-        impulse.Group.Groups[1].Color = col
-    end
+	if col.r == 0 and col.g == 0 and col.b == 0 then
+		impulse.Group.Groups[1].Color = nil
+	else
+		impulse.Group.Groups[1].Color = col
+	end
 
-    impulse.Group.Groups[1].Info = info
-    impulse.Group.Groups[1].StorageTier = storageTier
-    impulse.Group.Groups[1].GroupBank = groupBank
+	impulse.Group.Groups[1].Info = info
+	impulse.Group.Groups[1].StorageTier = storageTier
 
-    if IsValid(impulse.groupEditor) then
-        impulse.groupEditor:Refresh()
-    end
+	if IsValid(impulse.groupEditor) then
+		impulse.groupEditor:Refresh()
+	end
 end)
 
 net.Receive("impulseGetButtons", function()

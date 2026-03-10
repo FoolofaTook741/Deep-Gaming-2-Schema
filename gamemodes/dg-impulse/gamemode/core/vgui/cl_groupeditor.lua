@@ -147,13 +147,6 @@ function PANEL:ShowGroup()
 	lbl:SetFont("Impulse-Elements20-Shadow")
 	lbl:SetPos(5, 47)
 	lbl:SizeToContents()
-	
-	local lblBank = vgui.Create("DLabel", sheet)
-	local bankBal = (impulse.Group.Groups[1] and impulse.Group.Groups[1].GroupBank) or 0
-	lblBank:SetText("Group bank: " .. impulse.Config.CurrencyPrefix .. bankBal)
-	lblBank:SetFont("Impulse-Elements20-Shadow")
-	lblBank:SetPos(175, 47)
-	lblBank:SizeToContents()
 
 	local leave = vgui.Create("DButton", sheet)
 	leave:SetText("Leave group")

@@ -1,370 +1,330 @@
 local PANEL = {}
 
 local grey = Color(209, 209, 209)
-local darkText = Color(150, 150, 150, 210)
 
 function PANEL:Init()
-    self:SetSize(1094, 734)
-    self:Center()
-    self:SetTitle("Group Storage")
-    self:MakePopup()
+	self:SetSize(1094, 734)
+	self:Center()
+	self:SetTitle("Group Storage")
+	self:MakePopup()
 
-    self:SetupItems()
-
-    -- bank balance sync receiver
-    net.Receive("impulseGroupBankSync", function()
-        local bal = net.ReadUInt(32)
-        if impulse.Group.Groups[1] then
-            impulse.Group.Groups[1].GroupBank = bal
-        end
-        if IsValid(self) and self.bankBalLabel then
-            self.bankBalLabel:SetText("Group Bank: " .. impulse.Config.CurrencyPrefix .. bal)
-            self.bankBalLabel:SizeToContents()
-        end
-    end)
+	self:SetupItems()
 end
 
 function PANEL:PaintOver(w, h)
-    draw.SimpleText("You", "Impulse-Elements23-Shadow", 5, 30, grey)
-    if self.invWeight then
-        draw.SimpleText(self.invWeight.."kg/"..impulse.Config.InventoryMaxWeight.."kg", "Impulse-Elements18-Shadow", (w / 2) - 5, 35, grey, TEXT_ALIGN_RIGHT)
-    end
+	draw.SimpleText("You", "Impulse-Elements23-Shadow", 5, 30, grey)
+	if self.invWeight then
+		draw.SimpleText(self.invWeight.."kg/"..impulse.Config.InventoryMaxWeight.."kg", "Impulse-Elements18-Shadow", (w / 2) - 5, 35, grey, TEXT_ALIGN_RIGHT)
+	end
 
-    draw.SimpleText("Storage", "Impulse-Elements23-Shadow", w - 5, 30, grey, TEXT_ALIGN_RIGHT)
-    if self.storageWeight then
-        draw.SimpleText(self.storageWeight.."kg/"..LocalPlayer():GetMaxGroupInventoryStorage().."kg", "Impulse-Elements18-Shadow", (w / 2) + 5, 35, grey, TEXT_ALIGN_LEFT)
-    end
+	draw.SimpleText("Storage", "Impulse-Elements23-Shadow", w - 5, 30, grey, TEXT_ALIGN_RIGHT)
+	if self.storageWeight then
+		draw.SimpleText(self.storageWeight.."kg/"..LocalPlayer():GetMaxGroupInventoryStorage().."kg", "Impulse-Elements18-Shadow", (w / 2) + 5, 35, grey, TEXT_ALIGN_LEFT)
+	end
 end
 
 function PANEL:SetupItems(invscroll, storescroll)
-    local w, h = self:GetSize()
+	local w,h = self:GetSize()
 
-    local preservedCategory = self.currentCategory or "All"
-    local preservedSearch = self.searchText or ""
-    local preservedInvScroll = 0
-    local preservedStorageScroll = 0
+	local preservedCategory = self.currentCategory or "All"
+	local preservedSearch = self.searchText or ""
+	local preservedInvScroll = 0
+	local preservedStorageScroll = 0
 
-    if IsValid(self.invScroll) then
-        preservedInvScroll = self.invScroll:GetVBar():GetScroll()
-    end
-    if IsValid(self.invStorageScroll) then
-        preservedStorageScroll = self.invStorageScroll:GetVBar():GetScroll()
-    end
+	if IsValid(self.invScroll) then
+		preservedInvScroll = self.invScroll:GetVBar():GetScroll()
+	end
 
-    if self.tabContainer and IsValid(self.tabContainer) then self.tabContainer:Remove() end
-    if self.bankPanel and IsValid(self.bankPanel) then self.bankPanel:Remove() end
-    if self.invScroll and IsValid(self.invScroll) then self.invScroll:Remove() end
-    if self.invStorageScroll and IsValid(self.invStorageScroll) then self.invStorageScroll:Remove() end
+	if IsValid(self.invStorageScroll) then
+		preservedStorageScroll = self.invStorageScroll:GetVBar():GetScroll()
+	end
 
-    -- Bank panel
-    local canDeposit = LocalPlayer():GroupHasPermission(11)
-    local canWithdraw = LocalPlayer():GroupHasPermission(12)
-    local bankBalance = (impulse.Group.Groups[1] and impulse.Group.Groups[1].GroupBank) or 0
-    local prefix = impulse.Config.CurrencyPrefix
+	if self.tabContainer and IsValid(self.tabContainer) then
+		self.tabContainer:Remove()
+	end
 
-    self.bankPanel = vgui.Create("DPanel", self)
-    self.bankPanel:SetPos(0, 25)
-    self.bankPanel:SetSize(w, 30)
-    self.bankPanel.Paint = function(s, pw, ph)
-        draw.RoundedBox(0, 0, 0, pw, ph, Color(30, 30, 30, 200))
-    end
+	if self.invScroll and IsValid(self.invScroll) then
+		self.invScroll:Remove()
+	end
 
-    self.bankBalLabel = vgui.Create("DLabel", self.bankPanel)
-    self.bankBalLabel:SetText("Group Bank: " .. prefix .. bankBalance)
-    self.bankBalLabel:SetFont("Impulse-Elements18-Shadow")
-    self.bankBalLabel:SetTextColor(Color(100, 200, 100))
-    self.bankBalLabel:SetPos(10, 6)
-    self.bankBalLabel:SizeToContents()
+	if self.invStorageScroll and IsValid(self.invStorageScroll) then
+		self.invStorageScroll:Remove()
+	end
 
-    -- deposit
-    local depositEntry = vgui.Create("DTextEntry", self.bankPanel)
-    depositEntry:SetPos(w / 2 - 220, 4)
-    depositEntry:SetSize(120, 22)
-    depositEntry:SetNumeric(true)
-    depositEntry:SetPlaceholderText("Deposit amount...")
-    depositEntry:SetEnabled(canDeposit)
+	self.tabContainer = vgui.Create("DPanel", self)
+	self.tabContainer:SetTall(35)
+	self.tabContainer:SetPos(0, 55)
+	self.tabContainer:SetSize(w, 35)
 
-    local depositBtn = vgui.Create("DButton", self.bankPanel)
-    depositBtn:SetText("Deposit")
-    depositBtn:SetPos(w / 2 - 95, 4)
-    depositBtn:SetSize(80, 22)
-    depositBtn:SetDisabled(not canDeposit)
-    function depositBtn:DoClick()
-        local num = tonumber(depositEntry:GetValue())
-        if not num or num < 1 then return end
-        net.Start("impulseGroupATMDeposit")
-        net.WriteUInt(math.floor(num), 32)
-        net.SendToServer()
-        depositEntry:SetValue("")
-    end
+	function self.tabContainer:Paint(w, h)
+		draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 210))
+	end
 
-    -- withdraw
-    local withdrawEntry = vgui.Create("DTextEntry", self.bankPanel)
-    withdrawEntry:SetPos(w / 2 + 5, 4)
-    withdrawEntry:SetSize(120, 22)
-    withdrawEntry:SetNumeric(true)
-    withdrawEntry:SetPlaceholderText("Withdraw amount...")
-    withdrawEntry:SetEnabled(canWithdraw)
+	local categories = {}
+	local localInv = table.Copy(impulse.Inventory.Data[0][1]) or {}
+	local localInvStorage = table.Copy(impulse.Inventory.Group.Data[0][3]) or {}
 
-    local withdrawBtn = vgui.Create("DButton", self.bankPanel)
-    withdrawBtn:SetText("Withdraw")
-    withdrawBtn:SetPos(w / 2 + 130, 4)
-    withdrawBtn:SetSize(80, 22)
-    withdrawBtn:SetDisabled(not canWithdraw)
-    function withdrawBtn:DoClick()
-        local num = tonumber(withdrawEntry:GetValue())
-        if not num or num < 1 then return end
-        net.Start("impulseGroupATMWithdraw")
-        net.WriteUInt(math.floor(num), 32)
-        net.SendToServer()
-        withdrawEntry:SetValue("")
-    end
+	for v,k in pairs(localInv) do
+		local itemData = impulse.Inventory.Items[k.id]
+		if itemData and itemData.Category then
+			categories[itemData.Category] = true
+		end
+	end
 
-    -- filter/search bar
-    self.tabContainer = vgui.Create("DPanel", self)
-    self.tabContainer:SetTall(35)
-    self.tabContainer:SetPos(0, 55)
-    self.tabContainer:SetSize(w, 35)
-    function self.tabContainer:Paint(pw, ph)
-        draw.RoundedBox(0, 0, 0, pw, ph, Color(40, 40, 40, 210))
-    end
+	for v,k in pairs(localInvStorage) do
+		local itemData = impulse.Inventory.Items[k.id]
+		if itemData and itemData.Category then
+			categories[itemData.Category] = true
+		end
+	end
 
-    local categories = {}
-    local localInv = table.Copy(impulse.Inventory.Data[0][1]) or {}
-    local localInvStorage = table.Copy(impulse.Inventory.Group.Data[0][3]) or {}
+	local sortedCategories = {}
+	local numCategories = 0
+	for cat, _ in pairs(categories) do
+		table.insert(sortedCategories, cat)
+		numCategories = numCategories + 1
+	end
+	table.sort(sortedCategories)
 
-    for v, k in pairs(localInv) do
-        local itemData = impulse.Inventory.Items[k.id]
-        if itemData and itemData.Category then categories[itemData.Category] = true end
-    end
-    for v, k in pairs(localInvStorage) do
-        local itemData = impulse.Inventory.Items[k.id]
-        if itemData and itemData.Category then categories[itemData.Category] = true end
-    end
+	local showFilter = numCategories > 1
 
-    local sortedCategories = {}
-    local numCategories = 0
-    for cat, _ in pairs(categories) do
-        table.insert(sortedCategories, cat)
-        numCategories = numCategories + 1
-    end
-    table.sort(sortedCategories)
+	if showFilter then
+		table.insert(sortedCategories, 1, "All")
+	end
 
-    local showFilter = numCategories > 1
-    if showFilter then table.insert(sortedCategories, 1, "All") end
+	self.currentCategory = preservedCategory
+	self.searchText = preservedSearch
 
-    self.currentCategory = preservedCategory
-    self.searchText = preservedSearch
+	if showFilter then
+		local searchLabel = vgui.Create("DLabel", self.tabContainer)
+		searchLabel:SetPos(w - 520, 8)
+		searchLabel:SetFont("Impulse-Elements18-Shadow")
+		searchLabel:SetText("Filter:")
+		searchLabel:SetTextColor(grey)
+		searchLabel:SizeToContents()
 
-    if showFilter then
-        local searchLabel = vgui.Create("DLabel", self.tabContainer)
-        searchLabel:SetPos(w - 520, 8)
-        searchLabel:SetFont("Impulse-Elements18-Shadow")
-        searchLabel:SetText("Filter:")
-        searchLabel:SetTextColor(grey)
-        searchLabel:SizeToContents()
+		self.categoryDropdown = vgui.Create("DComboBox", self.tabContainer)
+		self.categoryDropdown:SetPos(w - 460, 5)
+		self.categoryDropdown:SetSize(200, 25)
+		self.categoryDropdown:SetValue(preservedCategory)
+		self.categoryDropdown:SetFont("Impulse-Elements18-Shadow")
+		self.categoryDropdown.panel = self
 
-        self.categoryDropdown = vgui.Create("DComboBox", self.tabContainer)
-        self.categoryDropdown:SetPos(w - 460, 5)
-        self.categoryDropdown:SetSize(200, 25)
-        self.categoryDropdown:SetValue(preservedCategory)
-        self.categoryDropdown:SetFont("Impulse-Elements18-Shadow")
-        self.categoryDropdown.panel = self
-        function self.categoryDropdown:Paint(pw, ph)
-            draw.RoundedBox(4, 0, 0, pw, ph, Color(50, 50, 50, 210))
-            return false
-        end
-        function self.categoryDropdown:OnSelect(index, value, data)
-            self.panel:SwitchCategory(value)
-        end
-        for i, category in ipairs(sortedCategories) do
-            self.categoryDropdown:AddChoice(category)
-        end
+		function self.categoryDropdown:Paint(w, h)
+			draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 210))
+			return false
+		end
 
-        local searchLabel2 = vgui.Create("DLabel", self.tabContainer)
-        searchLabel2:SetPos(w - 250, 8)
-        searchLabel2:SetFont("Impulse-Elements18-Shadow")
-        searchLabel2:SetText("Search:")
-        searchLabel2:SetTextColor(grey)
-        searchLabel2:SizeToContents()
+		function self.categoryDropdown:OnSelect(index, value, data)
+			self.panel:SwitchCategory(value)
+		end
 
-        self.searchBar = vgui.Create("DTextEntry", self.tabContainer)
-        self.searchBar:SetPos(w - 190, 5)
-        self.searchBar:SetSize(180, 25)
-        self.searchBar:SetFont("Impulse-Elements18-Shadow")
-        self.searchBar:SetPlaceholderText("Item name...")
-        self.searchBar:SetValue(preservedSearch)
-        self.searchBar.panel = self
-        self.searchBar.lastValue = preservedSearch
-        function self.searchBar:Paint(pw, ph)
-            draw.RoundedBox(4, 0, 0, pw, ph, Color(50, 50, 50, 210))
-            self:DrawTextEntryText(grey, Color(100, 100, 100), grey)
-        end
-        function self.searchBar:Think()
-            local currentValue = self:GetValue()
-            if currentValue ~= self.lastValue then
-                self.lastValue = currentValue
-                self.panel.searchText = string.lower(currentValue)
-                self.panel:PopulateInventories()
-            end
-        end
-    else
-        self.tabContainer:Hide()
-    end
+		for i, category in ipairs(sortedCategories) do
+			self.categoryDropdown:AddChoice(category)
+		end
 
-    local topOffset = showFilter and 90 or 55
-    local panelWidth = (w - 8) / 2
+		local searchLabel2 = vgui.Create("DLabel", self.tabContainer)
+		searchLabel2:SetPos(w - 250, 8)
+		searchLabel2:SetFont("Impulse-Elements18-Shadow")
+		searchLabel2:SetText("Search:")
+		searchLabel2:SetTextColor(grey)
+		searchLabel2:SizeToContents()
 
-    self.invScroll = vgui.Create("DScrollPanel", self)
-    self.invScroll:SetPos(0, topOffset)
-    self.invScroll:SetSize(panelWidth, h - topOffset)
+		self.searchBar = vgui.Create("DTextEntry", self.tabContainer)
+		self.searchBar:SetPos(w - 190, 5)
+		self.searchBar:SetSize(180, 25)
+		self.searchBar:SetFont("Impulse-Elements18-Shadow")
+		self.searchBar:SetPlaceholderText("Item name...")
+		self.searchBar:SetValue(preservedSearch)
+		self.searchBar.panel = self
+		self.searchBar.lastValue = preservedSearch
 
-    self.invStorageScroll = vgui.Create("DScrollPanel", self)
-    self.invStorageScroll:SetPos(panelWidth + 8, topOffset)
-    self.invStorageScroll:SetSize(panelWidth, h - topOffset)
+		function self.searchBar:Paint(w, h)
+			draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 210))
+			self:DrawTextEntryText(grey, Color(100, 100, 100), grey)
+		end
 
-    self.items = {}
-    self.itemPanels = {}
-    self.itemsStorage = {}
-    self.itemPanelsStorage = {}
+		function self.searchBar:Think()
+			local currentValue = self:GetValue()
+			if currentValue ~= self.lastValue then
+				self.lastValue = currentValue
+				self.panel.searchText = string.lower(currentValue)
+				self.panel:PopulateInventories()
+			end
+		end
+	else
+		self.tabContainer:Hide()
+	end
 
-    self:PopulateInventories()
+	local panelWidth = (w - 8) / 2
 
-    if invscroll then
-        self.invScroll:GetVBar():AnimateTo(invscroll, 0)
-        self.invStorageScroll:GetVBar():AnimateTo(storescroll, 0)
-    else
-        timer.Simple(0, function()
-            if IsValid(self) and IsValid(self.invScroll) and IsValid(self.invStorageScroll) then
-                self.invScroll:GetVBar():SetScroll(preservedInvScroll)
-                self.invStorageScroll:GetVBar():SetScroll(preservedStorageScroll)
-            end
-        end)
-    end
+	self.invScroll = vgui.Create("DScrollPanel", self)
+	self.invScroll:SetPos(0, showFilter and 90 or 55)
+	self.invScroll:SetSize(panelWidth, h - (showFilter and 90 or 55))
+
+	self.invStorageScroll = vgui.Create("DScrollPanel", self)
+	self.invStorageScroll:SetPos(panelWidth + 8, showFilter and 90 or 55)
+	self.invStorageScroll:SetSize(panelWidth, h - (showFilter and 90 or 55))
+
+	self.items = {}
+	self.itemPanels = {}
+	self.itemsStorage = {}
+	self.itemPanelsStorage = {}
+	
+	self:PopulateInventories()
+
+	if invscroll then
+		self.invScroll:GetVBar():AnimateTo(invscroll, 0)
+		self.invStorageScroll:GetVBar():AnimateTo(storescroll, 0)
+	else
+		timer.Simple(0, function()
+			if IsValid(self) and IsValid(self.invScroll) and IsValid(self.invStorageScroll) then
+				self.invScroll:GetVBar():SetScroll(preservedInvScroll)
+				self.invStorageScroll:GetVBar():SetScroll(preservedStorageScroll)
+			end
+		end)
+	end
 end
 
 function PANEL:PopulateInventories()
-    local preservedInvScroll = 0
-    local preservedStorageScroll = 0
+	local preservedInvScroll = 0
+	local preservedStorageScroll = 0
 
-    if IsValid(self.invScroll) then preservedInvScroll = self.invScroll:GetVBar():GetScroll() end
-    if IsValid(self.invStorageScroll) then preservedStorageScroll = self.invStorageScroll:GetVBar():GetScroll() end
+	if IsValid(self.invScroll) then
+		preservedInvScroll = self.invScroll:GetVBar():GetScroll()
+	end
 
-    self.invScroll:Clear()
-    self.invStorageScroll:Clear()
-    self.items = {}
-    self.itemsStorage = {}
+	if IsValid(self.invStorageScroll) then
+		preservedStorageScroll = self.invStorageScroll:GetVBar():GetScroll()
+	end
 
-    local w = self:GetWide()
-    local invWeight = 0
-    local storageWeight = 0
-    local localInv = table.Copy(impulse.Inventory.Data[0][1]) or {}
-    local localInvStorage = table.Copy(impulse.Inventory.Group.Data[0][3]) or {}
-    local reccurTemp = {}
-    local sortMethod = impulse.GetSetting("inv_sortweight", "Inventory only")
-    local invertSort = true
+	self.invScroll:Clear()
+	self.invStorageScroll:Clear()
+	
+	self.items = {}
+	self.itemsStorage = {}
+	
+	local w = self:GetWide()
+	local invWeight = 0
+	local storageWeight = 0
+	local localInv = table.Copy(impulse.Inventory.Data[0][1]) or {}
+	local localInvStorage = table.Copy(impulse.Inventory.Group.Data[0][3]) or {}
+	local reccurTemp = {}
+	local sortMethod = impulse.GetSetting("inv_sortweight", "Inventory only")
+	local invertSort = true
 
-    for v, k in pairs(localInv) do
-        k.realKey = v
-        if sortMethod == "Always" or sortMethod == "Containers only" then
-            reccurTemp[k.id] = (reccurTemp[k.id] or 0) + (impulse.Inventory.Items[k.id].Weight or 0)
-            k.sortWeight = reccurTemp[k.id]
-        else
-            k.sortWeight = impulse.Inventory.Items[k.id].Name
-            invertSort = false
-        end
-    end
+	for v,k in pairs(localInv) do
+		k.realKey = v
 
-    reccurTemp = {}
-    for v, k in pairs(localInvStorage) do
-        k.realKey = v
-        if sortMethod == "Always" or sortMethod == "Containers only" then
-            reccurTemp[k.id] = (reccurTemp[k.id] or 0) + (impulse.Inventory.Items[k.id].Weight or 0)
-            k.sortWeight = reccurTemp[k.id]
-        else
-            k.sortWeight = impulse.Inventory.Items[k.id].Name
-            invertSort = false
-        end
-    end
+		if sortMethod == "Always" or sortMethod == "Containers only" then
+			reccurTemp[k.id] = (reccurTemp[k.id] or 0) + (impulse.Inventory.Items[k.id].Weight or 0)
+			k.sortWeight = reccurTemp[k.id]
+		else
+			k.sortWeight = impulse.Inventory.Items[k.id].Name
+			invertSort = false
+		end
+	end
 
-    if localInv and table.Count(localInv) > 0 then
-        for v, k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
-            local itemX = impulse.Inventory.Items[k.id]
-            local categoryMatch = self.currentCategory == "All" or (itemX.Category == self.currentCategory)
-            local searchMatch = self.searchText == "" or string.find(string.lower(itemX.Name), self.searchText, 1, true)
-            if categoryMatch and searchMatch then
-                local otherItem = self.items[k.id]
-                if itemX.CanStack and otherItem then
-                    otherItem.Count = (otherItem.Count or 1) + 1
-                else
-                    local item = self.invScroll:Add("deepInventoryItem")
-                    item:Dock(TOP)
-                    item:DockMargin(0, 0, 0, 5)
-                    item.Basic = true
-                    item.Type = 1
-                    item:SetItem(k, w)
-                    item.InvID = k.realKey
-                    item.InvPanel = self
-                    self.items[k.id] = item
-                end
-            end
-            invWeight = invWeight + (itemX.Weight or 0)
-        end
-    else
-        self.empty = self.invScroll:Add("DLabel", self)
-        self.empty:SetContentAlignment(5)
-        self.empty:Dock(TOP)
-        self.empty:SetText("Empty")
-        self.empty:SetFont("Impulse-Elements19-Shadow")
-        self.empty:SetTextColor(grey)
-    end
+	local reccurTemp = {}
 
-    if localInvStorage and table.Count(localInvStorage) > 0 then
-        for v, k in SortedPairsByMemberValue(localInvStorage, "sortWeight", invertSort) do
-            local itemX = impulse.Inventory.Items[k.id]
-            local categoryMatch = self.currentCategory == "All" or (itemX.Category == self.currentCategory)
-            local searchMatch = self.searchText == "" or string.find(string.lower(itemX.Name), self.searchText, 1, true)
-            if categoryMatch and searchMatch then
-                local otherItem = self.itemsStorage[k.id]
-                if itemX.CanStack and otherItem then
-                    otherItem.Count = (otherItem.Count or 1) + 1
-                else
-                    local item = self.invStorageScroll:Add("deepInventoryItem")
-                    item:Dock(TOP)
-                    item:DockMargin(0, 0, 0, 5)
-                    item.Basic = true
-                    item.Type = 3
-                    item:SetItem(k, w)
-                    item.InvID = k.realKey
-                    item.InvPanel = self
-                    self.itemsStorage[k.id] = item
-                end
-            end
-            storageWeight = storageWeight + (itemX.Weight or 0)
-        end
-    else
-        self.empty = self.invStorageScroll:Add("DLabel", self)
-        self.empty:SetContentAlignment(5)
-        self.empty:Dock(TOP)
-        self.empty:SetText("Empty")
-        self.empty:SetFont("Impulse-Elements19-Shadow")
-        self.empty:SetTextColor(grey)
-    end
+	for v,k in pairs(localInvStorage) do
+		k.realKey = v
 
-    self.invWeight = invWeight
-    self.storageWeight = storageWeight
+		if sortMethod == "Always" or sortMethod == "Containers only" then
+			reccurTemp[k.id] = (reccurTemp[k.id] or 0) + (impulse.Inventory.Items[k.id].Weight or 0)
+			k.sortWeight = reccurTemp[k.id]
+		else
+			k.sortWeight = impulse.Inventory.Items[k.id].Name
+			invertSort = false
+		end
+	end
 
-    timer.Simple(0, function()
-        if IsValid(self) and IsValid(self.invScroll) and IsValid(self.invStorageScroll) then
-            self.invScroll:GetVBar():SetScroll(preservedInvScroll)
-            self.invStorageScroll:GetVBar():SetScroll(preservedStorageScroll)
-        end
-    end)
+	if localInv and table.Count(localInv) > 0 then
+		for v,k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
+			local itemX = impulse.Inventory.Items[k.id]
+			local categoryMatch = self.currentCategory == "All" or (itemX.Category == self.currentCategory)
+			local searchMatch = self.searchText == "" or string.find(string.lower(itemX.Name), self.searchText, 1, true)
+			local shouldShow = categoryMatch and searchMatch
+
+			if shouldShow then
+				local otherItem = self.items[k.id]
+
+				if itemX.CanStack and otherItem then
+					otherItem.Count = (otherItem.Count or 1) + 1
+				else
+					local item = self.invScroll:Add("deepInventoryItem")
+					item:Dock(TOP)
+					item:DockMargin(0, 0, 0, 5)
+					item.Basic = true
+					item.Type = 1
+					item:SetItem(k, w)
+					item.InvID = k.realKey
+					item.InvPanel = self
+					self.items[k.id] = item
+				end
+			end
+
+			invWeight = invWeight + (itemX.Weight or 0)
+		end
+	else
+		self.empty = self.invScroll:Add("DLabel", self)
+		self.empty:SetContentAlignment(5)
+		self.empty:Dock(TOP)
+		self.empty:SetText("Empty")
+		self.empty:SetFont("Impulse-Elements19-Shadow")
+		self.empty:SetTextColor(grey)
+	end
+
+	if localInvStorage and table.Count(localInvStorage) > 0 then
+		for v,k in SortedPairsByMemberValue(localInvStorage, "sortWeight", invertSort) do
+			local itemX = impulse.Inventory.Items[k.id]
+			local categoryMatch = self.currentCategory == "All" or (itemX.Category == self.currentCategory)
+			local searchMatch = self.searchText == "" or string.find(string.lower(itemX.Name), self.searchText, 1, true)
+			local shouldShow = categoryMatch and searchMatch
+
+			if shouldShow then
+				local otherItem = self.itemsStorage[k.id]
+
+				if itemX.CanStack and otherItem then
+					otherItem.Count = (otherItem.Count or 1) + 1
+				else
+					local item = self.invStorageScroll:Add("deepInventoryItem")
+					item:Dock(TOP)
+					item:DockMargin(0, 0, 0, 5)
+					item.Basic = true
+					item.Type = 3
+					item:SetItem(k, w)
+					item.InvID = k.realKey
+					item.InvPanel = self
+					self.itemsStorage[k.id] = item
+				end
+			end
+
+			storageWeight = storageWeight + (itemX.Weight or 0)
+		end
+	else
+		self.empty = self.invStorageScroll:Add("DLabel", self)
+		self.empty:SetContentAlignment(5)
+		self.empty:Dock(TOP)
+		self.empty:SetText("Empty")
+		self.empty:SetFont("Impulse-Elements19-Shadow")
+		self.empty:SetTextColor(grey)
+	end
+
+	self.invWeight = invWeight
+	self.storageWeight = storageWeight
+
+	timer.Simple(0, function()
+		if IsValid(self) and IsValid(self.invScroll) and IsValid(self.invStorageScroll) then
+			self.invScroll:GetVBar():SetScroll(preservedInvScroll)
+			self.invStorageScroll:GetVBar():SetScroll(preservedStorageScroll)
+		end
+	end)
 end
 
 function PANEL:SwitchCategory(category)
-    self.currentCategory = category
-    self:PopulateInventories()
+	self.currentCategory = category
+	self:PopulateInventories()
 end
 
 vgui.Register("deepGroupInventory", PANEL, "DFrame")
