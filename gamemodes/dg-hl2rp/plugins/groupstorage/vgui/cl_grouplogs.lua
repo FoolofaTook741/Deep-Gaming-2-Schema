@@ -32,15 +32,89 @@ if CLIENT then
 
             local logsTabs = vgui.Create("DPropertySheet", logsPanel)
             logsTabs:Dock(FILL)
-			--[[
-            local atmPanel = vgui.Create("DPanel", logsTabs)
+
+			local atmPanel = vgui.Create("DPanel", logsTabs)
             atmPanel:Dock(FILL)
+            atmPanel:DockPadding(5, 5, 5, 5)
             atmPanel.Paint = function(self, w, h)
-                draw.RoundedBox(4, 0, 0, w, h, Color(60, 60, 60, 240))
-                draw.SimpleText("ATM Logs", "Trebuchet24", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.RoundedBox(8, 0, 0, w, h, Color(40, 40, 40, 220))
             end
-            logsTabs:AddSheet("ATM", atmPanel, "icon16/money.png")
-			--]]
+
+            local atmFilterPanel = vgui.Create("DPanel", atmPanel)
+            atmFilterPanel:Dock(TOP)
+            atmFilterPanel:SetTall(40)
+            atmFilterPanel.Paint = function(self, w, h)
+                draw.RoundedBox(0, 0, 0, w, h, Color(60, 60, 60, 240))
+            end
+
+            local atmFilterCombo = vgui.Create("DComboBox", atmFilterPanel)
+            atmFilterCombo:Dock(LEFT)
+            atmFilterCombo:DockMargin(10, 10, 10, 10)
+            atmFilterCombo:AddChoice("All")
+            atmFilterCombo:AddChoice("Deposit")
+            atmFilterCombo:AddChoice("Withdrawal")
+            atmFilterCombo:SetValue("All")
+
+            local atmMemberCombo = vgui.Create("DComboBox", atmFilterPanel)
+            atmMemberCombo:Dock(LEFT)
+            atmMemberCombo:DockMargin(10, 10, 10, 10)
+            atmMemberCombo:AddChoice("All Members")
+            for steamID, info in pairs(members) do
+                atmMemberCombo:AddChoice(info.Name .. " (" .. steamID .. ")")
+            end
+            atmMemberCombo:SetValue("All Members")
+            atmMemberCombo:SetWide(200)
+
+            local atmList = vgui.Create("DListView", atmPanel)
+            atmList:Dock(FILL)
+            atmList:AddColumn("Time"):SetMinWidth(40)
+            atmList:AddColumn("Amount"):SetMinWidth(20)
+            atmList:AddColumn("Player"):SetMinWidth(40)
+            atmList:AddColumn("Description"):SetMinWidth(40)
+
+            local function refreshATMLogs()
+                atmList:Clear()
+                local selType   = atmFilterCombo:GetValue():lower()
+                local selMember = atmMemberCombo:GetValue()
+                local selID     = selMember:match("%((.-)%)") or ""
+
+                for _, entry in ipairs(storedLogs) do
+                    if not entry.description or not entry.description:find("Bank") then continue end
+                    if (selType == "all" or entry.type:lower() == selType)
+                    and (selMember == "All Members" or (entry.player or ""):find(selID)) then
+                        local timeStr = os.date("%Y-%m-%d %H:%M:%S", entry.time)
+                        local line = atmList:AddLine(
+                            timeStr,
+                            tostring(entry.amount),
+                            entry.player or "<unknown>",
+                            entry.description
+                        )
+                        for colIndex, cell in ipairs(line.Columns) do
+                            cell:SetMouseInputEnabled(true)
+                            cell:SetCursor("hand")
+                            cell:SetTooltip("Right-click to copy: " .. line:GetColumnText(colIndex))
+                            function cell:OnMousePressed(mouseCode)
+                                if mouseCode == MOUSE_RIGHT then
+                                    local txt = line:GetColumnText(colIndex)
+                                    SetClipboardText(txt)
+                                    chat.AddText(Color(0, 255, 0), "Copied: ", txt)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+
+            atmFilterCombo.OnSelect = refreshATMLogs
+            atmMemberCombo.OnSelect = refreshATMLogs
+
+            local oldRefreshLogs = refreshLogsFunction
+            refreshLogsFunction = function()
+                if oldRefreshLogs then oldRefreshLogs() end
+                refreshATMLogs()
+            end
+
+            logsTabs:AddSheet("Bank", atmPanel, "icon16/money.png")
             local storagePanel = vgui.Create("DPanel", logsTabs)
             storagePanel:Dock(FILL)
             storagePanel:DockPadding(5, 5, 5, 5)
