@@ -122,7 +122,7 @@ function ENT:InitWeapons()
         bullet.Spread = Vector(spread, spread, spread)
         bullet.TracerName = "none"
         bullet.Force = 1000
-        bullet.HullSize = 0
+        bullet.HullSize = 15
         bullet.Damage = tonumber(GetConVar("lvs_car_hl2_combineapc_damage"):GetInt())
         bullet.Velocity = 30000
         bullet.Attacker = ent:GetDriver()
