@@ -207,7 +207,7 @@ function meta:CanHoldItem(itemclass, amount)
 	local weight = (item.Weight or 0) * (amount or 1)
 	local addedweight = 0
 	if self.HasBackpack then
-		addedweight = 10
+		addedweight = 12
 	end 
 
 	return self.InventoryWeight + weight <= impulse.Config.InventoryMaxWeight + addedweight
