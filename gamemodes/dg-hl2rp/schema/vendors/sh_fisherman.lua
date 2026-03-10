@@ -12,7 +12,6 @@ VENDOR.Talk = true
 
 VENDOR.DownloadTrades = true -- use for vendors that change what they buy/sell at runtime
 
-VENDOR.MaxBuys = 3000
 
 VENDOR.RandomTrades = {
 	Sell = {
@@ -126,8 +125,9 @@ local function fishermanAppear(ent)
 	end
 
 	ent.BeenTriggered = true
-	ent.Buys = 0
-    
+	ent.Vendor.BuyBudget = 8000
+	--print("[Fisherman] Spawned with budget: " .. ent.Vendor.BuyBudget)
+
 	fishermanRandomInv(ent)
 
 	ent:SetPos(ent.MainPos)
@@ -144,30 +144,48 @@ local function fishermanAppear(ent)
 end
 
 function VENDOR:Initialize()
-	self.MainPos = impulse.Config.FishermanPos
-	self:SetAngles(impulse.Config.FishermanAng)
+    self.MainPos = impulse.Config.FishermanPos
+    self:SetAngles(impulse.Config.FishermanAng)
+    self:SetNoDraw(true)
+    self.BeenTriggered = false
+    self.Vendor.BuyBudget = 8000
 
-	self:SetNoDraw(true)
-	self.BeenTriggered = false
+    hook.Add("PlayerVendorSell", "FishermanBudget_"..tostring(self), function(ply, vendor, itemclass, cost)
+        if vendor ~= self then return end
+        if isnumber(cost) then
+            if self.Vendor.BuyBudget <= 0 then
+                ply:Notify("This vendor can not afford to purchase this item.")
+                return
+            end
+           -- print("[Fisherman] Budget before sale: " .. self.Vendor.BuyBudget)
+            self.Vendor.BuyBudget = self.Vendor.BuyBudget - cost
+            --print("[Fisherman] Budget after sale: " .. self.Vendor.BuyBudget)
+            if self.Vendor.BuyBudget <= 0 then
+                self.Vendor.Buy = {}
+                ply:Notify("This vendor can not afford to purchase this item.")
+            end
+        end
+    end)
 
-	self.TimerID = "TravelerSpawn_" .. self:EntIndex()
+    self.TimerID = "TravelerSpawn_" .. self:EntIndex()
 
-	timer.Create(self.TimerID, 2160, 0, function()
-		if not IsValid(self) then
-			timer.Remove(self.TimerID)
-			return
-		end
+    timer.Create(self.TimerID, 2160, 0, function()
+        if not IsValid(self) then
+            timer.Remove(self.TimerID)
+            return
+        end
 
-		if not self.BeenTriggered then
-			fishermanAppear(self)
-		end
-	end)
+        if not self.BeenTriggered then
+            fishermanAppear(self)
+        end
+    end)
 end
 
 function VENDOR:OnRemove()
-	if self.TimerID and timer.Exists(self.TimerID) then
-		timer.Remove(self.TimerID)
-	end
+    hook.Remove("PlayerVendorSell", "FishermanBudget_"..tostring(self))
+    if self.TimerID and timer.Exists(self.TimerID) then
+        timer.Remove(self.TimerID)
+    end
 end
 
 
