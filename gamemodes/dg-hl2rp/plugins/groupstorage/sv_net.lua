@@ -7,6 +7,9 @@ util.AddNetworkString("deepGroupLogsRequest")
 util.AddNetworkString("deepGroupLogsSend")
 util.AddNetworkString("impulseGroupDoStorageUpgrade")
 util.AddNetworkString("impulseGroupStorageTierSync")
+util.AddNetworkString("impulseGroupATMDeposit")
+util.AddNetworkString("impulseGroupATMWithdraw")
+util.AddNetworkString("impulseGroupBankSync")
 
 net.Receive("deepGroupInvContainerDoMove", function(len, ply)
     if (ply.nextInvMove or 0) > CurTime() then return end
@@ -235,6 +238,111 @@ net.Receive("impulseGroupDoStorageUpgrade", function(len, ply)
 
     ply:Notify("Storage upgraded to Tier " .. tier .. "! (+" .. (tier * STORAGE_TIER_BONUS) .. "kg bonus storage)")
 end)
+
+local function SyncGroupBankToOnline(groupName)
+    local group = impulse.Group.Groups[groupName]
+    if not group then return end
+
+    local rf = RecipientFilter()
+    for _, p in pairs(player.GetAll()) do
+        if p:GetSyncVar(SYNC_GROUP_NAME, nil) == groupName then
+            rf:AddPlayer(p)
+        end
+    end
+
+    net.Start("impulseGroupBankSync")
+    net.WriteUInt(group.GroupBank or 0, 32)
+    net.Send(rf)
+end
+
+net.Receive("impulseGroupATMDeposit", function(len, ply)
+    if (ply.nextGroupBank or 0) > CurTime() then return end
+    ply.nextGroupBank = CurTime() + 1
+
+    if not ply:Alive() then return end
+    if ply:IsCP() then return end
+    if ply:GetSyncVar(SYNC_ARRESTED, false) then return end
+
+    -- proximity check to group storage entity
+    if not ply.currentStorage or not IsValid(ply.currentStorage) then
+        return ply:Notify("You must be near a group storage to access the group bank.")
+    end
+    if ply.currentStorage:GetPos():DistToSqr(ply:GetPos()) > 100^2 then
+        return ply:Notify("You are too far from the group storage.")
+    end
+
+    local groupName = ply:GetSyncVar(SYNC_GROUP_NAME, nil)
+    if not groupName then return ply:Notify("You are not in a group.") end
+
+    if not ply:GroupHasPermission(11) then
+        return ply:Notify("You do not have permission to deposit into the group bank.")
+    end
+
+    local group = impulse.Group.Groups[groupName]
+    if not group then return end
+
+    local amount = net.ReadUInt(32)
+    if not isnumber(amount) or amount < 1 or amount > 1000000000 then return end
+    amount = math.floor(amount)
+
+    if not ply:CanAfford(amount) then
+        return ply:Notify("You cannot afford to deposit that amount.")
+    end
+
+    ply:TakeMoney(amount)
+    group.GroupBank = (group.GroupBank or 0) + amount
+    impulse.Group.DBUpdateGroupBank(group.ID, group.GroupBank)
+    SyncGroupBankToOnline(groupName)
+
+    LogDeposit(groupName, ply, amount, "Bank Deposit: " .. impulse.Config.CurrencyPrefix .. amount)
+    ply:Notify("You deposited " .. impulse.Config.CurrencyPrefix .. amount .. " into the group bank.")
+end)
+
+net.Receive("impulseGroupATMWithdraw", function(len, ply)
+    if (ply.nextGroupBank or 0) > CurTime() then return end
+    ply.nextGroupBank = CurTime() + 1
+
+    if not ply:Alive() then return end
+    if ply:IsCP() then return end
+    if ply:GetSyncVar(SYNC_ARRESTED, false) then return end
+
+    -- proximity check to group storage entity
+    if not ply.currentStorage or not IsValid(ply.currentStorage) then
+        return ply:Notify("You must be near a group storage to access the group bank.")
+    end
+    if ply.currentStorage:GetPos():DistToSqr(ply:GetPos()) > 100^2 then
+        return ply:Notify("You are too far from the group storage.")
+    end
+
+    local groupName = ply:GetSyncVar(SYNC_GROUP_NAME, nil)
+    if not groupName then return ply:Notify("You are not in a group.") end
+
+    if not ply:GroupHasPermission(12) then
+        return ply:Notify("You do not have permission to withdraw from the group bank.")
+    end
+
+    local group = impulse.Group.Groups[groupName]
+    if not group then return end
+
+    local amount = net.ReadUInt(32)
+    if not isnumber(amount) or amount < 1 or amount > 1000000000 then return end
+    amount = math.floor(amount)
+
+    local balance = group.GroupBank or 0
+    if amount > balance then
+        return ply:Notify("The group bank does not have enough funds.")
+    end
+
+    group.GroupBank = balance - amount
+    impulse.Group.DBUpdateGroupBank(group.ID, group.GroupBank)
+
+    ply:GiveMoney(amount)
+    SyncGroupBankToOnline(groupName)
+
+    LogWithdrawal(groupName, ply, amount, "Bank Withdrawal: " .. impulse.Config.CurrencyPrefix .. amount)
+    ply:Notify("You withdrew " .. impulse.Config.CurrencyPrefix .. amount .. " from the group bank.")
+end)
+
 function SyncGroupStorageForGroup(groupid, ply, delete)
     local groupItems = {}
 	net.Start("deepGroupStorageSync")

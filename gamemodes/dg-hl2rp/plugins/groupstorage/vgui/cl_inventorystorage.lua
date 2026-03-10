@@ -1,6 +1,25 @@
 local PANEL = {}
 
 local grey = Color(209, 209, 209)
+local darkHeader = Color(30, 30, 30, 200)
+local filterBar = Color(40, 40, 40, 210)
+local dropdownBg = Color(50, 50, 50, 210)
+local searchCursor = Color(100, 100, 100)
+local bankGreen = Color(100, 200, 100)
+
+local function formatMoney(amount)
+    local formatted = tostring(math.floor(amount))
+    local result = ""
+    local count = 0
+    for i = #formatted, 1, -1 do
+        if count > 0 and count % 3 == 0 then
+            result = "," .. result
+        end
+        result = formatted:sub(i, i) .. result
+        count = count + 1
+    end
+    return result
+end
 
 function PANEL:Init()
 	self:SetSize(1094, 734)
@@ -9,6 +28,17 @@ function PANEL:Init()
 	self:MakePopup()
 
 	self:SetupItems()
+
+	net.Receive("impulseGroupBankSync", function()
+		local bal = net.ReadUInt(32)
+		if impulse.Group.Groups[1] then
+			impulse.Group.Groups[1].GroupBank = bal
+		end
+		if IsValid(self) and self.bankBalLabel then
+			self.bankBalLabel:SetText("Bank: " .. impulse.Config.CurrencyPrefix .. " " .. formatMoney(bal))
+			self.bankBalLabel:SizeToContents()
+		end
+	end)
 end
 
 function PANEL:PaintOver(w, h)
@@ -24,7 +54,7 @@ function PANEL:PaintOver(w, h)
 end
 
 function PANEL:SetupItems(invscroll, storescroll)
-	local w,h = self:GetSize()
+	local w, h = self:GetSize()
 
 	local preservedCategory = self.currentCategory or "All"
 	local preservedSearch = self.searchText or ""
@@ -34,48 +64,29 @@ function PANEL:SetupItems(invscroll, storescroll)
 	if IsValid(self.invScroll) then
 		preservedInvScroll = self.invScroll:GetVBar():GetScroll()
 	end
-
 	if IsValid(self.invStorageScroll) then
 		preservedStorageScroll = self.invStorageScroll:GetVBar():GetScroll()
 	end
 
-	if self.tabContainer and IsValid(self.tabContainer) then
-		self.tabContainer:Remove()
-	end
+	if self.tabContainer and IsValid(self.tabContainer) then self.tabContainer:Remove() end
+	if self.bankPanel and IsValid(self.bankPanel) then self.bankPanel:Remove() end
+	if self.invScroll and IsValid(self.invScroll) then self.invScroll:Remove() end
+	if self.invStorageScroll and IsValid(self.invStorageScroll) then self.invStorageScroll:Remove() end
 
-	if self.invScroll and IsValid(self.invScroll) then
-		self.invScroll:Remove()
-	end
-
-	if self.invStorageScroll and IsValid(self.invStorageScroll) then
-		self.invStorageScroll:Remove()
-	end
-
-	self.tabContainer = vgui.Create("DPanel", self)
-	self.tabContainer:SetTall(35)
-	self.tabContainer:SetPos(0, 55)
-	self.tabContainer:SetSize(w, 35)
-
-	function self.tabContainer:Paint(w, h)
-		draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 210))
-	end
+	local bankBalance = (impulse.Group.Groups[1] and impulse.Group.Groups[1].GroupBank) or 0
+	local prefix = impulse.Config.CurrencyPrefix
 
 	local categories = {}
 	local localInv = table.Copy(impulse.Inventory.Data[0][1]) or {}
 	local localInvStorage = table.Copy(impulse.Inventory.Group.Data[0][3]) or {}
 
-	for v,k in pairs(localInv) do
+	for v, k in pairs(localInv) do
 		local itemData = impulse.Inventory.Items[k.id]
-		if itemData and itemData.Category then
-			categories[itemData.Category] = true
-		end
+		if itemData and itemData.Category then categories[itemData.Category] = true end
 	end
-
-	for v,k in pairs(localInvStorage) do
+	for v, k in pairs(localInvStorage) do
 		local itemData = impulse.Inventory.Items[k.id]
-		if itemData and itemData.Category then
-			categories[itemData.Category] = true
-		end
+		if itemData and itemData.Category then categories[itemData.Category] = true end
 	end
 
 	local sortedCategories = {}
@@ -87,13 +98,66 @@ function PANEL:SetupItems(invscroll, storescroll)
 	table.sort(sortedCategories)
 
 	local showFilter = numCategories > 1
-
-	if showFilter then
-		table.insert(sortedCategories, 1, "All")
-	end
+	if showFilter then table.insert(sortedCategories, 1, "All") end
 
 	self.currentCategory = preservedCategory
 	self.searchText = preservedSearch
+
+	self.tabContainer = vgui.Create("DPanel", self)
+	self.tabContainer:SetTall(35)
+	self.tabContainer:SetPos(0, 55)
+	self.tabContainer:SetSize(w, 35)
+	function self.tabContainer:Paint(pw, ph)
+		draw.RoundedBox(0, 0, 0, pw, ph, filterBar)
+	end
+
+	-- Bank balance label
+	self.bankBalLabel = vgui.Create("DLabel", self.tabContainer)
+	self.bankBalLabel:SetText("Bank: " .. prefix .. " " .. formatMoney(bankBalance))
+	self.bankBalLabel:SetFont("Impulse-Elements18-Shadow")
+	self.bankBalLabel:SetTextColor(bankGreen)
+	self.bankBalLabel:SetPos(10, 8)
+	self.bankBalLabel:SizeToContents()
+
+	-- Deposit
+local depositEntry = vgui.Create("DTextEntry", self.tabContainer)
+depositEntry:SetPos(150, 6)
+depositEntry:SetSize(100, 22)
+depositEntry:SetNumeric(true)
+depositEntry:SetPlaceholderText("Deposit...")
+
+local depositBtn = vgui.Create("DButton", self.tabContainer)
+depositBtn:SetText("Deposit")
+depositBtn:SetPos(255, 6)
+depositBtn:SetSize(70, 22)
+function depositBtn:DoClick()
+    local num = tonumber(depositEntry:GetValue())
+    if not num or num < 1 then return end
+    net.Start("impulseGroupATMDeposit")
+    net.WriteUInt(math.floor(num), 32)
+    net.SendToServer()
+    depositEntry:SetValue("")
+end
+
+-- Withdraw
+local withdrawEntry = vgui.Create("DTextEntry", self.tabContainer)
+withdrawEntry:SetPos(335, 6)
+withdrawEntry:SetSize(100, 22)
+withdrawEntry:SetNumeric(true)
+withdrawEntry:SetPlaceholderText("Withdraw...")
+
+local withdrawBtn = vgui.Create("DButton", self.tabContainer)
+withdrawBtn:SetText("Withdraw")
+withdrawBtn:SetPos(440, 6)
+withdrawBtn:SetSize(70, 22)
+function withdrawBtn:DoClick()
+    local num = tonumber(withdrawEntry:GetValue())
+    if not num or num < 1 then return end
+    net.Start("impulseGroupATMWithdraw")
+    net.WriteUInt(math.floor(num), 32)
+    net.SendToServer()
+    withdrawEntry:SetValue("")
+end
 
 	if showFilter then
 		local searchLabel = vgui.Create("DLabel", self.tabContainer)
@@ -109,16 +173,13 @@ function PANEL:SetupItems(invscroll, storescroll)
 		self.categoryDropdown:SetValue(preservedCategory)
 		self.categoryDropdown:SetFont("Impulse-Elements18-Shadow")
 		self.categoryDropdown.panel = self
-
-		function self.categoryDropdown:Paint(w, h)
-			draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 210))
+		function self.categoryDropdown:Paint(pw, ph)
+			draw.RoundedBox(4, 0, 0, pw, ph, dropdownBg)
 			return false
 		end
-
 		function self.categoryDropdown:OnSelect(index, value, data)
 			self.panel:SwitchCategory(value)
 		end
-
 		for i, category in ipairs(sortedCategories) do
 			self.categoryDropdown:AddChoice(category)
 		end
@@ -138,12 +199,10 @@ function PANEL:SetupItems(invscroll, storescroll)
 		self.searchBar:SetValue(preservedSearch)
 		self.searchBar.panel = self
 		self.searchBar.lastValue = preservedSearch
-
-		function self.searchBar:Paint(w, h)
-			draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 210))
-			self:DrawTextEntryText(grey, Color(100, 100, 100), grey)
+		function self.searchBar:Paint(pw, ph)
+			draw.RoundedBox(4, 0, 0, pw, ph, dropdownBg)
+			self:DrawTextEntryText(grey, searchCursor, grey)
 		end
-
 		function self.searchBar:Think()
 			local currentValue = self:GetValue()
 			if currentValue ~= self.lastValue then
@@ -156,21 +215,22 @@ function PANEL:SetupItems(invscroll, storescroll)
 		self.tabContainer:Hide()
 	end
 
+	local topOffset = showFilter and 90 or 55
 	local panelWidth = (w - 8) / 2
 
 	self.invScroll = vgui.Create("DScrollPanel", self)
-	self.invScroll:SetPos(0, showFilter and 90 or 55)
-	self.invScroll:SetSize(panelWidth, h - (showFilter and 90 or 55))
+	self.invScroll:SetPos(0, topOffset)
+	self.invScroll:SetSize(panelWidth, h - topOffset)
 
 	self.invStorageScroll = vgui.Create("DScrollPanel", self)
-	self.invStorageScroll:SetPos(panelWidth + 8, showFilter and 90 or 55)
-	self.invStorageScroll:SetSize(panelWidth, h - (showFilter and 90 or 55))
+	self.invStorageScroll:SetPos(panelWidth + 8, topOffset)
+	self.invStorageScroll:SetSize(panelWidth, h - topOffset)
 
 	self.items = {}
 	self.itemPanels = {}
 	self.itemsStorage = {}
 	self.itemPanelsStorage = {}
-	
+
 	self:PopulateInventories()
 
 	if invscroll then
@@ -190,20 +250,14 @@ function PANEL:PopulateInventories()
 	local preservedInvScroll = 0
 	local preservedStorageScroll = 0
 
-	if IsValid(self.invScroll) then
-		preservedInvScroll = self.invScroll:GetVBar():GetScroll()
-	end
-
-	if IsValid(self.invStorageScroll) then
-		preservedStorageScroll = self.invStorageScroll:GetVBar():GetScroll()
-	end
+	if IsValid(self.invScroll) then preservedInvScroll = self.invScroll:GetVBar():GetScroll() end
+	if IsValid(self.invStorageScroll) then preservedStorageScroll = self.invStorageScroll:GetVBar():GetScroll() end
 
 	self.invScroll:Clear()
 	self.invStorageScroll:Clear()
-	
 	self.items = {}
 	self.itemsStorage = {}
-	
+
 	local w = self:GetWide()
 	local invWeight = 0
 	local storageWeight = 0
@@ -213,9 +267,8 @@ function PANEL:PopulateInventories()
 	local sortMethod = impulse.GetSetting("inv_sortweight", "Inventory only")
 	local invertSort = true
 
-	for v,k in pairs(localInv) do
+	for v, k in pairs(localInv) do
 		k.realKey = v
-
 		if sortMethod == "Always" or sortMethod == "Containers only" then
 			reccurTemp[k.id] = (reccurTemp[k.id] or 0) + (impulse.Inventory.Items[k.id].Weight or 0)
 			k.sortWeight = reccurTemp[k.id]
@@ -225,11 +278,9 @@ function PANEL:PopulateInventories()
 		end
 	end
 
-	local reccurTemp = {}
-
-	for v,k in pairs(localInvStorage) do
+	reccurTemp = {}
+	for v, k in pairs(localInvStorage) do
 		k.realKey = v
-
 		if sortMethod == "Always" or sortMethod == "Containers only" then
 			reccurTemp[k.id] = (reccurTemp[k.id] or 0) + (impulse.Inventory.Items[k.id].Weight or 0)
 			k.sortWeight = reccurTemp[k.id]
@@ -240,15 +291,12 @@ function PANEL:PopulateInventories()
 	end
 
 	if localInv and table.Count(localInv) > 0 then
-		for v,k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
+		for v, k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
 			local itemX = impulse.Inventory.Items[k.id]
 			local categoryMatch = self.currentCategory == "All" or (itemX.Category == self.currentCategory)
 			local searchMatch = self.searchText == "" or string.find(string.lower(itemX.Name), self.searchText, 1, true)
-			local shouldShow = categoryMatch and searchMatch
-
-			if shouldShow then
+			if categoryMatch and searchMatch then
 				local otherItem = self.items[k.id]
-
 				if itemX.CanStack and otherItem then
 					otherItem.Count = (otherItem.Count or 1) + 1
 				else
@@ -263,7 +311,6 @@ function PANEL:PopulateInventories()
 					self.items[k.id] = item
 				end
 			end
-
 			invWeight = invWeight + (itemX.Weight or 0)
 		end
 	else
@@ -276,15 +323,12 @@ function PANEL:PopulateInventories()
 	end
 
 	if localInvStorage and table.Count(localInvStorage) > 0 then
-		for v,k in SortedPairsByMemberValue(localInvStorage, "sortWeight", invertSort) do
+		for v, k in SortedPairsByMemberValue(localInvStorage, "sortWeight", invertSort) do
 			local itemX = impulse.Inventory.Items[k.id]
 			local categoryMatch = self.currentCategory == "All" or (itemX.Category == self.currentCategory)
 			local searchMatch = self.searchText == "" or string.find(string.lower(itemX.Name), self.searchText, 1, true)
-			local shouldShow = categoryMatch and searchMatch
-
-			if shouldShow then
+			if categoryMatch and searchMatch then
 				local otherItem = self.itemsStorage[k.id]
-
 				if itemX.CanStack and otherItem then
 					otherItem.Count = (otherItem.Count or 1) + 1
 				else
@@ -299,7 +343,6 @@ function PANEL:PopulateInventories()
 					self.itemsStorage[k.id] = item
 				end
 			end
-
 			storageWeight = storageWeight + (itemX.Weight or 0)
 		end
 	else

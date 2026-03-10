@@ -208,6 +208,7 @@ function impulse.Group.NetworkMetaData(to, name)
 	end
 
 	net.WriteUInt(grp.StorageTier or 0, 4)
+	net.WriteUInt(grp.GroupBank or 0, 32)
 	net.Send(to)
 end
 
@@ -228,6 +229,7 @@ function impulse.Group.NetworkMetaDataToOnline(name)
 	net.WriteString(grp.Data.Info or "")
 	net.WriteColor(grp.Data.Col or Color(0, 0, 0))
 	net.WriteUInt(grp.StorageTier or 0, 4)
+	net.WriteUInt(grp.GroupBank or 0, 32)
 	net.Send(rf)
 end
 
@@ -321,12 +323,12 @@ function impulse.Group.NetworkRankToOnline(name, rankName)
 	local rank = impulse.Group.Groups[name].Ranks[rankName]
 	local data = pon.encode(rank)
 	local rf = RecipientFilter()
-
+	print("[NetworkRankToOnline] Sending rank: " .. rankName .. " to " .. rf:GetCount() .. " players")
 	for v,k in pairs(player.GetAll()) do
 		local x = k:GetSyncVar(SYNC_GROUP_NAME, nil)
 		local r = k:GetSyncVar(SYNC_GROUP_RANK, nil)
 
-		if x and x == name and r == rank then
+		if x and x == name and r == rankName then
 			if k:GroupHasPermission(5) or k:GroupHasPermission(6) then
 				continue
 			end
@@ -447,6 +449,13 @@ function meta:GroupLoad(groupid, rank)
 	end)
 end
 
+function impulse.Group.DBUpdateGroupBank(groupid, amount)
+    local query = mysql:Update("impulse_rpgroups")
+    query:Update("groupbank", amount)
+    query:Where("id", groupid)
+    query:Execute()
+end
+
 function impulse.Group.IsNameUnique(name, callback)
 	local query = mysql:Select("impulse_rpgroups")
 	query:Select("name")
@@ -472,6 +481,7 @@ function impulse.Group.Load(id, onLoaded)
 	query:Select("ranks")
 	query:Select("data")
 	query:Select("storageupgrade")
+	query:Select("groupbank")
 	query:Where("id", id)
 	query:Callback(function(result)
 		if type(result) == "table" and #result > 0 then
@@ -489,7 +499,7 @@ function impulse.Group.Load(id, onLoaded)
 				MaxStorage = data.maxstorage,
 				StorageTier = tonumber(data.storageupgrade) or 0,
 				Ranks = pon.decode(data.ranks),
-
+				GroupBank = tonumber(data.groupbank) or 0,
 				Data = (data.data and pon.decode(data.data) or {})
 			}
 

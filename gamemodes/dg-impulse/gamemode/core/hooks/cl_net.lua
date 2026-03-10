@@ -565,26 +565,33 @@ net.Receive("impulseGroupRanks", function()
 	if IsValid(impulse.groupEditor) then
 		impulse.groupEditor:Refresh()
 	end
+	if impulse_storage and IsValid(impulse_storage) then
+        impulse_storage:SetupItems()
+    end
 end)
 
 net.Receive("impulseGroupRank", function()
-	local name = net.ReadString()
-	local len = net.ReadUInt(32)
-	local rank = pon.decode(net.ReadData(len))
+    local name = net.ReadString()
+    local len = net.ReadUInt(32)
+    local rank = pon.decode(net.ReadData(len))
 
-	if not impulse.Group.Groups[1] then
-		impulse.Group.Groups[1] = {}
-	end
+    if not impulse.Group.Groups[1] then
+        impulse.Group.Groups[1] = {}
+    end
 
-	if not impulse.Group.Groups[1].Ranks then
-		impulse.Group.Groups[1].Ranks = {}
-	end
+    if not impulse.Group.Groups[1].Ranks then
+        impulse.Group.Groups[1].Ranks = {}
+    end
 
-	impulse.Group.Groups[1].Ranks[name] = rank
+    impulse.Group.Groups[1].Ranks[name] = rank
 
-	if IsValid(impulse.groupEditor) then
-		impulse.groupEditor:Refresh()
-	end
+    if IsValid(impulse.groupEditor) then
+        impulse.groupEditor:Refresh()
+    end
+
+    if impulse_storage and IsValid(impulse_storage) then
+        impulse_storage:SetupItems()
+    end
 end)
 
 net.Receive("impulseGroupMemberRemove", function()
@@ -615,24 +622,26 @@ net.Receive("impulseGroupInvite", function()
 end)
 
 net.Receive("impulseGroupMetadata", function()
-	local info = net.ReadString()
-	local col = net.ReadColor()
-	local storageTier = net.ReadUInt(4)
+    local info = net.ReadString()
+    local col = net.ReadColor()
+    local storageTier = net.ReadUInt(4)
+    local groupBank = net.ReadUInt(32)
 
-	impulse.Group.Groups[1] = impulse.Group.Groups[1] or {}
+    impulse.Group.Groups[1] = impulse.Group.Groups[1] or {}
 
-	if col.r == 0 and col.g == 0 and col.b == 0 then
-		impulse.Group.Groups[1].Color = nil
-	else
-		impulse.Group.Groups[1].Color = col
-	end
+    if col.r == 0 and col.g == 0 and col.b == 0 then
+        impulse.Group.Groups[1].Color = nil
+    else
+        impulse.Group.Groups[1].Color = col
+    end
 
-	impulse.Group.Groups[1].Info = info
-	impulse.Group.Groups[1].StorageTier = storageTier
+    impulse.Group.Groups[1].Info = info
+    impulse.Group.Groups[1].StorageTier = storageTier
+    impulse.Group.Groups[1].GroupBank = groupBank
 
-	if IsValid(impulse.groupEditor) then
-		impulse.groupEditor:Refresh()
-	end
+    if IsValid(impulse.groupEditor) then
+        impulse.groupEditor:Refresh()
+    end
 end)
 
 net.Receive("impulseGetButtons", function()

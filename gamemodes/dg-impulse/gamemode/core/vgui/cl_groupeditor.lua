@@ -1,5 +1,21 @@
 local PANEL = {}
 
+local bankGreen = Color(100, 200, 100)
+
+local function formatMoney(amount)
+    local formatted = tostring(math.floor(amount))
+    local result = ""
+    local count = 0
+    for i = #formatted, 1, -1 do
+        if count > 0 and count % 3 == 0 then
+            result = "," .. result
+        end
+        result = formatted:sub(i, i) .. result
+        count = count + 1
+    end
+    return result
+end
+
 function PANEL:Init()
 	self:SetSize(640, 500)
 	self:Center()
@@ -147,6 +163,14 @@ function PANEL:ShowGroup()
 	lbl:SetFont("Impulse-Elements20-Shadow")
 	lbl:SetPos(5, 47)
 	lbl:SizeToContents()
+	
+	local lblBank = vgui.Create("DLabel", sheet)
+	local bankBal = (impulse.Group.Groups[1] and impulse.Group.Groups[1].GroupBank) or 0
+	lblBank:SetText("Group bank: " .. impulse.Config.CurrencyPrefix .. " " .. formatMoney(bankBal))
+	lblBank:SetFont("Impulse-Elements20-Shadow")
+	lblBank:SetTextColor(bankGreen)
+	lblBank:SizeToContents()
+	lblBank:SetPos(500 - lblBank:GetWide() - 5, 47)
 
 	local leave = vgui.Create("DButton", sheet)
 	leave:SetText("Leave group")
