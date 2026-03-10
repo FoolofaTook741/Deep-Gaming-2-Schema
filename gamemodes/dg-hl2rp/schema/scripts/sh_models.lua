@@ -117,7 +117,7 @@ hook.Add("LoadAnimationClasses", "impulseHL2RPAnimClasses", function()
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl", "overwatch")
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl", "overwatch")
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl", "overwatch")
-	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl", "overwatch")
+	--impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl", "overwatch")
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl", "overwatch")
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_etl/dg_etl.mdl", "overwatch")
 
