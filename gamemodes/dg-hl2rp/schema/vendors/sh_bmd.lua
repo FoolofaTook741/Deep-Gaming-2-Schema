@@ -148,7 +148,7 @@ VENDOR.Sell = {
 
 VENDOR.Buy = {
     ["util_moonshine"] = {
-        Cost = 400
+        Cost = 330
     },
 
     ["book_arabic"] = {
