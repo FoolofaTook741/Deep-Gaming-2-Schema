@@ -62,16 +62,9 @@ VENDOR.Sell = {
         TempCooldown = 1200
     },
     ["util_medicalsupplies"] = {
-        Cost = 60,
+        Cost = 65,
         BuyMax = 5,
-        TempCooldown = 1200,
-        CanBuy = function(ply)
-			if ply:Team() == TEAM_CWU and ply:GetTeamClass() == CLASS_MEDIC then
-				return true
-			end
-
-			return false
-		end
+        TempCooldown = 1200
     },
     ["wep_pm63"] = {
         Desc = "Charisma Level 6+",
