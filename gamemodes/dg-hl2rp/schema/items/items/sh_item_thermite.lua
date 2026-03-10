@@ -8,7 +8,7 @@ ITEM.Model = Model("models/bo/weapons/signal flare.mdl")
 ITEM.FOV = 13.372492836676
 ITEM.CamPos = Vector(-68.767906188965, -67.851005554199, 9)
 ITEM.NoCenter = true
-ITEM.Weight = 4
+ITEM.Weight = 2.8
 
 ITEM.Droppable = true
 ITEM.DropOnDeath = true

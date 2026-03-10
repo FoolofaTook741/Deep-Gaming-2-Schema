@@ -22,7 +22,7 @@ ITEM.Illegal = true
 ITEM.CanStack = true
 
 ITEM.UseName = "Use"
-ITEM.UseWorkBarTime = 4
+ITEM.UseWorkBarTime = 3.9
 ITEM.UseWorkBarName = "Planting C4..."
 ITEM.UseWorkBarFreeze = true
 ITEM.UseWorkBarSound = "weapons/c4/c4_disarm.wav"
