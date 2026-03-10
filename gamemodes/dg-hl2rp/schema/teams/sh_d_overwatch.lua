@@ -444,8 +444,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
 					ply:SetModel("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl")
-					ply:SetArmor(140)
-					ply:SetMaxArmor(140)
+					ply:SetArmor(160)
+					ply:SetMaxArmor(160)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 					ply:SetModelScale(1)
@@ -536,8 +536,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
 					ply:SetModel("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl")
-					ply:SetArmor(160)
-					ply:SetMaxArmor(160)
+					ply:SetArmor(180)
+					ply:SetMaxArmor(180)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
@@ -635,8 +635,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
 					ply:SetModel("models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl")
-					ply:SetArmor(180)
-					ply:SetMaxArmor(180)
+					ply:SetArmor(200)
+					ply:SetMaxArmor(200)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
@@ -729,8 +729,8 @@ TEAM_OTA = impulse.Teams.Define({
 					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 				elseif ply:GetTeamClass() == CLASS_FIST then
 					ply:SetModel("models/DG_models/DG_combinepack/DG_etl/dg_etl.mdl")
-					ply:SetArmor(200)
-					ply:SetMaxArmor(200)
+					ply:SetArmor(220)
+					ply:SetMaxArmor(220)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
@@ -823,7 +823,7 @@ TEAM_OTA = impulse.Teams.Define({
 				elseif ply:GetTeamClass() == CLASS_FIST then
 					ply:SetModel("models/DG_models/DG_combinepack/DG_etl/dg_etl.mdl")
 					ply:SetArmor(220)
-					ply:SetMaxArmor(220)
+					ply:SetMaxArmor(240)
 					ply:SetRunSpeed(impulse.Config.JogSpeed)
 					ply:SetModelScale(1)
 					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
