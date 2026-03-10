@@ -1783,6 +1783,10 @@ net.Receive("impulseVendorSell", function(len, ply)
 		return
 	end
 
+	if vendor.Vendor.BuyBudget and buyData.Cost and buyData.Cost > vendor.Vendor.BuyBudget then
+	    return ply:Notify("This vendor can not afford to purchase this item.")
+	end
+
 	if buyData.CanBuy and buyData.CanBuy(ply) == false then
 		return
 	end
