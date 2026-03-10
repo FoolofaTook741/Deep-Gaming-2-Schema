@@ -30,10 +30,10 @@ ITEM.UseWorkBarSound = "weapons/c4/c4_disarm.wav"
 function ITEM:OnUse(ply, ent)
 	local pc = GetPlayerCount()
 	local cc = GetCombineCount()
-	if GetPlayerCount() < 30 and GetOTACount() < 5 and ply:IsSuperAdmin() == false then
+	if GetPlayerCount() < 30 and ply:IsSuperAdmin() == false then
 		ply:Notify("There are not enough players online (30).")
 		return false
-	elseif GetOTACount() >= 5 then
+	elseif GetOTACount() >= 7 then
 		ply:AchievementGive("ach_cache")
 		if timer.Exists(ent:GetCreationID() .. "DeepPWCBox") then
 			ply:Notify("This cache already being blown open...")
