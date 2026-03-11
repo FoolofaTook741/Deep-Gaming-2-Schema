@@ -326,7 +326,7 @@ function impulse.Group.NetworkRankToOnline(name, rankName)
 		local x = k:GetSyncVar(SYNC_GROUP_NAME, nil)
 		local r = k:GetSyncVar(SYNC_GROUP_RANK, nil)
 
-		if x and x == name and r == rankName then
+		if x and x == name and r == rank then
 			if k:GroupHasPermission(5) or k:GroupHasPermission(6) then
 				continue
 			end

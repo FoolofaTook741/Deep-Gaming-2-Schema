@@ -585,10 +585,6 @@ net.Receive("impulseGroupRank", function()
 	if IsValid(impulse.groupEditor) then
 		impulse.groupEditor:Refresh()
 	end
-
-	if impulse_storage and IsValid(impulse_storage) then
-        impulse_storage:SetupItems()
-    end
 end)
 
 net.Receive("impulseGroupMemberRemove", function()
