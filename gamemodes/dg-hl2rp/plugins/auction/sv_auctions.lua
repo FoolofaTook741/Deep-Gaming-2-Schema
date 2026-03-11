@@ -88,7 +88,12 @@ local function NotifyPlayer(steamid, message)
     local ply = player.GetBySteamID(steamid)
     for _, ent in ipairs(ents.FindByClass("impulse_auctionhouse")) do
         if IsValid(ent) then
-            ent:AddNotification(ply, message)
+            ent.PendingNotifications[steamid] = true
+            if IsValid(ply) then
+                net.Start("AuctionHouse_ShowNotification")
+                net.WriteEntity(ent)
+                net.Send(ply)
+            end
         end
     end
     if IsValid(ply) then
@@ -393,22 +398,16 @@ net.Receive("AuctionHouse_PlaceBid", function(len, ply)
             end
             ply:TakeMoney(buyout)
             if prevBidder and prevBidder ~= "" and ValidSteamID(prevBidder) and currentBid > 0 then
-                local prevPly = player.GetBySteamID(prevBidder)
-                if IsValid(prevPly) then
-                    prevPly:GiveMoney(currentBid)
-                    prevPly:Notify("Your bid on " .. (row.item_name or "an item") .. " was ended by a buyout. Your " .. currentBid .. " credits have been refunded.")
-                else
-                    local ins = mysql:Insert("impulse_auction_history")
-                    ins:Insert("auction_id",      auctionID)
-                    ins:Insert("event_type",      0)
-                    ins:Insert("actor_steamid",   prevBidder)
-                    ins:Insert("amount",          currentBid)
-                    ins:Insert("placed_at",       os.time())
-                    ins:Insert("was_outbid",      1)
-                    ins:Insert("credits_received", 0)
-                    ins:Execute()
-                    NotifyPlayer(prevBidder, "Your bid on " .. (row.item_name or "an item") .. " was ended by a buyout. Visit the Auction House to collect your " .. currentBid .. " credit refund.")
-                end
+                local ins = mysql:Insert("impulse_auction_history")
+                ins:Insert("auction_id",       auctionID)
+                ins:Insert("event_type",       0)
+                ins:Insert("actor_steamid",    prevBidder)
+                ins:Insert("amount",           currentBid)
+                ins:Insert("placed_at",        os.time())
+                ins:Insert("was_outbid",       1)
+                ins:Insert("credits_received", 0)
+                ins:Execute()
+                NotifyPlayer(prevBidder, "Your bid on " .. (row.item_name or "an item") .. " was ended by a buyout. Visit the Auction House to collect your " .. currentBid .. " credit refund.")
             end
             local deposit    = tonumber(row.deposit_paid) or 0
             local fee        = CalcSaleFee(buyout)
@@ -441,20 +440,15 @@ net.Receive("AuctionHouse_PlaceBid", function(len, ply)
         end
         ply:TakeMoney(bidAmount)
         if prevBidder and prevBidder ~= "" and ValidSteamID(prevBidder) then
-            local prevPly = player.GetBySteamID(prevBidder)
-            if IsValid(prevPly) then
-                prevPly:GiveMoney(currentBid)
-            else
-                local ins = mysql:Insert("impulse_auction_history")
-                ins:Insert("auction_id",       auctionID)
-                ins:Insert("event_type",        0)
-                ins:Insert("actor_steamid",     prevBidder)
-                ins:Insert("amount",            currentBid)
-                ins:Insert("placed_at",         os.time())
-                ins:Insert("was_outbid",        1)
-                ins:Insert("credits_received",  0)
-                ins:Execute()
-            end
+            local ins = mysql:Insert("impulse_auction_history")
+            ins:Insert("auction_id",       auctionID)
+            ins:Insert("event_type",       0)
+            ins:Insert("actor_steamid",    prevBidder)
+            ins:Insert("amount",           currentBid)
+            ins:Insert("placed_at",        os.time())
+            ins:Insert("was_outbid",       1)
+            ins:Insert("credits_received", 0)
+            ins:Execute()
             NotifyPlayer(prevBidder, "You have been outbid on " .. (row.item_name or "an item") .. "! Your " .. currentBid .. " credits are ready to collect at the Auction House.")
         end
         local ins = mysql:Insert("impulse_auction_history")
@@ -520,22 +514,16 @@ net.Receive("AuctionHouse_Buyout", function(len, ply)
         end
         ply:TakeMoney(buyout)
         if prevBidder and prevBidder ~= "" and ValidSteamID(prevBidder) and currentBid > 0 then
-            local prevPly = player.GetBySteamID(prevBidder)
-            if IsValid(prevPly) then
-                prevPly:GiveMoney(currentBid)
-                prevPly:Notify("Your bid on " .. (row.item_name or "an item") .. " was ended by a buyout. Your " .. currentBid .. " credits have been refunded.")
-            else
-                local ins = mysql:Insert("impulse_auction_history")
-                ins:Insert("auction_id",       auctionID)
-                ins:Insert("event_type",        0)
-                ins:Insert("actor_steamid",     prevBidder)
-                ins:Insert("amount",            currentBid)
-                ins:Insert("placed_at",         os.time())
-                ins:Insert("was_outbid",        1)
-                ins:Insert("credits_received",  0)
-                ins:Execute()
-                NotifyPlayer(prevBidder, "Your bid on " .. (row.item_name or "an item") .. " was ended by a buyout. Visit the Auction House to collect your " .. currentBid .. " credit refund.")
-            end
+            local ins = mysql:Insert("impulse_auction_history")
+            ins:Insert("auction_id",       auctionID)
+            ins:Insert("event_type",       0)
+            ins:Insert("actor_steamid",    prevBidder)
+            ins:Insert("amount",           currentBid)
+            ins:Insert("placed_at",        os.time())
+            ins:Insert("was_outbid",       1)
+            ins:Insert("credits_received", 0)
+            ins:Execute()
+            NotifyPlayer(prevBidder, "Your bid on " .. (row.item_name or "an item") .. " was ended by a buyout. Visit the Auction House to collect your " .. currentBid .. " credit refund.")
         end
         local fee        = CalcSaleFee(buyout)
         local sellerGets = buyout - fee + deposit
@@ -728,11 +716,11 @@ function AH.ProcessPickups(ply)
 end
 hook.Add("PlayerSpawn", "AuctionHouse_PendingNotify", function(ply)
     if not IsValid(ply) then return end
-    local t = ply:Team()
-    if t ~= TEAM_CWU and t ~= TEAM_CITIZEN and t ~= TEAM_VORT then return end
     local sid = ply:SteamID()
     timer.Simple(3, function()
         if not IsValid(ply) then return end
+        local t = ply:Team()
+        if t ~= TEAM_CWU and t ~= TEAM_CITIZEN and t ~= TEAM_VORT then return end
         local escapedSid = mysql:Escape(sid)
         mysql:RawQuery(
             "SELECT `id` FROM `impulse_auction_history` WHERE ((`event_type` = 0 AND `was_outbid` = 1 AND `credits_received` = 0 AND `actor_steamid` = '" .. escapedSid .. "') OR (`event_type` = 1 AND `item_received` = 0 AND `actor_steamid` = '" .. escapedSid .. "') OR (`event_type` = 1 AND `credits_received` = 0 AND `seller_steamid` = '" .. escapedSid .. "') OR (`event_type` = 2 AND `item_received` = 0 AND `seller_steamid` = '" .. escapedSid .. "') OR (`event_type` = 2 AND `credits_received` = 0 AND `actor_steamid` = '" .. escapedSid .. "'))",
