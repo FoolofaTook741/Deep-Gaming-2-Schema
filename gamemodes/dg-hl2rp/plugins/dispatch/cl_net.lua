@@ -344,7 +344,7 @@ end)
 -- im too lazy to fix this fucking disaster
 
 net.Receive("impulseHL2RPBioDeath", function(len, ply)
-	if not IsValid(lp) or not lp.SendCombineMessage then return end
+	if not IsValid(LocalPlayer()) then return end
 	local unit = net.ReadUInt(8)
 	local zone = net.ReadUInt(8)
 	local rank = net.ReadUInt(8) or 0
