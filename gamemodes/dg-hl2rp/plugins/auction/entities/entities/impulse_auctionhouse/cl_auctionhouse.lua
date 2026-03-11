@@ -659,9 +659,17 @@ function PANEL:BuildSellTab()
     local feeLabel = self.feeSummaryLabel
     local sbEntry  = self.startBidEntry
     local function updateFee()
-        local sb      = tonumber(sbEntry:GetValue()) or 0
-        local bo      = tonumber(panel.buyoutEntry:GetValue()) or 0
-        local base    = (bo > 0) and bo or sb
+        local sb   = tonumber(sbEntry:GetValue()) or 0
+        local res  = tonumber(panel.reserveEntry:GetValue()) or 0
+        local bo   = tonumber(panel.buyoutEntry:GetValue()) or 0
+        local base
+        if bo > 0 then
+            base = bo
+        elseif res > 0 then
+            base = res
+        else
+            base = sb
+        end
         local deposit = math.max(1, math.floor(base * DEPOSIT_RATE + 0.5))
         feeLabel:SetText(
             "Deposit (refunded if sold): " .. FormatCredits(deposit) ..
@@ -670,6 +678,14 @@ function PANEL:BuildSellTab()
     end
     self.startBidEntry.lastVal = ""
     function self.startBidEntry:Think()
+        local v = self:GetValue()
+        if v ~= self.lastVal then
+            self.lastVal = v
+            updateFee()
+        end
+    end
+    self.reserveEntry.lastVal = ""
+    function self.reserveEntry:Think()
         local v = self:GetValue()
         if v ~= self.lastVal then
             self.lastVal = v
