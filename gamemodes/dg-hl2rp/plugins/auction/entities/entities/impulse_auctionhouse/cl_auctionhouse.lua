@@ -14,7 +14,7 @@ local DURATION_OPTIONS = {
     { label = "3 Days (72h)",  hours = 72  },
     { label = "7 Days (168h)", hours = 168 },
 }
-local DEPOSIT_RATE    = 0.02
+local DEPOSIT_RATE    = 0.0075
 local SALE_FEE_RATE   = 0.06
 local function FormatCredits(n)
     n = math.floor(n or 0)
@@ -37,7 +37,47 @@ local function MakeButton(parent, x, y, w, h, text, col, textCol)
     function btn:OnCursorExited()  self.hovered = false end
     return btn
 end
+local ITEMS_PER_PAGE = 25
+
+local function MakePageBar(parent, x, y, w, h, panel, pageKey, populateFn)
+    local bar = vgui.Create("DPanel", parent)
+    bar:SetPos(x, y)
+    bar:SetSize(w, h)
+    function bar:Paint(bw, bh)
+        draw.RoundedBox(0, 0, 0, bw, bh, panelBg)
+    end
+    function bar:Rebuild(currentPage, totalPages)
+        bar:Clear()
+        local barW  = bar:GetWide()
+        local btnW  = 28
+        local cx    = math.floor(barW / 2)
+        local prevBtn = MakeButton(bar, cx - 90, 4, btnW, h - 8, "<", panelBg2, grey)
+        prevBtn.DoClick = function()
+            if panel[pageKey] > 1 then
+                panel[pageKey] = panel[pageKey] - 1
+                panel[populateFn](panel)
+            end
+        end
+        local nextBtn = MakeButton(bar, cx + 62, 4, btnW, h - 8, ">", panelBg2, grey)
+        nextBtn.DoClick = function()
+            if panel[pageKey] < totalPages then
+                panel[pageKey] = panel[pageKey] + 1
+                panel[populateFn](panel)
+            end
+        end
+        local pageLabel = vgui.Create("DLabel", bar)
+        pageLabel:SetPos(cx - 60, 0)
+        pageLabel:SetSize(120, h)
+        pageLabel:SetFont("Impulse-Elements18-Shadow")
+        pageLabel:SetTextColor(grey)
+        pageLabel:SetText("Page " .. currentPage .. " / " .. math.max(1, totalPages))
+        pageLabel:SetContentAlignment(5)
+    end
+    return bar
+end
+
 local PANEL = {}
+
 function PANEL:Init()
     self:SetSize(1200, 734)
     self:Center()
@@ -133,6 +173,7 @@ function PANEL:BuildBrowseTab()
         local v = self:GetValue()
         if v ~= self.lastVal then
             self.lastVal = v
+            panel.browsePage = 1
             panel:PopulateBrowseList()
         end
     end
@@ -155,6 +196,7 @@ function PANEL:BuildBrowseTab()
     end
     function self.categoryFilter:OnSelect(idx, value)
         self.panel.browseCategory = value
+        self.panel.browsePage = 1
         self.panel:PopulateBrowseList()
     end
     self:RebuildCategoryDropdown()
@@ -178,6 +220,7 @@ function PANEL:BuildBrowseTab()
         self.sortDropdown:AddChoice(v)
     end
     function self.sortDropdown:OnSelect(idx, value)
+        self.panel.browsePage = 1
         self.panel:SortBrowseList(value)
     end
     local refreshBtn = MakeButton(filterRow, w - 110, 5, 100, 26, "⟳  Refresh", accentColor, Color(20, 20, 20))
@@ -205,10 +248,13 @@ function PANEL:BuildBrowseTab()
         lbl:SetTextColor(accentColor)
         lbl:SizeToContents()
     end
+    local pageBarH = 34
     self.browseScroll = vgui.Create("DScrollPanel", p)
     self.browseScroll:SetPos(0, 62)
-    self.browseScroll:SetSize(w, h - 62)
+    self.browseScroll:SetSize(w, h - 62 - pageBarH)
     self.browseScroll.rowW = w - 16
+    self.browsePage = self.browsePage or 1
+    self.browsePageBar = MakePageBar(p, 0, h - pageBarH, w, pageBarH, self, "browsePage", "PopulateBrowseList")
     self:PopulateBrowseList()
 end
 function PANEL:RebuildCategoryDropdown()
@@ -251,20 +297,20 @@ function PANEL:PopulateBrowseList()
         empty:SetText("No auctions found.")
         empty:SetFont("Impulse-Elements19-Shadow")
         empty:SetTextColor(grey)
+        if IsValid(self.browsePageBar) then self.browsePageBar:Rebuild(1, 1) end
         return
     end
-    local shown = 0
+    local filtered = {}
     for _, auc in ipairs(auctions) do
         local itemName = string.lower(auc.item_name or "")
         local itemCat  = auc.item_category or "Misc"
         local matchSearch   = search == "" or string.find(itemName, search, 1, true)
         local matchCategory = category == "All" or itemCat == category
         if matchSearch and matchCategory then
-            self:AddBrowseRow(auc)
-            shown = shown + 1
+            table.insert(filtered, auc)
         end
     end
-    if shown == 0 then
+    if #filtered == 0 then
         local empty = self.browseScroll:Add("DLabel")
         empty:Dock(TOP)
         empty:SetContentAlignment(5)
@@ -272,6 +318,24 @@ function PANEL:PopulateBrowseList()
         empty:SetText("No auctions match your filters.")
         empty:SetFont("Impulse-Elements19-Shadow")
         empty:SetTextColor(grey)
+        if IsValid(self.browsePageBar) then self.browsePageBar:Rebuild(1, 1) end
+        return
+    end
+    local isSearching = search ~= ""
+    if isSearching then
+        for _, auc in ipairs(filtered) do
+            self:AddBrowseRow(auc)
+        end
+        if IsValid(self.browsePageBar) then self.browsePageBar:Rebuild(1, 1) end
+    else
+        local totalPages = math.ceil(#filtered / ITEMS_PER_PAGE)
+        self.browsePage  = math.Clamp(self.browsePage or 1, 1, totalPages)
+        local startIdx   = (self.browsePage - 1) * ITEMS_PER_PAGE + 1
+        local endIdx     = math.min(startIdx + ITEMS_PER_PAGE - 1, #filtered)
+        for i = startIdx, endIdx do
+            self:AddBrowseRow(filtered[i])
+        end
+        if IsValid(self.browsePageBar) then self.browsePageBar:Rebuild(self.browsePage, totalPages) end
     end
 end
 function PANEL:AddBrowseRow(auc)
@@ -832,10 +896,13 @@ function PANEL:BuildMyAuctions()
         lbl:SetTextColor(accentColor)
         lbl:SizeToContents()
     end
+    local pageBarH = 34
     self.myAucScroll = vgui.Create("DScrollPanel", p)
     self.myAucScroll:SetPos(0, headerH)
-    self.myAucScroll:SetSize(w, h - headerH)
+    self.myAucScroll:SetSize(w, h - headerH - pageBarH)
     self.myAucScroll.rowW = w - 16
+    self.myAucPage = self.myAucPage or 1
+    self.myAucPageBar = MakePageBar(p, 0, h - pageBarH, w, pageBarH, self, "myAucPage", "PopulateMyAuctions")
     self:PopulateMyAuctions()
 end
 function PANEL:PopulateMyAuctions()
@@ -850,11 +917,17 @@ function PANEL:PopulateMyAuctions()
         empty:SetText("You have no active auctions.")
         empty:SetFont("Impulse-Elements19-Shadow")
         empty:SetTextColor(grey)
+        if IsValid(self.myAucPageBar) then self.myAucPageBar:Rebuild(1, 1) end
         return
     end
-    for _, auc in ipairs(auctions) do
-        self:AddMyAuctionRow(auc)
+    local totalPages = math.ceil(#auctions / ITEMS_PER_PAGE)
+    self.myAucPage   = math.Clamp(self.myAucPage or 1, 1, totalPages)
+    local startIdx   = (self.myAucPage - 1) * ITEMS_PER_PAGE + 1
+    local endIdx     = math.min(startIdx + ITEMS_PER_PAGE - 1, #auctions)
+    for i = startIdx, endIdx do
+        self:AddMyAuctionRow(auctions[i])
     end
+    if IsValid(self.myAucPageBar) then self.myAucPageBar:Rebuild(self.myAucPage, totalPages) end
 end
 function PANEL:AddMyAuctionRow(auc)
     local rowW = self.myAucScroll.rowW or 1060
