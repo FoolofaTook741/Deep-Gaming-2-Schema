@@ -354,17 +354,6 @@ VENDOR.Sell = {
 			end
 		end
 	},
-	["wep_rsmoke"] = {
-		Desc = "SWEEPER",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if (ply:GetTeamClass() >= CLASS_APF) then
-				return true
-			else return false
-			end
-		end
-	},
 	["item_slam"] = {
 		Desc = "MACE ECS+ & Research Project",
 		Restricted = true,
@@ -472,11 +461,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_rsmoke"] = {
-		Desc = "CTL+ or FIST",
+		Desc = "CTL+/FIST/APF",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_OSL or ply:GetTeamClass() == CLASS_FIST then
+			if ply:GetTeamRank() >= RANK_OSL or ply:GetTeamClass() == CLASS_FIST or ply:GetTeamClass() == CLASS_APF then
 				return true
 			else return false
 			end
@@ -499,6 +488,28 @@ VENDOR.Sell = {
 		Max = 1,
 		CanBuy = function(ply)
 			if (ply:GetTeamRank() >= RANK_OSL && ply:GetTeamClass() == CLASS_MACE) && impulse.Dispatch.GetCityCode() >= CODE_AJ then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_otastimshot"] = {
+		Desc = "ECS & CCP",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if (ply:GetTeamRank() >= RANK_EOS && ply:GetTeamRank() < RANK_OSL) then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_otastimshotctl"] = {
+		Desc = "CTL+",
+		Restricted = true,
+		Max = 2,
+		CanBuy = function(ply)
+			if (ply:GetTeamRank() >= RANK_OSL) then
 				return true
 			else return false
 			end
