@@ -10,11 +10,13 @@ local TAB_BROWSE  = 1
 local TAB_SELL    = 2
 local TAB_MYAUCTS = 3
 local DURATION_OPTIONS = {
-    { label = "1 Day  (24h)",  hours = 24  },
-    { label = "3 Days (72h)",  hours = 72  },
-    { label = "7 Days (168h)", hours = 168 },
+    { label = "2 Hours",  hours = 2   },
+    { label = "8 Hours",  hours = 8   },
+    { label = "1 Day",    hours = 24  },
+    { label = "3 Days",   hours = 72  },
+    { label = "7 Days",   hours = 168 },
 }
-local DEPOSIT_RATE    = 0.0075
+local DEPOSIT_RATE    = 0.02
 local SALE_FEE_RATE   = 0.06
 local function FormatCredits(n)
     n = math.floor(n or 0)
@@ -549,6 +551,7 @@ function PANEL:BuildSellTab()
     self.durationCombo:SetPos(labelX, formY)
     self.durationCombo:SetSize(rightW - 28, 28)
     self.durationCombo:SetFont("Impulse-Elements18-Shadow")
+    self.durationCombo:SetSortItems(false)
     self.durationCombo:SetValue(DURATION_OPTIONS[1].label)
     self.selectedDuration = DURATION_OPTIONS[1].hours
     function self.durationCombo:Paint(dw, dh)
@@ -836,7 +839,6 @@ function PANEL:SubmitListing()
         return
     end
     local canStack = self.selectedCanStack   or false
-    local maxQty   = self.selectedStackCount or 1
     local stackQty = canStack and (tonumber(self.stackQtyEntry:GetValue()) or 1) or 1
     if stackQty < 1 then
         self.sellErrorLabel:SetText("Quantity must be at least 1.")

@@ -59,14 +59,14 @@ local function ValidSteamID(sid)
     return type(sid) == "string" and sid:match("^STEAM_%d:%d:%d+$") ~= nil
 end
 local function ValidDuration(d)
-    return d == 24 or d == 72 or d == 168
+    return d == 2 or d == 8 or d == 24 or d == 72 or d == 168
 end
 local function SafeItemClass(s)
     return type(s) == "string" and #s > 0 and #s <= 64 and s:match("^[%w_%-]+$") ~= nil
 end
 local function ValidTeam(ply)
     local t = ply:Team()
-    return t == TEAM_CWU or t == TEAM_CITIZEN or TEAM_VORT
+    return t == TEAM_CWU or t == TEAM_CITIZEN or t == TEAM_VORT
 end
 local function CalcDeposit(startBid)
     return math.max(1, math.floor(startBid * DEPOSIT_RATE + 0.5))
@@ -504,8 +504,8 @@ net.Receive("AuctionHouse_Buyout", function(len, ply)
         end
         if row.seller_steamid == ply:SteamID() then
             print("[AuctionHouse] EXPLOIT ATTEMPT: " .. ply:SteamID() .. " (" .. ply:Name() .. ") attempted to buy out their own auction #" .. auctionID)
-            ply:Notify("You cannot buyout your own auction.")
-            return SendResult(ply, false, "You cannot buyout your own auction.")
+            ply:Notify("You cannot buy out your own auction.")
+            return SendResult(ply, false, "You cannot buy out your own auction.")
         end
         if ply:GetMoney() < buyout then
             return SendResult(ply, false, "You cannot afford the buyout price of " .. buyout .. " credits.")
@@ -720,6 +720,8 @@ function AH.ProcessPickups(ply)
 end
 hook.Add("PlayerSpawn", "AuctionHouse_PendingNotify", function(ply)
     if not IsValid(ply) then return end
+    local t = ply:Team()
+    if t ~= TEAM_CWU and t ~= TEAM_CITIZEN and t ~= TEAM_VORT then return end
     local sid = ply:SteamID()
     timer.Simple(3, function()
         if not IsValid(ply) then return end
