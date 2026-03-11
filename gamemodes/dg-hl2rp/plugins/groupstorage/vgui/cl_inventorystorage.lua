@@ -28,17 +28,6 @@ function PANEL:Init()
 	self:MakePopup()
 
 	self:SetupItems()
-
-	net.Receive("impulseGroupBankSync", function()
-		local bal = net.ReadUInt(32)
-		if impulse.Group.Groups[1] then
-			impulse.Group.Groups[1].GroupBank = bal
-		end
-		if IsValid(self) and self.bankBalLabel then
-			self.bankBalLabel:SetText("Bank: " .. impulse.Config.CurrencyPrefix .. " " .. formatMoney(bal))
-			self.bankBalLabel:SizeToContents()
-		end
-	end)
 end
 
 function PANEL:PaintOver(w, h)

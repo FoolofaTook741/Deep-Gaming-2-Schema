@@ -104,4 +104,18 @@ net.Receive("impulseGroupStorageTierSync", function()
     end
 end)
 
-
+net.Receive("impulseGroupBankSync", function()
+    local bal = net.ReadUInt(32)
+    if impulse.Group.Groups[1] then
+        impulse.Group.Groups[1].GroupBank = bal
+    end
+    if IsValid(impulse.groupEditor) then
+        impulse.groupEditor:Refresh()
+    end
+    if impulse_group_storage and IsValid(impulse_group_storage) then
+        if impulse_group_storage.bankBalLabel and IsValid(impulse_group_storage.bankBalLabel) then
+            impulse_group_storage.bankBalLabel:SetText("Bank: " .. impulse.Config.CurrencyPrefix .. " " .. tostring(bal))
+            impulse_group_storage.bankBalLabel:SizeToContents()
+        end
+    end
+end)
