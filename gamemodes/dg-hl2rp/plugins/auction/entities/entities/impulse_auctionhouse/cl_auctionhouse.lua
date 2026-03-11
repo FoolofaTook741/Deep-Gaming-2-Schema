@@ -839,6 +839,7 @@ function PANEL:SubmitListing()
         return
     end
     local canStack = self.selectedCanStack   or false
+    local maxQty   = self.selectedStackCount or 1
     local stackQty = canStack and (tonumber(self.stackQtyEntry:GetValue()) or 1) or 1
     if stackQty < 1 then
         self.sellErrorLabel:SetText("Quantity must be at least 1.")
