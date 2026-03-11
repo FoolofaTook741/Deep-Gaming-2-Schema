@@ -68,8 +68,9 @@ local function ValidTeam(ply)
     local t = ply:Team()
     return t == TEAM_CWU or t == TEAM_CITIZEN or t == TEAM_VORT
 end
-local function CalcDeposit(startBid)
-    return math.max(1, math.floor(startBid * DEPOSIT_RATE + 0.5))
+local function CalcDeposit(startBid, buyoutPrice)
+    local base = (buyoutPrice and buyoutPrice > 0) and buyoutPrice or startBid
+    return math.max(1, math.floor(base * DEPOSIT_RATE + 0.5))
 end
 local function CalcSaleFee(finalPrice)
     return math.floor(finalPrice * SALE_FEE_RATE)
@@ -289,7 +290,7 @@ net.Receive("AuctionHouse_PostListing", function(len, ply)
     if nonRestrictedCount < stackQty then
         return SendResult(ply, false, "You do not have " .. stackQty .. "x unrestricted " .. (itemData.Name or itemClass) .. " to auction.")
     end
-    local deposit = CalcDeposit(startBid)
+    local deposit = CalcDeposit(startBid, buyoutPrice)
     if ply:GetMoney() < deposit then
         return SendResult(ply, false, "You cannot afford the deposit of " .. deposit .. " credits.")
     end
