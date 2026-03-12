@@ -4,12 +4,12 @@ include("cl_auctions.lua")
 
 local NOTIFICATION_COLOR = Color(255, 220, 0)
 local NOTIFICATION_SHADOW = Color(0, 0, 0, 180)
-local hasNotification = false
+local entityNotifications = {}
 
 function ENT:Draw()
     self:DrawModel()
 
-    if hasNotification then
+    if entityNotifications[self:EntIndex()] then
         local pos = self:GetPos() + Vector(0, 0, 82)
         local ang = (LocalPlayer():GetPos() - pos):Angle()
         ang:RotateAroundAxis(ang:Up(), 90)
@@ -24,16 +24,13 @@ end
 
 net.Receive("AuctionHouse_ShowNotification", function()
     local ent = net.ReadEntity()
-    if IsValid(ent) and ent == Entity(ent:EntIndex()) then
-        hasNotification = true
+    if IsValid(ent) then
+        entityNotifications[ent:EntIndex()] = true
     end
 end)
 
 net.Receive("AuctionHouse_ClearNotification", function()
-    local ent = net.ReadEntity()
-    if IsValid(ent) then
-        hasNotification = false
-    end
+    entityNotifications = {}
 end)
 
 net.Receive("AuctionHouse_Open", function()

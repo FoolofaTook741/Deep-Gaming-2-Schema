@@ -26,12 +26,13 @@ function ENT:Use(activator, caller)
     end
 
     local sid = activator:SteamID()
-    if self.PendingNotifications[sid] then
-        self.PendingNotifications[sid] = nil
-        net.Start("AuctionHouse_ClearNotification")
-        net.WriteEntity(self)
-        net.Send(activator)
+    for _, ent in ipairs(ents.FindByClass("impulse_auctionhouse")) do
+        if IsValid(ent) then
+            ent.PendingNotifications[sid] = nil
+        end
     end
+    net.Start("AuctionHouse_ClearNotification")
+    net.Send(activator)
 
     net.Start("AuctionHouse_Open")
     net.WriteEntity(self)
@@ -39,27 +40,6 @@ function ENT:Use(activator, caller)
 
     if impulse.Auctions then
         impulse.Auctions.ProcessPickups(activator)
-    end
-end
-
-function ENT:AddNotification(ply, message)
-    if not IsValid(ply) then return end
-
-    local sid = ply:SteamID()
-    self.PendingNotifications[sid] = true
-
-    net.Start("AuctionHouse_ShowNotification")
-    net.WriteEntity(self)
-    net.Send(ply)
-end
-
-function ENT:SendNotificationState(ply)
-    if not IsValid(ply) then return end
-    local sid = ply:SteamID()
-    if self.PendingNotifications[sid] then
-        net.Start("AuctionHouse_ShowNotification")
-        net.WriteEntity(self)
-        net.Send(ply)
     end
 end
 

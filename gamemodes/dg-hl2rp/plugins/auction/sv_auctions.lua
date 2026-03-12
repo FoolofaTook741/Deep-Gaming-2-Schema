@@ -8,7 +8,9 @@ util.AddNetworkString("AuctionHouse_Open")
 util.AddNetworkString("AuctionHouse_ShowNotification")
 util.AddNetworkString("AuctionHouse_ClearNotification")
 util.AddNetworkString("AuctionHouse_BrowseData")
+util.AddNetworkString("AuctionHouse_BrowseDataChunk")
 util.AddNetworkString("AuctionHouse_MyAuctions")
+util.AddNetworkString("AuctionHouse_MyAuctionsChunk")
 util.AddNetworkString("AuctionHouse_ActionResult")
 util.AddNetworkString("AuctionHouse_PostListing")
 util.AddNetworkString("AuctionHouse_PlaceBid")
@@ -21,7 +23,7 @@ local COOLDOWNS = {
     AuctionHouse_PlaceBid      = 2,
     AuctionHouse_Buyout        = 2,
     AuctionHouse_CancelListing = 2,
-    AuctionHouse_RequestBrowse = 4,
+    AuctionHouse_RequestBrowse = 0.7,
     AuctionHouse_RequestMine   = 4,
 }
 local lastAction = {}
@@ -131,6 +133,24 @@ local function SerializeAuction(row)
         reserve_met    = (not row.reserve_price) or (tonumber(row.current_bid or 0) >= tonumber(row.reserve_price)),
     }
 end
+local CHUNK_SIZE = 32768
+local function SendChunked(ply, startMsg, chunkMsg, compressed)
+    local total  = #compressed
+    local chunks = math.ceil(total / CHUNK_SIZE)
+    net.Start(startMsg)
+    net.WriteUInt(total, 32)
+    net.WriteUInt(chunks, 16)
+    net.Send(ply)
+    for i = 1, chunks do
+        local offset = (i - 1) * CHUNK_SIZE + 1
+        local chunk  = string.sub(compressed, offset, offset + CHUNK_SIZE - 1)
+        net.Start(chunkMsg)
+        net.WriteUInt(i, 16)
+        net.WriteUInt(#chunk, 16)
+        net.WriteData(chunk, #chunk)
+        net.Send(ply)
+    end
+end
 local function SendBrowseData(ply, rows)
     if not IsValid(ply) then return end
     local sid      = ply:SteamID()
@@ -140,9 +160,8 @@ local function SendBrowseData(ply, rows)
         s.i_am_high_bidder = (row.high_bidder_steamid == sid)
         table.insert(auctions, s)
     end
-    net.Start("AuctionHouse_BrowseData")
-    net.WriteString(util.TableToJSON(auctions))
-    net.Send(ply)
+    local compressed = util.Compress(util.TableToJSON(auctions))
+    SendChunked(ply, "AuctionHouse_BrowseData", "AuctionHouse_BrowseDataChunk", compressed)
 end
 local function SendMyAuctions(ply, rows)
     if not IsValid(ply) then return end
@@ -152,9 +171,8 @@ local function SendMyAuctions(ply, rows)
         s.high_bidder = row.high_bidder_steamid or nil
         table.insert(auctions, s)
     end
-    net.Start("AuctionHouse_MyAuctions")
-    net.WriteString(util.TableToJSON(auctions))
-    net.Send(ply)
+    local compressed = util.Compress(util.TableToJSON(auctions))
+    SendChunked(ply, "AuctionHouse_MyAuctions", "AuctionHouse_MyAuctionsChunk", compressed)
 end
 local function ProcessExpiredAuction(row)
     local auctionID    = tonumber(row.id)
@@ -171,11 +189,6 @@ local function ProcessExpiredAuction(row)
     if highBidder and ValidSteamID(highBidder) and currentBid > 0 and reserveMet then
         local fee        = CalcSaleFee(currentBid)
         local sellerGets = currentBid - fee + deposit
-        local upd = mysql:Update("impulse_auctions")
-        upd:Update("status",        1)
-        upd:Update("seller_payout", sellerGets)
-        upd:Where("id", auctionID)
-        upd:Execute()
         local ins = mysql:Insert("impulse_auction_history")
         ins:Insert("auction_id",       auctionID)
         ins:Insert("event_type",       1)
@@ -188,14 +201,21 @@ local function ProcessExpiredAuction(row)
         ins:Insert("seller_steamid",   sellerSID)
         ins:Insert("item_received",    0)
         ins:Insert("credits_received", 0)
+        ins:Insert("seller_payout",    sellerGets)
+        ins:Callback(function(result, status, lastID)
+            if not status then
+                print("[AuctionHouse] Expiry sold history insert FAILED for auction #" .. auctionID)
+            else
+                mysql:RawQuery("DELETE FROM `impulse_auction_history` WHERE `auction_id` = " .. math.floor(auctionID) .. " AND `event_type` = 0 AND `was_outbid` = 0")
+                local del = mysql:Delete("impulse_auctions")
+                del:Where("id", auctionID)
+                del:Execute()
+            end
+        end)
         ins:Execute()
         NotifyPlayer(sellerSID,  "Your auction for " .. itemName .. " sold for " .. currentBid .. " credits! Visit the Auction House to collect.")
         NotifyPlayer(highBidder, "You won the auction for " .. itemName .. "! Visit the Auction House to collect your item.")
     else
-        local upd = mysql:Update("impulse_auctions")
-        upd:Update("status", 2)
-        upd:Where("id", auctionID)
-        upd:Execute()
         local ins = mysql:Insert("impulse_auction_history")
         ins:Insert("auction_id",       auctionID)
         ins:Insert("event_type",       2)
@@ -208,6 +228,16 @@ local function ProcessExpiredAuction(row)
         ins:Insert("seller_steamid",   sellerSID)
         ins:Insert("item_received",    0)
         ins:Insert("credits_received", (highBidder and currentBid > 0) and 0 or 1)
+        ins:Callback(function(result, status, lastID)
+            if not status then
+                print("[AuctionHouse] Expiry unsold history insert FAILED for auction #" .. auctionID)
+            else
+                mysql:RawQuery("DELETE FROM `impulse_auction_history` WHERE `auction_id` = " .. math.floor(auctionID) .. " AND `event_type` = 0 AND `was_outbid` = 0")
+                local del = mysql:Delete("impulse_auctions")
+                del:Where("id", auctionID)
+                del:Execute()
+            end
+        end)
         ins:Execute()
         NotifyPlayer(sellerSID, "Your auction for " .. itemName .. " has expired. Visit the Auction House to retrieve your item.")
         if highBidder and ValidSteamID(highBidder) and currentBid > 0 then
@@ -216,9 +246,11 @@ local function ProcessExpiredAuction(row)
     end
 end
 local expiryRunning = false
+local expiryLastRun = 0
 function AH.CheckExpired()
-    if expiryRunning then return end
+    if expiryRunning and (CurTime() - expiryLastRun) < 30 then return end
     expiryRunning = true
+    expiryLastRun = CurTime()
     local q = mysql:Select("impulse_auctions")
     q:Where("status", 0)
     q:WhereLTE("expires_at", os.time())
@@ -306,16 +338,6 @@ net.Receive("AuctionHouse_PostListing", function(len, ply)
     if ply:GetMoney() < deposit then
         return SendResult(ply, false, "You cannot afford the deposit of " .. deposit .. " credits.")
     end
-    ply:TakeMoney(deposit)
-    local taken = 0
-    local invData3 = ply:GetInventory(1)
-    for invid, slot in pairs(invData3) do
-        if taken >= stackQty then break end
-        if slot.class == itemClass and not slot.restricted then
-            ply:TakeInventoryItem(invid, 1)
-            taken = taken + 1
-        end
-    end
     local now        = os.time()
     local expiresAt  = now + (duration * 3600)
     local displayName = stackQty > 1 and (stackQty .. "x " .. (itemData.Name or itemClass)) or (itemData.Name or itemClass)
@@ -337,8 +359,34 @@ net.Receive("AuctionHouse_PostListing", function(len, ply)
     ins:Insert("status",          0)
     if reservePrice > 0 then ins:Insert("reserve_price", reservePrice) end
     if buyoutPrice  > 0 then ins:Insert("buyout_price",  buyoutPrice)  end
-    ins:Callback(function(result)
+    ins:Callback(function(result, status, lastID)
         if not IsValid(ply) then return end
+        if not status then
+            return SendResult(ply, false, "Failed to post auction. Please try again.")
+        end
+        if ply:GetMoney() < deposit then
+            local del = mysql:Delete("impulse_auctions")
+            del:Where("id", lastID)
+            del:Execute()
+            return SendResult(ply, false, "You can no longer afford the deposit of " .. deposit .. " credits.")
+        end
+        ply:TakeMoney(deposit)
+        local taken = 0
+        local invData3 = ply:GetInventory(1)
+        for invid, slot in pairs(invData3) do
+            if taken >= stackQty then break end
+            if slot.class == itemClass and not slot.restricted then
+                ply:TakeInventoryItem(invid, 1)
+                taken = taken + 1
+            end
+        end
+        if taken < stackQty then
+            ply:GiveMoney(deposit)
+            local del = mysql:Delete("impulse_auctions")
+            del:Where("id", lastID)
+            del:Execute()
+            return SendResult(ply, false, "Could not take all items from your inventory. Auction cancelled.")
+        end
         SendResult(ply, true, "Auction posted! Deposit of " .. deposit .. " credits charged.")
         ply:Notify("Your auction for " .. displayName .. " has been posted.")
     end)
@@ -412,14 +460,6 @@ net.Receive("AuctionHouse_PlaceBid", function(len, ply)
             local deposit    = tonumber(row.deposit_paid) or 0
             local fee        = CalcSaleFee(buyout)
             local sellerGets = buyout - fee + deposit
-            local upd = mysql:Update("impulse_auctions")
-            upd:Update("status",              1)
-            upd:Update("current_bid",         buyout)
-            upd:Update("high_bidder_steamid", ply:SteamID())
-            upd:Update("seller_payout",       sellerGets)
-            upd:Where("id", auctionID)
-            upd:Execute()
-            GiveItems(ply, row.item_class, itemQty)
             local ins = mysql:Insert("impulse_auction_history")
             ins:Insert("auction_id",       auctionID)
             ins:Insert("event_type",       1)
@@ -432,7 +472,18 @@ net.Receive("AuctionHouse_PlaceBid", function(len, ply)
             ins:Insert("seller_steamid",   row.seller_steamid)
             ins:Insert("item_received",    1)
             ins:Insert("credits_received", 0)
+            ins:Insert("seller_payout",    sellerGets)
+            ins:Callback(function(result, status, lastID)
+                if not status then
+                    print("[AuctionHouse] Bid-buyout history insert FAILED for auction #" .. auctionID)
+                else
+                    local del = mysql:Delete("impulse_auctions")
+                del:Where("id", auctionID)
+                del:Execute()
+                end
+            end)
             ins:Execute()
+            GiveItems(ply, row.item_class, itemQty)
             SendResult(ply, true, "Your bid met the buyout price! " .. (row.item_name or "Item") .. " has been added to your inventory.")
             ply:Notify("You bought out " .. (row.item_name or "an item") .. " for " .. buyout .. " credits.")
             NotifyPlayer(row.seller_steamid, "Your auction for " .. (row.item_name or "an item") .. " was bought out for " .. buyout .. " credits! Visit the Auction House to collect " .. sellerGets .. " credits.")
@@ -458,14 +509,20 @@ net.Receive("AuctionHouse_PlaceBid", function(len, ply)
         ins:Insert("amount",        bidAmount)
         ins:Insert("placed_at",     os.time())
         ins:Insert("was_outbid",    0)
+        ins:Callback(function(result, status, lastID)
+            if not status then
+                print("[AuctionHouse] Bid history insert FAILED for auction #" .. auctionID .. " bidder=" .. ply:SteamID())
+                return
+            end
+            local upd = mysql:Update("impulse_auctions")
+            upd:Update("current_bid",         bidAmount)
+            upd:Update("high_bidder_steamid", ply:SteamID())
+            upd:Update("bid_count",           (tonumber(row.bid_count) or 0) + 1)
+            upd:Update("last_bid_at",         os.time())
+            upd:Where("id", auctionID)
+            upd:Execute()
+        end)
         ins:Execute()
-        local upd = mysql:Update("impulse_auctions")
-        upd:Update("current_bid",         bidAmount)
-        upd:Update("high_bidder_steamid", ply:SteamID())
-        upd:Update("bid_count",           (tonumber(row.bid_count) or 0) + 1)
-        upd:Update("last_bid_at",         os.time())
-        upd:Where("id", auctionID)
-        upd:Execute()
         SendResult(ply, true, "Bid of " .. bidAmount .. " credits placed successfully.")
         ply:Notify("You placed a bid of " .. bidAmount .. "cr on " .. (row.item_name or "an item") .. ".")
     end)
@@ -527,27 +584,27 @@ net.Receive("AuctionHouse_Buyout", function(len, ply)
         end
         local fee        = CalcSaleFee(buyout)
         local sellerGets = buyout - fee + deposit
-        local upd = mysql:Update("impulse_auctions")
-        upd:Update("status",              1)
-        upd:Update("current_bid",         buyout)
-        upd:Update("high_bidder_steamid", ply:SteamID())
-        upd:Update("seller_payout",       sellerGets)
-        upd:Where("id", auctionID)
-        upd:Execute()
+        local rawInsert = string.format(
+            "INSERT INTO `impulse_auction_history` (`auction_id`, `event_type`, `actor_steamid`, `amount`, `placed_at`, `item_class`, `item_name`, `item_quantity`, `seller_steamid`, `item_received`, `credits_received`, `seller_payout`) VALUES (%d, 1, '%s', %d, %d, '%s', '%s', %d, '%s', 1, 0, %d)",
+            math.floor(auctionID),
+            mysql:Escape(ply:SteamID()),
+            math.floor(buyout),
+            os.time(),
+            mysql:Escape(row.item_class),
+            mysql:Escape(row.item_name or ""),
+            math.floor(itemQty),
+            mysql:Escape(row.seller_steamid),
+            math.floor(sellerGets)
+        )
+        mysql:RawQuery(rawInsert, function(result, status, lastID)
+            if not status then
+            else
+                local del = mysql:Delete("impulse_auctions")
+                del:Where("id", auctionID)
+                del:Execute()
+            end
+        end)
         GiveItems(ply, row.item_class, itemQty)
-        local ins = mysql:Insert("impulse_auction_history")
-        ins:Insert("auction_id",       auctionID)
-        ins:Insert("event_type",       1)
-        ins:Insert("actor_steamid",    ply:SteamID())
-        ins:Insert("amount",           buyout)
-        ins:Insert("placed_at",        os.time())
-        ins:Insert("item_class",       row.item_class)
-        ins:Insert("item_name",        row.item_name)
-        ins:Insert("item_quantity",    itemQty)
-        ins:Insert("seller_steamid",   row.seller_steamid)
-        ins:Insert("item_received",    1)
-        ins:Insert("credits_received", 0)
-        ins:Execute()
         SendResult(ply, true, "Buyout successful! " .. (row.item_name or "Item") .. " has been added to your inventory.")
         ply:Notify("You bought out " .. (row.item_name or "an item") .. " for " .. buyout .. "cr.")
         NotifyPlayer(row.seller_steamid, "Your auction for " .. (row.item_name or "an item") .. " was bought out for " .. buyout .. " credits! Visit the Auction House to collect " .. sellerGets .. " credits.")
@@ -581,10 +638,6 @@ net.Receive("AuctionHouse_CancelListing", function(len, ply)
             return SendResult(ply, false, "You cannot cancel an auction that has bids.")
         end
         GiveItems(ply, row.item_class, itemQty)
-        local upd = mysql:Update("impulse_auctions")
-        upd:Update("status", 3)
-        upd:Where("id", auctionID)
-        upd:Execute()
         local ins = mysql:Insert("impulse_auction_history")
         ins:Insert("auction_id",       auctionID)
         ins:Insert("event_type",       3)
@@ -597,6 +650,15 @@ net.Receive("AuctionHouse_CancelListing", function(len, ply)
         ins:Insert("seller_steamid",   ply:SteamID())
         ins:Insert("item_received",    1)
         ins:Insert("credits_received", 1)
+        ins:Callback(function(result, status, lastID)
+            if not status then
+                print("[AuctionHouse] Cancel history insert FAILED for auction #" .. auctionID)
+            else
+                local del = mysql:Delete("impulse_auctions")
+                del:Where("id", auctionID)
+                del:Execute()
+            end
+        end)
         ins:Execute()
         SendResult(ply, true, "Auction cancelled. Your item has been returned. Note: the deposit is non-refundable.")
         ply:Notify("Your auction for " .. (row.item_name or "an item") .. " has been cancelled and returned to your inventory.")
@@ -626,13 +688,7 @@ net.Receive("AuctionHouse_RequestMine", function(len, ply)
     q:Where("seller_steamid", ply:SteamID())
     q:Callback(function(results)
         if not IsValid(ply) then return end
-        local filtered = {}
-        for _, row in ipairs(results or {}) do
-            if tonumber(row.status) ~= 3 then
-                table.insert(filtered, row)
-            end
-        end
-        SendMyAuctions(ply, filtered)
+        SendMyAuctions(ply, results or {})
     end)
     q:Execute()
 end)
@@ -655,8 +711,7 @@ function AH.ProcessPickups(ply)
                 if shouldGetItem and SafeItemClass(row.item_class or "") then
                     local qty = tonumber(row.item_quantity) or 1
                     GiveItems(ply, row.item_class, qty)
-                    local qtyStr = qty > 1 and (qty .. "x ") or ""
-                    ply:Notify("You collected: " .. qtyStr .. (row.item_name or row.item_class))
+                    ply:Notify("You collected: " .. (row.item_name or row.item_class))
                     local upd = mysql:Update("impulse_auction_history")
                     upd:Update("item_received", 1)
                     upd:Where("id", tonumber(row.id))
@@ -678,20 +733,11 @@ function AH.ProcessPickups(ply)
                 local isSeller  = row.seller_steamid == sid
                 local isActor   = row.actor_steamid == sid
                 if eventType == 1 and isSeller then
-                    local aq = mysql:Select("impulse_auctions")
-                    aq:Select("seller_payout")
-                    aq:Where("id", tonumber(row.auction_id))
-                    aq:Callback(function(ar)
-                        if not IsValid(ply) then return end
-                        if type(ar) == "table" and #ar > 0 then
-                            local payout = tonumber(ar[1].seller_payout) or 0
-                            if payout > 0 then
-                                ply:GiveMoney(payout)
-                                ply:Notify("You collected " .. payout .. " credits from your auction sale.")
-                            end
-                        end
-                    end)
-                    aq:Execute()
+                    local payout = tonumber(row.seller_payout) or 0
+                    if payout > 0 then
+                        ply:GiveMoney(payout)
+                        ply:Notify("You collected " .. payout .. " credits from your auction sale.")
+                    end
                     local upd = mysql:Update("impulse_auction_history")
                     upd:Update("credits_received", 1)
                     upd:Where("id", tonumber(row.id))

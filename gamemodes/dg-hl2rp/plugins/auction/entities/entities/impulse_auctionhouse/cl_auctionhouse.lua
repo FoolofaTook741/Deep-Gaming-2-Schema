@@ -490,6 +490,7 @@ function PANEL:PromptBuyout(auc)
         net.Start("AuctionHouse_Buyout")
         net.WriteUInt(auc.id, 32)
         net.SendToServer()
+        panel.pendingBuyoutID = auc.id
         pop:Remove()
     end
     local cancelBtn = MakeButton(pop, 180, 120, 156, 32, "Cancel", red, white)
@@ -1048,7 +1049,21 @@ function PANEL:ShowActionResult(success, message)
         LocalPlayer():ChatPrint(message)
     elseif self.currentTab == TAB_BROWSE then
         if success then
-            self:RequestBrowseData()
+            if self.pendingBuyoutID and self.auctionData then
+                for i = #self.auctionData, 1, -1 do
+                    if self.auctionData[i].id == self.pendingBuyoutID then
+                        table.remove(self.auctionData, i)
+                        break
+                    end
+                end
+                self.pendingBuyoutID = nil
+                self:PopulateBrowseList()
+            end
+            timer.Simple(1, function()
+                if IsValid(self) then
+                    self:RequestBrowseData()
+                end
+            end)
         end
         LocalPlayer():ChatPrint(message)
     end
