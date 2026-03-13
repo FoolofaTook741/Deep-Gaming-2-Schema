@@ -24,7 +24,7 @@ local COOLDOWNS = {
     AuctionHouse_Buyout        = 2,
     AuctionHouse_CancelListing = 2,
     AuctionHouse_RequestBrowse = 0.7,
-    AuctionHouse_RequestMine   = 4,
+    AuctionHouse_RequestMine   = 0.7,
 }
 local lastAction = {}
 local function RateLimit(ply, msgName)
@@ -61,7 +61,7 @@ local function ValidSteamID(sid)
     return type(sid) == "string" and sid:match("^STEAM_%d:%d:%d+$") ~= nil
 end
 local function ValidDuration(d)
-    return d == 2 or d == 8 or d == 24 or d == 72 or d == 168
+    return d == 0 or d == 2 or d == 8 or d == 24 or d == 72 or d == 168
 end
 local function SafeItemClass(s)
     return type(s) == "string" and #s > 0 and #s <= 64 and s:match("^[%w_%-]+$") ~= nil
@@ -339,7 +339,7 @@ net.Receive("AuctionHouse_PostListing", function(len, ply)
         return SendResult(ply, false, "You cannot afford the deposit of " .. deposit .. " credits.")
     end
     local now        = os.time()
-    local expiresAt  = now + (duration * 3600)
+    local expiresAt  = now + (duration == 0 and 120 or (duration * 3600))
     local displayName = stackQty > 1 and (stackQty .. "x " .. (itemData.Name or itemClass)) or (itemData.Name or itemClass)
     local ins = mysql:Insert("impulse_auctions")
     ins:Insert("seller_steamid",  ply:SteamID())
