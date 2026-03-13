@@ -12,7 +12,7 @@ impulse.Business.Define("Brewing Barrel", {
     	ply.BarrelCount = (ply.BarrelCount or 0) + 1
     end,
     customCheck = function(ply)
-        if ply:Team() != TEAM_CITIZEN then
+        if ply:Team() != TEAM_CITIZEN or TEAM_VORT then
             return false
         end
 
@@ -41,7 +41,7 @@ impulse.Business.Define("Bullet Press", {
     	ply.BPCount = (ply.BPCount or 0) + 1
     end,
     customCheck = function(ply)
-        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_CWU then
+        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_CWU and ply:Team() != TEAM_VORT then
             return false
         end
 
@@ -70,7 +70,7 @@ impulse.Business.Define("De-biolinking Machine", {
     	ply.DebiolinkCount = (ply.DebiolinkCount or 0) + 1
     end,
     customCheck = function(ply)
-        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_CWU then
+        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_CWU and ply:Team() != TEAM_VORT then
             return false
         end
 
@@ -141,7 +141,7 @@ impulse.Business.Define("Fishing Cage", {
     	ply.FishCrate = (ply.FishCrate or 0) + 1
     end,
     customCheck = function(ply)
-        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_CWU then
+        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_CWU and ply:Team() != TEAM_VORT then
             return false
         end
 
@@ -170,7 +170,7 @@ impulse.Business.Define("Generator", {
     	ply.Generator = (ply.Generator or 0) + 1
     end,
     customCheck = function(ply)
-        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_CWU then
+        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_CWU and ply:Team() != TEAM_VORT then
             return false
         end
 

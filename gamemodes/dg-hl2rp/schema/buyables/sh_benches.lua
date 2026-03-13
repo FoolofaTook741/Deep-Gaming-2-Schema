@@ -15,7 +15,7 @@ impulse.Business.Define("Clothing Workbench", {
 	price = 70,
     removeOnTeamSwitch = true,
     customCheck = function(ply)
-		if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+		if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT then
 			return true
 		else
 			return false
@@ -30,7 +30,7 @@ impulse.Business.Define("General Workbench", {
 	price = 70,
     removeOnTeamSwitch = true,
     customCheck = function(ply)
-    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT then
 			return true
 		else
 			return false
@@ -45,7 +45,7 @@ impulse.Business.Define("Tinker Workbench", {
 	price = 80,
     removeOnTeamSwitch = true,
     customCheck = function(ply)
-    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT then
 			return true
 		else
 			return false
@@ -76,7 +76,7 @@ impulse.Business.Define("Weaponry Workbench", {
 	price = 100,
     removeOnTeamSwitch = true,
     customCheck = function(ply)
-    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT then
 			return true
 		else
 			return false
@@ -91,7 +91,7 @@ impulse.Business.Define("Heavy Weaponry Workbench", {
 	price = 200,
     removeOnTeamSwitch = true,
     customCheck = function(ply)
-    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT then
 			return true
 		else
 			return false
@@ -106,7 +106,7 @@ impulse.Business.Define("Attachment Workbench", {
 	price = 45,
     removeOnTeamSwitch = true,
     customCheck = function(ply)
-    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+    	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT then
 			return true
 		else
 			return false
