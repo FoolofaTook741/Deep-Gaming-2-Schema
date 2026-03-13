@@ -10,12 +10,11 @@ local TAB_BROWSE  = 1
 local TAB_SELL    = 2
 local TAB_MYAUCTS = 3
 local DURATION_OPTIONS = {
-    { label = "2 Minutes", hours = 0   },
-    { label = "2 Hours",   hours = 2   },
-    { label = "8 Hours",   hours = 8   },
-    { label = "1 Day",     hours = 24  },
-    { label = "3 Days",    hours = 72  },
-    { label = "7 Days",    hours = 168 },
+    { label = "2 Hours",  hours = 2   },
+    { label = "8 Hours",  hours = 8   },
+    { label = "1 Day",    hours = 24  },
+    { label = "3 Days",   hours = 72  },
+    { label = "7 Days",   hours = 168 },
 }
 local DEPOSIT_RATE    = 0.02
 local SALE_FEE_RATE   = 0.06
