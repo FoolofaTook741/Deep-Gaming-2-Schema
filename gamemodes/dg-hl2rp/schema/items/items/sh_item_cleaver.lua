@@ -50,7 +50,7 @@ function ITEM:OnUse(ply, target)
 			ent:Spawn()
 			ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
 		end
-
+--[[
 		if headPos then
 			local m = impulse.Anim.GetModelClass(target:GetModel()) == "metrocop" and "models/dpfilms/metropolice/props/zombie_gasmask.mdl" or "models/gibs/hgibs.mdl"
 
@@ -59,7 +59,7 @@ function ITEM:OnUse(ply, target)
 			gib:SetPos(headPos)
 			makeGib(gib)
 		end
-
+]]--
 		if pelvisPos then
 			local gib = ents.Create("prop_ragdoll")
 			gib:SetModel("models/gibs/fast_zombie_legs.mdl")
