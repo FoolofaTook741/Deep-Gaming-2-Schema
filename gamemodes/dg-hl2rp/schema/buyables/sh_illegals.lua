@@ -12,15 +12,16 @@ impulse.Business.Define("Brewing Barrel", {
     	ply.BarrelCount = (ply.BarrelCount or 0) + 1
     end,
     customCheck = function(ply)
-        if ply:Team() != TEAM_CITIZEN or TEAM_VORT then
+        if ply:Team() != TEAM_CITIZEN and ply:Team() != TEAM_VORT and ply:Team() != TEAM_CWU then
             return false
         end
-
     	local barrelCount = ply.BarrelCount or 0
 
     	if barrelCount >= impulse.Config.MaxBarrels then
     		ply:Notify("You have reached the max amount of brewing barrels.")
     		return false
+        elseif (ply:Team() == TEAM_CWU and ply:GetTeamClass() == CLASS_COMMERCE) then
+            return false
     	else
     		return true
     	end

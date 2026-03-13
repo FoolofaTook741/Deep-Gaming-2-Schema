@@ -91,6 +91,13 @@ TEAM_CWU = impulse.Teams.Define({
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
+					if ply.BuyableTeamRemove then
+					    for v,k in pairs(ply.BuyableTeamRemove) do
+					        if k and IsValid(k) and k.BuyableOwner == ply and k:GetClass() == "impulse_hl2rp_brewingbarrel" then
+					            k:Remove()
+					        end
+					    end
+					end
 				elseif ply:GetTeamClass() == CLASS_REFINERY then
 					ply:SetBodygroup(2,6)
 					ply:SetBodygroup(3,0)
@@ -132,6 +139,13 @@ TEAM_CWU = impulse.Teams.Define({
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
+					if ply.BuyableTeamRemove then
+					    for v,k in pairs(ply.BuyableTeamRemove) do
+					        if k and IsValid(k) and k.BuyableOwner == ply and k:GetClass() == "impulse_hl2rp_brewingbarrel" then
+					            k:Remove()
+					        end
+					    end
+					end
 				elseif ply:GetTeamClass() == CLASS_REFINERY then
 					ply:SetBodygroup(2,6)
 					ply:SetBodygroup(3,0)
@@ -174,6 +188,13 @@ TEAM_CWU = impulse.Teams.Define({
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
+					if ply.BuyableTeamRemove then
+					    for v,k in pairs(ply.BuyableTeamRemove) do
+					        if k and IsValid(k) and k.BuyableOwner == ply and k:GetClass() == "impulse_hl2rp_brewingbarrel" then
+					            k:Remove()
+					        end
+					    end
+					end
 				elseif ply:GetTeamClass() == CLASS_REFINERY then
 					ply:SetBodygroup(2,6)
 					ply:SetBodygroup(3,0)
@@ -221,6 +242,13 @@ TEAM_CWU = impulse.Teams.Define({
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
 					ply:SetBodygroup(2,2)
 					ply:SetBodygroup(3,0)
+					if ply.BuyableTeamRemove then
+					    for v,k in pairs(ply.BuyableTeamRemove) do
+					        if k and IsValid(k) and k.BuyableOwner == ply and k:GetClass() == "impulse_hl2rp_brewingbarrel" then
+					            k:Remove()
+					        end
+					    end
+					end
 				elseif ply:GetTeamClass() == CLASS_REFINERY then
 					ply:SetBodygroup(2,6)
 					ply:SetBodygroup(3,0)
@@ -266,7 +294,14 @@ TEAM_CWU = impulse.Teams.Define({
 						ply:SetBodygroup(2,3)
 						ply:SetBodygroup(3,0)
 						ply:SetBodygroup(5,3)
-					else	
+					else
+						if ply:GetTeamClass() == CLASS_COMMERCE and ply.BuyableTeamRemove then
+						    for v,k in pairs(ply.BuyableTeamRemove) do
+						        if k and IsValid(k) and k.BuyableOwner == ply and k:GetClass() == "impulse_hl2rp_brewingbarrel" then
+						            k:Remove()
+						        end
+						    end
+						end 
 						ply:SetBodygroup(2,28)
 						ply:SetBodygroup(3,9)
 					end
