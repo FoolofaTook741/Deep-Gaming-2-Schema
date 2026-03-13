@@ -907,14 +907,16 @@ function GM:CanPlayerSuicide()
 	return false
 end
 
-function GM:OnPlayerChangedTeam(ply) -- get rid of it logging team changes to console
-	if ply.BuyableTeamRemove then
-		for v,k in pairs(ply.BuyableTeamRemove) do
-			if k and IsValid(k) and k.BuyableOwner == ply then
-				k:Remove()
-			end
-		end
-	end
+function GM:OnPlayerChangedTeam(ply, oldTeam, newTeam)
+    local allowedTeams = { [TEAM_CWU] = true, [TEAM_CITIZEN] = true, [TEAM_VORT] = true }
+
+    if ply.BuyableTeamRemove and not allowedTeams[newTeam] then
+        for v,k in pairs(ply.BuyableTeamRemove) do
+            if k and IsValid(k) and k.BuyableOwner == ply then
+                k:Remove()
+            end
+        end
+    end
 	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
 		ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
 	end
