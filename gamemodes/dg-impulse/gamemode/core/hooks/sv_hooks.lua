@@ -916,13 +916,7 @@ function GM:OnPlayerChangedTeam(ply, oldTeam, newTeam)
                 k:Remove()
             end
         end
-    elseif newTeam == TEAM_CWU and ply.BuyableTeamRemove then
-	    for v,k in pairs(ply.BuyableTeamRemove) do
-	        if k and IsValid(k) and k.BuyableOwner == ply and k:GetClass() == "impulse_hl2rp_brewingbarrel" then
-	            k:Remove()
-	        end
-	    end
-	end
+    end
 	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
 		ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
 	end
