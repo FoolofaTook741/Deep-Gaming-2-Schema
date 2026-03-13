@@ -924,6 +924,7 @@ function GM:OnPlayerChangedTeam(ply) -- get rid of it logging team changes to co
 	            ply:SetBodygroup(group.id, 0)
 	        end
 	    end
+	    ply:SetBodygroup(10, 0)
 	end
 end
 

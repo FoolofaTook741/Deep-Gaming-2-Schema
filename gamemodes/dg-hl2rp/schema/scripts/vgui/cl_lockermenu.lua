@@ -72,7 +72,7 @@ function PANEL:Init()
 			local bodygroup2 = 10
 			local bodygroup3 = 3
 			if ply:Team() == TEAM_CWU and teamClass == CLASS_MEDIC then
-				bodygroup2 = 9
+				bodygroup2 = 12
 				
 			end
 			ent:SetBodygroup(2, bodygroup2)

@@ -31,20 +31,20 @@ end
 
 function ITEM:OnEquip(ply)
 	bg = ply:GetBodygroup(2)
-	if ply:GetBodygroup(2) == 11 then
-		ply:SetBodygroup(2, 7)
-	elseif ply:GetBodygroup(2) == 11 then
+	if ply:GetBodygroup(2) == 11 or ply:GetBodygroup(2) == 10 then
 		ply:SetBodygroup(2, 8)
-	elseif ply:GetBodygroup(2) == 10 then
-		ply:SetBodygroup(2, 9)
 	else
-		ply:SetBodygroup(2, 8)
+		ply:SetBodygroup(2, 9)
 	end
 	ply.HasTier1Vest = true
 end
 
 function ITEM:UnEquip(ply)
-	ply:SetBodygroup(2, 12)
+	if ply:Team() == TEAM_CWU and ply:GetTeamClass() == CLASS_MEDIC then
+		ply:SetBodygroup(2, 12)
+	else
+		ply:SetBodygroup(2, 10)
+	end
 	ply.HasTier1Vest = false
 end
 

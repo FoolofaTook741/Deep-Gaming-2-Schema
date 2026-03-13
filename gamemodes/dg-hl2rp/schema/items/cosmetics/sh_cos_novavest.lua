@@ -35,7 +35,11 @@ function ITEM:OnEquip(ply)
 end
 
 function ITEM:UnEquip(ply)
-	ply:SetBodygroup(2, 12)
+	if ply:Team() == TEAM_CWU and ply:GetTeamClass() == CLASS_MEDIC then
+		ply:SetBodygroup(2, 12)
+	else
+		ply:SetBodygroup(2, 10)
+	end
 	ply.HasTier3Vest = false
 end
 
