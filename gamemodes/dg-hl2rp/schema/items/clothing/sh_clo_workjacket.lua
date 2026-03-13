@@ -23,7 +23,7 @@ function ITEM:CanEquip(ply)
 end
 
 function ITEM:OnEquip(ply)
-    ply:SetBodygroup(2, 25)
+    ply:SetBodygroup(2, 21)
 	ply.HasJacket = true
 end
 
