@@ -391,9 +391,17 @@ function PANEL:SortBrowseList(method)
     if method == "Time Remaining" then
         table.sort(self.auctionData, function(a, b) return (a.expires_at or 0) < (b.expires_at or 0) end)
     elseif method == "Price: Low→High" then
-        table.sort(self.auctionData, function(a, b) return (a.current_bid or 0) < (b.current_bid or 0) end)
+        table.sort(self.auctionData, function(a, b)
+            local pa = a.buyout_price or 0
+            local pb = b.buyout_price or 0
+            return pa < pb
+        end)
     elseif method == "Price: High→Low" then
-        table.sort(self.auctionData, function(a, b) return (a.current_bid or 0) > (b.current_bid or 0) end)
+        table.sort(self.auctionData, function(a, b)
+            local pa = a.buyout_price or 0
+            local pb = b.buyout_price or 0
+            return pa > pb
+        end)
     elseif method == "Name A→Z" then
         table.sort(self.auctionData, function(a, b) return (a.item_name or "") < (b.item_name or "") end)
     end
