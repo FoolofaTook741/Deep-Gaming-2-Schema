@@ -73,7 +73,7 @@ SWEP.Primary.Cone = 0.01
 SWEP.Primary.Delay = RPM(210)
 SWEP.UseIronsightsRecoil = false
 
-SWEP.Primary.Ammo = "SniperRound"
+SWEP.Primary.Ammo = "Rifle"
 SWEP.Primary.Automatic = false
 SWEP.Primary.ClipSize = 20
 SWEP.Primary.DefaultClip = 20
