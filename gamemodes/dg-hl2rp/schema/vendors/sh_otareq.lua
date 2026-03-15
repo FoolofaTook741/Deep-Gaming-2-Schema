@@ -113,28 +113,6 @@ VENDOR.Sell = {
 			else return false end
 		end
 	},
-	["att_holosight"] = {
-		Desc = "ECHO CCP+",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_OCP then
-				return true
-			else return false
-			end
-		end
-	},
-	["att_huntersight"] = {
-		Desc = "ECHO CCP+",
-		Restricted = true,
-		Max = 1,
-		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_OCP then
-				return true
-			else return false
-			end
-		end
-	},
 	["wep_m500"] = {
 		Desc = "MACE CCP+",
 		Restricted = true,
@@ -240,6 +218,28 @@ VENDOR.Sell = {
 			return true
 		end
 	},
+	["att_holosight"] = {
+		Desc = "ECHO CCP+",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_OCP then
+				return true
+			else return false
+			end
+		end
+	},
+	["att_huntersight"] = {
+		Desc = "ECHO CCP+",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if ply:GetTeamClass() == CLASS_ECHO and ply:GetTeamRank() >= RANK_OCP then
+				return true
+			else return false
+			end
+		end
+	},
 	]]--
 	["item_mine"] = {
 		Desc = "NOMAD",
@@ -253,11 +253,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_sledgehammer"] = {
-		Desc = "MACE ECS+",
+		Desc = "MACE CSO+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_MACE and ply:GetTeamRank() >= RANK_EOS then
+			if ply:GetTeamClass() == CLASS_MACE and ply:GetTeamRank() >= RANK_OWS then
 				return true
 			else return false
 			end
@@ -416,6 +416,7 @@ VENDOR.Sell = {
 			end
 		end
 	},
+	--[[
 	["att_reflex"] = {
 		Desc = "ECHO CSO+",
 		Restricted = true,
@@ -449,6 +450,7 @@ VENDOR.Sell = {
 			end
 		end
 	},
+	]]--
 	["grenade_flashbang"] = {
 		Desc = "CCP+",
 		Restricted = true,
