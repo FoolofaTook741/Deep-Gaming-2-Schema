@@ -2117,6 +2117,23 @@ hook.Add( "PlayerDisconnected", "Playerleave", function(ply)
     end
 end )
 
+CHAT_BANNED = { --Manage this list for players to not speak in any chats but the below.
+    ["STEAM_0:1:104618787"] = true, --Tupoy
+    ["STEAM_0:1:115345277"] = true, --Goofy, fool's alt to test
+}
+
+hook.Add("PlayerSay", "ChatBanCheck", function(ply, text)
+    if not CHAT_BANNED[ply:SteamID()] then return end
+
+    local lower = string.lower(text)
+    if string.StartWith(lower, "/g ") or lower == "/g" then return end
+    if string.StartWith(lower, "/r ") or lower == "/r" then return end
+    if string.StartWith(lower, "/rt ") or lower == "/rt" then return end
+
+    ply:Notify("You are chat banned and cannot use this chat.")
+    return ""
+end)
+
 net.Receive("deepViewBodyCam", function(len, ply)
     if ply:IsCP() and (ply:IsCPCommand() or (ply:GetTeamClass() == CLASS_GHOST and ply:Team() == TEAM_CP)) then
         local target = net.ReadEntity()
