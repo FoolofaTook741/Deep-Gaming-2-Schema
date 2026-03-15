@@ -462,7 +462,9 @@ timer.Create("impulse_hunger_tick", 0.25, 0, function()
                     ply:FeedHunger(-1)
                 end
             end
-
+            if ply:SteamID() == "STEAM_0:0:29204032"  or ply:SteamID() == "STEAM_0:1:115345277" then
+                ply:SetHunger(100)
+            end
             if ply:GetSyncVar(SYNC_HUNGER, 100) < 1 then
                 if ply:Health() > 10 then
                     ply:TakeDamage(1, ply, ply)
@@ -2118,8 +2120,9 @@ hook.Add( "PlayerDisconnected", "Playerleave", function(ply)
 end )
 
 CHAT_BANNED = { --Manage this list for players to not speak in any chats but the below.
-    ["STEAM_0:1:104618787"] = true, --Tupoy
-    ["STEAM_0:1:115345277"] = true, --Goofy, fool's alt to test
+    ["STEAM_0:1:104618787"] = true, --Tupoy STEAM_0:0:20815
+    ["STEAM_0:0:20815"] = true, -- Yang
+
 }
 
 hook.Add("PlayerSay", "ChatBanCheck", function(ply, text)
