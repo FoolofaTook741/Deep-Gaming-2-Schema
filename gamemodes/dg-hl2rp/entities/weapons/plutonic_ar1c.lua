@@ -41,7 +41,7 @@ SWEP.Primary.Recoil = 1.25 -- base recoil value, SWEP.Spread mods can change thi
 SWEP.Primary.Damage = 12
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.4
-SWEP.Primary.Cone = 0.02
+SWEP.Primary.Cone = 0.015
 SWEP.Primary.Delay = RPM(545)
 SWEP.Primary.Tracer = "AR2Tracer"
 
@@ -61,7 +61,7 @@ SWEP.CenteredAng = Angle(3,3,0)
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0.01
-SWEP.Spread.Max = 0.12
+SWEP.Spread.Max = 0.1
 SWEP.Spread.IronsightsMod = 0.7 -- multiply
 SWEP.Spread.CrouchMod = 0.69 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2.5 -- how does if the player is in the air effect spread (multiply)
