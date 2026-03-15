@@ -1425,7 +1425,9 @@ hook.Add( "PlayerChangedTeam", "resetbuyables", function(ply, oldTeam, newTeam)
     ply.BRStation = 0
     ply.RefineryCount = 0
     ply.BPCount = 0
-    ply.BarrelCount = 0
+    if newTeam ~= TEAM_CWU and newTeam ~= TEAM_CITIZEN and newTeam ~= TEAM_VORT then
+        ply.BarrelCount = 0
+    end
     ply.Radiator = 0
     ply.Winery = 0
     ply.RadioCount = 0
