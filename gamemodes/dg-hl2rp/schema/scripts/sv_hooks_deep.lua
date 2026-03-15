@@ -2129,6 +2129,8 @@ hook.Add("PlayerSay", "ChatBanCheck", function(ply, text)
     if string.StartWith(lower, "/g ") or lower == "/g" then return end
     if string.StartWith(lower, "/r ") or lower == "/r" then return end
     if string.StartWith(lower, "/rt ") or lower == "/rt" then return end
+    if string.StartWith(lower, "/me equips ") or lower == "/me equips " then return end
+    if string.StartWith(lower, "/me unequips ") or lower == "/me unequips " then return end
 
     ply:Notify("You are chat banned and cannot use this chat.")
     return ""
