@@ -157,6 +157,36 @@ impulse.Business.Define("Fishing Cage", {
     end
 })
 
+impulse.Business.Define("Commercial Cooler", {
+    entity = "impulse_cwucooler",
+    model = "models/props_c17/display_cooler01a.mdl",
+    description = "Sell your food with this!",
+    category = "Business",
+    price = 100,
+    refundAdd = 80,
+    refund = true,
+    removeOnTeamSwitch = true,
+    postSpawn = function(ent, ply)
+        ent:CPPISetOwner(ply)
+        ent:SetNWString("OwnerSID", ply:SteamID())
+        ply.CWUcooler = (ply.CWUcooler or 0) + 1
+    end,
+    customCheck = function(ply)
+        if ply:Team() ~= TEAM_CWU and ply:GetTeamClass() ~= CLASS_COMMERCE then
+            return false
+        end
+
+        local coolers = ply.CWUcooler or 0
+
+        if coolers >= 1 then
+            ply:Notify("You have reached the max amount of coolers. (1)")
+            return false
+        else
+            return true
+        end
+    end
+})
+
 impulse.Business.Define("Generator", {
     entity = "deep_generator",
     model = "models/props_vehicles/generatortrailer01.mdl",
