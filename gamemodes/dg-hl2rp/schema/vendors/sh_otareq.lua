@@ -439,6 +439,7 @@ VENDOR.Sell = {
 			end
 		end
 	},
+	]]--
 	["att_optic"] = {
 		Desc = "ECHO ECS+/FIST",
 		Restricted = true,
@@ -450,7 +451,6 @@ VENDOR.Sell = {
 			end
 		end
 	},
-	]]--
 	["grenade_flashbang"] = {
 		Desc = "CCP+",
 		Restricted = true,
