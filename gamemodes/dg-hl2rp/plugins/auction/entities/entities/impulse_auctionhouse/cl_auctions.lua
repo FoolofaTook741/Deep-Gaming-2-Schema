@@ -1,5 +1,6 @@
 local browseBuffer  = { total = 0, chunks = 0, received = {}, count = 0 }
 local myAucBuffer   = { total = 0, chunks = 0, received = {}, count = 0 }
+local saleHistBuf   = { total = 0, chunks = 0, received = {}, count = 0 }
 
 local function tryFinalize(buf, callback)
     if buf.count < buf.chunks then return end
@@ -48,6 +49,26 @@ net.Receive("AuctionHouse_MyAuctionsChunk", function()
     tryFinalize(myAucBuffer, function(data)
         if IsValid(impulse.AuctionHousePanel) then
             impulse.AuctionHousePanel:ReceiveMyAuctions(data)
+        end
+    end)
+end)
+
+net.Receive("AuctionHouse_SaleHistory", function()
+    saleHistBuf.total    = net.ReadUInt(32)
+    saleHistBuf.chunks   = net.ReadUInt(16)
+    saleHistBuf.received = {}
+    saleHistBuf.count    = 0
+end)
+
+net.Receive("AuctionHouse_SaleHistoryChunk", function()
+    local idx   = net.ReadUInt(16)
+    local size  = net.ReadUInt(16)
+    local chunk = net.ReadData(size)
+    saleHistBuf.received[idx] = chunk
+    saleHistBuf.count = saleHistBuf.count + 1
+    tryFinalize(saleHistBuf, function(data)
+        if IsValid(impulse.AuctionHousePanel) then
+            impulse.AuctionHousePanel:ReceiveSaleHistory(data)
         end
     end)
 end)

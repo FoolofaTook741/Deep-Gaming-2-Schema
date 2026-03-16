@@ -9,6 +9,7 @@ local white       = Color(255, 255, 255)
 local TAB_BROWSE  = 1
 local TAB_SELL    = 2
 local TAB_MYAUCTS = 3
+local TAB_HISTORY = 4
 local DURATION_OPTIONS = {
     { label = "2 Hours",  hours = 2   },
     { label = "8 Hours",  hours = 8   },
@@ -102,6 +103,7 @@ function PANEL:BuildChrome()
         { id = TAB_BROWSE,  label = "Browse Auctions" },
         { id = TAB_SELL,    label = "Sell Item"        },
         { id = TAB_MYAUCTS, label = "My Auctions"      },
+        { id = TAB_HISTORY, label = "Sale History"     },
     }
     local tabW = 180
     local tabH = 28
@@ -143,6 +145,7 @@ function PANEL:SwitchTab(tabID)
     if tabID == TAB_BROWSE  then self:BuildBrowseTab()  end
     if tabID == TAB_SELL    then self:BuildSellTab()    end
     if tabID == TAB_MYAUCTS then self:BuildMyAuctions() self:RequestMyAuctions() end
+    if tabID == TAB_HISTORY then self:BuildHistoryTab() self:RequestSaleHistory() end
 end
 function PANEL:BuildBrowseTab()
     local p   = self.tabContent
@@ -742,7 +745,7 @@ function PANEL:PopulateSellItemList()
             local itemData = impulse.Inventory.Items[entry.id]
             if itemData then
                 local uid = itemData.UniqueID or entry.class
-                if itemData.CanStack and seen[uid] then
+                if seen[uid] then
                     seen[uid].stackCount = seen[uid].stackCount + 1
                 else
                     seen[uid] = {
@@ -750,7 +753,7 @@ function PANEL:PopulateSellItemList()
                         itemEntry  = entry,
                         invKey     = key,
                         stackCount = 1,
-                        canStack   = itemData.CanStack or false,
+                        canStack   = true,
                     }
                 end
             end
@@ -1075,6 +1078,92 @@ function PANEL:ShowActionResult(success, message)
         end
         LocalPlayer():ChatPrint(message)
     end
+end
+function PANEL:RequestSaleHistory()
+    net.Start("AuctionHouse_RequestSaleHistory")
+    net.SendToServer()
+end
+function PANEL:ReceiveSaleHistory(data)
+    self.saleHistoryData = data
+    if self.currentTab == TAB_HISTORY then
+        self:PopulateHistoryTab()
+    end
+end
+function PANEL:BuildHistoryTab()
+    local p = self.tabContent
+    local w = p:GetWide()
+    local h = p:GetTall()
+    local headerH = 26
+    local colPanel = vgui.Create("DPanel", p)
+    colPanel:SetPos(0, 0)
+    colPanel:SetSize(w, headerH)
+    function colPanel:Paint(cw, ch)
+        draw.RoundedBox(0, 0, 0, cw, ch, Color(35, 35, 35, 220))
+    end
+    local cols = {
+        { label = "Item",         x = 10  },
+        { label = "Sale Price",   x = 500 },
+        { label = "Your Payout",  x = 660 },
+        { label = "Date",         x = 840 },
+    }
+    for _, col in ipairs(cols) do
+        local lbl = vgui.Create("DLabel", colPanel)
+        lbl:SetPos(col.x, 4)
+        lbl:SetFont("Impulse-Elements18-Shadow")
+        lbl:SetText(col.label)
+        lbl:SetTextColor(accentColor)
+        lbl:SizeToContents()
+    end
+    local pageBarH = 34
+    self.histScroll = vgui.Create("DScrollPanel", p)
+    self.histScroll:SetPos(0, headerH)
+    self.histScroll:SetSize(w, h - headerH - pageBarH)
+    self.histScroll.rowW = w - 16
+    self.histPage = self.histPage or 1
+    self.histPageBar = MakePageBar(p, 0, h - pageBarH, w, pageBarH, self, "histPage", "PopulateHistoryTab")
+    self:PopulateHistoryTab()
+end
+function PANEL:PopulateHistoryTab()
+    if not IsValid(self.histScroll) then return end
+    self.histScroll:Clear()
+    local history = self.saleHistoryData or {}
+    if #history == 0 then
+        local empty = self.histScroll:Add("DLabel")
+        empty:Dock(TOP)
+        empty:SetTall(40)
+        empty:SetContentAlignment(5)
+        empty:SetText("No sales history yet.")
+        empty:SetFont("Impulse-Elements19-Shadow")
+        empty:SetTextColor(grey)
+        if IsValid(self.histPageBar) then self.histPageBar:Rebuild(1, 1) end
+        return
+    end
+    local totalPages = math.ceil(#history / ITEMS_PER_PAGE)
+    self.histPage    = math.Clamp(self.histPage or 1, 1, totalPages)
+    local startIdx   = (self.histPage - 1) * ITEMS_PER_PAGE + 1
+    local endIdx     = math.min(startIdx + ITEMS_PER_PAGE - 1, #history)
+    for i = startIdx, endIdx do
+        local entry = history[i]
+        local row = self.histScroll:Add("DPanel")
+        row:Dock(TOP)
+        row:DockMargin(2, 0, 2, 3)
+        row:SetTall(52)
+        row.entry   = entry
+        row.hovered = false
+        function row:Paint(rw, rh)
+            local bg = self.hovered and Color(55, 55, 55, 220) or Color(45, 45, 45, 200)
+            draw.RoundedBox(4, 0, 0, rw, rh, bg)
+            draw.SimpleText(self.entry.item_name or "Unknown", "Impulse-Elements19-Shadow", 10, rh / 2, white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(FormatCredits(self.entry.amount or 0), "Impulse-Elements18-Shadow", 500, rh / 2, grey, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(FormatCredits(self.entry.seller_payout or 0), "Impulse-Elements18-Shadow", 660, rh / 2, green, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            local t = self.entry.placed_at or 0
+            local dateStr = t > 0 and os.date("%m/%d/%y %H:%M", t) or "—"
+            draw.SimpleText(dateStr, "Impulse-Elements18-Shadow", 840, rh / 2, grey, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+        function row:OnCursorEntered() self.hovered = true  end
+        function row:OnCursorExited()  self.hovered = false end
+    end
+    if IsValid(self.histPageBar) then self.histPageBar:Rebuild(self.histPage, totalPages) end
 end
 function PANEL:PaintOver(w, h)
     surface.SetDrawColor(accentColor.r, accentColor.g, accentColor.b, 80)

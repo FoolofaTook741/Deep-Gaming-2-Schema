@@ -18,13 +18,17 @@ util.AddNetworkString("AuctionHouse_Buyout")
 util.AddNetworkString("AuctionHouse_CancelListing")
 util.AddNetworkString("AuctionHouse_RequestBrowse")
 util.AddNetworkString("AuctionHouse_RequestMine")
+util.AddNetworkString("AuctionHouse_SaleHistory")
+util.AddNetworkString("AuctionHouse_SaleHistoryChunk")
+util.AddNetworkString("AuctionHouse_RequestSaleHistory")
 local COOLDOWNS = {
     AuctionHouse_PostListing   = 3,
     AuctionHouse_PlaceBid      = 2,
     AuctionHouse_Buyout        = 2,
     AuctionHouse_CancelListing = 2,
-    AuctionHouse_RequestBrowse = 0.7,
-    AuctionHouse_RequestMine   = 4,
+    AuctionHouse_RequestBrowse       = 0.7,
+    AuctionHouse_RequestMine         = 0.7,
+    AuctionHouse_RequestSaleHistory  = 0.7,
 }
 local lastAction = {}
 local function RateLimit(ply, msgName)
@@ -691,6 +695,38 @@ net.Receive("AuctionHouse_RequestMine", function(len, ply)
         SendMyAuctions(ply, results or {})
     end)
     q:Execute()
+end)
+local function SendSaleHistory(ply, rows)
+    if not IsValid(ply) then return end
+    local history = {}
+    for _, row in ipairs(rows or {}) do
+        table.insert(history, {
+            auction_id   = tonumber(row.auction_id),
+            item_name    = row.item_name,
+            item_class   = row.item_class,
+            item_quantity= tonumber(row.item_quantity) or 1,
+            amount       = tonumber(row.amount) or 0,
+            seller_payout= tonumber(row.seller_payout) or 0,
+            placed_at    = tonumber(row.placed_at),
+            event_type   = tonumber(row.event_type),
+        })
+    end
+    local compressed = util.Compress(util.TableToJSON(history))
+    SendChunked(ply, "AuctionHouse_SaleHistory", "AuctionHouse_SaleHistoryChunk", compressed)
+end
+net.Receive("AuctionHouse_RequestSaleHistory", function(len, ply)
+    if not IsValid(ply) then return end
+    if not RateLimit(ply, "AuctionHouse_RequestSaleHistory") then return end
+    if not NearAuctionHouse(ply) then return end
+    if not ValidTeam(ply) then return end
+    local escapedSid = mysql:Escape(ply:SteamID())
+    mysql:RawQuery(
+        "SELECT * FROM `impulse_auction_history` WHERE `event_type` = 1 AND `seller_steamid` = '" .. escapedSid .. "' ORDER BY `placed_at` DESC LIMIT 100",
+        function(results)
+            if not IsValid(ply) then return end
+            SendSaleHistory(ply, results or {})
+        end
+    )
 end)
 function AH.ProcessPickups(ply)
     if not IsValid(ply) then return end
