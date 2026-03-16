@@ -2127,19 +2127,35 @@ CHAT_BANNED = { --Manage this list for players to not speak in any chats but the
     ["STEAM_0:0:584507256"] = true, -- Goldplated
    }
 
+local allowedCommands = {
+    ["/g"] = true,
+    ["/r"] = true,
+    ["/rt"] = true,
+    ["/report"] = true,
+    ["/tools"] = true,
+    ["/rappel"] = true,
+    ["/unrappel"] = true,
+    ["/apply"] = true,
+    ["/gwp"] = true,
+    ["/ping"] = true,
+}
+
+local allowedPrefixes = {
+    "/me equips ",
+    "/me unequips ",
+}
+
 hook.Add("PlayerSay", "ChatBanCheck", function(ply, text)
     if not CHAT_BANNED[ply:SteamID()] then return end
 
     local lower = string.lower(text)
-    if string.StartWith(lower, "/g ") or lower == "/g" then return end
-    if string.StartWith(lower, "/r ") or lower == "/r" then return end
-    if string.StartWith(lower, "/rt ") or lower == "/rt" then return end
-    if string.StartWith(lower, "/me equips ") or lower == "/me equips " then return end
-    if string.StartWith(lower, "/me unequips ") or lower == "/me unequips " then return end
-    if string.StartWith(lower, "/report ") or lower == "/report " then return end
-    if string.StartWith(lower, "/tools") or lower == "/tools" then return end
-    if string.StartWith(lower, "/rappel") or lower == "/rappel" then return end
-    if string.StartWith(lower, "/unrappel") or lower == "/unrappel" then return end
+    local cmd = string.match(lower, "^(%S+)")
+
+    if allowedCommands[cmd] then return end
+
+    for _, prefix in ipairs(allowedPrefixes) do
+        if string.StartWith(lower, prefix) then return end
+    end
 
     ply:Notify("You are chat banned and cannot use this chat.")
     return ""
