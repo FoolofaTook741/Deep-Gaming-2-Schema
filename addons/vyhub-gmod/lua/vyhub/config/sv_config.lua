@@ -6,7 +6,7 @@
 -- PLEASE FOLLOW THE INSTALLATION INSTRUCTIONS HERE: https://docs.vyhub.net/latest/game/gmod/#installation
 VyHub.Config.api_url = "https://api.vyhub.app/deepgaming2forum/v1"
 VyHub.Config.api_key = "xfGK94Y2dcltJVxo2w6oumHLPHwXrE7i8qBEtMJnnldejUstpZxGirY8bXWfz4rR" -- Admin -> Settings -> Server -> Setup
-VyHub.Config.server_id = "ac8af53b-6e27-4db4-8d8a-9daf0e004a04" -- Admin -> Settings -> Server -> Setup
+VyHub.Config.server_id = "ac8af53b-6e27-4db4-8d8a-9daf0e004a04" -- Admin -> Settings -> Server -> Setup 
 
 -- Prevent script execution as reward
 -- Rewards that want to execute a script will not work if this is enabled.
