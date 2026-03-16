@@ -2139,6 +2139,10 @@ local allowedCommands = {
     ["/apply"] = true,
     ["/gwp"] = true,
     ["/ping"] = true,
+    ["/kickdoor"] = true,
+    ["/combinegate"] = true,
+    ["/ff"] = true,
+    ["/invsearch"] = true,
 }
 
 local allowedPrefixes = {
