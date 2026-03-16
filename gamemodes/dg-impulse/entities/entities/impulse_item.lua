@@ -109,6 +109,16 @@ if SERVER then
 					return
 				end
 
+				local itemUniqueID = self.Item.UniqueID
+				local itemDef = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemUniqueID)]
+				if itemDef and itemDef.CanStack then
+				    for v,k in pairs(impulse.Inventory.Data[activator.impulseID][1]) do
+				        if k.class == itemUniqueID and k.restricted then
+				            return activator:Notify("You cannot pick up this item currently.")
+				        end
+				    end
+				end
+
 				self:Remove()
 
 				if self.ItemClip then
