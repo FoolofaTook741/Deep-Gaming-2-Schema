@@ -2124,6 +2124,7 @@ CHAT_BANNED = { --Manage this list for players to not speak in any chats but the
     ["STEAM_0:1:104618787"] = true, --Tupoy
     ["STEAM_0:0:20815"] = true, -- Yang
     ["STEAM_0:1:110245383"] = true, -- Maekar
+    ["STEAM_0:0:584507256"] = true, -- Goldplated
    }
 
 hook.Add("PlayerSay", "ChatBanCheck", function(ply, text)
@@ -2137,6 +2138,8 @@ hook.Add("PlayerSay", "ChatBanCheck", function(ply, text)
     if string.StartWith(lower, "/me unequips ") or lower == "/me unequips " then return end
     if string.StartWith(lower, "/report ") or lower == "/report " then return end
     if string.StartWith(lower, "/tools") or lower == "/tools" then return end
+    if string.StartWith(lower, "/rappel") or lower == "/rappel" then return end
+    if string.StartWith(lower, "/unrappel") or lower == "/unrappel" then return end
 
     ply:Notify("You are chat banned and cannot use this chat.")
     return ""
