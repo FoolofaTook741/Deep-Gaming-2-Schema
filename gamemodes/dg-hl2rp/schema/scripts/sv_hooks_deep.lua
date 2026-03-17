@@ -2143,6 +2143,9 @@ local allowedCommands = {
     ["/combinegate"] = true,
     ["/ff"] = true,
     ["/invsearch"] = true,
+    ["/combinegate"] = true,
+    ["/ozg"] = true,
+    ["/ozb"] = true,
 }
 
 local allowedPrefixes = {
