@@ -2146,6 +2146,7 @@ local allowedCommands = {
     ["/combinegate"] = true,
     ["/ozg"] = true,
     ["/ozb"] = true,
+    ["/reply"] = true,
 }
 
 local allowedPrefixes = {
