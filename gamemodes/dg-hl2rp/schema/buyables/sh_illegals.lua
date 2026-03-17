@@ -169,7 +169,7 @@ impulse.Business.Define("Commercial Cooler", {
     postSpawn = function(ent, ply)
         ent:CPPISetOwner(ply)
         ent:SetNWString("OwnerSID", ply:SteamID())
-        ply.CWUcooler = (ply.CWUcooler or 0) + 1
+        ply.CoolerCount = (ply.CoolerCount or 0) + 1
     end,
     customCheck = function(ply)
         if ply:Team() ~= TEAM_CWU and ply:GetTeamClass() ~= CLASS_COMMERCE then
