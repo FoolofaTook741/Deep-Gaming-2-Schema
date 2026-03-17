@@ -6,7 +6,7 @@ TEAM_STALKER = impulse.Teams.Define({
     model = "models/stalker.mdl",
 	spawnLoc = true,
 	salary = 100,
-    Health = 500,
+    Health = 50,
     runSpeed = 110,
     percentLimit = true,
 	limit = 0.15,
@@ -30,11 +30,11 @@ end)
 
 hook.Add("OnPlayerChangedTeam", "StalkerSetup", function( ply, oldTeam, newTeam )
     if newTeam == TEAM_STALKER then
-        ply:SetHealth(500)
+        ply:SetHealth(50)
         ply:SetJumpPower(120)
         ply:SetWalkSpeed(80)
         ply:SetSlowWalkSpeed(40)
-        ply:Give("weapon_stalker")
+        --ply:Give("weapon_stalker")
         ply:Give("impulse_hands")
         ply:SetRPName("CMB:STLK-"..math.random(1000,9999))
         net.Start("impulseHL2RPCombineOverlayBoot")
