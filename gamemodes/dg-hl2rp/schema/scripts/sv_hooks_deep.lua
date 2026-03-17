@@ -2147,6 +2147,8 @@ local allowedCommands = {
     ["/ozg"] = true,
     ["/ozb"] = true,
     ["/reply"] = true,
+    ["/toggleshield"] = true,
+    ["/toggleraise"] = true,
 }
 
 local allowedPrefixes = {
