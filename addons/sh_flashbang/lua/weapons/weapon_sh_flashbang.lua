@@ -135,7 +135,8 @@ function SWEP:Think()
 		if (SERVER) then
 			local proj = self:ThrowProjectile()
 			if (self.AllowCooking and IsValid(proj)) then
-				proj.m_fDieTime = ct + (self.m_fPinPulled + self.CookTime) - ct
+			    local pinPulled = self.m_fPinPulled or ct
+			    proj.m_fDieTime = ct + (pinPulled + self.CookTime) - ct
 			end
 			
 			self:TakePrimaryAmmo(1)
