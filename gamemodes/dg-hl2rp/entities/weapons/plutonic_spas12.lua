@@ -55,7 +55,7 @@ SWEP.Secondary.DefaultClip = -1
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0.05
-SWEP.Spread.Max = 0.20
+SWEP.Spread.Max = 0.175
 SWEP.Spread.IronsightsMod = 1 -- multiply
 SWEP.Spread.CrouchMod = 1 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2 -- how does if the player is in the air effect spread (multiply)
