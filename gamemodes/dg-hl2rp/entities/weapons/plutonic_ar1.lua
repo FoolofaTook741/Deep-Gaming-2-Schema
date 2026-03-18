@@ -54,7 +54,7 @@ SWEP.Primary.Damage = 12
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.Cone = 0.015
-SWEP.Primary.Delay = RPM(535)
+SWEP.Primary.Delay = RPM(550)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "AR2"

@@ -66,7 +66,7 @@ SWEP.CenteredAng = Angle(0,0,0)
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
-SWEP.Spread.Max = .25
+SWEP.Spread.Max = .20
 SWEP.Spread.IronsightsMod = 0.975 -- multiply
 SWEP.Spread.CrouchMod = .8 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 1.2 -- how does if the player is in the air effect spread (multiply)

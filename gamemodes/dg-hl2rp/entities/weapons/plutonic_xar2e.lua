@@ -52,12 +52,12 @@ SWEP.Primary.Sound = Sound("PLUTONIC.AR2E.Single")
 SWEP.Primary.Inside_Sound = Sound("weapons/ar2/fire1.wav")
 
 
-SWEP.Primary.Recoil = 1.25
+SWEP.Primary.Recoil = 1.20
 SWEP.Primary.Damage = 14
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.Cone = 0.0085 -- base spread value
-SWEP.Primary.Delay = RPM(475)
+SWEP.Primary.Delay = RPM(479)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "ar2"

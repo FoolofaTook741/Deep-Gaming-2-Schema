@@ -54,9 +54,9 @@ SWEP.Primary.Inside_Sound = Sound("LS2.FAMAS.Inside")
 SWEP.Primary.Recoil = 1 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 9
 SWEP.Primary.NumShots = 1
-SWEP.Primary.PenetrationScale = 2.4
+SWEP.Primary.PenetrationScale = 2.1
 SWEP.Primary.Cone = 0.0019 -- base spread value
-SWEP.Primary.Delay = RPM(560)
+SWEP.Primary.Delay = RPM(540)
 
 SWEP.Primary.BulletModel = Model("models/weapons/rifleshell.mdl")
 
