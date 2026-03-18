@@ -81,6 +81,7 @@ impulse.Badges = {
 	deepmapper = {Material("roleicons/mapper_1.png"), "This player is a mapper or has made/edited a map for Deep Gaming 2", function(ply) return ply:GetUserGroup() == "mapper" end},
 	dgmodeler = {Material("roleicons/mapper_1.png"), "This player is a modeler or has made/edited models for Deep Gaming 2.", function(ply) return ply:GetUserGroup() == "modeler" end},
 	dgleaddev = {Material("roleicons/developer2.png"), "This player is the lead developer of this project for Deep Gaming 2", function(ply) return ply:SteamID() == "STEAM_0:1:52886245" end},
+	secretary = {Material("icon16/telephone.png"), "This is Gundown1250, Fool's secretary.", function(ply) return not ply:IsIncognito() and (ply:SteamID() == "STEAM_0:0:25714002") end},
 	betatester = {Material("roleicons/developer.png"), "This player is a contributor or beta tester of the server or development.", function(ply) return betatester[ply:SteamID()] end},
 	communitymanager = {Material("roleicons/upperadmin.png"), "This player is a member of the HL2RP Upper Administration.", function(ply) return ply:GetUserGroup() == "communitymanager" end},
 	devers = {Material("roleicons/developer2.png"), "This player is a developer or has made contributions to the developmental branch of Deep Gaming 2", function(ply) return devers[ply:SteamID()] end},
