@@ -56,7 +56,7 @@ SWEP.Primary.Damage = 32
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0002
 SWEP.Primary.Delay = RPM(160)
-SWEP.ReloadSpeed = 2
+SWEP.ReloadSpeed = 1.5
 SWEP.Primary.PenetrationScale = 1.7
 
 --[[
