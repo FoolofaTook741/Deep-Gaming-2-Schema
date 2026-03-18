@@ -40,7 +40,7 @@ SWEP.Primary.Sound = Sound("CUST.SPAS12.Single")
 SWEP.Primary.Recoil = 10 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 8.4
 SWEP.Primary.NumShots = 10
-SWEP.Primary.Cone = 0.065
+SWEP.Primary.Cone = 0.04
 SWEP.Primary.Delay = RPM(90)
 
 SWEP.Primary.Ammo = "buckshot"
@@ -54,8 +54,8 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 
 SWEP.Spread = {}
-SWEP.Spread.Min = 0.05
-SWEP.Spread.Max = 0.175
+SWEP.Spread.Min = 0.01
+SWEP.Spread.Max = 0.09
 SWEP.Spread.IronsightsMod = 1 -- multiply
 SWEP.Spread.CrouchMod = 1 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 2 -- how does if the player is in the air effect spread (multiply)
@@ -122,6 +122,7 @@ local copyrecoil = SWEP.Primary.Recoil + 0
 --local copypen = SWEP.Primary.PenetrationScale + 0
 
 SWEP.Attachments = {
+	--[[
 	att_spas12_resin = {
 		Cosmetic = {
 			Model = "models/weapons/arccw_go/atts/supp_large.mdl",
@@ -141,7 +142,7 @@ SWEP.Attachments = {
 			e.Primary.Cone = copycone
 			e.Primary.NumShots = copynum
 		end,
-	},
+	}, ]]--
 	incendiary_rounds = {
 		Cosmetic = {
 			Model = "models/hunter/plates/plate.mdl",
@@ -158,7 +159,7 @@ SWEP.Attachments = {
 		},
 		ModSetup = function(e)
 			e.IncendiaryRounds = true
-            e.Primary.Damage = 5
+            e.Primary.Damage = 6
             e.Primary.NumShots = 8
 			e.Primary.Sound = Sound("PLT.DragonsBreath")
 		end,
