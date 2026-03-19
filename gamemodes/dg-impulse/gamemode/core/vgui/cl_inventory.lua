@@ -74,6 +74,9 @@ function PANEL:Init()
 					ent:SetSubMaterial(v - 1, mat)
 				end
 			end
+			if LocalPlayer().HairColor then
+			    ent.HairColor = LocalPlayer().HairColor
+			end
 
 			hook.Run("SetupInventoryModel", self, ent)
 
