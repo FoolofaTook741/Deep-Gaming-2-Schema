@@ -930,10 +930,17 @@ function GM:OnPlayerChangedTeam(ply, oldTeam, newTeam)
             end
         end
     end
-	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
+	if newTeam == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
 		ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
 	end
-	if ply:Team() == TEAM_VORT then
+	if newTeam == TEAM_CITIZEN then
+	    for _, group in pairs(ply:GetBodyGroups()) do
+	        if group.name ~= "hair" and group.name ~= "beard" then
+	            ply:SetBodygroup(group.id, 0)
+	        end
+	    end
+	end
+	if newTeam == TEAM_VORT then
 	    for _, group in pairs(ply:GetBodyGroups()) do
 	        if group.name ~= "collar" and group.name ~= "hooks" and group.name ~= "shackles" then
 	            ply:SetBodygroup(group.id, 0)
