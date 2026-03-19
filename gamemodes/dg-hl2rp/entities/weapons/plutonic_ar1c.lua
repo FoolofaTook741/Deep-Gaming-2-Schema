@@ -38,17 +38,17 @@ SWEP.BlowbackAngle = Angle(0, 0, 0)
 SWEP.Primary.Sound = Sound("weapons/hlvr/irifle/fire1.wav")
 
 SWEP.Primary.Recoil = 1.25 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 12
+SWEP.Primary.Damage = 13
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.4
 SWEP.Primary.Cone = 0.015
-SWEP.Primary.Delay = RPM(545)
+SWEP.Primary.Delay = RPM(560)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "AR2"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 40
-SWEP.Primary.DefaultClip = 40
+SWEP.Primary.ClipSize = 45
+SWEP.Primary.DefaultClip = 45
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
