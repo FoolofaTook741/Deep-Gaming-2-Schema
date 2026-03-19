@@ -1786,7 +1786,7 @@ hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
         -- PTRS
         if wepClass == "plutonic_ptrs" or wepClass == "plutonic_ptrs41" then
             if string.StartWith(cls, "lvs_helicopter_hl2_combine_dropship") then
-                dmginfo:AddDamage(8800)
+                dmginfo:AddDamage(7400)
             else
                 dmginfo:AddDamage(2000)
             end
