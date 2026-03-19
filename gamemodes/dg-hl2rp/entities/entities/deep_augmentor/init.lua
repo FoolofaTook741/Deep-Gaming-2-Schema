@@ -167,6 +167,7 @@ function ENT:Use(ply)
                     ply:SetBodygroup(5, 1)
                     ply:SetBodygroup(6, 1)
                     ply:SetBodygroup(7, 0)
+                    ply:SetBodygroup(9, 15)
                     ply:Give("plutonic_mp7a8")
                     ply.IsAugmented = true
                     local ranktable = {"i4", "i3", "i2", "i1", "OfC", "SqL", "DvL", "DcO", "VCmD", "CmD"}
