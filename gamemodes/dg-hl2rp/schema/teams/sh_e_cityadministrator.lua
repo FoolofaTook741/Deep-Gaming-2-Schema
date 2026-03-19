@@ -158,7 +158,7 @@ TEAM_CA = impulse.Teams.Define({
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
 					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,31)
+					ply:SetBodygroup(2,4)
 					ply:SetBodygroup(3,6)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(4,0)
