@@ -2149,6 +2149,8 @@ local allowedCommands = {
     ["/reply"] = true,
     ["/toggleshield"] = true,
     ["/toggleraise"] = true,
+    ["/rs"] = true,
+    ["/rcmd"] = true,
 }
 
 local allowedPrefixes = {
