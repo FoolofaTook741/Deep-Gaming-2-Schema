@@ -91,7 +91,7 @@ function ENT:FlashExplode()
 	local tbl = FLASHBANG_SETTINGS.HitNPCs and ents.GetAll() or player.GetAll()
 
 	for _, ent in ipairs (tbl) do
-		if (ent:IsPlayer() and ent:Alive()) then
+		if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 			if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 				local sp = ent:GetShootPos()
 				local dir = (mypos - sp):GetNormal()
@@ -136,7 +136,7 @@ function ENT:FlashExplode()
 					ent:SetDSP(34, false)
 				end
 			end
-		elseif (ent:IsNPC()) then
+		elseif (IsValid(ent) and ent:IsNPC()) then
 			local sp = ent:EyePos()
 			local dir = (mypos - sp):GetNormal()
 
@@ -205,7 +205,7 @@ function ENT:FlashExplode()
 	timer.Simple(0.5, function()
 		if not IsValid(self) then return end
 		for _, ent in ipairs (tbl) do
-			if (ent:IsPlayer() and ent:Alive()) then
+			if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 				if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 					local sp = ent:GetShootPos()
 					local dir = (mypos - sp):GetNormal()
@@ -249,7 +249,7 @@ function ENT:FlashExplode()
 						ent:SetDSP(34, false)
 					end
 				end
-			elseif (ent:IsNPC()) then
+			elseif (IsValid(ent) and ent:IsNPC()) then
 				local sp = ent:EyePos()
 				local dir = (mypos - sp):GetNormal()
 	
@@ -308,7 +308,7 @@ function ENT:FlashExplode()
 	timer.Simple(1.2, function()
 		if not IsValid(self) then return end
 		for _, ent in ipairs (tbl) do
-			if (ent:IsPlayer() and ent:Alive()) then
+			if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 				if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 					local sp = ent:GetShootPos()
 					local dir = (mypos - sp):GetNormal()
@@ -328,7 +328,7 @@ function ENT:FlashExplode()
 						ent:SetDSP(34, false)
 					end
 				end
-			elseif (ent:IsNPC()) then
+			elseif (IsValid(ent) and ent:IsNPC()) then
 				local sp = ent:EyePos()
 				local dir = (mypos - sp):GetNormal()
 				local t = { start = sp, endpos = mypos, filter = ent }
@@ -365,7 +365,7 @@ function ENT:FlashExplode()
 	timer.Simple(1.6, function()
 		if not IsValid(self) then return end
 		for _, ent in ipairs (tbl) do
-			if (ent:IsPlayer() and ent:Alive()) then
+			if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 				if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 					local sp = ent:GetShootPos()
 					local dir = (mypos - sp):GetNormal()
@@ -385,7 +385,7 @@ function ENT:FlashExplode()
 						ent:SetDSP(34, false)
 					end
 				end
-			elseif (ent:IsNPC()) then
+			elseif (IsValid(ent) and ent:IsNPC()) then
 				local sp = ent:EyePos()
 				local dir = (mypos - sp):GetNormal()
 				local t = { start = sp, endpos = mypos, filter = ent }
@@ -422,7 +422,7 @@ function ENT:FlashExplode()
 	timer.Simple(2.4, function()
 		if not IsValid(self) then return end
 		for _, ent in ipairs (tbl) do
-			if (ent:IsPlayer() and ent:Alive()) then
+			if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 				if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 					local sp = ent:GetShootPos()
 					local dir = (mypos - sp):GetNormal()
@@ -442,7 +442,7 @@ function ENT:FlashExplode()
 						ent:SetDSP(34, false)
 					end
 				end
-			elseif (ent:IsNPC()) then
+			elseif (IsValid(ent) and ent:IsNPC()) then
 				local sp = ent:EyePos()
 				local dir = (mypos - sp):GetNormal()
 				local t = { start = sp, endpos = mypos, filter = ent }
@@ -479,7 +479,7 @@ function ENT:FlashExplode()
 	timer.Simple(3.8, function()
 		if not IsValid(self) then return end
 		for _, ent in ipairs (tbl) do
-			if (ent:IsPlayer() and ent:Alive()) then
+			if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 				if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 					local sp = ent:GetShootPos()
 					local dir = (mypos - sp):GetNormal()
@@ -499,7 +499,7 @@ function ENT:FlashExplode()
 						ent:SetDSP(34, false)
 					end
 				end
-			elseif (ent:IsNPC()) then
+			elseif (IsValid(ent) and ent:IsNPC()) then
 				local sp = ent:EyePos()
 				local dir = (mypos - sp):GetNormal()
 				local t = { start = sp, endpos = mypos, filter = ent }
@@ -536,7 +536,7 @@ function ENT:FlashExplode()
 	timer.Simple(4.6, function()
 		if not IsValid(self) then return end
 		for _, ent in ipairs (tbl) do
-			if (ent:IsPlayer() and ent:Alive()) then
+			if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 				if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 					local sp = ent:GetShootPos()
 					local dir = (mypos - sp):GetNormal()
@@ -556,7 +556,7 @@ function ENT:FlashExplode()
 						ent:SetDSP(34, false)
 					end
 				end
-			elseif (ent:IsNPC()) then
+			elseif (IsValid(ent) and ent:IsNPC()) then
 				local sp = ent:EyePos()
 				local dir = (mypos - sp):GetNormal()
 				local t = { start = sp, endpos = mypos, filter = ent }
@@ -593,7 +593,7 @@ function ENT:FlashExplode()
 	timer.Simple(5.2, function()
 		if not IsValid(self) then return end
 		for _, ent in ipairs (tbl) do
-			if (ent:IsPlayer() and ent:Alive()) then
+			if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 				if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 					local sp = ent:GetShootPos()
 					local dir = (mypos - sp):GetNormal()
@@ -613,7 +613,7 @@ function ENT:FlashExplode()
 						ent:SetDSP(34, false)
 					end
 				end
-			elseif (ent:IsNPC()) then
+			elseif (IsValid(ent) and ent:IsNPC()) then
 				local sp = ent:EyePos()
 				local dir = (mypos - sp):GetNormal()
 				local t = { start = sp, endpos = mypos, filter = ent }
@@ -650,7 +650,7 @@ function ENT:FlashExplode()
 	timer.Simple(6.4, function()
 		if not IsValid(self) then return end
 		for _, ent in ipairs (tbl) do
-			if (ent:IsPlayer() and ent:Alive()) then
+			if (IsValid(ent) and ent:IsPlayer() and ent:Alive()) then
 				if ent:Team() != TEAM_OTA and ent.FlashSafe != true then
 					local sp = ent:GetShootPos()
 					local dir = (mypos - sp):GetNormal()
@@ -670,7 +670,7 @@ function ENT:FlashExplode()
 						ent:SetDSP(34, false)
 					end
 				end
-			elseif (ent:IsNPC()) then
+			elseif (IsValid(ent) and ent:IsNPC()) then
 				local sp = ent:EyePos()
 				local dir = (mypos - sp):GetNormal()
 				local t = { start = sp, endpos = mypos, filter = ent }
