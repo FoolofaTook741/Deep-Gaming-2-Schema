@@ -31,6 +31,9 @@ function ITEM:OnUse(ply)
 	if ply:Health() < 75 then
         ply:EmitSound("npc/zombine/zombine_readygrenade1.wav")
         timer.Simple(2, function() 
+            if not IsValid(ply) then return end
+            if ply:Team() ~= TEAM_ZOMBIE then return end
+
             util.BlastDamage(ply, ply, ply:GetPos(), 240, 120)
             ply:EmitSound("ambient/explosions/explode_1.wav")
             ply:Kill()
