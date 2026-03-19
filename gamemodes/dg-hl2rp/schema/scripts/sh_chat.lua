@@ -1776,7 +1776,7 @@ local setcXPCommand = {
 impulse.RegisterChatCommand("/setcxp", setcXPCommand)
 
 local setArmorCommand = {
-	description = "Sets a players crafting XP.",
+	description = "Sets a players armor/sps.",
 	requiresArg = true,
 	requiresAlive = true,
 	adminOnly = true,
