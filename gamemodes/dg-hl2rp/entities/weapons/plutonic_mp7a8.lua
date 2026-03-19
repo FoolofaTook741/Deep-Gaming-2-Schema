@@ -42,17 +42,17 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("CUST.MP7A8.Single")
 SWEP.Primary.Recoil = 1 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 12
+SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.010
-SWEP.Primary.Delay = RPM(500)
+SWEP.Primary.Delay = RPM(700)
 
 SWEP.ReloadAttach = 1
 
 SWEP.Primary.Ammo = "smg1"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 25
-SWEP.Primary.DefaultClip = 25
+SWEP.Primary.ClipSize = 35
+SWEP.Primary.DefaultClip = 35
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
@@ -64,12 +64,12 @@ SWEP.CenteredAng = Angle(0,-5, 0)
 
 SWEP.Spread = {}
 SWEP.Spread.Min = 0
-SWEP.Spread.Max = 0.3
+SWEP.Spread.Max = 0.18
 SWEP.Spread.IronsightsMod = 0.97 -- multiply
 SWEP.Spread.CrouchMod = 0.95 -- crouch effect (multiply)
 SWEP.Spread.AirMod = 1.2 -- how does if the player is in the air effect spread (multiply)
-SWEP.Spread.RecoilMod = 0 -- how does the recoil effect the spread (sustained fire) (additional)
-SWEP.Spread.VelocityMod = 1.2 -- movement speed effect on spread (additonal)
+SWEP.Spread.RecoilMod = .01 -- how does the recoil effect the spread (sustained fire) (additional)
+SWEP.Spread.VelocityMod = .5 -- movement speed effect on spread (additonal)
 
 SWEP.SwayLevel = 0.01
 SWEP.SwayIdle = 0.01
