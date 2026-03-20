@@ -1440,7 +1440,14 @@ net.Receive("impulseMixTry", function(len, ply)
 		return
 	end
 
-	local oWeight = impulse.Inventory.ItemsQW[output] * (mixClass.OutputAmount or 1)
+	local oWeight = 0
+	if mixClass.Outputs then
+	    for _, outClass in ipairs(mixClass.Outputs) do
+	        oWeight = oWeight + (impulse.Inventory.ItemsQW[outClass] or 0)
+	    end
+	else
+	    oWeight = (impulse.Inventory.ItemsQW[output] or 0) * (mixClass.OutputAmount or 1)
+	end
 
 	for v,k in pairs(mixClass.Input) do
 		local iWeight = impulse.Inventory.ItemsQW[v]
@@ -1507,22 +1514,33 @@ net.Receive("impulseMixTry", function(len, ply)
 				return
 			end
 
-			local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(mixClass.Output)]
-
 			for v,k in pairs(mixClass.Input) do
-				ply:TakeInventoryItemClass(v, nil, k.take)
+   				 ply:TakeInventoryItemClass(v, nil, k.take)
 			end
 
-			local amount = mixClass.OutputAmount or 1
-
-			for i=1, amount do
-				ply:GiveInventoryItem(mixClass.Output)
-			end
-
-			if amount > 1 then
-				ply:Notify("You have crafted "..mixClass.OutputAmount.." "..item.Name.."s.")
+			if mixClass.Outputs then
+			    local names = {}
+			    for _, outClass in ipairs(mixClass.Outputs) do
+			        ply:GiveInventoryItem(outClass)
+			        local outItem = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(outClass)]
+			        if outItem then
+			            table.insert(names, outItem.Name)
+			        end
+			        hook.Run("PlayerCraftItem", ply, outClass)
+			    end
+			    ply:Notify("You have crafted: " .. table.concat(names, ", ") .. ".")
 			else
-				ply:Notify("You have crafted a "..item.Name..".")
+			    local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(mixClass.Output)]
+			    local amount = mixClass.OutputAmount or 1
+			    for i = 1, amount do
+			        ply:GiveInventoryItem(mixClass.Output)
+			    end
+			    if amount > 1 then
+			        ply:Notify("You have crafted " .. mixClass.OutputAmount .. " " .. item.Name .. "s.")
+			    else
+			        ply:Notify("You have crafted a " .. item.Name .. ".")
+			    end
+			    hook.Run("PlayerCraftItem", ply, outClass)
 			end
 
 
@@ -1533,8 +1551,6 @@ net.Receive("impulseMixTry", function(len, ply)
 			end
 
 			ply:AddSkillXP("craft", xp)
-
-			hook.Run("PlayerCraftItem", ply, mixClass.Output)
 		end
 	end)
 

@@ -72,33 +72,42 @@ function PANEL:SetupCrafting()
 	end
 
 	for v, k in pairs(mix) do
-        if k.isSpecial and !k.isSpecial[LocalPlayer():SteamID()] then continue end
+		if k.isSpecial and !k.isSpecial[LocalPlayer():SteamID()] then continue end
 
-        table.insert(allMixes, k)
+		table.insert(allMixes, k)
 
-        local item = findItemByUniqueID(k.Output)
-        if item and item.Category then
-            local category = item.Category
+		if k.Multi then
+			-- Multi-output mixes always go into Scrapping
+			if not categories["Scrapping"] then
+				categories["Scrapping"] = true
+				categoryMixes["Scrapping"] = {}
+			end
+			table.insert(categoryMixes["Scrapping"], k)
+		else
+			local item = findItemByUniqueID(k.Output)
+			if item and item.Category then
+				local category = item.Category
 
-            if not categories[category] then
-                categories[category] = true
-                categoryMixes[category] = {}
-            end
+				if not categories[category] then
+					categories[category] = true
+					categoryMixes[category] = {}
+				end
 
-            table.insert(categoryMixes[category], k)
-        else
-            if not categories["Misc"] then
-                categories["Misc"] = true
-                categoryMixes["Misc"] = {}
-            end
-            table.insert(categoryMixes["Misc"], k)
-        end
+				table.insert(categoryMixes[category], k)
+			else
+				if not categories["Misc"] then
+					categories["Misc"] = true
+					categoryMixes["Misc"] = {}
+				end
+				table.insert(categoryMixes["Misc"], k)
+			end
+		end
 	end
 
-if categoryMixes["Misc"] and table.Count(categoryMixes["Misc"]) == 0 then
-	categories["Misc"] = nil
-	categoryMixes["Misc"] = nil
-end
+	if categoryMixes["Misc"] and table.Count(categoryMixes["Misc"]) == 0 then
+		categories["Misc"] = nil
+		categoryMixes["Misc"] = nil
+	end
 
 	local sortedCategories = {}
 	local numCategories = 0
@@ -109,7 +118,7 @@ end
 	table.sort(sortedCategories)
 
 	local showTabs = numCategories > 1
-	
+
 	if showTabs then
 		table.insert(sortedCategories, 1, "All")
 	end
@@ -161,9 +170,9 @@ end
 	end
 
 	self.scrollPanels = {}
-	
+
 	local categoriesToCreate = showTabs and sortedCategories or {"All"}
-	
+
 	for _, category in ipairs(categoriesToCreate) do
 		local scroll = vgui.Create("DScrollPanel", self.contentContainer)
 		scroll:Dock(FILL)
@@ -194,7 +203,7 @@ end
 		unAvailibleMixes:SetContents(unAvailibleMixesLayout)
 
 		local mixesToShow = category == "All" and allMixes or (categoryMixes[category] or {})
-		
+
 		table.sort(mixesToShow, function(a, b)
 			return a.Level < b.Level
 		end)
@@ -226,11 +235,11 @@ end
 
 function PANEL:SwitchTab(category)
 	self.activeTab = self.tabs[category]
-	
+
 	for cat, scroll in pairs(self.scrollPanels) do
 		scroll:Hide()
 	end
-	
+
 	if self.scrollPanels[category] then
 		self.scrollPanels[category]:Show()
 	end
@@ -240,7 +249,7 @@ function PANEL:Think()
 	if self.bench and (not IsValid(self.bench) or self.bench:GetPos():DistToSqr(LocalPlayer():GetPos()) > (120 ^ 2)) then
 		return self:Remove()
 	end
-	
+
 	if not LocalPlayer():Alive() or LocalPlayer():IsCP() then
 		return self:Remove()
 	end
@@ -280,7 +289,7 @@ end
 
 function PANEL:PaintOver(w, h)
 	if self.IsCrafting then
-		draw.SimpleText("Crafting "..self.CraftingItem.."...", "Impulse-Elements22-Shadow", w / 2, 380, color_white, TEXT_ALIGN_CENTER)
+		draw.SimpleText("Scrapping "..self.CraftingItem.."...", "Impulse-Elements22-Shadow", w / 2, 380, color_white, TEXT_ALIGN_CENTER)
 	end
 end
 
@@ -293,6 +302,21 @@ function PANEL:DoCraft(item, mix)
 	self:ShowCloseButton(false)
 	self.IsCrafting = true
 	self.CraftingItem = item.Name
+
+	-- For multi-output mixes, show "Scrapping X..." instead of "Crafting X..."
+	if mix.Multi then
+		function self:PaintOver(w, h)
+			if self.IsCrafting then
+				draw.SimpleText("Scrapping "..self.CraftingItem.."...", "Impulse-Elements22-Shadow", w / 2, 380, color_white, TEXT_ALIGN_CENTER)
+			end
+		end
+	else
+		function self:PaintOver(w, h)
+			if self.IsCrafting then
+				draw.SimpleText("Crafting "..self.CraftingItem.."...", "Impulse-Elements22-Shadow", w / 2, 380, color_white, TEXT_ALIGN_CENTER)
+			end
+		end
+	end
 
 	self.craftBar = vgui.Create("DProgress", self)
 	self.craftBar:SetPos((wide / 2) - 300, 410)
@@ -364,7 +388,7 @@ function PANEL:DoCraft(item, mix)
 	if item.CamPos then
 		self.model:SetCamPos(item.CamPos)
 	else
-		self.model:SetCamPos(camPos -  Vector(10, 0, 16))
+		self.model:SetCamPos(camPos - Vector(10, 0, 16))
 	end
 
 	self.model:SetLookAt((max + min) / 2)
