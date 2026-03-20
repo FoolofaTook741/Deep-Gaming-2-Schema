@@ -208,11 +208,12 @@ function ITEM:OnUse(ply, door)
 			ply:Notify("The EMP attempt failed.")
 		end
 	elseif ent:GetClass() == "deep_forcefield" or ent:GetClass() == "deep_forcefield_small" then
-		ent.Active = false
-		ent.NextActivation = CurTime() + 900
-		ply:EmitSound("buttons/combine_button1.wav")
-		ply:Notify("You have successfully disabled the Combine Forcefield.")
-		ply:AddSkillXP("metabolism", math.random(10,30))
+	    ent.Active = false
+	    ent.EMPd = true
+	    ent.EMPdTime = CurTime()
+	    ply:EmitSound("buttons/combine_button1.wav")
+	    ply:Notify("You have successfully disabled the Combine Forcefield.")
+	    ply:AddSkillXP("metabolism", math.random(10,30))
 	else
 		if impulse.CommsNetWorkOn == true && !timer.Exists("emphackcooldown") then
 			if GetPlayerCount() >= 20 and GetCPCount() >= 4 and GetCombineCount() >= 6 then

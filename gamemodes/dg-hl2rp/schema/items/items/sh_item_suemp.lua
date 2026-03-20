@@ -166,10 +166,12 @@ function ITEM:OnUse(ply, door)
             return true
 		end
 	elseif ent:GetClass() == "deep_forcefield" or ent:GetClass() == "deep_forcefield_small" then
-		ent.Active = false
-		ent.NextActivation = CurTime() + 900
-		ply:EmitSound("buttons/combine_button1.wav")
-		ply:Notify("You have successfully disabled the Combine Forcefield.")
+	    ent.Active = false
+	    ent.EMPd = true
+	    ent.EMPdTime = CurTime()
+	    ply:EmitSound("buttons/combine_button1.wav")
+	    ply:Notify("You have successfully disabled the Combine Forcefield.")
+	    ply:AddSkillXP("metabolism", math.random(10,30))
 	else
 		if impulse.CommsNetWorkOn == true && !timer.Exists("emphackcooldown") then
 			if (GetPlayerCount() >= 20 and GetCPCount() >= 4 and GetCombineCount() >= 6 ) or ply:IsSuperAdmin() then

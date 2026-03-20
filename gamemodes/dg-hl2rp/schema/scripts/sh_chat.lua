@@ -237,54 +237,54 @@ local toggleForcefield = {
     requiresAlive = true,
     onRun = function(ply, arg)
         local rank = ply:GetTeamRank() or 0
-        if 	(ply:GetTeamClass() == CLASS_GRID and rank >= RANK_I4) or
-   			(ply:GetTeamClass() == CLASS_ICT and rank >= RANK_SUPERVISOR and ply:Team() == TEAM_CWU) or
-   			(ply:GetTeamClass() == CLASS_INDUST and rank >= RANK_SUPERVISOR and ply:Team() == TEAM_CWU) or
-   			(ply:GetTeamClass() == CLASS_RESEARCH and rank >= RANK_EMPLOYEE and (ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT)) or
-   			(rank >= RANK_I2 and ply:Team() == TEAM_CP) or
-   			(ply:Team() == TEAM_OTA) or
-			(ply:Team() == TEAM_CA and rank >= RANK_REPRESENTATIVE) or
-   			ply:IsAdmin() or
-   			ply:IsCPCommand() then
-                for k,v in pairs(ents.FindByClass("deep_forcefield")) do
-                    if v:GetPos():Distance(ply:GetPos()) < 250 then
-                        if v.Active == true and CurTime() > v.NextActivation then
-                            v.Active = false
-                            v:SetMaterial("Models/effects/vol_light001")
-                            v:SetCollisionGroup(COLLISION_GROUP_WORLD)
-                            v:SetNotSolid(true)
-                            v:EmitSound("buttons/combine_button5.wav")
-                            v.NextActivation = CurTime() + 4
-                        elseif v.Active == false and CurTime() > v.NextActivation then
+        if  (ply:GetTeamClass() == CLASS_GRID and rank >= RANK_I4) or
+            (ply:GetTeamClass() == CLASS_ICT and rank >= RANK_SUPERVISOR and ply:Team() == TEAM_CWU) or
+            (ply:GetTeamClass() == CLASS_INDUST and rank >= RANK_SUPERVISOR and ply:Team() == TEAM_CWU) or
+            (ply:GetTeamClass() == CLASS_RESEARCH and rank >= RANK_EMPLOYEE and (ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT)) or
+            (rank >= RANK_I2 and ply:Team() == TEAM_CP) or
+            (ply:Team() == TEAM_OTA) or
+            (ply:Team() == TEAM_CA and rank >= RANK_REPRESENTATIVE) or
+            ply:IsAdmin() or
+            ply:IsCPCommand() then
+
+            local function toggleFF(v)
+                if v:GetPos():Distance(ply:GetPos()) < 250 then
+                    if v.Active == true and CurTime() > v.NextActivation then
+                        v.Active = false
+                        v:SetMaterial("Models/effects/vol_light001")
+                        v:SetCollisionGroup(COLLISION_GROUP_WORLD)
+                        v:SetNotSolid(true)
+                        v:EmitSound("buttons/combine_button5.wav")
+                        v.NextActivation = CurTime() + 4
+                        ply:Notify("Forcefield(s) toggled, if you did not see a change, each forcefield has a 4 second cooldown to be toggled to prevent spam.")
+                    elseif v.Active == false then
+                        if v.EMPd then
+                            local remaining = math.ceil((v.EMPdTime + 120) - CurTime())
+                            if remaining > 0 then
+								ply:Notify(string.format("The forcefield has been damaged, it can be repaired in %d second(s).", remaining))
+                            else
+                                ply:Notify("The forcefield has been damaged, fix it with a repair kit.")
+                            end
+                        else
                             v.Active = true
                             v:SetMaterial("effects/combineshield/comshieldwall2")
                             v:SetCollisionGroup(COLLISION_GROUP_NONE)
                             v:SetNotSolid(false)
                             v:EmitSound("buttons/combine_button5.wav")
                             v.NextActivation = CurTime() + 4
+                            ply:Notify("Forcefield(s) toggled, if you did not see a change, each forcefield has a 4 second cooldown to be toggled to prevent spam.")
                         end
                     end
                 end
-                for k,v in pairs(ents.FindByClass("deep_forcefield_small")) do
-                    if v:GetPos():Distance(ply:GetPos()) < 250 then
-                        if v.Active == true and CurTime() > v.NextActivation then
-                            v.Active = false
-                            v:SetMaterial("Models/effects/vol_light001")
-                            v:SetCollisionGroup(COLLISION_GROUP_WORLD)
-                            v:SetNotSolid(true)
-                            v:EmitSound("buttons/combine_button5.wav")
-                            v.NextActivation = CurTime() + 4
-                        elseif v.Active == false and CurTime() > v.NextActivation then
-                            v.Active = true
-                            v:SetMaterial("effects/combineshield/comshieldwall2")
-                            v:SetCollisionGroup(COLLISION_GROUP_NONE)
-                            v:SetNotSolid(false)
-                            v:EmitSound("buttons/combine_button5.wav")
-                            v.NextActivation = CurTime() + 4
-                        end
-                    end
-                end
-                ply:Notify("Forcefield(s) toggled, if you did not see a change, each forcefield has a 4 second cooldown to be toggled to prevent spam.")
+            end
+            for k, v in pairs(ents.FindByClass("deep_forcefield")) do
+                toggleFF(v)
+            end
+            for k, v in pairs(ents.FindByClass("deep_forcefield_small")) do
+                toggleFF(v)
+            end
+
+            
         else
             ply:Notify("You lack the permissions to control this forcefield.")
         end

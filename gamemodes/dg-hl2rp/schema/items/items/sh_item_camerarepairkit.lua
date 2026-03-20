@@ -26,6 +26,30 @@ local CAMERA_POSITION_TOLERANCE = 100
 
 impulse.CameraRepairCooldowns = impulse.CameraRepairCooldowns or {}
 
+local function repairForcefield(ply, pos, class)
+    for _, ff in pairs(ents.FindByClass(class)) do
+        if ff:GetPos():DistToSqr(pos) < (500 ^ 2) and ff.EMPd == true then
+            local remaining = math.ceil((ff.EMPdTime + 120) - CurTime())
+            if remaining > 0 then
+                ply:Notify(string.format("The forcefield is still too damaged to repair. Try again in %d second(s).", remaining))
+                return false
+            end
+            ply:EmitSound("ambient/energy/weld2.wav")
+            ff.EMPd = false
+            ff.EMPdTime = nil
+            ff.Active = true
+            ff.NextActivation = 0
+            ply:Notify("You have repaired a damaged forcefield.")
+            if ply:Team() == TEAM_CWU then
+                ply:GiveMoney(150)
+                ply:Notify("You have received 150 credits for repairing the forcefield.")
+                ply:AddSkillXP("metabolism", math.random(10, 30))
+            end
+            return true
+        end
+    end
+end
+
 function ITEM:OnUse(ply)
     local pos = ply:GetPos()
     local now = CurTime()
@@ -127,6 +151,12 @@ function ITEM:OnUse(ply)
             return true
         end
     end
+
+    local ffResult = repairForcefield(ply, pos, "deep_forcefield")
+    if ffResult ~= nil then return ffResult end
+
+    local ffResult = repairForcefield(ply, pos, "deep_forcefield_small")
+    if ffResult ~= nil then return ffResult end
 
     ply:Notify("No broken devices found nearby.")
     return false
