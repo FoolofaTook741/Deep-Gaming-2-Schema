@@ -99,6 +99,7 @@ function PANEL:SetupCrafting()
 					categories["Misc"] = true
 					categoryMixes["Misc"] = {}
 				end
+				--print("Misc: " .. tostring(k.Class) .. " | Output: " .. tostring(k.Output))
 				table.insert(categoryMixes["Misc"], k)
 			end
 		end
