@@ -313,13 +313,13 @@ end
 function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 	if ply:Team() == TEAM_CP then
 		if ply.HasCPVest1 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
-			dmginfo:ScaleDamage(0.925)
+			dmginfo:ScaleDamage(0.90)
 		elseif ply.HasCPVest2 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
-			dmginfo:ScaleDamage(0.85)
+			dmginfo:ScaleDamage(0.80)
 		elseif ply.HasCPVest3 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
-			dmginfo:ScaleDamage(0.75)
+			dmginfo:ScaleDamage(0.70)
 		elseif ply.HasCPVest4 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
-			dmginfo:ScaleDamage(0.65)
+			dmginfo:ScaleDamage(0.60)
 		end
 		if hitgroup == HITGROUP_HEAD then
 			if ply.HasReinforcedCPMask == true and ply.HasCPMask == true then

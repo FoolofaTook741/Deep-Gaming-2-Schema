@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "cos_cpvest1"
 ITEM.Name = "Tier I Ballistic Vest"
-ITEM.Desc =  "A light plate placed inside of the Metro Police Force uniform, offering 7.5% protection."
+ITEM.Desc =  "A light plate placed inside of the Metro Police Force uniform, offering 10% protection."
 ITEM.Category = "Clothing"
 ITEM.Model = Model("models/props_junk/cardboard_box002a.mdl")
 ITEM.FOV = 150
