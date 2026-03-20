@@ -4,6 +4,7 @@ ITEM.UniqueID = "resin_machineready"
 ITEM.Name = "Resin (Machine Ready)"
 ITEM.Desc = "A tightly compacted cluster of Resin, ready for use in the Fabricator."
 ITEM.Model = Model("models/Items/item_item_crate.mdl")
+ITEM.Category = "Components"
 ITEM.FOV = 44.061604584527
 ITEM.CamPos = Vector(-6.8767910003662, 4.0114612579346, 28.080228805542)
 ITEM.NoCenter = true
