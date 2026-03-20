@@ -7,7 +7,7 @@ ITEM.Category = "Clothing"
 ITEM.Model = Model("models/combine_vests/elitevest.mdl")
 ITEM.FOV = 50
 ITEM.NoCenter = true
-ITEM.Weight = 12
+ITEM.Weight = 9
 ITEM.Colour = Color(255, 0, 0)
 
 ITEM.Droppable = true
