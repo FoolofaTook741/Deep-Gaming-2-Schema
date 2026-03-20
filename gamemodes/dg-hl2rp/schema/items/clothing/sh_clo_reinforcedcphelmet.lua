@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "clo_reinforcedcphelmet"
 ITEM.Name = "Reinforced Civil Protection Mask"
-ITEM.Desc =  "A strengthened Civil Protection mask with added plating, reducing head damage by 15%."
+ITEM.Desc =  "A strengthened Civil Protection mask with added plating that reduces damage."
 ITEM.Category = "Clothing Accessories"
 ITEM.Model = Model("models/wn7new/metropolice/n7_cp_gasmask1.mdl")
 ITEM.FOV = 12.213467048711
