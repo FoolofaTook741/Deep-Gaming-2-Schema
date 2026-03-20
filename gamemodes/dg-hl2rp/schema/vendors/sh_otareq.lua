@@ -343,12 +343,12 @@ VENDOR.Sell = {
 		end
 	},
 	["item_grenade"] = {
-		Desc = "ECHO ORD+/FIST/MACE ECS+",
+		Desc = "ECHO & Mace ECS+/FIST",
 		Restricted = true,
 		Max = 1,
 		Cooldown = 600,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_ORD and ply:GetTeamClass() == CLASS_ECHO) or (ply:GetTeamRank() >= RANK_EOS and ply:GetTeamClass() == CLASS_MACE) or ply:GetTeamClass() == CLASS_FIST then
+			if (ply:GetTeamRank() >= RANK_EOS and ply:GetTeamClass() == CLASS_ECHO) or (ply:GetTeamRank() >= RANK_EOS and ply:GetTeamClass() == CLASS_MACE) or ply:GetTeamClass() == CLASS_FIST then
 				return true
 			else return false
 			end
