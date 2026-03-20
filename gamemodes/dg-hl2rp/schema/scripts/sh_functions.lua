@@ -114,8 +114,8 @@ function meta:IsRebelSmart()
 		crimes[CRIME_ANTCIITIZEN] = true
 	elseif t == TEAM_CWU and (self.IsARebel or self:GetBodygroup(2) == 10) then -- rebel medic
 		isCriminal = true
-		firstCrime = firstCrime or CRIME_ANTCIITIZENMEDIC
-		crimes[CRIME_ANTCIITIZENMEDIC] = true
+		firstCrime = firstCrime or CRIME_ANTCITIZENMEDIC
+		crimes[CRIME_ANTCITIZENMEDIC] = true
 	elseif t == TEAM_VORT and self:GetBodygroup(7) != 1 then -- unshackled vort
 		isCriminal = true
 		firstCrime = firstCrime or CRIME_VORT
