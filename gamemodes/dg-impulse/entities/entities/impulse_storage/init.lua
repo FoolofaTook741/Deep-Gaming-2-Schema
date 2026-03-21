@@ -58,6 +58,15 @@ function ENT:Use(activator, caller)
 			return activator:Notify("You do not have access to this storage chest.")
 		end
 
+		local realWeight = 0
+		for v, k in pairs(impulse.Inventory.Data[activator.impulseID][2]) do
+			local itemData = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(k.class)]
+			if itemData then
+				realWeight = realWeight + (itemData.Weight or 0)
+			end
+		end
+		activator.InventoryWeightStorage = realWeight
+
 		net.Start("impulseInvStorageOpen")
 		net.Send(activator)
 
