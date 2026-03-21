@@ -110,6 +110,7 @@ function ENT:Use(ply)
                         ply:SetArmor(575)
                         ply:SetHealth(300)
                         ply:SetMaxHealth(300)
+                        ply:SetSkin(2)
                         --ply:SetModel("models/transition/soldiers/wallhammer-eow/wallhammer-eow.mdl")
                         ply.IsAugmented = true
                         ply:Notify("You have received your augmentation.")
