@@ -35,6 +35,7 @@ SWEP.MuzzleEffect = "muzzleflash_ak47"
 SWEP.MuzzleFlashSize = 256
 SWEP.MuzzleFlashBrightness = 6
 SWEP.MuzzleFlashColor = Color(77, 116, 200)
+
 function SWEP:CustomShootEffects()
 	if IsValid(self) then
 		if self:GetIronsights() then
@@ -51,13 +52,12 @@ SWEP.MuzzleHide = true
 SWEP.Primary.Sound = Sound("PLUTONIC.AR2E.Single")
 SWEP.Primary.Inside_Sound = Sound("weapons/ar2/fire1.wav")
 
-
-SWEP.Primary.Recoil = 1.05
+SWEP.Primary.Recoil = .6
 SWEP.Primary.Damage = 14
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.Cone = 0.0085 -- base spread value
-SWEP.Primary.Delay = RPM(485)
+SWEP.Primary.Delay = RPM(479)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.Ammo = "ar2"
@@ -100,6 +100,17 @@ local copySpreadVel = SWEP.Spread.VelocityMod + 0
 local copyCH = SWEP.IronsightsCrosshair
 local copyDMG = SWEP.Primary.Damage + 0
 local copycone = SWEP.Primary.Cone + 0
+local copyRecoil = SWEP.Primary.Recoil + 0
+
+function SWEP:CustomThink()
+	if self.zoom_optic_equipped then
+		if self:GetIronsights() then
+			self.Primary.Recoil = 0.4
+		else
+			self.Primary.Recoil = copyRecoil
+		end
+	end
+end
 
 SWEP.Attachments = {
 	zoom_optic = {
@@ -117,40 +128,42 @@ SWEP.Attachments = {
 			--}
 		},
 		ModSetup = function(e)
-			e.IronsightsFOV = 0.6
-			if CLIENT then 
+			e.zoom_optic_equipped = true
+			e.IronsightsFOV = 0.45
+			if CLIENT then
 				local copyScopeSens = impulse.GetSetting("scope_sens")
 				e.IronsightsSensitivity = copyScopeSens
 			end
-			e.IronsightsPos = Vector(-20, -20, -20)
+			e.IronsightsPos = Vector(-1.81, -2.613, -1)
 			e.IronsightsCrosshair = true
 			e.Primary.Cone = 0.001
 		end,
 		ModCleanup = function(e)
+			e.zoom_optic_equipped = false
 			e.IronsightsFOV = copyIronFOV
 			e.IronsightsSensitivity = copyIronSens
 			e.IronsightsPos = copyIronPos
-
 			e.IronsightsCrosshair = copyCH
 			e.Primary.Cone = copycone
+			e.Primary.Recoil = copyRecoil -- safety reset
 		end,
 		Behaviour = "magnifier",
 	}
 }
 
 SWEP.FireModes = {
-    {
-        Name = "regular",
-        On = function(self)
-            self.Primary.Automatic = true
-        end,
-        Off = function(self) end
-    },
+	{
+		Name = "regular",
+		On = function(self)
+			self.Primary.Automatic = true
+		end,
+		Off = function(self) end
+	},
 	{
 		Name = "pulse orb",
 		On = function(self)
-		self.CombineBallMode = true
-		self.Primary.Automatic = false
+			self.CombineBallMode = true
+			self.Primary.Automatic = false
 		end,
 		Off = function(self)
 			self.NextCombineBallFire = 0
@@ -169,5 +182,5 @@ SWEP.ViewModelString = "models/weapons/arccw/c_irifle.mdl"
 
 local CopyViewModelOrigin = SWEP.ViewModelFOV
 function SWEP:PostDrawViewModel(viewmodel, player)
-    self.ViewModelFOV = CopyViewModelOrigin + impulse.GetSetting("firstperson_fov")
+	self.ViewModelFOV = CopyViewModelOrigin + impulse.GetSetting("firstperson_fov")
 end
