@@ -68,7 +68,7 @@ local depdirector = {
 impulse.Badges = {
 	staff = {Material("roleicons/shield_staff.png"), "This player is a staff member.", function(ply) return not ply:IsIncognito() and ply:IsAdmin() end},
 	donator = {Material("icon16/coins.png"), "This player is a donator.", function(ply) return ply:IsDonator() end},
-	collaborator = {Material("icon16/ruby.png"), "This player is a collaborator.", function(ply) return ply:IsCollaborator() end},
+	--collaborator = {Material("icon16/ruby.png"), "This player is a collaborator.", function(ply) return ply:IsCollaborator() end},
 	e2 = {Material("icons/e2.png"), "This player has access to wiremod.", function(ply) return ply:IsE2() end},
 	exdev = {Material("icon16/cog_go.png"), "This player is a ex impulse developer.", function(ply) return ply:SteamID() == "STEAM_0:1:102639297" end},
 	dev = {Material("icon16/cog.png"), "This player is a impulse developer.", function(ply) return not ply:IsIncognito() and ply:IsDeveloper() end},
