@@ -2151,6 +2151,7 @@ local allowedCommands = {
     ["/toggleraise"] = true,
     ["/rs"] = true,
     ["/rcmd"] = true,
+    ["/dropmoney"] = true,
 }
 
 local allowedPrefixes = {
