@@ -1,7 +1,7 @@
 local ITEM = {}
 
 ITEM.UniqueID = "clo_bluejeans"
-ITEM.Name = "Blue Jeans"
+ITEM.Name = "Jeans"
 ITEM.Desc =  "A symbol of Western capitalism, rumor has it the Soviet people coveted them so hard that they imported hundreds of thousands of jeans from the United States."
 ITEM.Category = "Pants"
 ITEM.Model = Model("models/willardnetworks/clothingitems/recolorable_pants.mdl")
@@ -16,7 +16,9 @@ ITEM.DropOnDeath = true
 ITEM.Illegal = false
 ITEM.Equipable = true
 ITEM.EquipGroup = "pants"
-ITEM.CanStack = true   
+ITEM.CanStack = false 
+
+ITEM.DyeSlots = { "Pants" }
 
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU

@@ -1,7 +1,7 @@
 local ITEM = {}
 
 ITEM.UniqueID = "clo_boonie"
-ITEM.Name = "Boonie Beanie"
+ITEM.Name = "Boonie Hat"
 ITEM.Desc =  "A hat utilized by alligator hunters."
 ITEM.Category = "Hats"
 ITEM.Model = Model("models/willardnetworks/clothingitems/head_boonie.mdl")
@@ -16,7 +16,7 @@ ITEM.DropOnDeath = true
 ITEM.Illegal = false
 ITEM.Equipable = true
 ITEM.EquipGroup = "hat"
-ITEM.CanStack = true   
+ITEM.CanStack = false   
 
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU

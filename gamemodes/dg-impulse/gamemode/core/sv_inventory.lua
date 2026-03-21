@@ -22,42 +22,36 @@ local logClasses = {
 -- @int ownerid OwnerID number
 -- @string class Class name of the item to add
 -- @int[opt=1] storageType Storage type (1 is player inventory, 2 is storage)
-function impulse.Inventory.DBAddItem(ownerid, class, storageType, ply)
-	local query = mysql:Insert("impulse_inventory")
-	query:Insert("uniqueid", class)
-	query:Insert("ownerid", ownerid)
-	query:Insert("storagetype", storageType or 1)
-	query:Execute()
+function impulse.Inventory.DBAddItem(ownerid, class, storageType, ply, callback)
+    local query = mysql:Insert("impulse_inventory")
+    query:Insert("uniqueid", class)
+    query:Insert("ownerid", ownerid)
+    query:Insert("storagetype", storageType or 1)
+    query:Callback(function(result, status, lastid)
+    	if callback then callback(lastid) end
 
-	if not logClasses[class] then return end
-
-	if ply and IsValid(ply) then
-
-		local timestamp = "<t:" .. os.time() .. ":F>"
-		local playerName = ply:Name()
-        local playerSteamID = ply:SteamID()
-
-		local storageText = "Unknown"
-		if storageType == 1 then
-			storageText = "Player Inventory"
-		elseif storageType == 2 then
-			storageText = "Player Storage"
-		end
-
-		local embeds = {{
-			title = "Inventory Item Added",
-			description = "A high value item has been added to a player's inventory.",
-			color = 3447003, -- blue
-			fields = {
-				{ name = "Player", value = playerName .. " (" .. playerSteamID .. ")", inline = false },
-				{ name = "Item Class", value = class, inline = false },
-				{ name = "Storage Type", value = storageText, inline = true },
-				{ name = "Date/Time", value = timestamp, inline = true }
-			}
-		}}
-		ReqwestLog(embeds, PG_HIGHVALUE)
-	end
-end 
+        if not logClasses[class] then return end
+        if ply and IsValid(ply) then
+            local timestamp = "<t:" .. os.time() .. ":F>"
+            local playerName = ply:Name()
+            local playerSteamID = ply:SteamID()
+            local storageText = storageType == 1 and "Player Inventory" or storageType == 2 and "Player Storage" or "Unknown"
+            local embeds = {{
+                title = "Inventory Item Added",
+                description = "A high value item has been added to a player's inventory.",
+                color = 3447003,
+                fields = {
+                    { name = "Player",       value = playerName .. " (" .. playerSteamID .. ")", inline = false },
+                    { name = "Item Class",   value = class,       inline = false },
+                    { name = "Storage Type", value = storageText, inline = true  },
+                    { name = "Date/Time",    value = timestamp,   inline = true  }
+                }
+            }}
+            ReqwestLog(embeds, PG_HIGHVALUE)
+        end
+    end)
+    query:Execute()
+end
 
 --- Deletes an inventory item from the database. This can be used to control the inventory of offline users
 -- @realm server
@@ -346,7 +340,7 @@ end
 -- @bool[opt=false] moving (INTERNAL) Is item just being moved? (stops database requests)
 -- @int[opt] clip (INTERNAL) (Only used for weapons) Item clip
 -- @treturn int ItemID
-function meta:GiveInventoryItem(itemclass, storetype, restricted, isLoaded, moving, clip) -- isLoaded is a internal arg used for first time item setup, when they are already half loaded
+function meta:GiveInventoryItem(itemclass, storetype, restricted, isLoaded, moving, clip, itemdata, dbid) -- isLoaded is a internal arg used for first time item setup, when they are already half loaded
 	if not self.beenInvSetup and not isLoaded then return end
 
 	local storetype = storetype or 1
@@ -362,18 +356,26 @@ function meta:GiveInventoryItem(itemclass, storetype, restricted, isLoaded, movi
 		if inv[i] == nil then
 			invid = i
 			impulse.Inventory.Data[impulseid][storetype][i] = {
-				id = itemid,
-				class = itemclass,
-				restricted = restricted,
-				equipped = false,
-				clip = clip or nil
+			    id       = itemid,
+			    class    = itemclass,
+			    restricted = restricted,
+			    equipped = false,
+			    clip     = clip or nil,
+			    dyeData  = (itemdata and util.JSONToTable(itemdata)) or nil,
+			    dbid     = dbid or nil
 			}
 			break
 		end
 	end
 
 	if not restricted and not isLoaded and not moving then
-		impulse.Inventory.DBAddItem(impulseid, itemclass, storetype, self)
+    impulse.Inventory.DBAddItem(impulseid, itemclass, storetype, self, function(lastid)
+        if impulse.Inventory.Data[impulseid]
+        and impulse.Inventory.Data[impulseid][storetype]
+        and impulse.Inventory.Data[impulseid][storetype][invid] then
+            impulse.Inventory.Data[impulseid][storetype][invid].dbid = lastid
+        end
+    end)
 	end
 	
 	if storetype == 1 then
@@ -395,6 +397,41 @@ function meta:GiveInventoryItem(itemclass, storetype, restricted, isLoaded, movi
 
 	return invid
 end
+
+--- Sets dye data on a specific inventory item instance and persists to DB
+-- @realm server
+-- @int invid Item inventory ID
+-- @table dyeData Color table {r,g,b,a} or nil to clear
+-- @int[opt=1] storetype Storage type
+function meta:SetInventoryItemDyeData(invid, dyeData, storetype)
+    storetype = storetype or 1
+    local item = impulse.Inventory.Data[self.impulseID][storetype][invid]
+    if not item then return end
+
+    item.dyeData = dyeData
+
+    local json = dyeData and util.TableToJSON(dyeData) or nil
+
+    if item.dbid then
+        local query = mysql:Update("impulse_inventory")
+        query:Update("data", json)
+        query:Where("id", item.dbid)
+        query:Execute()
+    else
+        -- Fallback for items given mid-session before callback fired
+        -- Safe for dyeable clothing since they aren't stackable
+        local safeClass = mysql:Escape(item.class)
+        local sql = string.format(
+            "UPDATE `impulse_inventory` SET `data` = %s WHERE `ownerid` = %d AND `uniqueid` = '%s' AND `storagetype` = %d LIMIT 1",
+            json and ("'" .. mysql:Escape(json) .. "'") or "NULL",
+            self.impulseID,
+            safeClass,
+            storetype
+        )
+        mysql:RawQuery(sql)
+    end
+end
+
 
 --- Takes an inventory item from a player
 -- @realm server
@@ -587,6 +624,7 @@ function meta:SetInventoryItemEquipped(itemid, state)
 			self.InventoryEquipGroups[itemclass.EquipGroup] = itemid
 		end
 		onEquip(item, self, itemclass, itemid)
+		hook.Run("OnInventoryItemEquipped", self, item, itemclass, itemid)
 		if isAlive then 
 			self:EmitSound("impulse/equip.wav") 
 			
@@ -600,6 +638,7 @@ function meta:SetInventoryItemEquipped(itemid, state)
 			self.InventoryEquipGroups[itemclass.EquipGroup] = nil
 		end
 		unEquip(item, self, itemclass, itemid)
+		hook.Run("OnInventoryItemUnequipped", self, item, itemclass, itemid)
 		if isAlive then 
 			self:EmitSound("impulse/unequip.wav")
 			
@@ -636,49 +675,60 @@ end
 -- @realm server
 -- @int itemid Item ID
 function meta:DropInventoryItem(itemid)
-	local trace = {}
-	trace.start = self:EyePos()
-	trace.endpos = trace.start + self:GetAimVector() * 45
-	trace.filter = self
+    local trace = {}
+    trace.start = self:EyePos()
+    trace.endpos = trace.start + self:GetAimVector() * 45
+    trace.filter = self
 
-	local item = impulse.Inventory.Data[self.impulseID][1][itemid]
-	local tr = util.TraceLine(trace)
+    local item = impulse.Inventory.Data[self.impulseID][1][itemid]
+    local tr = util.TraceLine(trace)
 
-	local itemnetid = impulse.Inventory.ClassToNetID(item.class)
-	local itemclass = impulse.Inventory.Items[itemnetid]
+    local itemnetid = impulse.Inventory.ClassToNetID(item.class)
+    local itemclass = impulse.Inventory.Items[itemnetid]
 
-	self.DroppedItemsC  = self.DroppedItemsC  or 0
-	self.DroppedItemsCA = self.DroppedItemsCA or 0 
-	self.DroppedItems   = self.DroppedItems   or {}
+    self.DroppedItemsC  = self.DroppedItemsC  or 0
+    self.DroppedItemsCA = self.DroppedItemsCA or 0
+    self.DroppedItems   = self.DroppedItems   or {}
 
-	local limit = impulse.Config.DroppedItemsLimit or 30
-	if self.DroppedItemsC >= limit then
-		return self:Notify("You can only have up to "..limit.." dropped items at once.")
+    local limit = impulse.Config.DroppedItemsLimit or 30
+    if self.DroppedItemsC >= limit then
+        return self:Notify("You can only have up to "..limit.." dropped items at once.")
+    end
+
+    if item.restricted then
+        if not itemclass.DropIfRestricted then
+            return
+        end
+    end
+
+    local savedDyeData = item.dyeData or nil
+
+    self:TakeInventoryItem(itemid)
+
+    local ent = impulse.Inventory.SpawnItem(item.class, tr.HitPos)
+    ent.ItemOwner = self
+    ent.IsRestrictedItem = item.restricted
+    ent.dyeData = savedDyeData  -- attach to world entity
+
+    if savedDyeData then
+	    for _, slotDye in pairs(savedDyeData) do
+	        if slotDye.r then
+	            ent:SetColor(Color(slotDye.r, slotDye.g, slotDye.b, 255))
+	            break
+	        end
+	    end
 	end
 
-	if item.restricted then
-		if not itemclass.DropIfRestricted then
-			return
-		end
-	end
+    if itemclass.WeaponClass and item.clip then
+        ent.ItemClip = item.clip
+    end
 
-	self:TakeInventoryItem(itemid)
+    self.DroppedItemsC = self.DroppedItemsC + 1
+    self.DroppedItems[self.DroppedItemsCA] = ent
+    self.NextItemDrop = CurTime() + 2
+    ent.DropIndex = self.DroppedItemsCA
 
-	local ent = impulse.Inventory.SpawnItem(item.class, tr.HitPos)
-	ent.ItemOwner = self
-	
-	ent.IsRestrictedItem = item.restricted
-
-	if itemclass.WeaponClass and item.clip then
-		ent.ItemClip = item.clip
-	end
-
-	self.DroppedItemsC = self.DroppedItemsC + 1
-	self.DroppedItems[self.DroppedItemsCA] = ent
-	self.NextItemDrop = CurTime() + 2
-	ent.DropIndex = self.DroppedItemsCA
-
-	ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
+    ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
 end
 
 --- Uses a specific inventory item
@@ -720,12 +770,20 @@ function meta:MoveInventoryItem(itemid, from, to)
 	if self:IsInventoryItemRestricted(itemid, from) then return end
 	local item = impulse.Inventory.Data[self.impulseID][from][itemid]
 	local itemclass = item.class
-
 	local itemclip = self:TakeInventoryItem(itemid, from, true)
-
 	impulse.Inventory.DBUpdateStoreType(self.impulseID, itemclass, 1, from, to)
 	local newinvid = self:GiveInventoryItem(itemclass, to, false, nil, true, (itemclip or nil))
-
+	local oldDyeData = item and item.dyeData or nil
+	local oldDbid    = item and item.dbid or nil
+	if impulse.Inventory.Data[self.impulseID][to][newinvid] then
+	    if oldDyeData then
+		    impulse.Inventory.Data[self.impulseID][to][newinvid].dyeData = oldDyeData
+		    hook.Run("OnInventoryItemMoved", self, newinvid, to)
+		end
+		if oldDbid then
+		    impulse.Inventory.Data[self.impulseID][to][newinvid].dbid = oldDbid
+		end
+	end
 	net.Start("impulseInvMove")
 	net.WriteUInt(itemid, 16)
 	net.WriteUInt(newinvid, 16)

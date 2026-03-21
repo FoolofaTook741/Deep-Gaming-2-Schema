@@ -35,15 +35,17 @@ function PANEL:SetItem(netitem, wide)
 	end
 
 	function self.model:LayoutEntity(ent)
-		ent:SetAngles(Angle(0, 90, 0))
+	    ent:SetAngles(Angle(0, 90, 0))
 
-		if panel.Item.Material then
-			ent:SetMaterial(panel.Item.Material)
-		end
+	    if panel.Item.Material then
+	        ent:SetMaterial(panel.Item.Material)
+	    end
 
-		if not item.NoCenter then
-			self:SetLookAt(Vector(0, 0, 0))
-		end
+	    if not item.NoCenter then
+	        self:SetLookAt(Vector(0, 0, 0))
+	    end
+
+	    hook.Run("InventoryItemLayoutEntity", ent, panel.Item, panel.InvID, panel.model, panel.Type)
 	end
 
 	function self.model:DoClick()

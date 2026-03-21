@@ -1,10 +1,10 @@
 local ITEM = {}
 
-ITEM.UniqueID = "clo_blackleatherjacket"
-ITEM.Name = "Black leather jacket"
-ITEM.Desc =  "Black leather jacket to make you look cool."
-ITEM.Category = "Shirts"
-ITEM.Model = Model("models/willardnetworks/clothingitems/peacoat_item.mdl")
+ITEM.UniqueID = "clo_beanie"
+ITEM.Name = "Beanie"
+ITEM.Desc =  "A nice hat for the Winter season."
+ITEM.Category = "Hats"
+ITEM.Model = Model("models/willardnetworks/clothingitems/head_beanie_update.mdl")
 ITEM.FOV = 12.213467048711
 ITEM.CamPos = Vector(46.418338775635, 20.630373001099, 32.091690063477)
 ITEM.NoCenter = true
@@ -15,21 +15,21 @@ ITEM.DropOnDeath = true
 
 ITEM.Illegal = false
 ITEM.Equipable = true
-ITEM.EquipGroup = "torso"
-ITEM.CanStack = true   
+ITEM.EquipGroup = "hat"
+ITEM.CanStack = false   
+
+ITEM.DyeSlots = { "Head Gear" }
 
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU
 end
 
 function ITEM:OnEquip(ply)
-    ply:SetBodygroup(2, 27)
-	ply.HasJacket = true
+    ply:SetBodygroup(1, 2)
 end
 
 function ITEM:UnEquip(ply)
-	ply:SetBodygroup(2, 0)
-	ply.HasJacket = false
+	ply:SetBodygroup(1, 0)
 end
 
 impulse.RegisterItem(ITEM)

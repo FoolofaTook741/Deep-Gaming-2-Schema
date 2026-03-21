@@ -64,6 +64,7 @@ net.Receive("deepGroupInvContainerDoMove", function(len, ply)
 
     local direction = (from == 3) and "Withdrawal" or "Deposit"
     hook.Run("PlayerContainerTake", ply, item.class, ply.currentStorage:GetClass(), direction, "1")
+    SyncDyeDataToClient(ply)
 end)
 
 net.Receive("deepGroupInvContainerDoMoveMass", function(len, ply)
@@ -160,6 +161,7 @@ net.Receive("deepGroupInvContainerDoMoveMass", function(len, ply)
 
     local direction = (from == 1) and "Deposit" or "Withdrawal"
     hook.Run("PlayerContainerTake", ply, itemclass, ply.currentStorage:GetClass(), direction, tostring(amount))
+    SyncDyeDataToClient(ply)
 end)
     
 local logRequestCooldown = {}

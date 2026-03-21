@@ -16,7 +16,7 @@ ITEM.DropOnDeath = true
 ITEM.Illegal = false
 ITEM.Equipable = true
 ITEM.EquipGroup = "pants"
-ITEM.CanStack = true   
+ITEM.CanStack = false  
 
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_CP and not ply.IsAugmented and not ply.IsRogue

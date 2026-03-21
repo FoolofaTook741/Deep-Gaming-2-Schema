@@ -462,6 +462,7 @@ function impulse.SetupPlayer(ply, dbData)
 	query:Select("uniqueid")
 	query:Select("ownerid")
 	query:Select("storagetype")
+	query:Select("data")
 	query:Where("ownerid", dbData.id)
 	query:Callback(function(result)
 		if IsValid(ply) and type(result) == "table" and #result > 0 then
@@ -470,7 +471,7 @@ function impulse.SetupPlayer(ply, dbData)
 
 			for v,k in pairs(result) do
 				local netid = impulse.Inventory.ClassToNetID(k.uniqueid)
-				if not netid then continue end -- when items are removed from a live server we will remove them manually in the db, if an item is broken auto doing this would break peoples items
+				if not netid then continue end
 
 				local storetype = k.storagetype
 
@@ -478,7 +479,7 @@ function impulse.SetupPlayer(ply, dbData)
 					userInv[storetype] = {}
 				end
 				
-				ply:GiveInventoryItem(k.uniqueid, k.storagetype, false, true)
+				ply:GiveInventoryItem(k.uniqueid, k.storagetype, false, true, nil, nil, k.data, k.id)
 			end
 		end
 

@@ -122,9 +122,9 @@ if SERVER then
 				self:Remove()
 
 				if self.ItemClip then
-					activator:GiveInventoryItem(self.Item.UniqueID, nil, nil, nil, nil, self.ItemClip) -- kinda messy ik
+				    activator:GiveInventoryItem(self.Item.UniqueID, nil, nil, nil, nil, self.ItemClip)
 				else
-					activator:GiveInventoryItem(self.Item.UniqueID, nil, self.IsRestrictedItem or false)
+				    activator:GiveInventoryItem(self.Item.UniqueID, nil, self.IsRestrictedItem or false, nil, nil, nil, self.dyeData and util.TableToJSON(self.dyeData) or nil)
 				end
 				
 				--activator:Notify("You have picked up a "..self.Item.Name..".") grammatical problems + not really needed
@@ -156,17 +156,17 @@ if SERVER then
 	
 
 else
-	function ENT:Think()
-		local itemid = self:GetItemID()
+    function ENT:Think()
+        local itemid = self:GetItemID()
 
-		if itemid and itemid != (self.lastItemID or -1) then
-			local item = impulse.Inventory.Items[itemid]
-			
-			if item then
-				self.HUDName = item.Name or "Unknown Item"
-				self.HUDDesc = item.Desc or ""
-				self.lastItemID = itemid
-			end
-		end
-	end
+        if itemid and itemid != (self.lastItemID or -1) then
+            local item = impulse.Inventory.Items[itemid]
+            
+            if item then
+                self.HUDName = item.Name or "Unknown Item"
+                self.HUDDesc = item.Desc or ""
+                self.lastItemID = itemid
+            end
+        end
+    end
 end

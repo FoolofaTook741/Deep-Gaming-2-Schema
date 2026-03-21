@@ -16,7 +16,7 @@ ITEM.DropOnDeath = true
 ITEM.Illegal = false
 ITEM.Equipable = true
 ITEM.EquipGroup = "torso"
-ITEM.CanStack = true   
+ITEM.CanStack = false    
 
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_VORT 

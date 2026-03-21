@@ -52,9 +52,9 @@ function PANEL:Init()
 	self.modelPreview:SetCursor("arrow")
 
 	if impulse.IsHighRes() then
-		self.modelPreview:SetFOV((324 / ScrH()) * 140) -- a incredible equation that makes the model fit onto the ui, patent by professor vin
+		self.modelPreview:SetFOV((324 / ScrH()) * 140)
 	else
-		self.modelPreview:SetFOV((324 / ScrH()) * 100) -- a incredible equation that makes the model fit onto the ui, patent by professor vin
+		self.modelPreview:SetFOV((324 / ScrH()) * 100)
 	end
 
 	function self.modelPreview:LayoutEntity(ent)
@@ -83,12 +83,6 @@ function PANEL:Init()
 			self.setup = true
 		end
 	end
-
- 	--self.invName = vgui.Create("DLabel", self)
- 	--self.invName:SetPos(270, 35)
- 	--self.invName:SetText("Inventory")
- 	--self.invName:SetFont("Impulse-Elements24-Shadow")
- 	--self.invName:SizeToContents()
 
  	self:SetupItems(w, h)
 end
@@ -132,7 +126,7 @@ function PANEL:SetupItems()
  	local sortMethod = impulse.GetSetting("inv_sortweight", "Inventory only")
  	local invertSort = true
 
- 	for v,k in pairs(localInv) do -- fix for fucking table.sort desyncing client/server itemids!!!!!!!
+ 	for v,k in pairs(localInv) do
  		k.realKey = v
 
  		if sortMethod == "Always" or sortMethod == "Inventory only" then
@@ -163,7 +157,7 @@ function PANEL:SetupItems()
 	 		end
 	 	end
 
-	 	for v,k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do -- 01 is player 0 (localplayer) and storage 1 (local inv)
+	 	for v,k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
 	 		if shouldSortEq and k.equipped then continue end
 	 		local otherItem = self.items[k.id]
 	 		local itemX = impulse.Inventory.Items[k.id]
@@ -259,9 +253,7 @@ function PANEL:SetupSkills(w, h)
  	self.tabs:AddSheet("Skills", self.skillScroll)
 end
 
--- who the fuck thought this was a good idea?
 local langstrings = {"Spanish", "Italian", "German", "Russian", "Chinese", "Japanese", "French", "Arabic"}
-
 
 local dataLabels = {
     ["Languages"] = function(c)
@@ -300,7 +292,6 @@ function PANEL:SetupCharacterData(w, h)
         lTitle:SetFont( "Impulse-Elements32-Shadow" )
         lTitle:SetText( title )
         lTitle:SizeToContentsY()
-
 
         function lTitle:PaintOver( w, h )
             surface.SetFont( "Impulse-Elements32-Shadow" )

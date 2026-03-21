@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "clo_flannelshirt"
 ITEM.Name = "Flannel shirt"
-ITEM.Desc =  "A red flannel shirt."
+ITEM.Desc =  "A flannel with an undershirt."
 ITEM.Category = "Shirts"
 ITEM.Model = Model("models/willardnetworks/clothingitems/torso_alyxcoat6.mdl")
 ITEM.FOV = 12.213467048711
@@ -16,14 +16,16 @@ ITEM.DropOnDeath = true
 ITEM.Illegal = false
 ITEM.Equipable = true
 ITEM.EquipGroup = "torso"
-ITEM.CanStack = true   
+ITEM.CanStack = false 
+
+ITEM.DyeSlots = { "Torso", "Shirt" }
 
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU
 end
 
 function ITEM:OnEquip(ply)
-    ply:SetBodygroup(2, 20)
+    ply:SetBodygroup(2, 19)
 	ply.HasJacket = true
 end
 
