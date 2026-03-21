@@ -1481,12 +1481,14 @@ net.Receive("impulseMixTry", function(len, ply)
 		takeWeight = takeWeight + iWeight
 	end
 
+	local isCollab = ply:IsCollaborator()
+	local maxInv = isCollab and impulse.Config.InventoryMaxWeightCOLLABORATOR or impulse.Config.InventoryMaxWeight
 	if ply.HasBackpack == true then
-		if (ply.InventoryWeight - takeWeight) + oWeight >= impulse.Config.InventoryMaxWeight + 10 then
+		if (ply.InventoryWeight - takeWeight) + oWeight >= maxInv + 10 then
 			return ply:Notify("You do not have the inventory space to craft this item.")
 		end
 	else
-		if (ply.InventoryWeight - takeWeight) + oWeight >= impulse.Config.InventoryMaxWeight then
+		if (ply.InventoryWeight - takeWeight) + oWeight >= maxInv then
 			return ply:Notify("You do not have the inventory space to craft this item.")
 		end
 	end

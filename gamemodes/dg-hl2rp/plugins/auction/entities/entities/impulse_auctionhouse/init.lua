@@ -36,6 +36,7 @@ function ENT:Use(activator, caller)
 
     net.Start("AuctionHouse_Open")
     net.WriteEntity(self)
+    net.WriteBool(activator:IsCollaborator())
     net.Send(activator)
 
     if impulse.Auctions then

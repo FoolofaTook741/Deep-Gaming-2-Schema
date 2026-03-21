@@ -78,7 +78,11 @@ end
 -- @realm shared
 -- @treturn bool Is donator
 function meta:IsDonator()
-    return (self:IsUserGroup("donator") or self:IsUserGroup("mapper") or self:IsUserGroup("developer") or self:IsAdmin() or self:IsGameMaster())
+    return (self:IsUserGroup("donator") or self:IsUserGroup("collaborator") or self:IsUserGroup("mapper") or self:IsUserGroup("developer") or self:IsUserGroup("collaborator") or self:IsAdmin() or self:IsGameMaster())
+end
+
+function meta:IsCollaborator()
+    return self:IsUserGroup("collaborator") or self:IsSuperAdmin()
 end
 
 function meta:IsE2()

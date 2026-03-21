@@ -128,8 +128,10 @@ impulse.Config.DefaultFemaleHealth = 95
 impulse.Config.DefaultMaleHealth = 100
 
 impulse.Config.InventoryMaxWeight = 25 -- in kg
+impulse.Config.InventoryMaxWeightCOLLABORATOR = 30
 impulse.Config.InventoryStorageMaxWeight = 200
 impulse.Config.InventoryStorageMaxWeightVIP = 400
+impulse.Config.InventoryStorageMaxWeightCOLLABORATOR = 500
 impulse.Config.InventoryItemDeSpawnTime = 300
 impulse.Config.InventoryStorageModel = "models/props/CS_militia/footlocker01_closed.mdl"
 impulse.Config.InventoryStoragePublicModel = "models/hls/alyxports/mailbox_2.mdl"
@@ -197,7 +199,8 @@ impulse.Config.RankColours = {
 	["developer"] = Color(255, 229, 0),
 	["leaddeveloper"] = Color(125, 0, 0),
 	["mapper"] = Color(255, 229, 0),
-	["donator"] = Color(150, 50, 200)
+	["donator"] = Color(150, 50, 200),
+	["collaborator"] = Color(200, 50, 150)
 }
 
 impulse.Config.SaveableAmmo = {

@@ -258,11 +258,13 @@ end
 -- @realm shared
 -- @treturn int Capacity (in kg)
 function meta:GetMaxInventoryStorage()
-	if self:IsDonator() then
+	if self:IsCollaborator() then
+		return impulse.Config.InventoryStorageMaxWeightCOLLABORATOR
+	elseif self:IsDonator() then
 		return impulse.Config.InventoryStorageMaxWeightVIP
-	end
-
-	return impulse.Config.InventoryStorageMaxWeight
+	else
+		return impulse.Config.InventoryStorageMaxWeight
+	end	
 end
 
 if CLIENT then

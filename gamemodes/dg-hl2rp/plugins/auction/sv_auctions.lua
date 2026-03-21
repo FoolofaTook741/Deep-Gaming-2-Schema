@@ -74,7 +74,8 @@ local function ValidTeam(ply)
     local t = ply:Team()
     return t == TEAM_CWU or t == TEAM_CITIZEN or t == TEAM_VORT
 end
-local function CalcDeposit(startBid, reservePrice, buyoutPrice)
+local function CalcDeposit(startBid, reservePrice, buyoutPrice, isCollab)
+    if isCollab then return 0 end
     local base
     if buyoutPrice and buyoutPrice > 0 then
         base = buyoutPrice
@@ -85,8 +86,9 @@ local function CalcDeposit(startBid, reservePrice, buyoutPrice)
     end
     return math.max(1, math.floor(base * DEPOSIT_RATE + 0.5))
 end
-local function CalcSaleFee(finalPrice)
-    return math.floor(finalPrice * SALE_FEE_RATE)
+local function CalcSaleFee(finalPrice, isCollab)
+    local rate = isCollab and 0.03 or SALE_FEE_RATE
+    return math.floor(finalPrice * rate)
 end
 local function NotifyPlayer(steamid, message)
     if not ValidSteamID(steamid) then return end
@@ -191,7 +193,8 @@ local function ProcessExpiredAuction(row)
     if not ValidSteamID(sellerSID) then return end
     local reserveMet = (not reservePrice) or (currentBid >= reservePrice)
     if highBidder and ValidSteamID(highBidder) and currentBid > 0 and reserveMet then
-        local fee        = CalcSaleFee(currentBid)
+        local isCollab   = tonumber(row.is_collaborator) == 1
+        local fee        = CalcSaleFee(currentBid, isCollab)
         local sellerGets = currentBid - fee + deposit
         local ins = mysql:Insert("impulse_auction_history")
         ins:Insert("auction_id",       auctionID)
@@ -338,7 +341,8 @@ net.Receive("AuctionHouse_PostListing", function(len, ply)
     if nonRestrictedCount < stackQty then
         return SendResult(ply, false, "You do not have " .. stackQty .. "x unrestricted " .. (itemData.Name or itemClass) .. " to auction.")
     end
-    local deposit = CalcDeposit(startBid, reservePrice, buyoutPrice)
+    local isCollab = ply:IsCollaborator() and 1 or 0
+    local deposit = CalcDeposit(startBid, reservePrice, buyoutPrice, isCollab == 1)
     if ply:GetMoney() < deposit then
         return SendResult(ply, false, "You cannot afford the deposit of " .. deposit .. " credits.")
     end
@@ -361,6 +365,7 @@ net.Receive("AuctionHouse_PostListing", function(len, ply)
     ins:Insert("bid_count",       0)
     ins:Insert("deposit_paid",    deposit)
     ins:Insert("status",          0)
+    ins:Insert("is_collaborator", isCollab)
     if reservePrice > 0 then ins:Insert("reserve_price", reservePrice) end
     if buyoutPrice  > 0 then ins:Insert("buyout_price",  buyoutPrice)  end
     ins:Callback(function(result, status, lastID)
@@ -462,7 +467,8 @@ net.Receive("AuctionHouse_PlaceBid", function(len, ply)
                 NotifyPlayer(prevBidder, "Your bid on " .. (row.item_name or "an item") .. " was ended by a buyout. Visit the Auction House to collect your " .. currentBid .. " credit refund.")
             end
             local deposit    = tonumber(row.deposit_paid) or 0
-            local fee        = CalcSaleFee(buyout)
+            local isCollab   = tonumber(row.is_collaborator) == 1
+            local fee        = CalcSaleFee(buyout, isCollab)
             local sellerGets = buyout - fee + deposit
             local ins = mysql:Insert("impulse_auction_history")
             ins:Insert("auction_id",       auctionID)
@@ -586,7 +592,8 @@ net.Receive("AuctionHouse_Buyout", function(len, ply)
             ins:Execute()
             NotifyPlayer(prevBidder, "Your bid on " .. (row.item_name or "an item") .. " was ended by a buyout. Visit the Auction House to collect your " .. currentBid .. " credit refund.")
         end
-        local fee        = CalcSaleFee(buyout)
+        local isCollab   = tonumber(row.is_collaborator) == 1
+        local fee        = CalcSaleFee(buyout, isCollab)
         local sellerGets = buyout - fee + deposit
         local rawInsert = string.format(
             "INSERT INTO `impulse_auction_history` (`auction_id`, `event_type`, `actor_steamid`, `amount`, `placed_at`, `item_class`, `item_name`, `item_quantity`, `seller_steamid`, `item_received`, `credits_received`, `seller_payout`) VALUES (%d, 1, '%s', %d, %d, '%s', '%s', %d, '%s', 1, 0, %d)",

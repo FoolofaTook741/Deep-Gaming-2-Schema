@@ -206,9 +206,17 @@ function GM:PlayerSpawn(ply)
 		ply:SetTeam(impulse.Config.DefaultTeam)
 		--ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
 		if ply.HasDied then
-			ply:SetHunger(50) -- gives them 50 hunger if they died
+			if ply:IsCollaborator() then
+				ply:SetHunger(75) --vip+ always spawns with 75 hunger
+			else
+				ply:SetHunger(50) -- gives them 50 hunger if they died
+			end
 		else
-			ply:SetHunger(70) -- otherwise its 70 if theyve just spawned
+			if ply:IsCollaborator() then --vip+ always spawn with 100 hunger
+				ply:SetHunger(100)
+			else
+				ply:SetHunger(70) -- otherwise its 70 if theyve just spawned
+			end
 		end
 	end
 

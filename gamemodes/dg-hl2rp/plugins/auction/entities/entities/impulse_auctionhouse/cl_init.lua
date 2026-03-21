@@ -35,6 +35,7 @@ end)
 
 net.Receive("AuctionHouse_Open", function()
     local ent = net.ReadEntity()
+    local isCollab = net.ReadBool()
     if not IsValid(ent) then return end
 
     if IsValid(impulse.AuctionHousePanel) then
@@ -42,4 +43,7 @@ net.Receive("AuctionHouse_Open", function()
     end
 
     impulse.AuctionHousePanel = vgui.Create("impulseAuctionHouse")
+    if IsValid(impulse.AuctionHousePanel) then
+        impulse.AuctionHousePanel.isCollaborator = isCollab
+    end
 end)

@@ -328,9 +328,12 @@ function PANEL:FindItemPanelByID(id)
 	return self.itemsPanels[id]
 end
 
-local grey = Color(209, 209, 209)
 function PANEL:PaintOver(w, h)
-	draw.SimpleText(self.invWeight.."kg/"..impulse.Config.InventoryMaxWeight.."kg", HIGH_RES("Impulse-Elements18-Shadow", "Impulse-Elements22-Shadow"), w - 18, 40, grey, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+	local lp = LocalPlayer()
+	local isCollab = lp:IsCollaborator()
+	local maxInv = isCollab and impulse.Config.InventoryMaxWeightCOLLABORATOR or impulse.Config.InventoryMaxWeight
+	local grey = Color(209, 209, 209)
+	draw.SimpleText(self.invWeight.."kg/"..maxInv.."kg", HIGH_RES("Impulse-Elements18-Shadow", "Impulse-Elements22-Shadow"), w - 18, 40, grey, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
 end
 
 vgui.Register("impulseInventory", PANEL, "DFrame")

@@ -42,9 +42,12 @@ function PANEL:OnRemove()
 end
 
 function PANEL:PaintOver(w, h)
+	local lp = LocalPlayer()
+	local isCollab = lp:IsCollaborator()
+	local maxInv = isCollab and impulse.Config.InventoryMaxWeightCOLLABORATOR or impulse.Config.InventoryMaxWeight
     draw.SimpleText("You", "Impulse-Elements23-Shadow", 5, 30, grey)
     if self.invWeight then
-        draw.SimpleText(self.invWeight.."kg/"..impulse.Config.InventoryMaxWeight.."kg", "Impulse-Elements18-Shadow", 345, 35, grey, TEXT_ALIGN_RIGHT)
+        draw.SimpleText(self.invWeight.."kg/"..maxInv.."kg", "Impulse-Elements18-Shadow", 345, 35, grey, TEXT_ALIGN_RIGHT)
     end
 
     draw.SimpleText("Container", "Impulse-Elements23-Shadow", w - 5, 30, grey, TEXT_ALIGN_RIGHT)

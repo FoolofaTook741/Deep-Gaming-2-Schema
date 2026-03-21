@@ -209,8 +209,11 @@ function meta:CanHoldItem(itemclass, amount)
 	if self.HasBackpack then
 		addedweight = 12
 	end 
-
-	return self.InventoryWeight + weight <= impulse.Config.InventoryMaxWeight + addedweight
+	if self:IsCollaborator() then
+		return self.InventoryWeight + weight <= impulse.Config.InventoryMaxWeightCOLLABORATOR + addedweight
+	else
+		return self.InventoryWeight + weight <= impulse.Config.InventoryMaxWeight + addedweight
+	end
 end
 
 
@@ -223,7 +226,9 @@ function meta:CanHoldItemStorage(itemclass, amount)
 	local item = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(itemclass)]
 	local weight = (item.Weight or 0) * (amount or 1)
 
-	if self:IsDonator() then
+	if self:IsCollaborator() then
+		return self.InventoryWeightStorage + weight <= impulse.Config.InventoryStorageMaxWeightCOLLABORATOR
+	elseif self:IsDonator() then
 		return self.InventoryWeightStorage + weight <= impulse.Config.InventoryStorageMaxWeightVIP
 	else
 		return self.InventoryWeightStorage + weight <= impulse.Config.InventoryStorageMaxWeight

@@ -517,6 +517,17 @@ VENDOR.Sell = {
 			end
 		end
 	},
+	["wep_gausspistol"] = {
+		Desc = "Collaborator (VIP+)",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if ply:IsCollaborator() then
+				return true
+			else return false
+			end
+		end
+	},
 }
 
 VENDOR.Buy = {}

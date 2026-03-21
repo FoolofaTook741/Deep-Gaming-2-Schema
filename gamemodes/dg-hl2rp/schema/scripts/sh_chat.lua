@@ -76,7 +76,7 @@ local setgroupCommand = {
 		local targ = impulse.FindPlayer(steamid)
 		local targ64 = targ:SteamID64()
 		local ply64 = ply:SteamID64()
-		local groups = {"user", "donator", "gamemaster", "admin", "leadadmin"}
+		local groups = {"user", "donator", "collaborator", "gamemaster", "admin", "leadadmin"}
 		local msg = ply:SteamName() .. " has assigned " .. targ:SteamName() .. " to group " .. group .. "."
 		if not ply:IsSuperAdmin() then
 			if groups[group] and group != "donator" then

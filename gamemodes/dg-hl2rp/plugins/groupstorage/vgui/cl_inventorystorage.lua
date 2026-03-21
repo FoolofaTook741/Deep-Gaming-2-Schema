@@ -30,15 +30,34 @@ function PANEL:Init()
 	self:SetupItems()
 end
 
+function PANEL:Think()
+	local lp = LocalPlayer()
+	local isCollab = lp:IsCollaborator()
+	local maxInv = isCollab and impulse.Config.InventoryMaxWeightCOLLABORATOR or impulse.Config.InventoryMaxWeight
+	local maxStorage = lp:GetMaxGroupInventoryStorage()
+
+	if self._cachedInvWeight ~= self.invWeight or self._cachedMaxInv ~= maxInv then
+		self._cachedInvWeight = self.invWeight
+		self._cachedMaxInv = maxInv
+		self._invWeightStr = (self.invWeight or 0) .. "kg/" .. maxInv .. "kg"
+	end
+
+	if self._cachedStorageWeight ~= self.storageWeight or self._cachedMaxStorage ~= maxStorage then
+		self._cachedStorageWeight = self.storageWeight
+		self._cachedMaxStorage = maxStorage
+		self._storageWeightStr = (self.storageWeight or 0) .. "kg/" .. maxStorage .. "kg"
+	end
+end
+
 function PANEL:PaintOver(w, h)
 	draw.SimpleText("You", "Impulse-Elements23-Shadow", 5, 30, grey)
-	if self.invWeight then
-		draw.SimpleText(self.invWeight.."kg/"..impulse.Config.InventoryMaxWeight.."kg", "Impulse-Elements18-Shadow", (w / 2) - 5, 35, grey, TEXT_ALIGN_RIGHT)
+	if self._invWeightStr then
+		draw.SimpleText(self._invWeightStr, "Impulse-Elements18-Shadow", (w / 2) - 5, 35, grey, TEXT_ALIGN_RIGHT)
 	end
 
 	draw.SimpleText("Storage", "Impulse-Elements23-Shadow", w - 5, 30, grey, TEXT_ALIGN_RIGHT)
-	if self.storageWeight then
-		draw.SimpleText(self.storageWeight.."kg/"..LocalPlayer():GetMaxGroupInventoryStorage().."kg", "Impulse-Elements18-Shadow", (w / 2) + 5, 35, grey, TEXT_ALIGN_LEFT)
+	if self._storageWeightStr then
+		draw.SimpleText(self._storageWeightStr, "Impulse-Elements18-Shadow", (w / 2) + 5, 35, grey, TEXT_ALIGN_LEFT)
 	end
 end
 

@@ -665,12 +665,21 @@ function PANEL:BuildSellTab()
     self.feeSummaryLabel:SetSize(rightW - 28, 40)
     self.feeSummaryLabel:SetFont("Impulse-Elements18-Shadow")
     self.feeSummaryLabel:SetTextColor(grey)
-    self.feeSummaryLabel:SetText("Deposit: — cr  |  Sale fee on success: 6% of final price")
+    local isCollab = self.isCollaborator or false
+    self.feeSummaryLabel:SetText(
+        isCollab
+        and "Deposit: FREE  |  Sale fee on success: 3% of final price"
+        or  "Deposit: — cr  |  Sale fee on success: 6% of final price"
+    )
     self.feeSummaryLabel:SetWrap(true)
     formY = formY + 50
     local feeLabel = self.feeSummaryLabel
     local sbEntry  = self.startBidEntry
     local function updateFee()
+        if isCollab then
+            feeLabel:SetText("Deposit: FREE  |  Sale fee on success: 3% of final price")
+            return
+        end
         local sb   = tonumber(sbEntry:GetValue()) or 0
         local res  = tonumber(panel.reserveEntry:GetValue()) or 0
         local bo   = tonumber(panel.buyoutEntry:GetValue()) or 0
