@@ -68,6 +68,7 @@ local depdirector = {
 impulse.Badges = {
 	staff = {Material("roleicons/shield_staff.png"), "This player is a staff member.", function(ply) return not ply:IsIncognito() and ply:IsAdmin() end},
 	donator = {Material("icon16/coins.png"), "This player is a donator.", function(ply) return ply:IsDonator() end},
+	collaborator = {Material("icon16/ruby.png"), "This player is a collaborator.", function(ply) return ply:IsCollaborator() end},
 	e2 = {Material("icons/e2.png"), "This player has access to wiremod.", function(ply) return ply:IsE2() end},
 	exdev = {Material("icon16/cog_go.png"), "This player is a ex impulse developer.", function(ply) return ply:SteamID() == "STEAM_0:1:102639297" end},
 	dev = {Material("icon16/cog.png"), "This player is a impulse developer.", function(ply) return not ply:IsIncognito() and ply:IsDeveloper() end},
@@ -81,6 +82,7 @@ impulse.Badges = {
 	deepmapper = {Material("roleicons/mapper_1.png"), "This player is a mapper or has made/edited a map for Deep Gaming 2", function(ply) return ply:GetUserGroup() == "mapper" end},
 	dgmodeler = {Material("roleicons/mapper_1.png"), "This player is a modeler or has made/edited models for Deep Gaming 2.", function(ply) return ply:GetUserGroup() == "modeler" end},
 	dgleaddev = {Material("roleicons/developer2.png"), "This player is the lead developer of this project for Deep Gaming 2", function(ply) return ply:SteamID() == "STEAM_0:1:52886245" end},
+	nolife = {Material("icon16/AWARD_STAR_GOLD_3.png"), "This player has the most XP on the server.", function(ply) return not ply:IsIncognito() and (ply:SteamID() == "STEAM_0:0:104556270") end},
 	secretary = {Material("icon16/telephone.png"), "This is Gundown1250, Fool's secretary.", function(ply) return not ply:IsIncognito() and (ply:SteamID() == "STEAM_0:0:25714002") end},
 	betatester = {Material("roleicons/developer.png"), "This player is a contributor or beta tester of the server or development.", function(ply) return betatester[ply:SteamID()] end},
 	communitymanager = {Material("roleicons/upperadmin.png"), "This player is a member of the HL2RP Upper Administration.", function(ply) return ply:GetUserGroup() == "communitymanager" end},
