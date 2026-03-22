@@ -77,9 +77,9 @@ SWEP.ReloadSound = Sound("")
 SWEP.EmptySound = Sound("Weapon_Shotun.Empty")
 
 SWEP.Primary.Sound = Sound(")weapons/remington_870/870_shoot_1.wav",")weapons/remington_870/870_shoot_2.wav",")weapons/remington_870/870_shoot_3.wav")
-SWEP.Primary.Recoil = 8.32 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 14
-SWEP.Primary.NumShots = 8
+SWEP.Primary.Recoil = 6.3 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 8.5
+SWEP.Primary.NumShots = 7
 SWEP.Primary.Cone = 0.095
 SWEP.Primary.Delay = Plutonic.FireRate.RPM(60)
 
