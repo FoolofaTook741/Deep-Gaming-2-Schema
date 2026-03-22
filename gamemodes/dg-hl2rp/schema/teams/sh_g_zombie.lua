@@ -190,7 +190,7 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
                 ply:SetHealth(80 + buff)
                 ply:Give("weapon_braaains")
                 ply:SetWalkSpeed(120)
-                ply:SetRunSpeed(140)
+                ply:SetRunSpeed(190)
                 ply:SetJumpPower( 600 )
                 ply.RegularZombie = false
                 ply.Zombine = false
