@@ -298,7 +298,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, --[[
 	["wep_molotov"] = {
 		Desc = "Citizen/CWU Only",
 		Restricted = true,
@@ -322,7 +322,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, ]]--
     ["item_vortessence"] = {
 		Desc = "Vort Only",
 		Restricted = true,
@@ -358,7 +358,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, --[[
 	["att_foregrip"] = {
 		Restricted = true,
 		Max = 1,
@@ -369,7 +369,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, ]]--
 	["food_tomato"] = {
 		Desc = "CLEARS YOUR INVENTORY",
 		Restricted = true,

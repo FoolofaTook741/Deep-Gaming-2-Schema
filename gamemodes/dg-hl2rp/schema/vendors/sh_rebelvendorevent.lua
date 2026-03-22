@@ -10,7 +10,7 @@ VENDOR.Bodygroups = "01" -- manhack
 VENDOR.Gender = "male" -- male, female, cp
 VENDOR.Talk = true
 
-VENDOR.Sell = {
+VENDOR.Sell = { --[[
 	["att_optic"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
@@ -22,7 +22,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, ]]--
 	["wep_357"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
@@ -202,7 +202,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, --[[
 	["wep_ar2e_eq"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
@@ -214,7 +214,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, ]]--
 	["wep_apf_eq"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
@@ -310,7 +310,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, --[[
 	["item_grenade"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
@@ -334,7 +334,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, ]]--
 	["item_healthkit"] = {
 		Desc = "CWU Only",
 		Restricted = true,
@@ -466,7 +466,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, --[[
 	["att_foregrip"] = {
 		Restricted = true,
 		Max = 1,
@@ -477,7 +477,7 @@ VENDOR.Sell = {
 
 			return false
 		end
-	},
+	}, ]]--
 	["food_tomato"] = {
 		Desc = "CLEARS YOUR INVENTORY",
 		Restricted = true,
