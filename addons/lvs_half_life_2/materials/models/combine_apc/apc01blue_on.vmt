@@ -1,0 +1,11 @@
+VertexLitGeneric
+{
+	$baseTexture	models/combine_apc/apc01blue_hires
+	$color2 "[.875 .875 .875]"
+	$surfaceprop metal
+	$envmap env_cubemap
+	$envmapcontrast .8
+	$envmapsaturation .5
+	$envmaptint "[ .375 .45 .5]"
+	$basealphaenvmapmask 1
+}

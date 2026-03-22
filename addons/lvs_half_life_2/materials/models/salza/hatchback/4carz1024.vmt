@@ -1,7 +1,7 @@
 VertexLitGeneric
 {
 
-$basetexture "models/salza/hatchback/4carz1024"
+$basetexture "foptimizer_shared_duplicates/a4e37426f4901c7830159a8ce1beb535" // Original: models/salza/hatchback/4carz1024
 
 $surfaceprop metal
 $model 1
@@ -15,7 +15,7 @@ $blendtintbybasealpha 1
 
 $envmap env_cubemap
 
-$envmapmask "models/salza/hatchback/4carz1024_envmask"
+$envmapmask "foptimizer_shared_duplicates/3108d60ab14513466717c4f78f5eba12" // Original: models/salza/hatchback/4carz1024_envmask
 
 
 $envmapfresnel 1

@@ -1,10 +1,13 @@
 "VertexLitGeneric"
 {
-	"$basetexture" "Models/props_vehicles/Apc001"
+	"$basetexture" "Models/apc/apc001"
+	"$bumpmap" "Models/apc/apc001_normal"
 	"$surfaceprop" "solidmetal"
+
 	"$envmap" "env_cubemap"
-	"$basealphaenvmapmask" 1
-	"$envmaptint" "[ .75 .75 .75]"
-	"$envmapsaturation" 1
-	"$envmapcontrast" 1
+	"$envmapmask" "Models/apc/apc001_env"
+
+	"$nocull" 1
+	"$alphatest" 1
+	"$alphatestreference" 0.9
 }

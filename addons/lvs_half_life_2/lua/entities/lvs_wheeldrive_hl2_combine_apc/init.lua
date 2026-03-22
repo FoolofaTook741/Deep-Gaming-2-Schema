@@ -1,56 +1,49 @@
-AddCSLuaFile("shared.lua")
 AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:OnSpawn(PObj)
-    // fix angles
-    self:SetAngles(self:GetAngles() - Angle(0,90,0))
+    local DriverSeat = self:AddDriverSeat(Vector(-30, 0, 65), Angle(0, 270, 0))
+    DriverSeat.ExitPos = Vector(-44.58, 13.57, 69.06)
 
-    local Pod = self:AddDriverSeat(Vector(0,-30,65), Angle(0,0,0))
-    Pod.ExitPos = Vector(-44.58,13.57,69.06)
-
-    // add 6 seats
+    -- add 6 seats
+    local PassengerSeat
     for i = 1, 6 do
-        local pos, ang = Vector(-30, -52, 50), Angle(0, -90, 0)
-        pos.y = pos.y - (i - 1) * 24
-
-        if (i > 3) then
-            pos.x = pos.x + 60
-            pos.y = pos.y + 72
-
+        local pos, ang = Vector(-52, -30, 50), Angle(0, 0, 0)
+        pos.x = pos.x - (i - 1) * 24
+        if ( i > 3 ) then
+            pos.y = pos.y + 60
+            pos.x = pos.x + 72
             ang.y = ang.y + 180
         end
 
-        Pod = self:AddPassengerSeat(pos, ang)
-        Pod.ExitPos = Vector(0,-170,64)
+        PassengerSeat = self:AddPassengerSeat(pos, ang)
+        PassengerSeat.ExitPos = Vector(0, -170, 64)
     end
 
-    self:AddEngine(Vector(0,87,50))
-    
-    local FrontRadius = 28
-    local RearRadius = 28
-    local FL, FR, RL, RR, ForwardAngle = self:AddWheelsUsingRig(FrontRadius, RearRadius)
+    self:AddEngine(Vector(80, 0, 50))
 
-    local FrontAxle = self:DefineAxle({
+    local FL, FR, RL, RR, ForwardAngle = self:AddWheelsUsingRig(25, 25)
+    self:DefineAxle({
         Axle = {
             ForwardAngle = ForwardAngle,
             SteerType = LVS.WHEEL_STEER_FRONT,
-            SteerAngle = 30,
+            SteerAngle = 45,
             TorqueFactor = 0.3,
             BrakeFactor = 1,
         },
         Wheels = {FL, FR},
         Suspension = {
-            Height = 20,
-            MaxTravel = 7,
-            ControlArmLength = 100,
-            SpringConstant = 20000,
-            SpringDamping = 2000,
-            SpringRelativeDamping = 2000,
+            Height = 24,
+            MaxTravel = 8,
+            ControlArmLength = 128,
+            SpringConstant = 5000,
+            SpringDamping = 1000,
+            SpringRelativeDamping = 1000,
         },
     })
 
-    local RearAxle = self:DefineAxle({
+    self:DefineAxle({
         Axle = {
             ForwardAngle = ForwardAngle,
             SteerType = LVS.WHEEL_STEER_NONE,
@@ -60,28 +53,28 @@ function ENT:OnSpawn(PObj)
         },
         Wheels = {RL, RR},
         Suspension = {
-            Height = 20,
-            MaxTravel = 7,
-            ControlArmLength = 100,
-            SpringConstant = 20000,
-            SpringDamping = 2000,
-            SpringRelativeDamping = 2000,
+            Height = 24,
+            MaxTravel = 8,
+            ControlArmLength = 128,
+            SpringConstant = 5000,
+            SpringDamping = 1000,
+            SpringRelativeDamping = 1000,
         },
     })
 
-    self:ManipulateBoneScale(self:LookupBone("APC.Gun_Base"), Vector(0, 0, 0))
-    self:ManipulateBoneScale(self:LookupBone("APC.arm_root"), Vector(0, 0, 0))
-    self:ManipulateBoneScale(self:LookupBone("APC.arm_middle"), Vector(0, 0, 0))
+    self:ManipulateBoneScale(self:LookupBone("APC.Gun_Base"), vector_origin)
 
     local var = GetConVar("lvs_car_hl2_combineapc_health") and GetConVar("lvs_car_hl2_combineapc_health"):GetInt() or 1600
     self.MaxHealth = var
     self:SetHP(var)
+
+    if ( self.PostOnSpawn ) then self:PostOnSpawn(PObj) end
 end
 
-function ENT:OnDriverEnterVehicle(ply)
-    self:ResetSequence("enter"..math.random(1, 2))
+function ENT:OnDriverEnterVehicle(client)
+    self:ResetSequence("enter" .. math.random(1, 2))
 end
 
-function ENT:OnDriverExitVehicle(ply)
-    self:ResetSequence("exit"..math.random(1, 2))
+function ENT:OnDriverExitVehicle(client)
+    self:ResetSequence("exit" .. math.random(1, 2))
 end

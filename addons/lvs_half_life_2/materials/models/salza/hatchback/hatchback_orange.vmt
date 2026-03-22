@@ -1,6 +1,6 @@
 VertexLitGeneric
 {
-$baseTexture "models\salza\hatchback/hatchback_orange"
+$baseTexture "models/salza/hatchback/hatchback_orange"
 $blendtintbybasealpha 1
 $surfaceprop metal
 $model 1

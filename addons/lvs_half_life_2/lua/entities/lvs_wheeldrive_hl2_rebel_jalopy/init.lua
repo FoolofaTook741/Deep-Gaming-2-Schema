@@ -1,25 +1,23 @@
-AddCSLuaFile("shared.lua")
+
 AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:OnSpawn(PObj)
-    // fix angles
-    self:SetAngles(self:GetAngles() - Angle(0,90,0))
+    self:SetAngles(self:GetAngles() - Angle(0, 90, 0))
 
-    local Pod = self:AddDriverSeat(Vector(-20,-40,16), Angle(0,0,0))
-    Pod.ExitPos = Vector(-64,-28,16)
+    local Pod = self:AddDriverSeat(Vector(-20, -40, 16), Angle(0, 0, 0))
+    Pod.ExitPos = Vector(-64, -28, 16)
 
-    Pod = self:AddPassengerSeat(Vector(20,-25,24), Angle(0,0,0))
-    Pod.ExitPos = Vector(64,-28,16)
+    Pod = self:AddPassengerSeat(Vector(20, -25, 24), Angle(0, 0, 0))
+    Pod.ExitPos = Vector(64, -28, 16)
 
-    self:AddEngine(Vector(0,50,40), Angle(0,90,0))
-    self:AddFuelTank(Vector(0,0,0), Angle(0,0,0), 600, LVS.FUELTYPE_PETROL)
-    
-    local FrontRadius = 18
-    local RearRadius = 20
-    local FL, FR, RL, RR, ForwardAngle = self:AddWheelsUsingRig(FrontRadius, RearRadius)
+    self:AddEngine(Vector(0, 50, 40), Angle(0, 90, 0))
+    self:AddFuelTank(Vector(0, 0, 0), Angle(0, 0, 0), 600, LVS.FUELTYPE_PETROL)
 
-    local FrontAxle = self:DefineAxle({
+    local FL, FR, RL, RR, ForwardAngle = self:AddWheelsUsingRig(18, 19)
+
+    self:DefineAxle({
         Axle = {
             ForwardAngle = ForwardAngle,
             SteerType = LVS.WHEEL_STEER_FRONT,
@@ -38,7 +36,7 @@ function ENT:OnSpawn(PObj)
         },
     })
 
-    local RearAxle = self:DefineAxle({
+    self:DefineAxle({
         Axle = {
             ForwardAngle = ForwardAngle,
             SteerType = LVS.WHEEL_STEER_NONE,
@@ -58,10 +56,11 @@ function ENT:OnSpawn(PObj)
     })
 end
 
-function ENT:OnEngineActiveChanged( Active )
+function ENT:OnEngineActiveChanged(Active)
     if ( Active ) then
         self:ResetSequence("idle_running")
     else
         self:ResetSequence("idle")
+        self:EmitSound("vehicles/junker/jnk_stop1.wav")
     end
 end

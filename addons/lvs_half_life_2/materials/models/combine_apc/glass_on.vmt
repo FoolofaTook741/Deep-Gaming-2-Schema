@@ -1,0 +1,12 @@
+VertexLitGeneric
+{
+	$baseTexture models/combine_apc/glass
+	$additive 1
+	$nocull 1
+	$color2 "[0.6 0.625 0.55]"
+	$envmapmask	models/combine_apc/glass_spec
+	$envmap "Environment maps/rg"
+	$envmaptint "[0.2 0.21 0.18]"
+	$envmapcontrast .9
+	$envmapsaturation 0.5
+}

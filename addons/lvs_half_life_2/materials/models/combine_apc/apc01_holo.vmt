@@ -1,0 +1,41 @@
+UnlitTwoTexture
+{
+	$basetexture models/combine_apc/apc01_holo
+	$texture2 dev/dev_scanline
+	$additive 1
+	$model 1
+//	$color2 "[2 2 2]"
+	$tex2offset	"[0 0]"
+	$tex2scale 0.2
+	Proxies
+	{	
+		Sine
+		{
+			resultVar "$color[0]"
+			sineperiod 1
+			sinemin .9
+			sinemax .9
+		}
+		
+		Sine
+		{
+			resultVar "$color[1]"
+			sineperiod .01
+			sinemin .9
+			sinemax 1
+		}
+		
+		LinearRamp
+		{
+			resultVar "$tex2offset[1]"
+			rate -.91
+		}
+
+		TextureTransform
+		{
+			scaleVar	"$tex2scale"
+			translateVar	"$tex2offset"
+			resultVar	"$texture2transform"
+		}
+	}
+}

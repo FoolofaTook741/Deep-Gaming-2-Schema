@@ -1,7 +1,7 @@
 "VertexLitGeneric"
 {
-    "$basetexture" "models\salza\cars\car004b"
-    "$bumpmap" "models\salza\cars\car004_n"
+    "$basetexture" "models/salza/cars/car004b"
+    "$bumpmap" "models/salza/cars/car004_n"
 $envmap env_cubemap
 $envmaptint "[ .05 .05 .05 ]"
 $envmapfresnel 1
@@ -11,7 +11,7 @@ $normalmapalphaenvmapmask 1
     "$phongalbedotint"        "1"
     "$phongboost"            "1"
     "$phongexponent"        "60"
-    "$phongexponenttexture"    "models\salza\vehicle_exp"
+    "$phongexponenttexture"    "foptimizer_shared_duplicates/e6a6c45ae5b9d7910f5baa76849e1e05" // Original: models/salza/vehicle_exp
     "$phongfresnelranges"    "[.5 1 2]"
 
     "$rimlight"                "1"

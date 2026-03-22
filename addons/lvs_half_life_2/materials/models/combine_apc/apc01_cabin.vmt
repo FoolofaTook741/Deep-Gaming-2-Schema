@@ -1,0 +1,11 @@
+VertexLitGeneric
+{
+	$baseTexture	models/combine_apc/apc01_cabin
+	$envmap env_cubemap
+	$envmapcontrast .8
+	$envmapsaturation .5
+	$envmaptint "[ .1 .1 .1]"
+	$basealphaenvmapmask 1
+	$selfillum 1
+	$selfillummask	models/combine_apc/apc01_cabin_s
+}
