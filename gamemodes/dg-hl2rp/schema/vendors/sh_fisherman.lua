@@ -31,7 +31,7 @@ VENDOR.RandomTrades = {
 		["util_refinedmetalplate"] = {Rarity = 680, Cost = {60, 100}, BuyMax = 5},
 		["util_steel"] = {Rarity = 710, Cost = {140, 230}, BuyMax = 3},
 		["wep_bar"] = {Rarity = 795, Cost = {400, 900}, BuyMax = 1},
-		["wep_molotov"] = {Rarity = 740, Cost = {100, 200}, BuyMax = 3},
+		["wep_molotov"] = {Rarity = 740, Cost = {350, 550}, BuyMax = 1},
 		["item_enhancedvial"] = {Rarity = 575, Cost = {150, 300}, BuyMax = 2},
 		["item_healthvial"] = {Rarity = 550, Cost = {95, 200}, BuyMax = 3},
 		["wep_shotgun"] = {Rarity = 720, Cost = {400, 650}, BuyMax = 1},
