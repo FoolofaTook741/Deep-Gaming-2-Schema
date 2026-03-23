@@ -330,7 +330,7 @@ VENDOR.Sell = {
 			else return false
 			end
 		end
-	},
+	}, --[[
 	["att_assault_shield"] = {
 		Desc = "PAYBACK Only [Testing]",
 		Restricted = true,
@@ -341,7 +341,7 @@ VENDOR.Sell = {
 			else return false
 			end
 		end
-	},
+	}, ]]--
 	["item_grenade"] = {
 		Desc = "ECHO & Mace ECS+/FIST",
 		Restricted = true,
@@ -441,11 +441,11 @@ VENDOR.Sell = {
 	},
 	]]--
 	["att_optic"] = {
-		Desc = "ECHO ECS+/FIST",
+		Desc = "FIST",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_EOS and ply:GetTeamClass() == CLASS_ECHO) or ply:GetTeamClass() == CLASS_FIST then
+			if ply:GetTeamClass() == CLASS_FIST then
 				return true
 			else return false
 			end
