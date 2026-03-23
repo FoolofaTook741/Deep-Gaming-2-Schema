@@ -31,14 +31,7 @@ local slurs = {
     "UCz7lYPf2xyB8IG6Tve7hbzw",
     "RfVHapVJ_vg",
     "PQ2-nRbZVdk",
-    "aLkHm0xkspQ",
-    "skibidi",
-    "sk1b1d1",
-    "skib1d1",
-    "skibid1",
-    "sk1bid1",
-    "sk!b!d!",
-    "sk!bid!"
+    "aLkHm0xkspQ"
 }
 
 local replacements = {
