@@ -21,7 +21,7 @@ VENDOR.RandomTrades = {
 		["wep_pistol"] = {Rarity = 400, Cost = {70, 250}, BuyMax = 1},
 		["wep_skeleton"] = {Rarity = 500, Cost = {67, 100}, BuyMax = 1},
 		["wep_stiletto"] = {Rarity = 500, Cost = {130, 330}, BuyMax = 1},
-		["util_rdxcompound"] = {Rarity = 750, Cost = {400, 650}, BuyMax = 2},
+		["util_rdxcompound"] = {Rarity = 750, Cost = {400, 650}, BuyMax = 1},
 		["util_lvl2plate"] = {Rarity = 400, Cost = {120, 285}, BuyMax = 1},
 		-- ["wep_pickaxe"] = {Rarity = 500, Cost = {50, 101}, BuyMax = 2},
 		["cos_otavest3"] = {Rarity = 890, Cost = {260, 699}, BuyMax = 1},
