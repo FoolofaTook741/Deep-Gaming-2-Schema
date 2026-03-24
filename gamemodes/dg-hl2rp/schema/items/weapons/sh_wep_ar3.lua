@@ -23,7 +23,7 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "primary"
 ITEM.CanStack = true
 
-ITEM.WeaponClass = "plutonic_ar3"
+ITEM.WeaponClass = "rw_sw_dlt19"
 ITEM.CombineWeapon = true
 ITEM.EquipTime = 7
 ITEM.UnEquipTime = 7

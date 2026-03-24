@@ -1,158 +1,5 @@
 tagtable = {"ECHO", "MACE", "RANGER", "FIST", "SWEEPER", "NOMAD", "PAYBACK"}
 
-local MDL_GRUNT   = "models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl"
-local MDL_SOLDIER = "models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl"
-local MDL_ORDINAL = "models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl"
-local MDL_ELITE   = "models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl"
-local MDL_APF     = "models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl"
-local MDL_ETL     = "models/DG_models/DG_combinepack/DG_etl/dg_etl.mdl"
-local MDL_CHARGER = "models/dg_models/dg_combinepack/dg_charger/syn_combine_heavy.mdl"
-
-local BG_RESET_3 = {{0,0},{1,0},{2,0}}
-local BG_CTL = {
-    {0,0},{1,1},{2,0},{3,1},{4,1},{5,1},
-    {6,1},{7,1},{8,1},{9,1},{10,1},{11,1}
-}
-
--- Fields:
---   model (string)
---   skin (int) default 0
---   armor (int)
---   maxArmor (int) defaults to armor
---   health (int) only set if specified
---   speedMult (float) multiplier of impulse.Config.JogSpeed
---   runSpeed (int) absolute run speed (overrides speedMult)
---   walkSpeed (int) absolute walk speed, defaults to config
---   forceFlags (bool) true means immune to knockback, false means you get knockback
---   bodygroups  (table)   {{id, val}, ...}
---   give (string) gives an item, usually a weapon
-
-local OTA_STATS = {
-
-    -- ECHO
-    [1] = { ranks = {
-        CGR = { model=MDL_GRUNT,   skin=1, armor=80,  speedMult=1.05, forceFlags=false },
-        CSO = { model=MDL_SOLDIER, skin=0, armor=100, speedMult=1.0,  forceFlags=false },
-        ECS = { model=MDL_SOLDIER, skin=0, armor=120, speedMult=1.0,  forceFlags=false },
-        CCP = { model=MDL_SOLDIER, skin=0, armor=140, speedMult=1.0,  forceFlags=false, bodygroups=BG_RESET_3 },
-        CTL = { model=MDL_ORDINAL, skin=0, armor=160, speedMult=1.0,  forceFlags=false, bodygroups=BG_CTL },
-        ORD = { model=MDL_ORDINAL, skin=0, armor=200, speedMult=1.0,  forceFlags=false, bodygroups=BG_RESET_3 },
-        CSC = { model=MDL_ORDINAL, skin=3, armor=220, speedMult=1.0,  forceFlags=false, bodygroups=BG_RESET_3 },
-    }},
-
-    -- MACE
-    [2] = { ranks = {
-        CGR = { model=MDL_GRUNT,   skin=1, armor=95,  speedMult=1.05, forceFlags=false, bodygroups=BG_RESET_3 },
-        CSO = { model=MDL_SOLDIER, skin=1, armor=110, speedMult=1.03, forceFlags=false },
-        ECS = { model=MDL_SOLDIER, skin=1, armor=135, speedMult=1.03, forceFlags=false },
-        CCP = { model=MDL_SOLDIER, skin=1, armor=150, speedMult=1.06, forceFlags=false },
-        CTL = { model=MDL_ORDINAL, skin=1, armor=170, speedMult=1.06, forceFlags=false, bodygroups=BG_CTL },
-        ORD = { model=MDL_ORDINAL, skin=1, armor=200, speedMult=1.06, forceFlags=false, bodygroups=BG_RESET_3 },
-        CSC = { model=MDL_ORDINAL, skin=3, armor=220, speedMult=1.06, forceFlags=false, bodygroups=BG_RESET_3 },
-    }},
-
-    -- RANGER
-    [3] = { ranks = {
-        CSO = { model=MDL_SOLDIER, skin=4, armor=90,  speedMult=0.95, forceFlags=false },
-        ECS = { model=MDL_SOLDIER, skin=4, armor=105, speedMult=0.95, forceFlags=false },
-        CCP = { model=MDL_SOLDIER, skin=4, armor=130, speedMult=0.95, forceFlags=false },
-        CTL = { model=MDL_ORDINAL, skin=0, armor=150, speedMult=0.95, forceFlags=false, bodygroups=BG_CTL },
-        ORD = { model=MDL_ORDINAL, skin=0, armor=170, speedMult=0.95, forceFlags=false, bodygroups=BG_RESET_3 },
-        CSC = { model=MDL_ORDINAL, skin=3, armor=190, speedMult=0.95, forceFlags=false, bodygroups=BG_RESET_3 },
-    }},
-
-    -- FIST
-    [4] = { ranks = {
-        CSO = { model=MDL_ELITE, armor=140, speedMult=1, forceFlags=false },
-        ECS = { model=MDL_ELITE, armor=160, speedMult=1, forceFlags=false },
-        CCP = { model=MDL_ELITE, armor=180, speedMult=1, forceFlags=false },
-        CTL = { model=MDL_ELITE, armor=200, speedMult=1.05, forceFlags=false },
-        ORD = { model=MDL_ETL,   armor=220, speedMult=1.05, forceFlags=false, bodygroups=BG_RESET_3 },
-        CSC = { model=MDL_ETL,   armor=240, speedMult=1.05, forceFlags=false, bodygroups={{1,1},{3,1}} },
-    }},
-
-    -- APF (SWEEPER)
-    [5] = { ranks = {
-        CSO = { model=MDL_APF, skin=1, armor=150, runSpeed=170, forceFlags=true },
-        ECS = { model=MDL_APF, skin=1, armor=175, runSpeed=170, forceFlags=true },
-        CCP = { model=MDL_APF, skin=1, armor=225, runSpeed=170, forceFlags=true },
-        CTL = { model=MDL_APF, skin=2, armor=225, runSpeed=170, forceFlags=true },
-        ORD = { model=MDL_APF, skin=2, armor=250, runSpeed=170, forceFlags=true, bodygroups=BG_RESET_3 },
-        CSC = { model=MDL_APF, skin=2, armor=270, runSpeed=170, forceFlags=true, bodygroups=BG_RESET_3 },
-    }},
-
-    -- NOMAD
-    [6] = { ranks = {
-        CSO = { model=MDL_SOLDIER, skin=6, armor=100, speedMult=1.0, forceFlags=false, give="weapon_lvsrepair" },
-        ECS = { model=MDL_SOLDIER, skin=6, armor=120, speedMult=1.0, forceFlags=false, give="weapon_lvsrepair" },
-        CCP = { model=MDL_SOLDIER, skin=6, armor=140, speedMult=1.0, forceFlags=false, give="weapon_lvsrepair", bodygroups={{0,0}} },
-        CTL = { model=MDL_SOLDIER, skin=6, armor=160, speedMult=1.0, forceFlags=false, give="weapon_lvsrepair" },
-        ORD = { model=MDL_SOLDIER, skin=6, armor=180, speedMult=1.0, forceFlags=false, give="weapon_lvsrepair" },
-        CSC = { model=MDL_SOLDIER, skin=6, armor=200, speedMult=1.0, forceFlags=false, give="weapon_lvsrepair" },
-    }},
-
-
-    -- WALLHAMMER (PAYBACK)
-    [7] = { ranks = {
-        CSO = { model=MDL_CHARGER, skin=0, armor=250, health=150, runSpeed=160, walkSpeed=80, forceFlags=true },
-        ECS = { model=MDL_CHARGER, skin=0, armor=275, health=160, runSpeed=160, walkSpeed=80, forceFlags=true },
-        CCP = { model=MDL_CHARGER, skin=0, armor=300, health=170, runSpeed=160, walkSpeed=80, forceFlags=true },
-        CTL = { model=MDL_CHARGER, skin=1, armor=325, health=175, runSpeed=160, walkSpeed=80, forceFlags=true },
-        ORD = { model=MDL_CHARGER, skin=1, armor=350, health=200, runSpeed=160, walkSpeed=80, forceFlags=true, bodygroups=BG_RESET_3 },
-        CSC = { model=MDL_CHARGER, skin=1, armor=400, health=210, runSpeed=160, walkSpeed=80, forceFlags=true, bodygroups=BG_RESET_3 },
-    }},
-}
-
-
-local function ApplyOTARank(ply, rankName)
-    local classStats = OTA_STATS[ply:GetTeamClass()]
-    if not classStats then return end
-    local s = classStats.ranks[rankName]
-    if not s then return end
-
-    ply:SetModel(s.model)
-    ply:SetSkin(s.skin or 0)
-    ply:SetModelScale(1)
-
-    local armor    = s.armor or 0
-    local maxArmor = s.maxArmor or armor
-    ply:SetArmor(armor)
-    ply:SetMaxArmor(maxArmor)
-
-    if s.health then
-        ply:SetHealth(s.health)
-        ply:SetMaxHealth(s.health)
-    end
-
-    if s.runSpeed then
-        ply:SetRunSpeed(s.runSpeed)
-    elseif s.speedMult then
-        ply:SetRunSpeed(impulse.Config.JogSpeed * s.speedMult)
-    end
-
-    ply:SetWalkSpeed(s.walkSpeed or impulse.Config.WalkSpeed)
-
-    if s.forceFlags then
-        ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
-    else
-        ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
-    end
-
-    if s.bodygroups then
-        for _, bg in ipairs(s.bodygroups) do
-            ply:SetBodygroup(bg[1], bg[2])
-        end
-    end
-
-    if s.give then
-        ply:Give(s.give)
-    end
-    if ply:GetTeamClass() == CLASS_PAYBACK then
-    	ply:GiveInventoryItem("wep_wallhammershield", nil, true)
-    end
-    ply:SetRPName("CTA:" .. rankName .. "." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-end
-
 TEAM_OTA = impulse.Teams.Define({
 	name = "Combine Transhuman Arm",
 	color = Color(60, 60, 60, 255),
@@ -167,7 +14,7 @@ TEAM_OTA = impulse.Teams.Define({
 	xp = 750,
 	cp = true,
 	doorGroup = {1, 2, 3, 6, 7},
-	blockNameChange = true,
+	blockNameChange = true, 
 
 	quiz = {
 		enabled = true,
@@ -269,7 +116,7 @@ TEAM_OTA = impulse.Teams.Define({
 		},
 		{
 			id = 11,
-			question =[[Translate the following radio transmission: "ST-2 going sharp on contaminant jackpot. Prepping extractors"]],
+			question = "Translate the following radio transmission: “ST-2 going sharp on contaminant jackpot. Prepping extractors”",
 			answers = {
 				{"Team is ready to contain the xen infestation. Preparing grenades.", false},
 				{"Team is attacking a rebel holdout. Preparing grenades.", true},
@@ -298,7 +145,7 @@ TEAM_OTA = impulse.Teams.Define({
 		},
 		{
 			id = 14,
-			question = [[Translate the following radio transmission: "ST-1 is at code: ice at SJ-1. Report all radials free."]],
+			question = "Translate the following radio transmission: “ST-1 is at code: ice at SJ-1. Report all radials free.”",
 			answers = {
 				{"Team is holding at the Nexus. Nothing to report.", false},
 				{"Team is holding at the Outlands Hardpoint. All sightlines are clear.", true},
@@ -337,7 +184,7 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "ECHO",
 			description = "ECHO units are highly trained medium-range combat units. ECHO units are a jack of all trades, master of none. They have access to a mix of close and medium range weaponry.",
-			model = MDL_GRUNT,
+			model = "models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl",
 			skin = 1,
 			itemsAdd = {
 				{class = "wep_osips", amount = 1},
@@ -349,7 +196,7 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "MACE",
 			description = "MACE units are close-quaters engagement specialists. They are ineffective at medium and long ranges however they excel at close-quaters due to their SPAS-12 shotgun and heavy armour. MACE units are excellent at performing raids and bruteforcing into enemy strongholds.",
-			model = MDL_GRUNT,
+			model = "models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl",
 			skin = 1,
 			itemsAdd = {
 				{class = "wep_osisg", amount = 1},
@@ -361,7 +208,7 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "RANGER",
 			description = "RANGER units have a diversified arsenal and the primary skillset in long range engagements. Utilizing your O.M.R. or O.S.R. you can effectively dispatch hostiles at ranges of up to 500 meters.",
-			model = MDL_SOLDIER,
+			model = "models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl",
 			skin = 4,
 			itemsAdd = {
 				{class = "wep_omr", amount = 1},
@@ -375,24 +222,25 @@ TEAM_OTA = impulse.Teams.Define({
 		{
 			name = "FIST",
 			description = "FIST units, also known as Combine Elites, are deployed to high risk situations.",
-			model = MDL_ELITE,
+			model = "models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl",
 			skin = 0,
 			itemsAdd = {
 				{class = "wep_ar2e", amount = 1},
+				--{class = "wep_ar2orb", amount = 1},
 				{class = "item_vocoder", amount = 1}
 			},
 			xp = 5,
 			percentLimit = false,
 			whitelistUID = "CTA_FIST",
 			whitelistLevel = 1,
-			whitelistFailMessage = "You must be specially whitelisted for the FIST division.",
+            whitelistFailMessage = "You must be specially whitelisted for the FIST division.",
 			limit = 3,
 			noMenu = true
 		},
 		{
 			name = "SWEEPER",
 			description = "SWEEPER units, also known as APF, specialize in engagements that require significant concentrated fire to lock down an enemy position.",
-			model = MDL_APF,
+			model = "models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl",
 			skin = 1,
 			itemsAdd = {
 				{class = "wep_apf", amount = 1},
@@ -403,13 +251,13 @@ TEAM_OTA = impulse.Teams.Define({
 			limit = 2,
 			whitelistUID = "CTA_SLASH",
 			whitelistLevel = 1,
-			whitelistFailMessage = "You must be specially whitelisted for the SWEEPER division.",
+            whitelistFailMessage = "You must be specially whitelisted for the SWEEPER division.",
 			noMenu = true
 		},
 		{
 			name = "NOMAD",
 			description = "NOMAD units serve as vehicle operators of the Combine Transhuman Arm, they utilize Hunters and APCs for their duties.",
-			model = MDL_SOLDIER,
+			model = "models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl",
 			skin = 6,
 			itemsAdd = {
 				{class = "wep_osips", amount = 1},
@@ -420,13 +268,13 @@ TEAM_OTA = impulse.Teams.Define({
 			limit = 3,
 			whitelistUID = "CTA_NOMAD",
 			whitelistLevel = 1,
-			whitelistFailMessage = "You must be specially whitelisted for the NOMAD division.",
+            whitelistFailMessage = "You must be specially whitelisted for the NOMAD division.",
 			noMenu = true
 		},
 		{
 			name = "PAYBACK",
 			description = "PAYBACK units, also known as Wallhammer, they have extremely powerful armor and a close range shotgun.",
-			model = MDL_CHARGER,
+			model = "models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl",
 			skin = 0,
 			itemsAdd = {
 				{class = "wep_osihs", amount = 1},
@@ -438,7 +286,7 @@ TEAM_OTA = impulse.Teams.Define({
 			limit = 2,
 			whitelistUID = "CTA_PAYBACK",
 			whitelistLevel = 1,
-			whitelistFailMessage = "You must be specially whitelisted for the PAYBACK division.",
+            whitelistFailMessage = "You must be specially whitelisted for the PAYBACK division.",
 			noMenu = true
 		},
 	},
@@ -449,7 +297,27 @@ TEAM_OTA = impulse.Teams.Define({
 			description = "owg",
 			xp = 0,
 			onBecome = function(ply, rank)
-				ApplyOTARank(ply, "CGR")
+				ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+				ply:SetRPName("DT." .. tagtable[ply:GetTeamClass()] .. "-" ..math.random(10, 999))
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:Give("tfa_e11d_extended")
+					ply:SetSkin(1)
+					ply:SetArmor(80)
+					ply:SetMaxArmor(80)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetSkin(1)
+					ply:SetArmor(95)
+					ply:SetMaxArmor(95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(impulse.Config.JogSpeed* 1.05)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				end
 			end
 		},
 		{
@@ -458,7 +326,77 @@ TEAM_OTA = impulse.Teams.Define({
 			xp = 0,
 			whitelistLevel = 1,
 			onBecome = function(ply, rank)
-				ApplyOTARank(ply, "CSO")
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("tfa_e11d_extended")
+					ply:SetSkin(0)
+					ply:SetArmor(100)
+					ply:SetMaxArmor(100)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("tfa_sw_cisshot")
+					ply:SetSkin(1)
+					ply:SetArmor(110)
+					ply:SetMaxArmor(110)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_APF then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("tfa_e11d_extended")
+					ply:Give("rw_sw_z6i")
+					ply:SetSkin(1)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetArmor(150)
+					ply:SetMaxArmor(150)
+					ply:SetRunSpeed(170)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_RANGER then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(4)
+					ply:SetArmor(90)
+					ply:SetMaxArmor(90)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_FIST then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetArmor(140)
+					ply:SetMaxArmor(140)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_NOMAD then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(6)
+					ply:SetArmor(100)
+					ply:SetMaxArmor(100)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+					ply:Give("weapon_lvsrepair")
+				elseif ply:GetTeamClass() == CLASS_PAYBACK then
+					ply:SetModel("models/dg_models/dg_combinepack/dg_charger/syn_combine_heavy.mdl")
+					--ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
+					ply:SetHealth(150)
+					ply:SetMaxHealth(150)
+					--ply:SetModelScale(1.1)
+					ply:SetArmor(250)
+					ply:SetMaxArmor(250)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(160)
+					ply:SetWalkSpeed(80)
+				end
+				ply:SetRPName("DT-Corporal." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
 		},
 		{
@@ -467,16 +405,163 @@ TEAM_OTA = impulse.Teams.Define({
 			xp = 0,
 			whitelistLevel = 2,
 			onBecome = function(ply, rank)
-				ApplyOTARank(ply, "ECS")
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_e11d")
+					ply:SetSkin(0)
+					ply:SetArmor(120)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetMaxArmor(120)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("tfa_sw_cisshot")
+					ply:SetSkin(1)
+					ply:SetArmor(135)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:SetMaxArmor(135)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_RANGER then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(4)
+					ply:SetArmor(105)
+					ply:SetMaxArmor(105)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_APF then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_z6i")
+					ply:SetSkin(1)
+					ply:SetArmor(175)
+					ply:SetMaxArmor(175)
+					ply:SetRunSpeed(170)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_FIST then
+					ply:SetModel("models/nada/tfuroyalguard.mdl")
+					ply:Give("rw_sw_tl50")
+					ply:SetArmor(160)
+					ply:SetMaxArmor(160)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_NOMAD then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(6)
+					ply:SetArmor(120)
+					ply:SetMaxArmor(120)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:Give("weapon_lvsrepair")
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_PAYBACK then
+					ply:SetModel("models/dg_models/dg_combinepack/dg_charger/syn_combine_heavy.mdl")
+					--ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
+					ply:SetHealth(150)
+					ply:SetMaxHealth(150)
+					--ply:SetModelScale(1.1)
+					ply:SetArmor(250)
+					ply:SetMaxArmor(250)
+					ply:SetRunSpeed(160)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetWalkSpeed(80)
+				end
+				ply:SetRPName("DT-Sergeant." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
 		},
 		{
 			name = "CCP",
 			description = "captain",
 			xp = 0,
+			--[[canPromote = {
+				[RANK_OWG] = true
+			},]]
 			whitelistLevel = 3,
 			onBecome = function(ply, rank)
-				ApplyOTARank(ply, "CCP")
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_e11d")
+					ply:SetSkin(0)
+					ply:SetArmor(140)
+					ply:SetMaxArmor(140)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("tfa_sw_cisshot")
+					ply:SetSkin(1)
+					ply:SetArmor(150)
+					ply:SetMaxArmor(150)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_APF then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_z6i")
+					ply:SetSkin(1)
+					ply:SetArmor(225)
+					ply:SetMaxArmor(225)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(170)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_RANGER then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(4)
+					ply:SetArmor(130)
+					ply:SetMaxArmor(130)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_FIST then
+					ply:SetModel("models/nada/tfuimperialsenateguard.mdl")
+					ply:Give("rw_sw_tl50")
+					ply:SetArmor(180)
+					ply:SetMaxArmor(180)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_NOMAD then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(6)
+					ply:SetArmor(140)
+					ply:SetMaxArmor(140)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:Give("weapon_lvsrepair")
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_PAYBACK then
+					ply:SetModel("models/dg_models/dg_combinepack/dg_charger/syn_combine_heavy.mdl")
+					--ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
+					ply:SetHealth(150)
+					ply:SetMaxHealth(150)
+					--ply:SetModelScale(1.1)
+					ply:SetArmor(300)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetMaxArmor(300)
+					ply:SetRunSpeed(160)
+					ply:SetWalkSpeed(80)
+				end
+				ply:SetRPName("DT-2ndLT." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
 		},
 		{
@@ -484,9 +569,119 @@ TEAM_OTA = impulse.Teams.Define({
 			description = "ldr",
 			xp = 0,
 			doorGroup = {1, 2, 3, 4, 6, 7},
+			--[[canPromote = {
+				[RANK_OWG] = true,
+				[RANK_OWS] = true,
+			},]]
 			whitelistLevel = 4,
 			onBecome = function(ply, rank)
-				ApplyOTARank(ply, "CTL")
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(0)
+					ply:SetArmor(160)
+					ply:SetMaxArmor(160)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:Give("rw_sw_e11d")
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,1)
+					ply:SetBodygroup(2,0)
+					ply:SetBodygroup(3,1)
+					ply:SetBodygroup(4,1)
+					ply:SetBodygroup(5,1)
+					ply:SetBodygroup(6,1)
+					ply:SetBodygroup(7,1)
+					ply:SetBodygroup(8,1)
+					ply:SetBodygroup(9,1)
+					ply:SetBodygroup(10,1)
+					ply:SetBodygroup(11,1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(1)
+					ply:Give("tfa_sw_cisshot")
+					ply:Give("rw_sw_e11d")
+					ply:SetArmor(170)
+					ply:SetMaxArmor(170)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,1)
+					ply:SetBodygroup(2,0)
+					ply:SetBodygroup(3,1)
+					ply:SetBodygroup(4,1)
+					ply:SetBodygroup(5,1)
+					ply:SetBodygroup(6,1)
+					ply:SetBodygroup(7,1)
+					ply:SetBodygroup(8,1)
+					ply:SetBodygroup(9,1)
+					ply:SetBodygroup(10,1)
+					ply:SetBodygroup(11,1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_RANGER then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(0)
+					ply:Give("rw_sw_e11d")
+					ply:SetArmor(150)
+					ply:SetMaxArmor(150)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,1)
+					ply:SetBodygroup(2,0)
+					ply:SetBodygroup(3,1)
+					ply:SetBodygroup(4,1)
+					ply:SetBodygroup(5,1)
+					ply:SetBodygroup(6,1)
+					ply:SetBodygroup(7,1)
+					ply:SetBodygroup(8,1)
+					ply:SetBodygroup(9,1)
+					ply:SetBodygroup(10,1)
+					ply:SetBodygroup(11,1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_APF then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_z6i")
+					ply:SetSkin(2)
+					ply:SetArmor(225)
+					ply:SetMaxArmor(225)
+					ply:SetRunSpeed(170)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_FIST then
+					ply:SetModel("models/nada/tfuimperialsenateguard.mdl")
+					ply:Give("rw_sw_tl50")
+					ply:SetArmor(200)
+					ply:SetMaxArmor(200)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+				elseif ply:GetTeamClass() == CLASS_NOMAD then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(6)
+					ply:SetArmor(160)
+					ply:SetMaxArmor(160)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:Give("weapon_lvsrepair")
+				elseif ply:GetTeamClass() == CLASS_PAYBACK then
+					ply:SetModel("models/dg_models/dg_combinepack/dg_charger/syn_combine_heavy.mdl")
+					--ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
+					ply:SetSkin(1)
+					ply:SetHealth(150)
+					ply:SetMaxHealth(150)
+					--ply:SetModelScale(1.1)
+					ply:SetArmor(300)
+					ply:SetMaxArmor(300)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(160)
+					ply:SetWalkSpeed(80)
+				end
+				ply:SetRPName("DT-1stLT." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
 		},
 		{
@@ -496,7 +691,96 @@ TEAM_OTA = impulse.Teams.Define({
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			whitelistLevel = 5,
 			onBecome = function(ply, rank)
-				ApplyOTARank(ply, "ORD")
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_e11d")
+					ply:SetSkin(0)
+					ply:SetArmor(200)
+					ply:SetMaxArmor(200)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("tfa_sw_cisshot")
+					ply:SetSkin(1)
+					ply:SetArmor(200)
+					ply:SetMaxArmor(200)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_RANGER then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(0)
+					ply:SetArmor(170)
+					ply:SetMaxArmor(170)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_APF then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_z6i")
+					ply:SetSkin(2)
+					ply:SetArmor(250)
+					ply:SetMaxArmor(250)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(170)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_FIST then
+					ply:SetModel("models/nada/tfushadowguard.mdl")
+					ply:Give("rw_sw_tl50")
+					ply:SetArmor(220)
+					ply:SetMaxArmor(220)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_NOMAD then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(6)
+					ply:SetArmor(180)
+					ply:SetMaxArmor(180)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:Give("weapon_lvsrepair")
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_PAYBACK then
+					ply:SetModel("models/dg_models/dg_combinepack/dg_charger/syn_combine_heavy.mdl")
+					--ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
+					ply:SetSkin(1)					
+					ply:SetHealth(200)
+					ply:SetMaxHealth(200)
+					--ply:SetModelScale(1.1)
+					ply:SetArmor(350)
+					ply:SetMaxArmor(350)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(160)
+					ply:SetWalkSpeed(80)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+				end
+				ply:SetRPName("DT-Captain." .. tagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
 			end
 		},
 		{
@@ -506,18 +790,110 @@ TEAM_OTA = impulse.Teams.Define({
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			whitelistLevel = 6,
 			onBecome = function(ply, rank)
-				ApplyOTARank(ply, "CSC")
+				if ply:GetTeamClass() == CLASS_ECHO then
+					ply:SetModel("models/nanb_darth_vader.mdl")
+					ply:Give("weapon_lightsaber")
+					ply:SetModelScale(1.1)
+					ply:SetSkin(0)
+					ply:SetHealth(1000)
+					ply:SetMaxHealth(1000)
+					ply:SetArmor(500)
+					ply:SetMaxArmor(500)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_MACE then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(2)
+					ply:Give("tfa_sw_repshot")
+					ply:SetArmor(220)
+					ply:SetMaxArmor(220)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_RANGER then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("tfa_dlt20a_extended")
+					ply:SetSkin(2)
+					ply:SetArmor(190)
+					ply:SetMaxArmor(190)
+					ply:SetRunSpeed(impulse.Config.JogSpeed * 0.95)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_APF then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_z6i")
+					ply:SetSkin(2)
+					ply:SetArmor(270)
+					ply:SetMaxArmor(270)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(170)
+					ply:SetModelScale(1)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_FIST then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:Give("rw_sw_tl50")
+					ply:SetArmor(220)
+					ply:SetMaxArmor(240)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetBodygroup(1,1)
+					ply:SetBodygroup(3,1)
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_NOMAD then
+					ply:SetModel("models/player/bunny/deathtrooper/deathtrooper.mdl")
+					ply:SetSkin(6)
+					ply:SetArmor(200)
+					ply:SetMaxArmor(200)
+					ply:SetRunSpeed(impulse.Config.JogSpeed)
+					ply:SetModelScale(1)
+					ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:Give("weapon_lvsrepair")
+					ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+				elseif ply:GetTeamClass() == CLASS_PAYBACK then
+					ply:SetModel("models/dg_models/dg_combinepack/dg_charger/syn_combine_heavy.mdl")
+					--ply:SetModel("models/DG_models/DG_combinepack/DG_charger/dg_combine_charger.mdl")
+					ply:SetSkin(1)		
+					ply:SetHealth(200)
+					ply:SetMaxHealth(200)
+					--ply:SetModelScale(1.1)
+					ply:SetArmor(400)
+					ply:SetMaxArmor(400)
+					ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+					ply:SetRunSpeed(160)
+					ply:SetWalkSpeed(80)
+					ply:SetBodygroup(0,0)
+					ply:SetBodygroup(1,0)
+					ply:SetBodygroup(2,0)
+				end
+				ply:SetRPName("Darth Vader")
 			end
 		}
 	}
 })
 
-CLASS_ECHO    = 1
-CLASS_MACE    = 2
-CLASS_RANGER  = 3
-CLASS_FIST    = 4
-CLASS_APF     = 5
-CLASS_NOMAD   = 6
+CLASS_ECHO = 1
+CLASS_MACE = 2
+CLASS_RANGER = 3
+CLASS_FIST = 4
+CLASS_APF = 5
+CLASS_NOMAD = 6
 CLASS_PAYBACK = 7
 
 RANK_OWG = 1
@@ -535,9 +911,9 @@ RANK_CCP = RANK_OCP
 RANK_CTL = RANK_OSL
 RANK_CSC = RANK_OSC
 
-hook.Add("PlayerFootstep", "wallhammerfoot", function(ply, pos, foot, sound)
-	if ply:Team() == TEAM_OTA and ply:GetTeamClass() == CLASS_PAYBACK then
-		ply:EmitSound("wallhammer/steps/step_layer_clink_0" .. math.random(1, 5) .. ".wav")
-		return true
-	end
+hook.Add("PlayerFootstep", "wallhammerfoot", function(ply, pos, foot, sound) 
+    if ply:Team() == TEAM_OTA && ply:GetTeamClass() == CLASS_PAYBACK then
+        ply:EmitSound("wallhammer/steps/step_layer_clink_0" .. math.random(1,5) .. ".wav")
+        return true
+    end
 end)

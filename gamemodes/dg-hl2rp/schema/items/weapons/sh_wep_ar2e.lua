@@ -27,7 +27,7 @@ ITEM.CanStack = true
 ITEM.EquipTime = 3
 ITEM.UnEquipTime = 3
 
-ITEM.WeaponClass = "plutonic_xar2e"
+ITEM.WeaponClass = "rw_sw_tl50"
 ITEM.CombineWeapon = true
 
 impulse.RegisterItem(ITEM)

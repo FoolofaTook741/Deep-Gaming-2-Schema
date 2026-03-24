@@ -67,6 +67,8 @@ end
 function EMPTYBOX:OnUse(ply)
 	if ply:GetAmmoCount(AmmoType) < AmmoAmount then
 		return false
+	else
+		return false
 	end
 
 	if (not ply:CanHoldItem(ITEM.UniqueID, 1)) then

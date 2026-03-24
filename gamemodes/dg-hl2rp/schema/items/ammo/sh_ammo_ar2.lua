@@ -66,6 +66,8 @@ end
 function EMPTYBOX:OnUse(ply)
 	if ply:GetAmmoCount(AmmoType) < AmmoAmount then
 		return false
+	else
+		return false
 	end
 
 	if (not ply:CanHoldItem(ITEM.UniqueID, 1)) then
@@ -76,5 +78,4 @@ function EMPTYBOX:OnUse(ply)
 	ply:RemoveAmmo(AmmoAmount, AmmoType)
 	return true
 end
-
 impulse.RegisterItem(EMPTYBOX)

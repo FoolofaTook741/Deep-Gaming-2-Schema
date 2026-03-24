@@ -27,7 +27,7 @@ ITEM.CanStack = true
 ITEM.EquipTime = 3
 ITEM.UnEquipTime = 3
 
-ITEM.WeaponClass = "plutonic_ar2"
+ITEM.WeaponClass = "rw_sw_tl40"
 
 function ITEM:CanEquip(ply)
 	return ply:Team() ~= TEAM_VORT

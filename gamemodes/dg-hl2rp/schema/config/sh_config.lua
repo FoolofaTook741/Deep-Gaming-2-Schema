@@ -586,6 +586,12 @@ impulse.Config.Achievements = {
 		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
 		Points = 20
 	},
+	["ach_thatsnomoon"] = {
+		Name = "That's no Moon...",
+		Desc = "April fools event 4/1/2026, Star Wars RP. Han shot first!",
+		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
+		Points = 20
+	},
 }
 
 impulse.Config.ModQuickReplies = {
@@ -873,6 +879,7 @@ impulse.Config.LootPools = {
 			["util_energycore"] = {Rarity = 730, Rep = 6},
 			["item_ammocrate"] = {Rarity = 600, Rep = 5},
 			["cos_conscriptarmor"] = {Rarity = 500, Rep = 2},
+			["wep_ak74ub"] = {Rarity = 900, Rep = 2},
 		},
 		MaxItems = 18,
 		MinItems = 9
@@ -903,6 +910,7 @@ impulse.Config.LootPools = {
 		Items = {
 			["wep_p90"] = {Rarity = 700, Rep = 2},
 			["wep_357"] = {Rarity = 500, Rep = 1},
+			["wep_ak74ub"] = {Rarity = 800, Rep = 2},
 			["wep_scarh"] = {Rarity = 900, Rep = 1},
 			["wep_famas"] = {Rarity = 830, Rep = 1},
 			["wep_m4a1"] = {Rarity = 640, Rep = 3},

@@ -26,7 +26,7 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "primary"
 ITEM.CanStack = true
 
-ITEM.WeaponClass = "plutonic_doublebarrel"
+ITEM.WeaponClass = "tfa_sw_cisshot"
 
 function ITEM:CanEquip(ply)
 	return ply:Team() ~= TEAM_VORT

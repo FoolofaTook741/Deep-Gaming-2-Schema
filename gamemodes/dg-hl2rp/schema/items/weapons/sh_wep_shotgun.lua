@@ -28,7 +28,7 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "primary"
 ITEM.CanStack = true
 
-ITEM.WeaponClass = "plutonic_spas12"
+ITEM.WeaponClass = "tfa_sw_repshot"
 
 
 
