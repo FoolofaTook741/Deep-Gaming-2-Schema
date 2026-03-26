@@ -44,9 +44,9 @@ SWEP.Primary.Sound = Sound("LS2.SCAR.Single")
 SWEP.ReloadSound = "weapons/ar2/ar2_reload.wav"
 SWEP.EmptySound = "weapons/clipempty_pistol.wav"
 
-SWEP.Primary.Recoil = 2.15 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Recoil = 2 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 15
-SWEP.Primary.PenetrationScale = 1.55
+SWEP.Primary.PenetrationScale = 1.4
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.001
 SWEP.Primary.Delay = RPM(420)
