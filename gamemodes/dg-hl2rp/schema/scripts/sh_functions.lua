@@ -377,7 +377,7 @@ function meta:GetLoyalistLevel()
 end
 
 function meta.getItemType(class) --Function to check weapon type for inventory clear-out of same type weapons || Use the below arrays to update vendor weapon clear-outs
-    primaryWeapons = {"wep_mp7", "wep_shotgun", "wep_mp7a8", "wep_osisg", "wep_m500", "wep_p90", "wep_pm63", "wep_osiprmk1", "wep_ar1orb", "wep_ar2orb", "wep_ar2", "wep_ar2e", "wep_ar3", "wep_ar2r", "wep_osr", "wep_omr", "wep_osips", "wep_mini14", "wep_apf", "wep_honeybadger"}
+    primaryWeapons = {"wep_mp7", "wep_shotgun", "wep_mp7a8", "wep_osisg", "wep_m500", "wep_p90", "wep_pm63", "wep_osiprmk1", "wep_ar1orb", "wep_ar2orb", "wep_ar2", "wep_ar2e", "wep_ar3", "wep_ar2r", "wep_osr", "wep_omr", "wep_osips", "wep_mini14", "wep_apf", "wep_honeybadger", "wep_mp510"}
 	secondaryWeapons = {"wep_pistol", "wep_357", "wep_tt", "wep_sw500", "wep_cz75"}
 	weaponOptics = {"att_holosight", "att_reddot", "att_cmore", "att_reflex"}
 	weaponAttachments = {"att_slugrounds", "att_pistol_silencer", "att_dragonsbreath"}

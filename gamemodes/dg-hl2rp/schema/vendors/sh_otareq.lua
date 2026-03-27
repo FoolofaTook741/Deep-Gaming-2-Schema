@@ -143,6 +143,16 @@ VENDOR.Sell = {
 			else return false end
 		end
 	},
+	["wep_mp510"] = {
+		Desc = "ECHO CSO+/NOMAD CCP+",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if (ply:GetTeamClass() == CLASS_ECHO && ply:GetTeamRank() >= RANK_OWS) or (ply:GetTeamClass() == CLASS_NOMAD and ply:GetTeamRank() >= RANK_OCP) then
+				return true
+			else return false end
+		end
+	},
 	["item_breachingcharge"] = {
 		Restricted = true,
 		Max = 5,
