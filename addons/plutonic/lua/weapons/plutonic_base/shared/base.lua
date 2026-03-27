@@ -331,10 +331,10 @@ function SWEP:ShootEffects()
 				end
 			end
 		else
-			if self:Clip1() <= 0 then
-				self:PlayAnim(ACT_VM_PRIMARYATTACK_EMPTY)
+			if self:Clip1() <= 0 and not self.NoLastShotAnim then
+			    self:PlayAnim(ACT_VM_PRIMARYATTACK_EMPTY)
 			else
-				self:PlayAnim(ACT_VM_PRIMARYATTACK)
+			    self:PlayAnim(ACT_VM_PRIMARYATTACK)
 			end
 			self:QueueIdle()
 		end
