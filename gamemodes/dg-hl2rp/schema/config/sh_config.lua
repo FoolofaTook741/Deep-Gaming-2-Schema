@@ -124,7 +124,7 @@ impulse.Config.MaxSigns = 10
 impulse.Config.HungerTime = 60
 impulse.Config.HungerHealTime = 25
 
-impulse.Config.DefaultFemaleHealth = 90
+impulse.Config.DefaultFemaleHealth = 95
 impulse.Config.DefaultMaleHealth = 100
 
 impulse.Config.InventoryMaxWeight = 25 -- in kg
