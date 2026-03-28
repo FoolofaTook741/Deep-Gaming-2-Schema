@@ -506,4 +506,8 @@ net.Receive("impulse.SyncColours", function()
     end
 end)
 
-
+hook.Add("OnPlayerChangedTeam", "VortessenceClearESP", function(ply, oldTeam, newTeam)
+    if ply ~= LocalPlayer() then return end
+    if oldTeam ~= TEAM_VORT then return end
+    VORTESSENCE_EXPIRE = nil
+end)
