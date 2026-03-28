@@ -2205,55 +2205,62 @@ local demeritCommand = {
     description = "Gives a demerit to a player.",
     requiresArg = true,
     onRun = function(ply, arg, rawText)
-		if ply:IsCPCommand() then
-        	local targ = impulse.FindPlayer(arg[1])
+        if not ply:IsCPCommand() then return end
 
-			local teamtext = "Metro Police Force"
-			if not targ:IsCP() then
-				ply:Notify("You can only merit Combine.")
-				return
-			end
-			if targ:Team() != ply:Team() then
-				ply:Notify("You can only merit men in your division.")
-				return
-			end
+        local targ = impulse.FindPlayer(arg[1])
+        if not targ then
+            ply:Notify("Could not find that player.")
+            return
+        end
 
-			if ply:Team() == TEAM_OTA then
-				teamtext = "Transhuman Arm"
-			elseif ply:Team() == TEAM_CA then
-				teamtext = "City Administration"
-			end
+        if not targ:IsCP() then
+            ply:Notify("You can only demerit Combine.")
+            return
+        end
 
-			ply:Notify("Demerit issued.")
+        local teamtext
+        local crossFaction = ply:Team() == TEAM_OTA and targ:Team() == TEAM_CP and targ:GetTeamRank() < RANK_OFC
 
-        	local embeds = {{
-				title =  teamtext .. " Demerit Issued",
-				description = "A user has given an order.",
-				url = "https://discord.com/channels/1149540724648456252/1186351119232925808",
-				color = 15548997,
-				fields = {
-					{
-						name = "Supervisor:",
-						value = ply:Name() .. " - " .. ply:SteamID()
-					},
-					{
-						name = "Unit:",
-						value = targ:Name() .. " - " .. targ:SteamID()
-					},
-					{
-						name = "Merit:",
-						value = rawText
-					},
-				}
-			}}
+        if crossFaction then
+            teamtext = "Cross-Faction Demerit Issued OTA -> MPF"
+        elseif ply:Team() == TEAM_OTA then
+            teamtext = "Transhuman Arm Demerit Issued"
+        elseif ply:Team() == TEAM_CA then
+            teamtext = "City Administration Demerit Issued"
+        else
+            teamtext = "Metro Police Force Demerit Issued"
+        end
 
-			ReqwestLog(embeds, DG_DMER)
-		end
+        if not crossFaction and targ:Team() ~= ply:Team() then
+            ply:Notify("You can only demerit men in your division.")
+            return
+        end
+
+        ply:Notify("Demerit issued.")
+        local embeds = {{
+            title = teamtext,
+            description = "A user has given an order.",
+            url = "https://discord.com/channels/1149540724648456252/1186351119232925808",
+            color = 15548997,
+            fields = {
+                {
+                    name = "Supervisor:",
+                    value = ply:Name() .. " - " .. ply:SteamID()
+                },
+                {
+                    name = "Unit:",
+                    value = targ:Name() .. " - " .. targ:SteamID()
+                },
+                {
+                    name = "Reason:",
+                    value = rawText
+                },
+            }
+        }}
+        ReqwestLog(embeds, DG_DMER)
     end
 }
-
 impulse.RegisterChatCommand("/demerit", demeritCommand)
-
 local trainingMeritCommand = {
     description = "Gives a training merit to a player.",
     requiresArg = true,
