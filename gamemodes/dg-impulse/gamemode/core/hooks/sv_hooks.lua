@@ -537,6 +537,7 @@ function GM:ShowHelp()
 	return
 end
 
+local TALK_DIST_SQR = (impulse.Config.TalkDistance or 350) ^ 2
 local talkCol = Color(255, 255, 100)
 local infoCol = Color(135, 206, 250)
 local strTrim = string.Trim
@@ -601,7 +602,7 @@ function GM:PlayerSay(ply, text, teamChat, newChat)
 		text = hook.Run("ChatClassMessageSend", 1, text, ply) or text
 
 		for v,k in pairs(player.GetAll()) do
-			if (ply:GetPos() - k:GetPos()):LengthSqr() <= (impulse.Config.TalkDistance ^ 2) then
+			if (ply:GetPos() - k:GetPos()):LengthSqr() <= TALK_DIST_SQR then
 				k:SendChatClassMessage(1, text, ply)
 			end
 		end
@@ -1139,6 +1140,7 @@ function GM:GetFallDamage(ply, speed)
 	return dmg
 end
 
+local DRAG_DIST_SQR = 175 * 175
 local lastAFKScan
 local curTime = CurTime
 function GM:Think()
@@ -1154,7 +1156,7 @@ function GM:Think()
 		local dragger = v.ArrestedDragger
 
 		if IsValid(dragger) then
-			if (dragger:GetPos() - v:GetPos()):LengthSqr() >= (175 ^ 2) then
+			if (dragger:GetPos() - v:GetPos()):LengthSqr() >= DRAG_DIST_SQR then
 				v:StopDrag()
 			end
 		else
