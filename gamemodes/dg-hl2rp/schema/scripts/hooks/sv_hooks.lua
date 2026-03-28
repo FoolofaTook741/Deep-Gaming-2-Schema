@@ -1,5 +1,6 @@
 COMMSTAP = 1
 COMMSTAP_2 = 2
+local playerDamageInfo = {}
 
 function SCHEMA:ChatClassMessageSend(classID, message, sender)
 	if not impulse.Voice.ChatTypes[classID] then
