@@ -2219,7 +2219,7 @@ local demeritCommand = {
         end
 
         local teamtext
-        local crossFaction = ply:Team() == TEAM_OTA and targ:Team() == TEAM_CP and targ:GetTeamRank() < RANK_OFC
+        local crossFaction = ply:Team() == TEAM_OTA and ply:GetTeamRank() >= RANK_OCP and targ:Team() == TEAM_CP and targ:GetTeamRank() < RANK_OFC
 
         if crossFaction then
             teamtext = "Cross-Faction Demerit Issued OTA -> MPF"
