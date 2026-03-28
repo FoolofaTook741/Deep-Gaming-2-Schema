@@ -175,6 +175,7 @@ DG_RATIONS = true
 local nextIncumberanceCheck = 0
 local nexte2Check = 0
 local MASTER_RATE = 0.25
+local nextDoorTime = 0
 
 timer.Create("ocaabpassivefunding", 900, 0, function()
     if impulse.Dispatch.GetCityCode() < CODE_JW then
@@ -1636,7 +1637,6 @@ hook.Add("OnPhysgunPickup", "letterfix", function(ply, ent)
 end)
 
 hook.Add( "PlayerSwitchWeapon", "Tau_IdleSFX", function( ply, oldWeapon, newWeapon )
-	-- GetClass() will return the weapons class as a string.
     if oldWeapon and IsValid(oldWeapon) then
         if oldWeapon:GetClass() == "weapon_taucannon_wal" then
             ply:StopSound("weapons/gluon/tesla_switch_flip_on.mp3")
@@ -1743,11 +1743,9 @@ hook.Add( "PlayerChangedTeam", "FixArmor", function( ply, oldTeam, newTeam )
 end )
 
 local function IsVehicleLike(ent, cls)
-    -- Cache per-entity result to avoid model/class checks on every hit
     local cached = ent._dgVehLike
     if cached ~= nil then return cached end
 
-    -- ent:GetModel() is not free, so do it once
     local mdl = ent:GetModel()
     cached = ent:IsVehicle()
         or mdl == "models/hunter.mdl"
@@ -1758,27 +1756,29 @@ local function IsVehicleLike(ent, cls)
     return cached
 end
 
-hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
+
+hook.Add("EntityTakeDamage", "DG_MergedDamage", function(target, dmginfo)
     if not IsValid(target) then return end
 
-    local cls = target:GetClass()
-    -- Grab attacker/weapon ONCE
     local attacker = dmginfo:GetAttacker()
-    local wep
-    local wepClass
-    if IsValid(attacker) and attacker:IsPlayer() then
+    local attackerIsPlayer = IsValid(attacker) and attacker:IsPlayer()
+
+    local wep, wepClass
+    if attackerIsPlayer then
         wep = attacker:GetActiveWeapon()
         if IsValid(wep) then
             wepClass = wep:GetClass()
         end
     end
 
-    -- =========================
-    -- VEHICLE-LIKE DAMAGE LOGIC    wep_ptrs41   wep_tau   
-    -- =========================
+    local cls = target:GetClass()
+    local targetIsPlayer = target:IsPlayer()
+
+    -- ==================
+    -- VEHICLE DAMAGE
+    -- ==================
     if IsVehicleLike(target, cls) then
         if dmginfo:IsExplosionDamage() then
-            -- Note: dmginfo:GetInflictor() can be NULL in some cases; guard it
             if wepClass and wepClass ~= "plutonic_vort" and wepClass ~= "weapon_braaains" then
                 local inf = dmginfo:GetInflictor()
                 if not (IsValid(inf) and inf:GetClass() == "npc_grenade_frag") then
@@ -1790,7 +1790,6 @@ hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
             return
         end
 
-        -- PTRS
         if wepClass == "plutonic_ptrs" or wepClass == "plutonic_ptrs41" then
             if string.StartWith(cls, "lvs_helicopter_hl2_combine_dropship") then
                 dmginfo:AddDamage(7400)
@@ -1800,61 +1799,47 @@ hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
             return
         end
 
-        -- M60
         if wepClass == "plutonic_m60" then
             dmginfo:ScaleDamage(10)
             return
         end
 
-        -- Tau Cannon
         if wepClass == "weapon_taucannon_wal" then
             if string.StartWith(cls, "lvs_helicopter_hl2_combine_dropship") then
                 dmginfo:AddDamage(3300)
             else
                 dmginfo:AddDamage(1500)
             end
-            
             return
         end
 
-        -- If it's vehicle-like but not a relevant case, bail early
         return
     end
 
-    -- =========================
-    -- PROP / SIGN / DOOR LOGIC
-    -- =========================
-
-    -- Fast check: if it's not one of these, do nothing.
+    -- ==================
+    -- PROP / SIGN / DOOR
+    -- ==================
     local isDoor = target:IsDoor()
     if not isDoor and cls ~= "prop_physics" and cls ~= "gb_rp_sign" then
-        return
+        goto player_damage
     end
 
-    -- --------
-    -- PROPS
-    -- --------
     if not isDoor then
-        -- Only do CPPI work for non-door props
+        --props
         local propOwner
         if target.CPPIGetOwner then
             propOwner = target:CPPIGetOwner()
         end
-        if not (IsValid(propOwner) and propOwner:IsPlayer()) then return end
+        if not (IsValid(propOwner) and propOwner:IsPlayer()) then goto player_damage end
+        if not attackerIsPlayer then goto player_damage end
+        if dmginfo:GetDamageType() ~= DMG_CLUB then goto player_damage end
+        if wepClass ~= "plutonic_sledgehammer" then goto player_damage end
 
-        -- Only care about club damage with the sledgehammer
-        if not (IsValid(attacker) and attacker:IsPlayer()) then return end
-        if dmginfo:GetDamageType() ~= DMG_CLUB then return end
-        if wepClass ~= "plutonic_sledgehammer" then return end
-
-        -- Make this cheaper: compute these once
         local attackerIsCP = attacker.IsCP and attacker:IsCP()
         local ownerIsCP = propOwner.IsCP and propOwner:IsCP()
-
         local attackerTeam = attacker:Team()
         local attackerRank = attacker.GetTeamRank and attacker:GetTeamRank()
 
-        -- Your original rules, unchanged
         local allowRemove =
             (attackerTeam == TEAM_CP and attackerRank == RANK_I4 and ownerIsCP)
             or (attackerIsCP and not ownerIsCP)
@@ -1867,188 +1852,179 @@ hook.Add("EntityTakeDamage", "vehicledmgbuffs", function(target, dmginfo)
             target:Remove()
         end
 
-        return
+        goto player_damage
     end
 
-    -- --------
-    -- DOORS
-    -- --------
-    if not (IsValid(attacker) and attacker:IsPlayer()) then return end
-    if not (wepClass == "plutonic_sledgehammer" or wepClass == "plutonic_osish") then return end
+    --doors
+    if not attackerIsPlayer then goto player_damage end
+    if wepClass ~= "plutonic_sledgehammer" and wepClass ~= "plutonic_osish" then goto player_damage end
 
-    -- Door group protected
-    local doorGroup = target.GetSyncVar and target:GetSyncVar(SYNC_DOOR_GROUP)
-    if doorGroup and doorGroup >= 1 then return end
+    do
+        local doorGroup = target.GetSyncVar and target:GetSyncVar(SYNC_DOOR_GROUP)
+        if doorGroup and doorGroup >= 1 then goto player_damage end
 
-    -- Distance check (use squared distance to avoid sqrt)
-    local distSqr = attacker:GetPos():DistToSqr(target:GetPos())
-    if distSqr > (800 * 800) then return end
+        local distSqr = attacker:GetPos():DistToSqr(target:GetPos())
+        if distSqr > (800 * 800) then goto player_damage end
 
-    -- Cooldown per-door so combat can't spam fake doors/timers
-    target._dgBreachNext = target._dgBreachNext or 0
-    if CurTime() < target._dgBreachNext then return end
-    target._dgBreachNext = CurTime() + 2.0  -- tune: 2 seconds is usually plenty
+        target._dgBreachNext = target._dgBreachNext or 0
+        if CurTime() < target._dgBreachNext then goto player_damage end
+        target._dgBreachNext = CurTime() + 2.0
 
-    -- Do the breach effect
-    target:SetNotSolid(true)
-    target:SetNoDraw(true)
-
-    target:DoorUnlock()
-    target:Fire("open", "", 0.6)
-    target:Fire("lock", "", 1.2)
-
-    if cls == "prop_door_rotating" then
-        local fakeDoor = ents.Create("prop_physics")
-        if IsValid(fakeDoor) then
-            fakeDoor:SetModel(target:GetModel())
-            fakeDoor:SetPos(target:GetPos())
-            fakeDoor:SetAngles(target:GetAngles())
-            fakeDoor:SetSkin(target:GetSkin())
-            fakeDoor:SetCollisionGroup(COLLISION_GROUP_WORLD)
-            fakeDoor:Spawn()
-
-            local phys = fakeDoor:GetPhysicsObject()
-            if IsValid(phys) then
-                phys:SetVelocity(attacker:GetForward() * 200 + Vector(0, 0, 50))
-            end
-
-            timer.Simple(45, function()
-                if IsValid(fakeDoor) then fakeDoor:Remove() end
-            end)
-        end
-    end
-
-    timer.Simple(60, function()
-        if not IsValid(target) then return end
+        target:SetNotSolid(true)
+        target:SetNoDraw(true)
         target:DoorUnlock()
-        target:SetNotSolid(false)
-        target:SetNoDraw(false)
-    end)
-end)
+        target:Fire("open", "", 0.6)
+        target:Fire("lock", "", 1.2)
 
-local nextDoorTime = 0
+        if cls == "prop_door_rotating" then
+            local fakeDoor = ents.Create("prop_physics")
+            if IsValid(fakeDoor) then
+                fakeDoor:SetModel(target:GetModel())
+                fakeDoor:SetPos(target:GetPos())
+                fakeDoor:SetAngles(target:GetAngles())
+                fakeDoor:SetSkin(target:GetSkin())
+                fakeDoor:SetCollisionGroup(COLLISION_GROUP_WORLD)
+                fakeDoor:Spawn()
+                local phys = fakeDoor:GetPhysicsObject()
+                if IsValid(phys) then
+                    phys:SetVelocity(attacker:GetForward() * 200 + Vector(0, 0, 50))
+                end
+                timer.Simple(45, function()
+                    if IsValid(fakeDoor) then fakeDoor:Remove() end
+                end)
+            end
+        end
 
-hook.Add( "EntityTakeDamage", "stunjumper", function( target, dmginfo )
-    local attacker = dmginfo:GetAttacker()
-    if not (IsValid(attacker) and attacker:IsPlayer()) then return end
-    local wep = attacker:GetActiveWeapon()
-    if not IsValid(wep) then return end
+        timer.Simple(60, function()
+            if not IsValid(target) then return end
+            target:DoorUnlock()
+            target:SetNotSolid(false)
+            target:SetNoDraw(false)
+        end)
+    end
 
-    if wep.IncendiaryRounds and (target:IsPlayer() or target:IsNPC()) then
-        target.NextIgnite = target.NextIgnite or 0
-        if CurTime() >= target.NextIgnite then
-            target:Ignite(4)
-            target.NextIgnite = CurTime() + 2
+    ::player_damage::
+
+    -- ==================
+    -- INCENDIARY ROUNDS
+    -- ==================
+    if attackerIsPlayer and IsValid(wep) and wep.IncendiaryRounds then
+        if targetIsPlayer or target:IsNPC() then
+            target.NextIgnite = target.NextIgnite or 0
+            if CurTime() >= target.NextIgnite then
+                target:Ignite(4)
+                target.NextIgnite = CurTime() + 2
+            end
         end
     end
 
-	if IsValid(dmginfo:GetAttacker()) then
-        if target:IsPlayer() && dmginfo:GetAttacker():IsPlayer() then
-            if IsValid(dmginfo:GetAttacker():GetActiveWeapon()) then
-                if dmginfo:GetAttacker():GetActiveWeapon():GetClass() == "plutonic_stunstick" or dmginfo:GetAttacker():GetActiveWeapon():GetClass() == "plutonic_w_stunstick" then
-		            target:SetJumpPower(0)
-                    local sid = target:SteamID()
-                    if !timer.Exists(sid .. "stunjump") then
-                        timer.Create(sid .. "stunjump", 3, 1, function()
-                            if IsValid(target) and target:Alive() then
-                                target:SetJumpPower(160)
-                            end
-                        end)
-                    else
-                        timer.Adjust(sid .. "stunjump", 3, 1, function()
-                            if IsValid(target) and target:Alive() then
-                                target:SetJumpPower(160)
-                            end
-                        end)
+    -- ==================
+    -- STUNSTICK JUMP
+    -- ==================
+    if attackerIsPlayer and targetIsPlayer then
+        if wepClass == "plutonic_stunstick" or wepClass == "plutonic_w_stunstick" then
+            target:SetJumpPower(0)
+            local sid = target:SteamID()
+            if not timer.Exists(sid .. "stunjump") then
+                timer.Create(sid .. "stunjump", 3, 1, function()
+                    if IsValid(target) and target:Alive() then
+                        target:SetJumpPower(160)
                     end
-                end
-            end
-        end
-	end
-    if IsValid(dmginfo:GetAttacker()) then
-        if target:IsPlayer() and dmginfo:GetAttacker():IsPlayer() then
-            if target:Team() != TEAM_ZOMBIE and dmginfo:GetAttacker():Team() == TEAM_ZOMBIE then
-                dmginfo:GetAttacker():AddSkillXP("strength", 1)
-            end
-        end
-    end
-    if target:GetClass() == "prop_door_rotating" and IsValid(dmginfo:GetAttacker()) and dmginfo:GetAttacker():IsPlayer() then
-        local ply = dmginfo:GetAttacker()
-        if IsValid(ply:GetActiveWeapon()) then
-            local weapon = ply:GetActiveWeapon()
-            if ply:GetPos():Distance(target:GetPos()) < 150 then
-                if weapon.Shotgun == true and weapon:GetClass() != "plutonic_osisg" then
-                    if CurTime() > nextDoorTime then
-                        local chance = math.random(1,20)
-                        if chance > 12 then
-                            target:Fire("unlock", "", 0)
-                            target:DoorUnlock()
-					        target:SetKeyValue("Speed", "500")
-					        target:Fire("openawayfrom", tostring(ply), 0)
-                            target:EmitSound("physics/wood/wood_panel_break1.wav")
-                            timer.Simple(1, function()
-                                target:SetKeyValue("Speed", 100)
-                            end)
-                        else
-                            target:EmitSound("physics/wood/wood_plank_break" .. math.random(1,4) .. ".wav")
-                        end
-                        nextDoorTime = CurTime() + 0.3
+                end)
+            else
+                timer.Adjust(sid .. "stunjump", 3, 1, function()
+                    if IsValid(target) and target:Alive() then
+                        target:SetJumpPower(160)
                     end
-                end
-            end
-        end
-    end
-end )
-
-hook.Add( "EntityTakeDamage", "vitalityskill", function( target, dmginfo )
-    if target:IsPlayer() then
-        local chance = math.random(1,500) + math.floor(dmginfo:GetDamage())
-        if chance > 325 then
-            target:AddSkillXP("vitality", math.random(1,3))
-        end
-    end
-end )
-
-hook.Add( "EntityTakeDamage", "zombcopstun", function( target, dmginfo )
-    local runspeeds = {200, 200, 205, 180, 220, 220, 4} 
-    if IsValid(dmginfo:GetAttacker()) and IsValid(target) then
-        local attacker = dmginfo:GetAttacker()
-        if attacker:IsPlayer() and target:IsPlayer() then
-            if target:IsPlayer() and attacker:Team() == TEAM_ZOMBIE and attacker:Name() == "Zombified Metrocop" and target:Team() != TEAM_ZOMBIE then
-                target:EmitSound(Sound("NPC_RollerMine.Shock"))
-                if target:Team() == TEAM_OTA and (target:GetTeamClass() == CLASS_PAYBACK or target:GetTeamClass() == CLASS_APF) then
-                    return
-                end
-                if target:HasBrokenLegs() then
-                    return
-                end
-                target:SetRunSpeed(120)
-                target:SetWalkSpeed(120)
-                local sid = target:SteamID()
-                timer.Create(sid .. "metrocopzomstun", 1, 1, function()
-                    target:SetRunSpeed(runspeeds[target:Team()])
-                    target:SetWalkSpeed(runspeeds[target:Team()] / 2)
                 end)
             end
         end
     end
-    if IsValid(dmginfo:GetAttacker()) and IsValid(target) then
-        local attacker = dmginfo:GetAttacker()
-        if attacker:IsPlayer() and target:IsPlayer() then
-            if target:Health() <= 50 and target:Alive() and dmginfo:GetInflictor():GetClass() == "plutonic_eknife" then
-                attacker:EmitSound("stiletto/execution.mp3")
-                target:Kill()
-                if target:Team() == TEAM_OTA then
-                    attacker:AchievementGive("ach_stiletto2")
-                elseif target:IsCP() then
-                    attacker:AchievementGive("ach_stiletto")
+
+    -- ==================
+    -- ZOMBIE XP ON HIT
+    -- ==================
+    if attackerIsPlayer and targetIsPlayer then
+        if target:Team() ~= TEAM_ZOMBIE and attacker:Team() == TEAM_ZOMBIE then
+            attacker:AddSkillXP("strength", 1)
+        end
+    end
+
+    -- ==================
+    -- SHOTGUN DOOR BLAST
+    -- ==================
+    if attackerIsPlayer and cls == "prop_door_rotating" then
+        if IsValid(wep) and wep.Shotgun == true and wepClass ~= "plutonic_osisg" then
+            if attacker:GetPos():Distance(target:GetPos()) < 150 then
+                if CurTime() > nextDoorTime then
+                    local chance = math.random(1, 20)
+                    if chance > 12 then
+                        target:Fire("unlock", "", 0)
+                        target:DoorUnlock()
+                        target:SetKeyValue("Speed", "500")
+                        target:Fire("openawayfrom", tostring(attacker), 0)
+                        target:EmitSound("physics/wood/wood_panel_break1.wav")
+                        timer.Simple(1, function()
+                            target:SetKeyValue("Speed", 100)
+                        end)
+                    else
+                        target:EmitSound("physics/wood/wood_plank_break" .. math.random(1, 4) .. ".wav")
+                    end
+                    nextDoorTime = CurTime() + 0.3
                 end
-            elseif dmginfo:GetInflictor():GetClass() == "plutonic_greatsword" and target:Alive() and target:IsPlayer() then
-                dmginfo:SetDamage(10 + (target:GetMaxHealth()/4))
             end
         end
     end
-end )
+
+    -- ==================
+    -- VITALITY XP
+    -- ==================
+    if targetIsPlayer then
+        local chance = math.random(1, 500) + math.floor(dmginfo:GetDamage())
+        if chance > 325 then
+            target:AddSkillXP("vitality", math.random(1, 3))
+        end
+    end
+
+    -- ==================
+    -- ZOMBIFIED METROCOP STUN
+    -- ==================
+    if attackerIsPlayer and targetIsPlayer then
+        if target:Team() ~= TEAM_ZOMBIE and attacker:Team() == TEAM_ZOMBIE and attacker:Name() == "Zombified Metrocop" then
+            target:EmitSound(Sound("NPC_RollerMine.Shock"))
+            if not (target:Team() == TEAM_OTA and (target:GetTeamClass() == CLASS_PAYBACK or target:GetTeamClass() == CLASS_APF)) then
+                if not target:HasBrokenLegs() then
+                    local runspeeds = {200, 200, 205, 180, 220, 220, 4}
+                    target:SetRunSpeed(120)
+                    target:SetWalkSpeed(120)
+                    local sid = target:SteamID()
+                    timer.Create(sid .. "metrocopzomstun", 1, 1, function()
+                        target:SetRunSpeed(runspeeds[target:Team()])
+                        target:SetWalkSpeed(runspeeds[target:Team()] / 2)
+                    end)
+                end
+            end
+        end
+    end
+
+    -- ==================
+    -- EKNIFE EXECUTION + GREATSWORD
+    -- ==================
+    if attackerIsPlayer and targetIsPlayer and target:Alive() then
+        local inflictorClass = IsValid(dmginfo:GetInflictor()) and dmginfo:GetInflictor():GetClass() or nil
+        if inflictorClass == "plutonic_eknife" and target:Health() <= 50 then
+            attacker:EmitSound("stiletto/execution.mp3")
+            target:Kill()
+            if target:Team() == TEAM_OTA then
+                attacker:AchievementGive("ach_stiletto2")
+            elseif target:IsCP() then
+                attacker:AchievementGive("ach_stiletto")
+            end
+        elseif inflictorClass == "plutonic_greatsword" then
+            dmginfo:SetDamage(10 + (target:GetMaxHealth() / 4))
+        end
+    end
+end)
 
 hook.Add("PlayerSpawnNPC", "DeepNPCHook", function(ply)
 	if ply:IsAdmin() or ply:IsLeadAdmin() or ply:IsSuperAdmin() or ply:IsGameMaster() then
