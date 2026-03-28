@@ -51,12 +51,11 @@ function impulse.FindEmptyPos(pos, ignore, distance, step, area)
 end
 
 function meta:UpdateDefaultModelSkin()
+    local hairColor = self.impulseData and self.impulseData.hairColor
     net.Start("impulseUpdateDefaultModelSkin")
     net.WriteString(self.defaultModel)
     net.WriteUInt(self.defaultSkin, 8)
-
-    net.WriteColor(Color(self.impulseData.hairColor.r, self.impulseData.hairColor.g, self.impulseData.hairColor.b, self.impulseData.hairColor.a or 255) or color_white)
-    
+    net.WriteColor(hairColor and Color(hairColor.r, hairColor.g, hairColor.b, hairColor.a or 255) or color_white)
     net.WriteUInt(self.impulseData.beard or 0, 8)
     net.WriteUInt(self.impulseData.hair or 0, 8)
     net.Send(self)
