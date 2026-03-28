@@ -136,6 +136,7 @@ impulse.Anim.citizen_female = {
 	glide = ACT_GLIDE,
 	vehicle = impulse.Anim.citizen_male.vehicle
 }
+
 impulse.Anim.metrocop = {
 	normal = {
 		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE},
@@ -205,6 +206,7 @@ impulse.Anim.metrocop = {
 		["prop_vehicle_prisoner_pod"] = {ACT_IDLE, Vector(-4, -0.5, 0)}
 	}
 }
+
 impulse.Anim.overwatch = {
 	normal = {
 		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE},
@@ -215,11 +217,11 @@ impulse.Anim.overwatch = {
 		[ACT_LAND] = {ACT_RESET, ACT_RESET}
 	},
 	pistol = {
-		[ACT_MP_STAND_IDLE] = {"idle_unarmed", ACT_IDLE_ANGRY_SMG1},
+		[ACT_MP_STAND_IDLE] = {ACT_IDLE_SMG1, ACT_IDLE_ANGRY_SMG1},
 		[ACT_MP_CROUCH_IDLE] = {ACT_CROUCHIDLE, ACT_CROUCHIDLE},
-		[ACT_MP_WALK] = {"walkunarmed_all", ACT_WALK_RIFLE},
+		[ACT_MP_WALK] = {ACT_WALK_RIFLE, ACT_WALK_RIFLE},
 		[ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH_RIFLE, ACT_WALK_CROUCH_RIFLE},
-		[ACT_MP_RUN] = {ACT_RUN_AIM_RIFLE, ACT_RUN_AIM_RIFLE},
+		[ACT_MP_RUN] = {ACT_RUN_RIFLE, ACT_RUN_AIM_RIFLE},
 		[ACT_LAND] = {ACT_RESET, ACT_RESET}
 	},
 	smg = {
@@ -271,6 +273,7 @@ impulse.Anim.overwatch = {
 		["prop_vehicle_prisoner_pod"] = {"idle_unarmed", Vector(-4, -0.5, 0)}
 	}
 }
+
 impulse.Anim.vort = {
 	normal = {
 		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE},
@@ -323,6 +326,7 @@ impulse.Anim.vort = {
 	},
 	glide = ACT_GLIDE
 }
+
 impulse.Anim.player = {
 	normal = {
 		[ACT_MP_STAND_IDLE] = ACT_HL2MP_IDLE,
@@ -337,6 +341,7 @@ impulse.Anim.player = {
 		[ACT_MP_RUN] = ACT_HL2MP_RUN_PASSIVE
 	}
 }
+
 impulse.Anim.zombie = {
 	[ACT_MP_STAND_IDLE] = ACT_HL2MP_IDLE_ZOMBIE,
 	[ACT_MP_CROUCH_IDLE] = ACT_HL2MP_IDLE_CROUCH_ZOMBIE,
@@ -344,6 +349,7 @@ impulse.Anim.zombie = {
 	[ACT_MP_WALK] = ACT_HL2MP_WALK_ZOMBIE_02,
 	[ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE
 }
+
 impulse.Anim.fastZombie = {
 	[ACT_MP_STAND_IDLE] = ACT_HL2MP_WALK_ZOMBIE,
 	[ACT_MP_CROUCH_IDLE] = ACT_HL2MP_IDLE_CROUCH_ZOMBIE,
@@ -364,7 +370,6 @@ impulse.Anim.fastZombie = {
 -- @field fastZombie
 -- @table DefaultAnimClasses
 
-
 local translations = translations or {}
 
 --- Sets the animation class of a specific model
@@ -376,25 +381,17 @@ function impulse.Anim.SetModelClass(model, class)
 	if not impulse.Anim[class] then
 		error("'"..tostring(class).."' is not a valid animation class!")
 	end
-	
 	translations[model:lower()] = class
 end
 
--- Micro-optimization since the get class function gets called a lot.
 local stringLower = string.lower
-local stringFind = string.find
 
 --- Gets the animation class of a specific model
 -- @realm shared
 -- @string model The model
 -- @treturn string Animation class
 function impulse.Anim.GetModelClass(model)
-	model = stringLower(model)
-	local class = translations[model]
-
-	class = class or "player"
-	
-	return class
+	return translations[stringLower(model)] or "player"
 end
 
 impulse.Anim.SetModelClass("models/vortigaunt.mdl", "vort")
@@ -405,18 +402,38 @@ impulse.Anim.SetModelClass("models/vortiblue1.mdl", "vort")
 
 hook.Run("LoadAnimationClasses")
 
+local animClassCache = {}
+
+local function GetCachedAnimClass(ply)
+	if not IsValid(ply) then return "player" end
+	local model = ply:GetModel()
+	local cache = animClassCache[ply]
+	if cache and cache.model == model then
+		return cache.class
+	end
+	local class = impulse.Anim.GetModelClass(model)
+	animClassCache[ply] = {model = model, class = class}
+	return class
+end
+
+-- Clean up cache on disconnect to avoid memory leaks
+hook.Add("PlayerDisconnected", "impulseAnimClassCacheCleanup", function(ply)
+	animClassCache[ply] = nil
+end)
+
 local ALWAYS_RAISED = {}
 ALWAYS_RAISED["weapon_physgun"] = true
 ALWAYS_RAISED["gmod_tool"] = true
 ALWAYS_RAISED["weapon_braaains"] = true
 ALWAYS_RAISED["weapon_frag"] = true
+
 do
 	--- Plays an animation sequence on a player
 	-- @realm server
-    -- @string sequence The sequence name
-    -- @func[opt] callback Called when the animation is completed
-    -- @int[opt] time How long until we force the sequence to stop
-    -- @bool[opt=false] noFreeze If the player should not freeze when the sequence is playing
+	-- @string sequence The sequence name
+	-- @func[opt] callback Called when the animation is completed
+	-- @int[opt] time How long until we force the sequence to stop
+	-- @bool[opt=false] noFreeze If the player should not freeze when the sequence is playing
 	function meta:ForceSequence(sequence, callback, time, noFreeze)
 		hook.Run("OnPlayerEnterSequence", self, sequence, callback, time, noFreeze)
 
@@ -426,16 +443,16 @@ do
 			net.WriteBool(true)
 			net.WriteUInt(0, 16)
 			net.Broadcast()
-			--return netstream.Start(nil, "seqSet", self)
+			return
 		end
 
-		local sequence = self:LookupSequence(sequence)
+		local seq = self:LookupSequence(sequence)
 
-		if sequence and sequence > 0 then
-			time = time or self:SequenceDuration(sequence)
+		if seq and seq > 0 then
+			time = time or self:SequenceDuration(seq)
 
 			self.impulseSeqCallback = callback
-			self.impulseForceSeq = sequence
+			self.impulseForceSeq = seq
 
 			if not noFreeze then
 				self:SetMoveType(MOVETYPE_NONE)
@@ -452,7 +469,7 @@ do
 			net.Start("impulseSeqSet")
 			net.WriteEntity(self)
 			net.WriteBool(false)
-			net.WriteUInt(sequence, 16)
+			net.WriteUInt(seq, 16)
 			net.Broadcast()
 
 			return time
@@ -496,7 +513,7 @@ do
 
 	if SERVER then
 		util.AddNetworkString("impulseSeqSet")
-		
+
 		function meta:SetWeaponRaised(state)
 			self:SetSyncVar(SYNC_WEPRAISED, state, true)
 
@@ -565,262 +582,158 @@ PLAYER_HOLDTYPE_TRANSLATOR["passive"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["knife"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["duel"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["bugbait"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["pistol"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["revolver"] = "normal"
 
-local getModelClass = impulse.Anim.GetModelClass
 local IsValid = IsValid
-local string  = string
 local type = type
-
-local PLAYER_HOLDTYPE_TRANSLATOR = PLAYER_HOLDTYPE_TRANSLATOR
 local HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR
+local PLAYER_HOLDTYPE_TRANSLATOR = PLAYER_HOLDTYPE_TRANSLATOR
+local impulseAnim = impulse.Anim
+local vector_origin = vector_origin
 
---[[function GM:TranslateActivity(ply, act)
-	local model = string.lower(ply:GetModel())
-	local class = getModelClass(model) or "player"
+function GM:TranslateActivity(ply, act)
+	local class = GetCachedAnimClass(ply)
 	local weapon = ply:GetActiveWeapon()
-	
-	if class == "player" then
-		local holdType = "normal"
-		
-		if IsValid(weapon) then
-			holdType = weapon.HoldType or weapon:GetHoldType() or "normal"
-		end
+	-- GetGroundEntity handles standing on props/entities like the APC
+	local onGround = ply:OnGround() or IsValid(ply:GetGroundEntity())
+	local raised = ply:IsWeaponRaised()
 
-		-- PLUTONIC system
-		if IsValid(weapon) and weapon.IsPlutonic then 
-			local isRunning = (act == ACT_MP_RUN) or (act == ACT_SPRINT) or (act == ACT_RUN)
-			if isRunning and weapon.LoweredPos then
-				--print("lowerdposstuff")
-				holdType = "passive"
-			else
-				if not ply:IsWeaponRaised() and ply:OnGround() then
-					holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
+	if class == "player" then
+		if IsValid(weapon) and not raised and onGround then
+			local holdType = weapon.HoldType or weapon:GetHoldType() or "normal"
+			holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
+
+			local animTree = impulseAnim.player[holdType]
+			if animTree then
+				local animAct = animTree[act]
+				if animAct then
+					if type(animAct) == "string" then
+						ply.CalcSeqOverride = ply:LookupSequence(animAct)
+						return
+					end
+					return animAct
 				end
 			end
 		end
 
-		if IsValid(weapon) and not weapon.IsPlutonic then
-			if not ply:IsWeaponRaised() and ply:OnGround() then
-				holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
-			end
-		end
-
-		local animTree = impulse.Anim.player[holdType]
-
-		if animTree and animTree[act] then
-			if type(animTree[act]) == "string" then
-				ply.CalcSeqOverride = ply:LookupSequence(animTree[act])
-				return ply.CalcSeqOverride
-			else
-				return animTree[act]
-			end
-		end
-		
 		return self.BaseClass:TranslateActivity(ply, act)
 	end
 
-	local animTree = impulse.Anim[class]
+	local animTree = impulseAnim[class]
+	if not animTree then return end
 
-	if animTree then
-		local subClass = "normal"
-		if ply:InVehicle() then
-			local vehicle = ply:GetVehicle()
-			local class = "chair"
-
-			if animTree.vehicle and animTree.vehicle[class] then
-				local act = animTree.vehicle[class][1]
-				local fixvec = animTree.vehicle[class][2]
-
+	if ply:InVehicle() then
+		if animTree.vehicle then
+			local vehicleAnim = animTree.vehicle["chair"]
+			if vehicleAnim then
+				local fixvec = vehicleAnim[2]
 				if fixvec then
 					ply:SetLocalPos(fixvec)
 				end
-
-				if type(act) == "string" then
-					ply.CalcSeqOverride = ply:LookupSequence(act)
-					return ply.CalcSeqOverride
-				else
-					return act
+				local vehicleAct = vehicleAnim[1]
+				if type(vehicleAct) == "string" then
+					ply.CalcSeqOverride = ply:LookupSequence(vehicleAct)
+					return
 				end
-			else
-				act = animTree.normal[ACT_MP_CROUCH_IDLE][1]
-
-				if type(act) == "string" then
-					ply.CalcSeqOverride = ply:LookupSequence(act)
-					return ply.CalcSeqOverride
-				end
-				return act
+				return vehicleAct
 			end
-		elseif ply:OnGround() then
+		end
+
+		local fallbackAct = animTree.normal[ACT_MP_CROUCH_IDLE][1]
+		if type(fallbackAct) == "string" then
+			ply.CalcSeqOverride = ply:LookupSequence(fallbackAct)
+		end
+		return
+
+	elseif onGround then
+		if ply._impulseBoneModified then
 			ply:ManipulateBonePosition(0, vector_origin)
+			ply._impulseBoneModified = false
+		end
 
-			if IsValid(weapon) then
-				subClass = weapon.HoldType or weapon:GetHoldType() or "normal"
-				subClass = HOLDTYPE_TRANSLATOR[subClass] or subClass
-			end
+		local subClass = "normal"
+		if IsValid(weapon) then
+			subClass = weapon.HoldType or weapon:GetHoldType() or "normal"
+			subClass = HOLDTYPE_TRANSLATOR[subClass] or subClass
+		end
 
-			if animTree[subClass] and animTree[subClass][act] then
-				local act2 = animTree[subClass][act][ply:IsWeaponRaised() and 2 or 1]
-
+		local subTree = animTree[subClass]
+		if subTree then
+			local entry = subTree[act]
+			if entry then
+				local act2 = entry[raised and 2 or 1]
 				if type(act2) == "string" then
 					ply.CalcSeqOverride = ply:LookupSequence(act2)
-					return ply.CalcSeqOverride
-				end
-				return act2
-			end
-		elseif animTree.glide then
-			return animTree.glide
-		end
-	end
-	
-	-- Fallback to base class
-	return self.BaseClass:TranslateActivity(ply, act)
-end]]--
-
-function GM:TranslateActivity(ply, act)
-	local model = string.lower(ply.GetModel(ply))
-	local class = getModelClass(model) or "player"
-	local weapon = ply.GetActiveWeapon(ply)
-
-	local onGround = ply.OnGround(ply)
-	local raised = ply.IsWeaponRaised(ply)
-
-	if class == "player" then
-		if IsValid(weapon) and (not raised) and onGround then
-			local holdType = weapon.HoldType or weapon.GetHoldType(weapon) or "normal"
-
-			if (not raised) and onGround then
-				holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
-			end
-
-			local animTree = impulse.Anim.player[holdType]
-
-			if animTree and animTree[act] then
-				if type(animTree[act]) == "string" then
-					ply.CalcSeqOverride = ply.LookupSequence(ply, animTree[act])
-					return
-				else
-					return animTree[act]
-				end
-			end
-		end
-
-		return self.BaseClass.TranslateActivity(self.BaseClass, ply, act)
-	end
-
-	local animTree = impulse.Anim[class]
-
-	if animTree then
-		local subClass = "normal"
-
-		if ply.InVehicle(ply) then
-			local vehicle = ply.GetVehicle(ply)
-			local class = "chair"
-
-			if animTree.vehicle and animTree.vehicle[class] then
-				local act = animTree.vehicle[class][1]
-				local fixvec = animTree.vehicle[class][2]
-
-				if fixvec then
-					ply:SetLocalPos(fixvec)
-				end
-
-				if type(act) == "string" then
-					ply.CalcSeqOverride = ply.LookupSequence(ply, act)
-					return
-				else
-					return act
-				end
-			else
-				act = animTree.normal[ACT_MP_CROUCH_IDLE][1]
-
-				if type(act) == "string" then
-					ply.CalcSeqOverride = ply:LookupSequence(act)
-				end
-				return
-			end
-
-		elseif onGround then
-			ply.ManipulateBonePosition(ply, 0, vector_origin)
-
-			if IsValid(weapon) then
-				subClass = weapon.HoldType or weapon.GetHoldType(weapon)
-				subClass = HOLDTYPE_TRANSLATOR[subClass] or subClass
-			end
-
-			if animTree[subClass] and animTree[subClass][act] then
-				local act2 = animTree[subClass][act][raised and 2 or 1]
-
-				if type(act2) == "string" then
-					ply.CalcSeqOverride = ply.LookupSequence(ply, act2)
 					return
 				end
 				return act2
 			end
-
-		elseif animTree.glide then
-			return animTree.glide
 		end
+
+	elseif animTree.glide then
+		return animTree.glide
 	end
 end
 
+hook.Add("PlayerEnteredVehicle", "impulseAnimBoneTrack", function(ply)
+	ply._impulseBoneModified = true
+end)
 
 local vectorAngle = FindMetaTable("Vector").Angle
 local normalizeAngle = math.NormalizeAngle
 
 function GM:CalcMainActivity(ply, velocity)
-	local eyeAngles = ply.EyeAngles(ply)
-	local yaw = vectorAngle(velocity)[2]
-	local normalized = normalizeAngle(yaw - eyeAngles[2])
-
-	ply.SetPoseParameter(ply, "move_yaw", normalized)
+	local velLen = velocity:Length2D()
+	if velLen > 1 then
+		local yaw = vectorAngle(velocity)[2]
+		ply:SetPoseParameter("move_yaw", normalizeAngle(yaw - ply:EyeAngles()[2]))
+	end
 
 	if CLIENT then
-		ply.SetIK(ply, false)
+		ply:SetIK(false)
 	end
 
 	local oldSeqOverride = ply.CalcSeqOverride
-	local seqIdeal, seqOverride = self.BaseClass.CalcMainActivity(self.BaseClass, ply, velocity)
+	local seqIdeal, seqOverride = self.BaseClass:CalcMainActivity(ply, velocity)
 
 	return seqIdeal, ply.impulseForceSeq or oldSeqOverride or ply.CalcSeqOverride
 end
 
 function GM:DoAnimationEvent(ply, event, data)
-	local model = ply:GetModel():lower()
-	local class = impulse.Anim.GetModelClass(model)
+	local class = GetCachedAnimClass(ply)
 
 	if class == "player" then
 		return self.BaseClass:DoAnimationEvent(ply, event, data)
-	else
-		local weapon = ply:GetActiveWeapon()
-
-		if IsValid(weapon) then
-			local holdType = weapon.HoldType or weapon:GetHoldType()
-			holdType = HOLDTYPE_TRANSLATOR[holdType] or holdType
-
-			local animation = impulse.Anim[class][holdType]
-
-			if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
-				ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
-				return ACT_VM_PRIMARYATTACK
-			elseif event == PLAYERANIMEVENT_ATTACK_SECONDARY then
-				ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
-				return ACT_VM_SECONDARYATTACK
-			elseif event == PLAYERANIMEVENT_RELOAD then
-				ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.reload or ACT_GESTURE_RELOAD_SMG1, true)
-				return ACT_INVALID
-			elseif event == PLAYERANIMEVENT_JUMP then
-				ply.m_bJumping = true
-				ply.m_bFirstJumpFrame = true
-				ply.m_flJumpStartTime = CurTime()
-				ply:AnimRestartMainSequence()
-				return ACT_INVALID
-			elseif event == PLAYERANIMEVENT_CANCEL_RELOAD then
-				ply:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
-				return ACT_INVALID
-			end
-		end
 	end
+
+	local weapon = ply:GetActiveWeapon()
+	if not IsValid(weapon) then return ACT_INVALID end
+
+	local holdType = weapon.HoldType or weapon:GetHoldType()
+	holdType = HOLDTYPE_TRANSLATOR[holdType] or holdType
+
+	local animation = impulseAnim[class][holdType]
+	if not animation then return ACT_INVALID end
+
+	if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
+		return ACT_VM_PRIMARYATTACK
+	elseif event == PLAYERANIMEVENT_ATTACK_SECONDARY then
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
+		return ACT_VM_SECONDARYATTACK
+	elseif event == PLAYERANIMEVENT_RELOAD then
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.reload or ACT_GESTURE_RELOAD_SMG1, true)
+		return ACT_INVALID
+	elseif event == PLAYERANIMEVENT_JUMP then
+		ply.m_bJumping = true
+		ply.m_bFirstJumpFrame = true
+		ply.m_flJumpStartTime = CurTime()
+		ply:AnimRestartMainSequence()
+		return ACT_INVALID
+	elseif event == PLAYERANIMEVENT_CANCEL_RELOAD then
+		ply:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
+		return ACT_INVALID
+	end
+
 	return ACT_INVALID
 end
