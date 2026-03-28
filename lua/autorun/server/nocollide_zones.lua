@@ -46,13 +46,16 @@ local function SetPlayerNoCollide(ply, enabled)
     end
 end
 
+local nextZoneCheck = 0
 hook.Add("Think", "ZoneNoCollideThink", function()
+    local now = CurTime()
+    if now < nextZoneCheck then return end
+    nextZoneCheck = now + 0.1
+
     for _, ply in ipairs(player.GetAll()) do
         if not IsValid(ply) or not ply:Alive() then continue end
-
         local wasInZone = inZone[ply]
         local nowInZone = IsInAnyZone(ply:GetPos())
-
         if nowInZone ~= wasInZone then
             inZone[ply] = nowInZone
             SetPlayerNoCollide(ply, nowInZone)
