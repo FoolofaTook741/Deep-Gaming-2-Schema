@@ -1573,7 +1573,7 @@ local function PlayerDeath(ply, killer)
     local team = ply:Team()
     local steamID64 = ply:SteamID64()
     ply.ZombieNLR = CurTime() + 90
-    
+
     if impulse.Dispatch.GetCityCode() >= CODE_AJ then
         return
     end
@@ -1604,7 +1604,10 @@ local function CanPlayerChangeTeam(ply, toTeam)
     if toTeam == TEAM_ZOMBIE and ply.ZombieNLR and ply.ZombieNLR > CurTime() then
         ply:Notify("You have recently died, you cannot play zombie for " .. string.NiceTime(ply.ZombieNLR - CurTime()))
         return false
-    end
+    elseif toTeam == TEAM_ZOMBIE and impulse.Dispatch.GetCityCode() >= CODE_JW then
+        ply:Notify("Zombie is not available during city code AJ or higher.")
+        return false
+    end 
     if (toTeam == TEAM_CP) and ply.MPFNLR and ply.MPFNLR > CurTime() then
 		--impulse.debugPrint("Attempting to join team "..toTeam)
 		ply:Notify("You have recently died on MPF, you can return to this team in " .. string.NiceTime(ply.MPFNLR - CurTime()))
