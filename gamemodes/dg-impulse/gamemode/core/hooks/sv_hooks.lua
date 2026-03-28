@@ -625,6 +625,7 @@ function GM:PlayerSay(ply, text, teamChat, newChat)
 	return ""
 end
 
+--[[
 local function canHearCheck(listener) -- based on darkrps voice chat optomization this is called every 0.5 seconds in the think hook
 	if not IsValid(listener) then return end
 
@@ -636,7 +637,7 @@ local function canHearCheck(listener) -- based on darkrps voice chat optomizatio
 		listener.CanHear[speaker] = (listPos:DistToSqr(speaker:GetShootPos()) < voiceDistance)
 		hook.Run("PlayerCanHearCheck", listener, speaker)
 	end
-end
+end ]]--
 
 local VOICE_CACHE_TTL = 0.25
 local voiceDistSqr = (impulse.Config.VoiceDistance or 600)
