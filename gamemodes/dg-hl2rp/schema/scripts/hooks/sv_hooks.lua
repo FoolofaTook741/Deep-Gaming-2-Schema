@@ -64,9 +64,6 @@ function SCHEMA:ChatClassMessageSend(classID, message, sender)
 	end
 end
 
-function SCHEMA:PlayerSpawn(ply)
-	ply.NextStorage = 0
-end
 
 function SCHEMA:OnPlayerChangedTeam(ply, oldTeam, newTeam)
 	if (oldTeam == TEAM_CP or oldTeam == TEAM_OTA) and (newTeam != TEAM_CP or newTeam != TEAM_OTA) then
@@ -298,6 +295,7 @@ function SCHEMA:ChatStateChanged(ply, oldState, newState)
 end
 
 function SCHEMA:PlayerDeath(ply)
+	playerDamageInfo[ply:UserID()] = nil
 	ply.lastDeath = CurTime()
 	if ply:GetSyncVar(SYNC_DISPATCH_BOL, nil) then
 		ply:RemoveDispatchBOL()
@@ -664,12 +662,9 @@ local globalSounds = {
 util.AddNetworkString("impulseHL2RPPlayGlobalSound")
 timer.Create("GlobalRandomSound", math.random(220, 900), 0, function()
     local soundPath = table.Random(globalSounds)
-    for _, ply in ipairs(player.GetAll()) do
-		net.Start("impulseHL2RPPlayGlobalSound")
-		net.WritePlayer(ply)
-		net.WriteString(soundPath)
-		net.Send(ply)
-    end
+    net.Start("impulseHL2RPPlayGlobalSound")
+	net.WriteString(soundPath)
+	net.Broadcast()
     timer.Adjust("GlobalRandomSound", math.random(60, 300), 0, nil)
 end)
 
@@ -683,12 +678,9 @@ local dispSounds = {
 util.AddNetworkString("impulseHL2RPPlayDispatchSound")
 timer.Create("DispSound", math.random(220, 900), 0, function()
     local soundPath = table.Random(dispSounds)
-    for _, ply in ipairs(player.GetAll()) do
-		net.Start("impulseHL2RPPlayDispatchSound")
-		net.WritePlayer(ply)
-		net.WriteString(soundPath)
-		net.Send(ply)
-    end
+	net.Start("impulseHL2RPPlayDispatchSound")
+	net.WriteString(soundPath)
+	net.Broadcast()
     timer.Adjust("DispSound", math.random(60, 300), 0, nil)
 end)
 
@@ -738,6 +730,7 @@ end)
 
 util.AddNetworkString("impulse.SyncColours")
 function SCHEMA:PlayerSpawn(ply, transition)
+	ply.NextStorage = 0
     for k, v in player.Iterator() do
         if ( v == ply ) then continue end
 

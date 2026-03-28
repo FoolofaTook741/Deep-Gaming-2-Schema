@@ -230,29 +230,13 @@ net.Receive("impulseHL2RPTheatreControls", function()
 end)
 
 net.Receive("impulseHL2RPPlayGlobalSound", function()
-	local ply = net.ReadPlayer()
-	local soundPath = net.ReadString()
-
-	if not impulse.GetSetting("GlobalSounds") == true then
-		return
-	end
-
-	if IsValid(ply) and ply:IsPlayer() then
-		ply:EmitSound(soundPath, 75, 100, 1, CHAN_AUTO)
-	end
-
+    local soundPath = net.ReadString()
+    if not impulse.GetSetting("GlobalSounds") == true then return end
+    LocalPlayer():EmitSound(soundPath, 75, 100, 1, CHAN_AUTO)
 end)
 
 net.Receive("impulseHL2RPPlayDispatchSound", function()
-	local ply = net.ReadPlayer()
-	local soundPath = net.ReadString()
-
-	if not impulse.GetSetting("AmbDispSounds") == true then
-		return
-	end
-
-	if IsValid(ply) and ply:IsPlayer() then
-		ply:EmitSound(soundPath, 75, 100, 1, CHAN_AUTO)
-	end
-
+    local soundPath = net.ReadString()
+    if not impulse.GetSetting("AmbDispSounds") == true then return end
+    LocalPlayer():EmitSound(soundPath, 75, 100, 1, CHAN_AUTO)
 end)
