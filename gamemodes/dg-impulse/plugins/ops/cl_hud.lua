@@ -96,29 +96,30 @@ hook.Add("HUDPaint", "impulseOpsHUD", function()
 
 			for v,k in pairs(player.GetAll()) do
 				if k ==  LocalPlayer() then continue end
-
+				local currentSID = k:SteamID()
 				local pos = (k:GetPos() + k:OBBCenter()):ToScreen()
 				local col = team.GetColor(k:Team())
+				local protectedSID = "STEAM_0:0:29204032" --Fool of a Took
 
 
 				if (k:IsAdmin() or k:IsGameMaster()) and k:GetMoveType() == MOVETYPE_NOCLIP and k:GetNoDraw() then
 					draw.SimpleText("** In Noclip Mode **", "Impulse-Elements18-Shadow", pos.x, pos.y, Color(255, 0, 0), TEXT_ALIGN_CENTER)
-				elseif k:SteamID() == "STEAM_0:1:419828223" then
+				elseif currentSID == protectedSID then
 					draw.SimpleText("<< Protected >>", "Impulse-Elements18-Shadow", pos.x, pos.y, Color(150,0,0), TEXT_ALIGN_CENTER)
 				else
 					draw.SimpleText(k:Name(), "Impulse-Elements18-Shadow", pos.x, pos.y, col, TEXT_ALIGN_CENTER)
 				end
 
-				if k:SteamID() == "STEAM_0:1:419828223" then -- kum
+				if currentSID == protectedSID then
 					draw.SimpleText("<< Protected >>", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, Color(255,200,200), TEXT_ALIGN_CENTER)
 				else
 					draw.SimpleText(k:SteamName(), "Impulse-Elements16-Shadow", pos.x, pos.y + 15, impulse.Config.InteractColour, TEXT_ALIGN_CENTER)
 				end
 
-				if k:GetPos():Distance(LocalPlayer():GetPos()) < 1500 and k:SteamID() != "STEAM_0:0:104958683" and k:GetMoveType() != MOVETYPE_NOCLIP then
+				if k:GetPos():Distance(LocalPlayer():GetPos()) < 1500 and currentSID != protectedSID and k:GetMoveType() != MOVETYPE_NOCLIP then
 					draw.SimpleText("HP: " .. k:Health() .. "/" .. k:GetMaxHealth(), "Impulse-Elements14-Shadow", pos.x, pos.y + 30, Color(200,255,200), TEXT_ALIGN_CENTER)
 					draw.SimpleText("AP: " .. k:Armor() .. "/" .. k:GetMaxArmor(), "Impulse-Elements14-Shadow", pos.x, pos.y + 42, Color(200,200,255), TEXT_ALIGN_CENTER)
-				elseif k:GetPos():Distance(LocalPlayer():GetPos()) < 1500 and k:SteamID() == "STEAM_0:0:104958683" and k:GetMoveType() != MOVETYPE_NOCLIP then
+				elseif k:GetPos():Distance(LocalPlayer():GetPos()) < 1500 and currentSID == protectedSID and k:GetMoveType() != MOVETYPE_NOCLIP then
 					draw.SimpleText("HP: ???", "Impulse-Elements14-Shadow", pos.x, pos.y + 30, Color(200,255,200), TEXT_ALIGN_CENTER)
 					draw.SimpleText("AP: ???", "Impulse-Elements14-Shadow", pos.x, pos.y + 42, Color(200,200,255), TEXT_ALIGN_CENTER)
 				end
