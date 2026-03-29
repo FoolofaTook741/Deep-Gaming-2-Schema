@@ -148,6 +148,11 @@ function GM:PlayerInitialSpawnLoaded(ply) -- called once player is full loaded
 end
 
 function GM:PlayerSpawn(ply)
+	ply.ArrestedDragging = ply.ArrestedDragging or false
+	ply.extraPVS         = false
+	ply.extraPVS2        = false
+	ply._voiceCache      = {}
+
 	local cellID = ply.InJail
 
 	if ply.InJail then
