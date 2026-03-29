@@ -296,7 +296,7 @@ TEAM_OTA = impulse.Teams.Define({
 		},
 		{
 			id = 14,
-			question = "Translate the following radio transmission: "ST-1 is at code: ice at SJ-1. Report all radials free."",
+			question = [[Translate the following radio transmission: "ST-1 is at code: ice at SJ-1. Report all radials free."]],
 			answers = {
 				{"Team is holding at the Nexus. Nothing to report.", false},
 				{"Team is holding at the Outlands Hardpoint. All sightlines are clear.", true},
