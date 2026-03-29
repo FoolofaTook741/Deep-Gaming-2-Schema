@@ -948,9 +948,10 @@ function GM:OnPlayerChangedTeam(ply, oldTeam, newTeam)
         end
     end
 	if newTeam == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
-		if ply.impulseData and ply.impulseData.hairColor then
-        	ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
-    	end
+	    if ply.impulseData and ply.impulseData.hairColor then
+	        local c = ply.impulseData.hairColor
+	        ply:SetHairColor(Color(c.r, c.g, c.b, c.a or 255))
+	    end
 	end
 	if newTeam == TEAM_CITIZEN then
 	    for _, group in pairs(ply:GetBodyGroups()) do
