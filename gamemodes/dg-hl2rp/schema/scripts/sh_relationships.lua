@@ -63,7 +63,7 @@ if SERVER then
         end
     end
 
-    timer.Create("NPCRelationshipUpdater", 1, 0, function()
+    timer.Create("NPCRelationshipUpdater", 5, 0, function()
         for _, npc in ipairs(ents.FindByClass("npc_*")) do
             UpdateNPCRelationships(npc)
         end

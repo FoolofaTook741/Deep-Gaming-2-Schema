@@ -445,7 +445,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
 end
 --]]
 
-timer.Create("impulse_hunger_tick", 0.25, 0, function()
+timer.Create("impulse_hunger_tick", 2, 0, function()
     local ctime = CurTime()
     local allPlayers = player.GetAll()
 
@@ -463,7 +463,7 @@ timer.Create("impulse_hunger_tick", 0.25, 0, function()
                     ply:FeedHunger(-1)
                 end
             end
-            if ply:SteamID() == "STEAM_0:0:29204032"  or ply:SteamID() == "STEAM_0:1:115345277" then
+            if sid == "STEAM_0:0:29204032" then
                 ply:SetHunger(100)
             end
             if ply:GetSyncVar(SYNC_HUNGER, 100) < 1 then
