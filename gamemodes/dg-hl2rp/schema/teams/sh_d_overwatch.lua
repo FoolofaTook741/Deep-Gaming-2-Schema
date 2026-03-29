@@ -267,7 +267,7 @@ TEAM_OTA = impulse.Teams.Define({
 		},
 		{
 			id = 11,
-			question = "Translate the following radio transmission: "ST-2 going sharp on contaminant jackpot. Prepping extractors"",
+			question =[[Translate the following radio transmission: "ST-2 going sharp on contaminant jackpot. Prepping extractors"]],
 			answers = {
 				{"Team is ready to contain the xen infestation. Preparing grenades.", false},
 				{"Team is attacking a rebel holdout. Preparing grenades.", true},
