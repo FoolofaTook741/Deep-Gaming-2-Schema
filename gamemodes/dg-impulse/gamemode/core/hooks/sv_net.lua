@@ -152,29 +152,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 	local query = mysql:Select("impulse_players")
 	query:Where("steamid", plyID)
 	query:Callback(function(result)
-	    if (type(result) == "table" and #result > 0) then
-	        --player exists but needs character setup (old account with bad data)
-	        if ply._needsCharacterSetup then
-	            local charData = {beard = charBeard, hair = charHair, hairColor = charHairColour}
-	            local updateQuery = mysql:Update("impulse_players")
-	            updateQuery:Update("model", charModel)
-	            updateQuery:Update("skin", charSkin)
-	            updateQuery:Update("data", util.TableToJSON(charData))
-	            updateQuery:Where("steamid", plyID)
-	            updateQuery:Execute()
-
-	            ply.impulseData = charData
-	            ply.defaultModel = charModel
-	            ply.defaultSkin = charSkin
-	            ply:UpdateDefaultModelSkin()
-	            ply:SetHairColor(charHairColour)
-	            ply:SetBodygroup(ply:FindBodygroupByName("beard"), charBeard or 0)
-	            ply:SetBodygroup(ply:FindBodygroupByName("hair"), charHair or 0)
-	            ply._needsCharacterSetup = nil
-	            ply:Freeze(false)
-	        end
-	        return
-	    end
+		if (type(result) == "table" and #result > 0) then return end -- if ply already exists; halt
 
 		local insertQuery = mysql:Insert("impulse_players")
 		insertQuery:Insert("rpname", charName)
@@ -187,7 +165,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 		insertQuery:Insert("skin", charSkin)
 		insertQuery:Insert("firstjoin", timestamp)
 		insertQuery:Insert("data", util.TableToJSON(charData))
-		insertQuery:Insert("skills", "{}")
+		insertQuery:Insert("skills", "[]")
 		insertQuery:Callback(function(result, status, lastID)
 			if IsValid(ply) then
 				local setupData = {
@@ -200,7 +178,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 					bankmoney = impulse.Config.StartingBankMoney,
 					model = charModel,
 					data = util.TableToJSON(charData),
-					skills = "{}",
+					skills = "[]",
 					skin = charSkin,
 					firstjoin = timestamp,
 					hairColor = charHairColour,

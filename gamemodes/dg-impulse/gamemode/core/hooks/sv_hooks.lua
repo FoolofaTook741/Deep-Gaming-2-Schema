@@ -57,7 +57,7 @@ function GM:PlayerInitialSpawn(ply)
 
 		if IsValid(ply) then
 			net.Start("impulseJoinData")
-			net.WriteBool(isNew or (ply._needsCharacterSetup == true))
+			net.WriteBool(isNew)
 			net.Send(ply)
 
 			net.Start("impulseGetButtons")
@@ -345,16 +345,8 @@ function impulse.SetupPlayer(ply, dbData)
 	ply:SetLocalSyncVar(SYNC_MONEY, dbData.money)
 	ply:SetLocalSyncVar(SYNC_BANKMONEY, dbData.bankmoney)
 
-	local rawData = dbData.data
-	if not rawData or rawData:sub(1, 1) == "[" then
-	    rawData = "{}"
-	    ply._needsCharacterSetup = true
-	    local fixQuery = mysql:Update("impulse_players")
-	    fixQuery:Update("data", "{}")
-	    fixQuery:Where("steamid", ply:SteamID())
-	    fixQuery:Execute()
-	end
-	local data = util.JSONToTable(rawData) or {}
+	local data = util.JSONToTable(dbData.data)
+
 	ply.impulseData = data
 	ply.impulseID = dbData.id
 
@@ -376,15 +368,8 @@ function impulse.SetupPlayer(ply, dbData)
 		ply:CalculateAchievementPoints()
 	end
 
-	local rawSkills = dbData.skills
-	if not rawSkills or rawSkills:sub(1, 1) == "[" then
-	    rawSkills = "{}"
-	    local fixQuery = mysql:Update("impulse_players")
-	    fixQuery:Update("skills", "{}")
-	    fixQuery:Where("steamid", ply:SteamID())
-	    fixQuery:Execute()
-	end
-	local skills = util.JSONToTable(rawSkills) or {}
+	local skills = util.JSONToTable(dbData.skills) or {}
+
 	ply.impulseSkills = skills
 
 	for v,k in pairs(ply.impulseSkills) do
@@ -428,8 +413,8 @@ function impulse.SetupPlayer(ply, dbData)
 	--ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
 	ply:AllowFlashlight(true)
 
-	ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-	ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
+	ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard)
+	ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair)
 
 	local id = ply.impulseID
 	impulse.Inventory.Data[id] = {}
@@ -948,9 +933,7 @@ function GM:OnPlayerChangedTeam(ply, oldTeam, newTeam)
         end
     end
 	if newTeam == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
-		if ply.impulseData and ply.impulseData.hairColor then
-        	ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
-    	end
+		ply:SetHairColor(Color(ply.impulseData.hairColor.r, ply.impulseData.hairColor.g, ply.impulseData.hairColor.b, ply.impulseData.hairColor.a or 255))
 	end
 	if newTeam == TEAM_CITIZEN then
 	    for _, group in pairs(ply:GetBodyGroups()) do
