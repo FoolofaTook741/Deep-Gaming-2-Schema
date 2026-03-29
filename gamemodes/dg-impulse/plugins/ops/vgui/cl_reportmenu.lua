@@ -8,9 +8,14 @@ local function ResolveReportEntity(data, index)
     if IsValid(ent) and ent:IsPlayer() then return ent end
     if not isstring(ent) then return nil end
 
+    local throttleKey = "resolve_throttle_" .. index
+    if (data[throttleKey] or 0) > CurTime() then return nil end
+    data[throttleKey] = CurTime() + 0.5
+
     for _, p in ipairs(player.GetAll()) do
         if p:SteamID() == ent then
             data[index] = p
+            data["resolve_throttle_" .. index] = nil
             return p
         end
     end
