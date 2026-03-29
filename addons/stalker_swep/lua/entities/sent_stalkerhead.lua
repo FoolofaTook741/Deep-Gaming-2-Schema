@@ -180,7 +180,7 @@ local MuzzleColor = Color( 255, 255, 255 );
 	end
 	
 local function DrawStalkerModel()
-for k,self in pairs(ents.GetAll()) do 
+for k,self in pairs(ents.FindByClass("sent_stalkerhead")) do
 if IsValid(self) and self:GetNWBool("IsStalkerHead") then
 	if self.NextBloodDrop == nil then
 	self.NextBloodDrop = 0
