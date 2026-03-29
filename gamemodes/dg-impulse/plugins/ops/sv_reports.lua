@@ -289,12 +289,15 @@ hook.Add("PostSetupPlayer", "impulseOpsReportSync", function(ply)
     end
 
     local reports = {}
-    reports = table.Merge(reports, impulse.Ops.Reports)
-
-    for v,k in pairs(reports) do
-        impulse.Ops.Reports[4] = nil
-        impulse.Ops.Reports[5] = nil -- clients dont need this
-        impulse.Ops.Reports[6] = nil
+    for id, data in pairs(impulse.Ops.Reports) do
+        reports[id] = {
+            data[1] and IsValid(data[1]) and data[1]:SteamID() or nil,
+            data[2],
+            data[3] and IsValid(data[3]) and data[3]:SteamID() or nil,
+            data[6] or false, -- dale
+            data[1] and IsValid(data[1]) and data[1]:SteamName() or "Unknown",
+            data[1] and IsValid(data[1]) and data[1]:Nick() or "Unknown",
+        }
     end
 
     net.Start("opsReportSync")

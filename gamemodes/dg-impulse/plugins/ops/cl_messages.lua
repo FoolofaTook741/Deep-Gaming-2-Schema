@@ -205,7 +205,22 @@ net.Receive("opsReportDaleReplied", function()
 end)
 
 net.Receive("opsReportSync", function()
-	impulse.Ops.Reports = net.ReadTable() or {}
+    local raw = net.ReadTable() or {}
+    impulse.Ops.Reports = {}
+    for id, data in pairs(raw) do
+        impulse.Ops.Reports[id] = {
+            data[1], --steamid
+            data[2],
+            data[3],
+            data[4],
+            nil, nil,
+            data[5], -- steamname
+            data[6], -- nick
+        }
+    end
+    if impulse_reportMenu and IsValid(impulse_reportMenu) then
+        impulse_reportMenu:ReloadReports()
+    end
 end)
 
 net.Receive("opsGiveWarn", function()

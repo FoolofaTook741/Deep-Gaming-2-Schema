@@ -3,6 +3,20 @@ local PANEL = {}
 local newReportCol = Color(173, 255, 47)
 local claimedReportCol = Color(147, 112, 219)
 
+local function ResolveReportEntity(data, index)
+    local ent = data[index]
+    if IsValid(ent) and ent:IsPlayer() then return ent end
+    if not isstring(ent) then return nil end
+
+    for _, p in ipairs(player.GetAll()) do
+        if p:SteamID() == ent then
+            data[index] = p
+            return p
+        end
+    end
+    return nil
+end
+
 function PANEL:Init()
 	self:SetSize(480, 410)
 	self:Center()
@@ -93,11 +107,8 @@ function PANEL:ReloadReports()
 			replyBtn:SetText("Reply")
 
 			function replyBtn:DoClick()
-				local reporteeName = "disconnected"
-
-				if IsValid(report.data[1]) then
-					reporteeName = report.data[1]:SteamName()
-				end 
+				local ent = ResolveReportEntity(report.data, 1)
+				local reporteeName = IsValid(ent) and ent:SteamName() or (report.data[7] or "disconnected")
 
 				local i = Derma_StringRequest("ops report reply to "..reporteeName, "Message to send:", nil, function(msg)
 					net.Start("impulseChatMessage")
@@ -146,10 +157,10 @@ function PANEL:ReloadReports()
 		cardBtn:SetText("Card")
 
 		function cardBtn:DoClick()
-			local ent = report.data[1]
+			local ent = ResolveReportEntity(report.data, 1)
 			local badges = {}
 
-			if not ent or not IsValid(ent) or not ent:IsPlayer() then
+			if not IsValid(ent) or not ent:IsPlayer() then
 				return LocalPlayer():Notify("User left the game.")
 			end
 
@@ -200,10 +211,11 @@ function PANEL:ReloadReports()
 				local claimerName = "disconnected, close me!"
 				local col = Color(255, 255, 0)
 
-				if IsValid(self.data[3]) then
-					claimerName = self.data[3]:SteamName()
+				local claimer = ResolveReportEntity(self.data, 3)
+				if IsValid(claimer) then
+					claimerName = claimer:SteamName()
 
-					if self.data[3] == LocalPlayer() then
+					if claimer == LocalPlayer() then
 						col = claimedReportCol
 					end
 				end
@@ -217,10 +229,13 @@ function PANEL:ReloadReports()
 				end
 			end
 
+			local ent = ResolveReportEntity(self.data, 1)
 			local reporteeName = "disconnected"
-			if IsValid(self.data[1]) then
-				reporteeName = self.data[1]:SteamName().." ("..self.data[1]:Nick()..")"
-			end 
+			if IsValid(ent) then
+				reporteeName = ent:SteamName().." ("..ent:Nick()..")"
+			elseif self.data[7] then
+				reporteeName = self.data[7].." ("..self.data[8]..")"
+			end
 
 			draw.SimpleText("Submitted by: "..reporteeName, "Impulse-Elements16", 25, 19, color_white)
 			draw.SimpleText("Message: "..self.data[2], "Impulse-Elements16", 3, 36, color_white)
