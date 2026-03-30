@@ -91,7 +91,7 @@ SWEP.Spread.AirMod = 10.2 -- how does if the player is in the air effect spread 
 SWEP.Spread.RecoilMod = 0.2 -- how does the recoil effect the spread (sustained fire) (additional)
 SWEP.Spread.VelocityMod = .01 -- movement speed effect on spread (additonal)
 
-SWEP.IronsightsPos = Vector(-5.2, -5, 1.675)
+SWEP.IronsightsPos = Vector(-1, -1, 1)
 SWEP.IronsightsAng = Angle(0, 0, 0)
 SWEP.IronsightsFOV = 0.75
 SWEP.IronsightsSensitivity = 0.8
