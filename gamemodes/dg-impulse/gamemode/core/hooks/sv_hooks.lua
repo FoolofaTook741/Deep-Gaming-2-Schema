@@ -211,12 +211,6 @@ function GM:PlayerSpawn(ply)
 			else
 				ply:SetHunger(50) -- gives them 50 hunger if they died
 			end
-		else
-			if ply:IsCollaborator() then --vip+ always spawn with 100 hunger
-				ply:SetHunger(100)
-			else
-				ply:SetHunger(70) -- otherwise its 70 if theyve just spawned
-			end
 		end
 	end
 
@@ -558,7 +552,11 @@ function GM:PostSetupPlayer(ply)
 	for v,k in pairs(impulse.Config.Achievements) do
 		ply:AchievementCheck(v)
 	end
-	ply:SetLocalSyncVar(SYNC_HUNGER, 70)
+	if ply:IsCollaborator() then
+        ply:SetLocalSyncVar(SYNC_HUNGER, 100)
+    else
+        ply:SetLocalSyncVar(SYNC__HUNGER, 70)
+    end
 	--ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
 end
 
