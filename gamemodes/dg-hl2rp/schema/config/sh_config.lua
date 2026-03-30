@@ -89,6 +89,7 @@ impulse.Config.ATMModel = "models/props_combine/combine_intwallunit.mdl"
 impulse.Config.XPTime = 600
 impulse.Config.XPGet = 5 -- double xp (normal: 5)
 impulse.Config.XPGetVIP = 10 -- double xp (normal: 10)
+impulse.Config.XPGetVIP = 15
 
 impulse.Config.RationTime = 3600
 
@@ -99,7 +100,7 @@ impulse.Config.TeamChangeTime = 60
 impulse.Config.TeamChangeTimeDonator = 30
 
 impulse.Config.ClassChangeTime = 5
-impulse.Config.QuizWaitTime = 60 -- in mins
+impulse.Config.QuizWaitTime = 10 -- in mins
 
 impulse.Config.RespawnTime = 30
 impulse.Config.RespawnTimeDonator = 10
