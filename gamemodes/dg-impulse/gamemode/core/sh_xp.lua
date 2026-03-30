@@ -24,9 +24,12 @@ if SERVER then
 	end
 
 	function meta:GiveTimedXP()
-		if self:IsDonator() then
+		if self:IsCollaborator() then
+			self:AddXP(impulse.Config.XPGetVIPplus)
+			self:Notify("As a VIP+, you have received "..impulse.Config.XPGetVIPplus.." XP for playing.")
+		elseif self:IsDonator() then
 			self:AddXP(impulse.Config.XPGetVIP)
-			self:Notify("You have received "..impulse.Config.XPGetVIP.." XP for playing.")
+			self:Notify("As a VIP, you have received "..impulse.Config.XPGetVIP.." XP for playing.")
 		else
 			self:AddXP(impulse.Config.XPGet)
 			self:Notify("You have received "..impulse.Config.XPGet.." XP for playing.")
