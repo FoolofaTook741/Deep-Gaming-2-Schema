@@ -89,7 +89,7 @@ impulse.Config.ATMModel = "models/props_combine/combine_intwallunit.mdl"
 impulse.Config.XPTime = 600
 impulse.Config.XPGet = 5 -- double xp (normal: 5)
 impulse.Config.XPGetVIP = 10 -- double xp (normal: 10)
-impulse.Config.XPGetVIP = 15
+impulse.Config.XPGetVIPplus = 15
 
 impulse.Config.RationTime = 3600
 
