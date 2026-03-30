@@ -279,49 +279,29 @@ function SWEP:Deploy()
 end
 
 function SWEP:RestrictMovement()
-	local pPlayer = self:GetOwner()
-	if not IsValid(pPlayer) then return end
+    local pPlayer = self:GetOwner()
+    if not IsValid(pPlayer) then return end
 
-	-- Store original movement values for restoration
-	--[[
-	if not pPlayer._originalRunSpeed then
-		pPlayer._originalRunSpeed = pPlayer:GetRunSpeed()
-		pPlayer._originalWalkSpeed = pPlayer:GetWalkSpeed()
-		pPlayer._originalJumpPower = pPlayer:GetJumpPower()
-	end ]]--
+    self._originalRunSpeed = pPlayer:GetRunSpeed()
+    self._originalWalkSpeed = pPlayer:GetWalkSpeed()
+    self._originalJumpPower = pPlayer:GetJumpPower()
 
-	local nWalkSpeed = 60
-
-	-- Set both walk and run speed to the same slow value to prevent running
-	pPlayer:SetWalkSpeed(nWalkSpeed)
-	pPlayer:SetRunSpeed(nWalkSpeed)
-	pPlayer:SetJumpPower(0)
-	pPlayer.disableSprint = true
-	pPlayer.restrictMovement = true
+    pPlayer:SetWalkSpeed(60)
+    pPlayer:SetRunSpeed(60)
+    pPlayer:SetJumpPower(0)
+    pPlayer.disableSprint = true
+    pPlayer.restrictMovement = true
 end
 
 function SWEP:UnrestrictMovement()
-	local pPlayer = self:GetOwner()
-	if not IsValid(pPlayer) then return end
-	pPlayer:SetRunSpeed(160)
-	pPlayer:SetWalkSpeed(80)
-	pPlayer:SetJumpPower(160)
+    local pPlayer = self:GetOwner()
+    if not IsValid(pPlayer) then return end
 
-	-- Restore original movement values
-	--[[ 
-	if pPlayer._originalRunSpeed then
-		pPlayer:SetWalkSpeed(pPlayer._originalWalkSpeed)
-		pPlayer:SetRunSpeed(pPlayer._originalRunSpeed)
-		pPlayer:SetJumpPower(pPlayer._originalRunSpeed)
-	else
-		-- Fallback for Sandbox - use default values
-		pPlayer:SetRunSpeed(160)
-		pPlayer:SetWalkSpeed(80)
-		pPlayer:SetJumpPower(160)
-	end ]]--
-
-	pPlayer.disableSprint = false
-	pPlayer.restrictMovement = false
+    pPlayer:SetRunSpeed(self._originalRunSpeed or 160)
+    pPlayer:SetWalkSpeed(self._originalWalkSpeed or 80)
+    pPlayer:SetJumpPower(self._originalJumpPower or 160)
+    pPlayer.disableSprint = false
+    pPlayer.restrictMovement = false
 end
 
 function SWEP:Holster(target)
@@ -383,6 +363,16 @@ function SWEP:OnDrop()
 	end
 
 	return BaseClass.OnDrop(self)
+end
+
+if SERVER then
+    hook.Add("PlayerSpawn", "ShieldMovementCleanup", function(ply)
+        ply.restrictMovement = false
+        ply.disableSprint = false
+        ply:SetJumpPower(160)
+        ply:SetRunSpeed(impulse.Config.JogSpeed)
+    	ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+    end)
 end
 
 SWEP.canBeDestroyedByDamage = false
