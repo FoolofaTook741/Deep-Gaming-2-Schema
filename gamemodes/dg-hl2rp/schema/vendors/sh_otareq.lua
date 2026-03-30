@@ -538,6 +538,17 @@ VENDOR.Sell = {
 			end
 		end
 	},
+	["item_enhancedvial"] = {
+		Desc = "Ordinal+",
+		Restricted = true,
+		Max = 2,
+		CanBuy = function(ply)
+			if (ply:GetTeamRank() >= RANK_ORD) then
+				return true
+			else return false
+			end
+		end
+	},
 }
 
 VENDOR.Buy = {}

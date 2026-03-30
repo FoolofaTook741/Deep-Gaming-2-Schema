@@ -686,7 +686,18 @@ VENDOR.Sell = {
 
 			return false
 		end
-	}
+	},
+	["item_enhancedvial"] = {
+		Desc = "DVL+",
+		Restricted = true,
+		Max = 2,
+		CanBuy = function(ply)
+			if (ply:GetTeamRank() >= RANK_DVL) then
+				return true
+			else return false
+			end
+		end
+	},
 }
 
 VENDOR.Buy = {
