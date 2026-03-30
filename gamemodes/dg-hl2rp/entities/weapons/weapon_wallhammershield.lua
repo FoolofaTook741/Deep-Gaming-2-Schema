@@ -1,5 +1,5 @@
 
-SWEP.Gun							= ("weapon_combine_hand_shield")
+SWEP.Gun							= ("weapon_wallhammershield")
 if (GetConVar(SWEP.Gun.."_allowed")) != nil then
 	if not (GetConVar(SWEP.Gun.."_allowed"):GetBool()) then SWEP.Base = "tfa_blacklisted" SWEP.PrintName = SWEP.Gun return end
 end
@@ -366,12 +366,14 @@ function SWEP:OnDrop()
 end
 
 if SERVER then
-    hook.Add("PlayerSpawn", "ShieldMovementCleanup", function(ply)
-        ply.restrictMovement = false
-        ply.disableSprint = false
-        ply:SetJumpPower(160)
-        ply:SetRunSpeed(impulse.Config.JogSpeed)
-    	ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+    hook.Add("OnPlayerChangedTeam", "ShieldMovementCleanup", function(ply)
+        timer.Simple(0, function()
+            ply.restrictMovement = false
+	        ply.disableSprint = false
+	        ply:SetJumpPower(160)
+	        ply:SetRunSpeed(impulse.Config.JogSpeed)
+	    	ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+	        end)
     end)
 end
 
