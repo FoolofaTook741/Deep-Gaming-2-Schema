@@ -129,10 +129,11 @@ SWEP.Attachments = {
 		},
 		ModSetup = function(e)
 			e.zoom_optic_equipped = true
-			e.IronsightsFOV = 0.45
+			local fov = .45
+			e.IronsightsFOV = fov
 			if CLIENT then
 				local copyScopeSens = impulse.GetSetting("scope_sens")
-				e.IronsightsSensitivity = copyScopeSens
+				e.IronsightsSensitivity = copyScopeSens * (fov / 0.8)
 			end
 			e.IronsightsPos = Vector(-1.81, -2.613, -1)
 			e.IronsightsCrosshair = true

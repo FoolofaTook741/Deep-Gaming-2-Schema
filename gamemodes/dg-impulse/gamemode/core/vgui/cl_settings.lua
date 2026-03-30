@@ -86,6 +86,19 @@ function PANEL:Init()
 			function numSlider:OnValueChanged(value)
 				impulse.SetSetting(v, value)
 			end
+		elseif settingType == "floatslider" then
+		    local numSlider = vgui.Create("DNumSlider", settingBase)
+		    numSlider:CenterVertical()
+		    numSlider:SetMin(k.minValue or 0)
+		    numSlider:SetMax(k.maxValue or 3.0)
+		    numSlider:SetDecimals(k.decimals or 1)
+		    numSlider:SetValue(impulse.GetSetting(v))
+		    numSlider:SetSize(320, 30)
+		    numSlider:SetPos(310, numSlider.y)
+
+		    function numSlider:OnValueChanged(value)
+		        impulse.SetSetting(v, value)
+		    end
 		elseif settingType == "dropdown" then
 			local dropdown = vgui.Create("DComboBox", settingBase)
 			dropdown:SetSize(150, 20)

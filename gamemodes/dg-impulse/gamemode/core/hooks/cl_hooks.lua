@@ -191,7 +191,7 @@ function GM:DefineSettings()
 	impulse.DefineSetting("chat_pmpings", {name="PM and tag sound enabled", category="Chatbox", type="tickbox", default=true})
 	impulse.DefineSetting("crosshair_style", {name="Crosshair Style", category="HUD", type="dropdown", default="Classic", options={"Classic", "Dot", "Circle & Dot", "Hidden"}})
 	impulse.DefineSetting("ads_sens", {name="ADS Sensitivity Multiplier", category="View", type="slider", default=0.12, minValue=0})
-	impulse.DefineSetting("scope_sens", {name="Scope Sensitivity Multiplier", category="View", type="slider", default=0.12, minValue=0})
+	impulse.DefineSetting("scope_sens", {name="Scope Sensitivity Multiplier", category="View", type="floatslider", default=1.0, minValue=0.1, maxValue=3.0, decimals=1})
 end
 
 local loweredAngles = Angle(30, -30, -25)

@@ -170,13 +170,14 @@ SWEP.Attachments = {
 			--}
 		},
 		ModSetup = function(e)
-			e.IronsightsFOV = 0.15
-			if CLIENT then 
-				local copyScopeSens = impulse.GetSetting("scope_sens")
-				e.IronsightsSensitivity = copyScopeSens
-			end
-			e.IronsightsPos = Vector(0, 0, -20)
-			e.IronsightsCrosshair = true
+		    local fov = 0.35
+		    e.IronsightsFOV = fov
+		    if CLIENT then
+		        local copyScopeSens = impulse.GetSetting("scope_sens")
+		        e.IronsightsSensitivity = copyScopeSens * (fov / 0.8)
+		    end
+		    e.IronsightsPos = Vector(0, 0, -20)
+		    e.IronsightsCrosshair = true
 		end,
 		ModCleanup = function(e)
 			e.IronsightsFOV = copyIronFOV
@@ -205,7 +206,7 @@ function SWEP:Deploy()
     self.DrawTime = CurTime() + 2
     self.BaseClass.Deploy(self)
 
-    if !self.HasPlayedIntro then
+    if not self.HasPlayedIntro then
         local vmodel = self.Owner:GetViewModel()
         vmodel:SetSequence(vmodel:LookupSequence("base_draw"))
         self.HasPlayedIntro = true

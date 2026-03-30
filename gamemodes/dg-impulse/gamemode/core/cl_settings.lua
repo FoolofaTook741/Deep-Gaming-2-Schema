@@ -51,7 +51,7 @@ end
 -- @internal
 function impulse.LoadSettings()
 	for v,k in pairs(impulse.Settings) do
-		if k.type == "tickbox" or k.type == "slider" or k.type == "plainint" then
+		if k.type == "tickbox" or k.type == "slider" or k.type == "plainint" or k.type == "floatslider" then
 			local def = k.default
 			if k.type == "tickbox" then 
 				def = tonumber(k.default) 

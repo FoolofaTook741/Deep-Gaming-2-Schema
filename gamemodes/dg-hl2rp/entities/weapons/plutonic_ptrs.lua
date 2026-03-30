@@ -87,6 +87,16 @@ SWEP.IronsightsSensitivity = 0.8
 SWEP.IronsightsCrosshair = false
 SWEP.IronsightsRecoilVisualMultiplier = 1
 
+local copyIronFOV = SWEP.IronsightsFOV + 0
+local copyIronSens = SWEP.IronsightsSensitivity + 0
+local copyIronPos = Vector(SWEP.IronsightsPos.x, SWEP.IronsightsPos.y, SWEP.IronsightsPos.z)
+local copyCone = SWEP.Primary.Cone + 0
+local copyIronMod = SWEP.Spread.IronsightsMod + 0
+local copyVelMod = SWEP.Spread.VelocityMod + 0
+local copyDamage = SWEP.Primary.Damage + 0
+local copyRPM = SWEP.Primary.Delay + 0
+local copyPen = SWEP.Primary.PenetrationScale + 0
+
 local copyISF = SWEP.IronsightsFOV + 0
 SWEP.Attachments = {
 	hunter_sight = {
@@ -174,10 +184,11 @@ SWEP.Attachments = {
 			--}
 		},
 		ModSetup = function(e)
-			e.IronsightsFOV = 0.15
+			local fov = .15
+			e.IronsightsFOV = fov
 			if CLIENT then 
 				local copyScopeSens = impulse.GetSetting("scope_sens")
-				e.IronsightsSensitivity = copyScopeSens
+				e.IronsightsSensitivity = copyScopeSens * (fov / 0.8)
 			end
 			e.IronsightsPos = Vector(-20, -20, -20)
 			e.IronsightsCrosshair = true
