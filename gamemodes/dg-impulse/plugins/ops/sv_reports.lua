@@ -18,7 +18,7 @@ util.AddNetworkString("opsReportDaleReplied")
 util.AddNetworkString("opsReportDaleClose")
 
 function impulse.Ops.ReportNew(ply, arg, rawText)
-	if ply.nextReport and ply.nextReport > CurTime() then
+    if ply.nextReport and ply.nextReport > CurTime() then
         return 
     end
 
@@ -175,26 +175,26 @@ function impulse.Ops.ReportClose(ply, arg, rawText)
         end
 
         if reportClaimant and not isDc and IsValid(reportClaimant) then
-        	local query = mysql:Insert("impulse_reports")
-			query:Insert("reporter", reporter:SteamID())
-			query:Insert("mod", reportClaimant:SteamID())
-			query:Insert("message", string.sub(reportMessage, 1, 650))
-			query:Insert("start", os.date("%Y-%m-%d %H:%M:%S", os.time()))
-			query:Insert("claimwait", targetReport[5] - targetReport[4])
-			query:Insert("closewait", CurTime() - targetReport[4])
-			query:Execute(true)
+            local query = mysql:Insert("impulse_reports")
+            query:Insert("reporter", reporter:SteamID())
+            query:Insert("mod", reportClaimant:SteamID())
+            query:Insert("message", string.sub(reportMessage, 1, 650))
+            query:Insert("start", os.date("%Y-%m-%d %H:%M:%S", os.time()))
+            query:Insert("claimwait", targetReport[5] - targetReport[4])
+            query:Insert("closewait", CurTime() - targetReport[4])
+            query:Execute(true)
         end
 
         impulse.Ops.Reports[reportId] = nil
 
         for v,k in pairs(player.GetAll()) do
-        	if k:IsAdmin() then
-		        net.Start("opsReportClosed")
-		        net.WriteEntity(ply)
-		        net.WriteUInt(reportId, 16)
-		        net.Send(k)
-		    end
-	    end
+            if k:IsAdmin() then
+                net.Start("opsReportClosed")
+                net.WriteEntity(ply)
+                net.WriteUInt(reportId, 16)
+                net.Send(k)
+            end
+        end
 
         if not isDc then
             net.Start("opsReportMessage")
@@ -280,29 +280,28 @@ function impulse.Ops.ReportMsg(ply, arg, rawText)
 end
 
 hook.Add("PostSetupPlayer", "impulseOpsReportSync", function(ply)
-    if not ply:IsAdmin() then
-        return
-    end
+    timer.Simple(5, function()
+        if not IsValid(ply) then return end
+        if not ply:IsAdmin() then return end
 
-    if table.Count(impulse.Ops.Reports) < 1 then
-        return
-    end
+        if table.Count(impulse.Ops.Reports) < 1 then return end
 
-    local reports = {}
-    for id, data in pairs(impulse.Ops.Reports) do
-        reports[id] = {
-            data[1] and IsValid(data[1]) and data[1]:SteamID() or nil,
-            data[2],
-            data[3] and IsValid(data[3]) and data[3]:SteamID() or nil,
-            data[6] or false, -- dale
-            data[1] and IsValid(data[1]) and data[1]:SteamName() or "Unknown",
-            data[1] and IsValid(data[1]) and data[1]:Nick() or "Unknown",
-        }
-    end
+        local reports = {}
+        for id, data in pairs(impulse.Ops.Reports) do
+            reports[id] = {
+                data[1] and IsValid(data[1]) and data[1]:SteamID() or nil,
+                data[2],
+                data[3] and IsValid(data[3]) and data[3]:SteamID() or nil,
+                data[6] or false,
+                data[1] and IsValid(data[1]) and data[1]:SteamName() or "Unknown",
+                data[1] and IsValid(data[1]) and data[1]:Nick() or "Unknown",
+            }
+        end
 
-    net.Start("opsReportSync")
-    net.WriteTable(reports)
-    net.Send(ply)
+        net.Start("opsReportSync")
+        net.WriteTable(reports)
+        net.Send(ply)
+    end)
 end)
 
 net.Receive("opsReportDaleRepliedDo", function(len, ply)
