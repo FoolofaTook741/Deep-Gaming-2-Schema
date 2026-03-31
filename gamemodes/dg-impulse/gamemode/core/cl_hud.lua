@@ -1556,7 +1556,7 @@ function GM:HUDPaintBackground()
 						DrawDoorInfo(entTarg, alpha)
 					elseif entTarg:IsRagdoll() then
 						DrawRagdollInfo(entTarg, alpha)
-					elseif impulse_ActiveButtons and impulse_ActiveButtons[entTarg.EntIndex(entTarg)] then
+					elseif impulse_ActiveButtons[entTarg.EntIndex(entTarg)] then
 						DrawButtonInfo(entTarg, alpha)
 					end
 				end
