@@ -15,6 +15,7 @@ local Glowie2 = Material("null")
 combineBlue = Color(71,98,105) -- text & outline
 lightCombineBlue = Color(58, 130, 144) -- hovered bg
 lightCombineBlueText = Color(89,171,179) -- hovered text
+local ocaBroadcastCol = Color(128, 0, 128)
 cp = Material("icons/civilprotection_logo.png")
 
 local Point = Vector(19, -0, 7)
@@ -367,8 +368,7 @@ net.Receive("impulseHL2RPOCABReturn", function()
 
     text = string.Trim(text)
     curBulletin = text
-
-    chat.AddText(Color(128, 0, 128),"[OCA BROADCAST] "..updater.." has updated the O.C.A Bulletin. Please view the civic terminal for more information.")
+    chat.AddText(ocaBroadcastCol, "[OCA BROADCAST] ", color_white, updater:Nick(), ocaBroadcastCol, " has updated the O.C.A Bulletin. Please view the civic terminal for more information.")
 end)
 
 local function WrapText(text, maxWidth)
