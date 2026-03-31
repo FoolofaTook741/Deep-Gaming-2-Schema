@@ -62,12 +62,12 @@ SWEP.Primary.Inside_Sound = Sound("LS2.M4A1.Inside")
 SWEP.ReloadSound = "weapons/ar2/ar2_reload.wav"
 SWEP.EmptySound = "weapons/clipempty_pistol.wav"
 
-SWEP.Primary.Recoil = 1 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Recoil = 1.15 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 11
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0019
-SWEP.Primary.Delay = RPM(540)
+SWEP.Primary.Delay = RPM(530)
 
 SWEP.Primary.Ammo = "Rifle"
 SWEP.Primary.Automatic = true
