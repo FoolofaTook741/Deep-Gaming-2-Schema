@@ -8,85 +8,84 @@ function PANEL:Init()
 end
 
 function PANEL:SetMix(mix)
-	local wide = self:GetWide()
-	local class, item
+    local wide = self:GetWide()
+    local class, item
 
-	if mix.Multi then
-		-- Use the first input item as the display model
-		local firstInput = next(mix.Input)
-		class = firstInput
-		local id = impulse.Inventory.ClassToNetID(class)
-		item = impulse.Inventory.Items[id]
-	else
-		class = mix.Output
-		local id = impulse.Inventory.ClassToNetID(class)
-		item = impulse.Inventory.Items[id]
-	end
+    if mix.Scrap then
+        local firstInput = next(mix.Input)
+        class = firstInput
+        local id = impulse.Inventory.ClassToNetID(class)
+        item = impulse.Inventory.Items[id]
+    else
+        class = mix.Output or mix.Outputs[1]
+        local id = impulse.Inventory.ClassToNetID(class)
+        item = impulse.Inventory.Items[id]
+    end
 
-	if not item then
-		print("[impulse] Could not find item: "..tostring(class).." for use in mix: "..tostring(mix.Class).."!")
-		return self:Remove()
-	end
+    if not item then
+        print("[impulse] Could not find item: "..tostring(class).." for use in mix: "..tostring(mix.Class).."!")
+        return self:Remove()
+    end
 
-	self.Item = item
-	self.Mix = mix
-	local panel = self
+    self.Item = item
+    self.Mix = mix
+    local panel = self
 
-	self.model:SetPos(0, 0)
-	self.model:SetSize(80, 80)
-	self.model:SetMouseInputEnabled(true)
-	self.model:SetModel(item.Model)
-	self.model:SetSkin(item.Skin or 0)
-	self.model:SetFOV(item.FOV or 35)
+    self.model:SetPos(0, 0)
+    self.model:SetSize(80, 80)
+    self.model:SetMouseInputEnabled(true)
+    self.model:SetModel(item.Model)
+    self.model:SetSkin(item.Skin or 0)
+    self.model:SetFOV(item.FOV or 35)
 
-	function self.model:LayoutEntity(ent)
-		ent:SetAngles(Angle(0, 90, 0))
-		if panel.Item.Material then
-			ent:SetMaterial(panel.Item.Material)
-		end
-		if not item.NoCenter then
-			self:SetLookAt(Vector(0, 0, 0))
-		end
-	end
+    function self.model:LayoutEntity(ent)
+        ent:SetAngles(Angle(0, 90, 0))
+        if panel.Item.Material then
+            ent:SetMaterial(panel.Item.Material)
+        end
+        if not item.NoCenter then
+            self:SetLookAt(Vector(0, 0, 0))
+        end
+    end
 
-	local camPos = self.model.Entity:GetPos()
-	camPos:Add(Vector(0, 25, 25))
-	local min, max = self.model.Entity:GetRenderBounds()
+    local camPos = self.model.Entity:GetPos()
+    camPos:Add(Vector(0, 25, 25))
+    local min, max = self.model.Entity:GetRenderBounds()
 
-	if item.CamPos then
-		self.model:SetCamPos(item.CamPos)
-	else
-		self.model:SetCamPos(camPos - Vector(10, 0, 16))
-	end
+    if item.CamPos then
+        self.model:SetCamPos(item.CamPos)
+    else
+        self.model:SetCamPos(camPos - Vector(10, 0, 16))
+    end
 
-	self.model:SetLookAt((max + min) / 2)
+    self.model:SetLookAt((max + min) / 2)
 
-	self.craftBtn = vgui.Create("DButton", self)
-	self.craftBtn:Dock(RIGHT)
-	self.craftBtn:SetText(mix.Multi and "Scrap" or "Craft")
-	self.craftBtn:SetFont("Impulse-Elements17")
-	self.craftBtn:SetDisabled(true)
+    self.craftBtn = vgui.Create("DButton", self)
+    self.craftBtn:Dock(RIGHT)
+    self.craftBtn:SetText(mix.Scrap and "Scrap" or "Craft")
+    self.craftBtn:SetFont("Impulse-Elements17")
+    self.craftBtn:SetDisabled(true)
 
-	function self.craftBtn:DoClick()
-		panel.dad.UseItem = panel.Item
-		panel.dad.UseMix = panel.Mix
-		net.Start("impulseMixTry")
-		net.WriteUInt(panel.Mix.NetworkID, 8)
-		net.SendToServer()
-	end
+    function self.craftBtn:DoClick()
+        panel.dad.UseItem = panel.Item
+        panel.dad.UseMix = panel.Mix
+        net.Start("impulseMixTry")
+        net.WriteUInt(panel.Mix.NetworkID, 8)
+        net.SendToServer()
+    end
 
-	self.canCraft = true
+    self.canCraft = true
 
-	function self.craftBtn:Think()
-		local level = LocalPlayer():GetSkillLevel("craft")
-		if panel.Mix.Level > level or not panel.canCraft then
-			self:SetDisabled(true)
-		else
-			self:SetDisabled(false)
-		end
-	end
+    function self.craftBtn:Think()
+        local level = LocalPlayer():GetSkillLevel("craft")
+        if panel.Mix.Level > level or not panel.canCraft then
+            self:SetDisabled(true)
+        else
+            self:SetDisabled(false)
+        end
+    end
 
-	self:RefreshCanCraft()
+    self:RefreshCanCraft()
 end
 
 function PANEL:RefreshCanCraft()
@@ -135,16 +134,21 @@ function PANEL:Paint(w, h)
 	local level = LocalPlayer():GetSkillLevel("craft")
 
 	if item then
-		if mix.Multi then
-			surface.SetTextColor(scrapCol)
-			surface.SetFont("Impulse-Elements19-Shadow")
-			surface.SetTextPos(82, 10)
-			surface.DrawText("Scrap: "..item.Name)
+		if mix.Scrap then
+		    surface.SetTextColor(scrapCol)
+		    surface.SetFont("Impulse-Elements19-Shadow")
+		    surface.SetTextPos(82, 10)
+		    surface.DrawText("Scrap: "..item.Name)
+		elseif mix.Multi then
+		    surface.SetTextColor(item.Colour or color_white)
+		    surface.SetFont("Impulse-Elements19-Shadow")
+		    surface.SetTextPos(82, 10)
+		    surface.DrawText(item.Name .. " (x".. (mix.Amount or 2) ..")")
 		else
-			surface.SetTextColor(item.Colour or color_white)
-			surface.SetFont("Impulse-Elements19-Shadow")
-			surface.SetTextPos(82, 10)
-			surface.DrawText(item.Name)
+		    surface.SetTextColor(item.Colour or color_white)
+		    surface.SetFont("Impulse-Elements19-Shadow")
+		    surface.SetTextPos(82, 10)
+		    surface.DrawText(item.Name)
 		end
 
 		if mix.Level > level then
