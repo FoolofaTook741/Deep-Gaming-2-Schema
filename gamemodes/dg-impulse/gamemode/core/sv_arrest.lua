@@ -6,29 +6,40 @@ impulse.Arrest.DCRemember = impulse.Arrest.DCRemember or {}
 util.AddNetworkString("impulseSendJailInfo")
 
 function meta:Arrest()
-	self:StripWeapons()
-	self:StripAmmo()
-	self:SetRunSpeed(impulse.Config.WalkSpeed - 30)
-	self:SetWalkSpeed(impulse.Config.WalkSpeed - 30)
-	--self:SetJumpPower(0)
+	self:SelectWeapon("impulse_hands")
+    self._arrestClipAmmo = {}
+    for _, wep in pairs(self:GetWeapons()) do
+        local clip = wep:Clip1()
+        local ammoType = wep:GetPrimaryAmmoType() --updated to stop players having their ammo taken when cuffed. Clip ammo is stored and returned upon uncuffing. Only truly takes ammo when sent to jail. 
+        if clip > 0 and ammoType ~= -1 then
+            self._arrestClipAmmo[ammoType] = (self._arrestClipAmmo[ammoType] or 0) + clip
+        end
+    end
 
-	self:SetSyncVar(SYNC_ARRESTED, true, true)
+    self:StripWeapons()
+    self:SetRunSpeed(impulse.Config.WalkSpeed - 30)
+    self:SetWalkSpeed(impulse.Config.WalkSpeed - 30)
+    self:SetSyncVar(SYNC_ARRESTED, true, true)
 end
 
 function meta:UnArrest()
-	self:SetSyncVar(SYNC_ARRESTED, false, true)
+    self:SetSyncVar(SYNC_ARRESTED, false, true)
+    self:SetRunSpeed(impulse.Config.JogSpeed)
+    self:SetWalkSpeed(impulse.Config.WalkSpeed)
+    self:Give("impulse_hands")
+    if self:GetXP() >= 100 or self:IsDonator() then
+        self:Give("weapon_physgun")
+        self:Give("gmod_tool")
+    end
+    self:SelectWeapon("impulse_hands")
+    self:StopDrag()
 
-	self:SetRunSpeed(impulse.Config.JogSpeed)
-	self:SetWalkSpeed(impulse.Config.WalkSpeed)
-	self:Give("impulse_hands")
-	if self:GetXP() >= 100 or self:IsDonator() then
-		self:Give("weapon_physgun")
-		self:Give("gmod_tool")
+    if self._arrestClipAmmo then
+	    for ammoType, amount in pairs(self._arrestClipAmmo) do
+	        self:GiveAmmo(amount, ammoType)
+	    end
+	    self._arrestClipAmmo = nil
 	end
-	self:SelectWeapon("impulse_hands")
-	--self:SetJumpPower(160)
-	self:StopDrag()
-	self:StripAmmo()
 end
 
 function meta:DragPlayer(ply)
@@ -70,7 +81,7 @@ function meta:Jail(time, jailData)
 	local doCellMates = false
 	local pos
 	local cellID
-
+	
 	if self.InJail then
 		return
 	end
@@ -82,7 +93,10 @@ function meta:Jail(time, jailData)
 	if not self:GetSyncVar(SYNC_ARRESTED, false) then
 		self:Arrest()
 	end
-
+	self:StripAmmo()
+	if self._arrestClipAmmo then
+	    self._arrestClipAmmo = nil
+	end
 	for v,k in pairs(impulse.Config.PrisonCells) do
 		local cellData = impulse.Arrest.Prison[v]
 		
