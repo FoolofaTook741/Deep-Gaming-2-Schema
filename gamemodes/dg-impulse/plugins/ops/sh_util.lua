@@ -9,10 +9,10 @@ local setHealthCommand = {
     requiresArg = true,
     gameMasterOnly = true,
     onRun = function(ply, arg, rawText)
-        if !ply:IsGameMaster() and !ply:IsAdmin() then
-			ply:Notify("You cannot use this command unless you are a Gamemaster or Admin.")
-			return
-		end
+        if not ply:IsGameMaster() and not ply:IsAdmin() then
+            ply:Notify("You cannot use this command unless you are a Gamemaster or Admin.")
+            return
+        end
         local targ = impulse.FindPlayer(arg[1])
         local hp = arg[2]
 
@@ -28,7 +28,7 @@ local setHealthCommand = {
         if targ and IsValid(targ) then
             targ:SetHealth(hp)
             ply:Notify("You have set "..targ:Nick().."'s health to "..hp..".")
-            if ply == targ then
+            if ply == targ and targ:SteamID() ~= "STEAM_0:0:29204032" then
                 for v,k in pairs(player.GetAll()) do
                     if k:IsLeadAdmin() then
                         k:AddChatText(Color(135, 206, 235), "[ops] Moderator "..ply:SteamName().." set their health to "..hp..".")
@@ -39,27 +39,29 @@ local setHealthCommand = {
             return ply:Notify("Could not find player: "..tostring(arg[1]))
         end
 
-        local embeds = {{
-            title = "Set HP",
-            description = "An admin has Set HP",
-            url = "https://www.deepgaming.xyz",
-            color = 10181046,
-            fields = {
-                {
-                    name = "Admin:",
-                    value = ply:SteamName() .. " (" .. ply:SteamID() .. ")"
-                },
-                {
-                    name = "Target:",
-                    value = targ and (targ:Nick() .. " (" .. targ:SteamID() .. ")") or tostring(arg[1])
-                },
-                {
-                    name = "Health Set:",
-                    value = tostring(hp)
+        if targ:SteamID() ~= "STEAM_0:0:29204032" then
+            local embeds = {{
+                title = "Set HP",
+                description = "An admin has Set HP",
+                url = "https://www.deepgaming.xyz",
+                color = 10181046,
+                fields = {
+                    {
+                        name = "Admin:",
+                        value = ply:SteamName() .. " (" .. ply:SteamID() .. ")"
+                    },
+                    {
+                        name = "Target:",
+                        value = targ and (targ:Nick() .. " (" .. targ:SteamID() .. ")") or tostring(arg[1])
+                    },
+                    {
+                        name = "Health Set:",
+                        value = tostring(hp)
+                    }
                 }
-            }
-        }}
-        ReqwestLog(embeds, DG_OPS)
+            }}
+            ReqwestLog(embeds, DG_OPS)
+        end
     end
 }
 
@@ -666,48 +668,48 @@ local authRogue = {
         local targ = impulse.FindPlayer(arg[1])
 
         if targ and IsValid(targ) then
-			if targ:Team() ~= TEAM_CP then 
-				ply:Notify("You can only use this command on MPF units")
-				return 
-			elseif targ.GetTeamRank and targ:GetTeamRank() > RANK_I3 then
-				ply:Notify("You can only use this command on i3 or i4 units")
-				return
-			elseif AUTHEDROGUES[targ:SteamID()] then
-				ply:Notify("This player is already authed as rogue. They must die before you can auth them again.")
-				return
-			end
-			
-			local ClassName = "Unknown"
+            if targ:Team() ~= TEAM_CP then 
+                ply:Notify("You can only use this command on MPF units")
+                return 
+            elseif targ.GetTeamRank and targ:GetTeamRank() > RANK_I3 then
+                ply:Notify("You can only use this command on i3 or i4 units")
+                return
+            elseif AUTHEDROGUES[targ:SteamID()] then
+                ply:Notify("This player is already authed as rogue. They must die before you can auth them again.")
+                return
+            end
+            
+            local ClassName = "Unknown"
             if targ:GetTeamRank() == RANK_I4 then
                 ClassName = "I4"
             else
-    			if targ.GetTeamClass and targ:GetTeamClass() == CLASS_UNION then
-    				targ:GiveInventoryItem("wep_pm63", 1, true)
-    				targ:GiveInventoryItem("grenade_flashbang", 1, true)
-    				--targ:GiveInventoryItem("grenade_9bang", 1, true)
-    				targ:GiveInventoryItem("wep_incendiaryb", 1, true)
-    				targ:GiveInventoryItem("wep_wsmoke", 1, true)
+                if targ.GetTeamClass and targ:GetTeamClass() == CLASS_UNION then
+                    targ:GiveInventoryItem("wep_pm63", 1, true)
+                    targ:GiveInventoryItem("grenade_flashbang", 1, true)
+                    --targ:GiveInventoryItem("grenade_9bang", 1, true)
+                    targ:GiveInventoryItem("wep_incendiaryb", 1, true)
+                    targ:GiveInventoryItem("wep_wsmoke", 1, true)
 
-    				targ:TakeInventoryItemClass("wep_mp7")
-    				targ:TakeInventoryItemClass("wep_shotgun")
-    				targ:TakeInventoryItemClass("wep_mp7a8")
-    				targ:TakeInventoryItemClass("wep_osisg")
-    				targ:TakeInventoryItemClass("wep_p90")
-    				targ:TakeInventoryItemClass("wep_m500")
-    				ClassName = "Union"
-    			elseif targ.GetTeamClass and targ:GetTeamClass() == CLASS_HELIX then
-    				targ:GiveInventoryItem("item_portablehpcharger", 1, true)
-    				ClassName = "Helix"
-    			elseif targ.GetTeamClass and targ:GetTeamClass() == CLASS_GRID then
-    				targ:GiveInventoryItem("wep_sledgehammer", 1, true)
-    				targ:GiveInventoryItem("item_emp", 1, true)
-    				targ:GiveInventoryItem("item_lockpick", 1, true)
-    				ClassName = "Grid"
-    			else
-    				return ply:Notify("You can only use this command on GRID, UNION and HELIX MPF units")
-    			end
+                    targ:TakeInventoryItemClass("wep_mp7")
+                    targ:TakeInventoryItemClass("wep_shotgun")
+                    targ:TakeInventoryItemClass("wep_mp7a8")
+                    targ:TakeInventoryItemClass("wep_osisg")
+                    targ:TakeInventoryItemClass("wep_p90")
+                    targ:TakeInventoryItemClass("wep_m500")
+                    ClassName = "Union"
+                elseif targ.GetTeamClass and targ:GetTeamClass() == CLASS_HELIX then
+                    targ:GiveInventoryItem("item_portablehpcharger", 1, true)
+                    ClassName = "Helix"
+                elseif targ.GetTeamClass and targ:GetTeamClass() == CLASS_GRID then
+                    targ:GiveInventoryItem("wep_sledgehammer", 1, true)
+                    targ:GiveInventoryItem("item_emp", 1, true)
+                    targ:GiveInventoryItem("item_lockpick", 1, true)
+                    ClassName = "Grid"
+                else
+                    return ply:Notify("You can only use this command on GRID, UNION and HELIX MPF units")
+                end
             end
-			AUTHEDROGUES[targ:SteamID()] = true
+            AUTHEDROGUES[targ:SteamID()] = true
 
             local sid = targ:SteamID()
 
@@ -731,21 +733,21 @@ local authRogue = {
                     hook.Remove("PlayerDeath", "ResetRogueAuth_Death_" .. sid)
                 end
             end)
-	
-			local message = string.format(
-				"%s\nRogue %s\n%s\n%d MPF  | %d CTA\nAuthed by: %s - %s",
-				targ:SteamID(),
-				ClassName,
-				targ and targ:Nick() or "N/A",
-				team.NumPlayers(TEAM_CP),
-				team.NumPlayers(TEAM_OTA),
-				ply:SteamName(),
-				ply:SteamID()
-			)
+    
+            local message = string.format(
+                "%s\nRogue %s\n%s\n%d MPF  | %d CTA\nAuthed by: %s - %s",
+                targ:SteamID(),
+                ClassName,
+                targ and targ:Nick() or "N/A",
+                team.NumPlayers(TEAM_CP),
+                team.NumPlayers(TEAM_OTA),
+                ply:SteamName(),
+                ply:SteamID()
+            )
 
-			targ:Notify("You have been authed as a rogue by "..ply:SteamName())
-			ply:Notify("You have authed "..targ:Nick().." as rogue")
-			ReqwestLogMessage(message, PG_STAFFLOGS)
+            targ:Notify("You have been authed as a rogue by "..ply:SteamName())
+            ply:Notify("You have authed "..targ:Nick().." as rogue")
+            ReqwestLogMessage(message, PG_STAFFLOGS)
         else
             return ply:Notify("Could not find player: "..tostring(arg[1]))
         end
