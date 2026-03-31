@@ -3,6 +3,7 @@
 ** This file is private and may not be shared, downloaded, used or sold.
 */
 
+impulse_ActiveButtons = impulse_ActiveButtons or {}
 impulse.hudEnabled = impulse.hudEnabled or true
 
 local hidden = {}
