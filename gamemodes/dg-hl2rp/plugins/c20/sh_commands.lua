@@ -96,7 +96,7 @@ if game.GetMap() == "rp_c18_dg" then
 				else
 					local buttons = 0
 					for v,k in pairs(ents.FindByClass("func_door")) do
-						if k:GetPos():Distance(Vector(3641.7868652344, 3002.6579589844, 738.47485351563)) < 10 then
+						if k:GetPos():Distance(Vector(3641.7868652344, 3002.6579589844, 738.47485351563)) < 500 then
 							buttons = buttons + 1
 							k:Fire("open", "", .6)
 							timer.Simple(20, function() k:Fire("close", "", .6) end)
