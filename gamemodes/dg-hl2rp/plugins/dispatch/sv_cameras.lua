@@ -138,7 +138,7 @@ local function CameraTick()
 
 		for ply,info in pairs(k) do
 			if not IsValid(ply) or not ply:Alive() or ply:GetSyncVar(SYNC_ARRESTED, false) then
-				info[ply] = nil
+				k[ply] = nil
 				continue
 			end
 
