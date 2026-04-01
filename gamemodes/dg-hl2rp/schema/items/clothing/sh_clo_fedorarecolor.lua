@@ -18,6 +18,8 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "hat"
 ITEM.CanStack = false    
 
+ITEM.DyeSlots = { "Head Gear" }
+
 function ITEM:CanEquip(ply)
 	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU
 end
