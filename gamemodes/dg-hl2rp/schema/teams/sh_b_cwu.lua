@@ -291,8 +291,8 @@ TEAM_CWU = impulse.Teams.Define({
 						ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
 						ply:SetBodygroup(0,1)
 					elseif ply:GetTeamClass() == CLASS_MEDIC then
-						ply:SetBodygroup(2,3)
-						ply:SetBodygroup(3,0)
+						ply:SetBodygroup(2,26)
+						ply:SetBodygroup(3,7)
 						ply:SetBodygroup(5,3)
 					else
 						if ply:GetTeamClass() == CLASS_COMMERCE and ply.BuyableTeamRemove then
@@ -302,12 +302,12 @@ TEAM_CWU = impulse.Teams.Define({
 						        end
 						    end
 						end 
-						ply:SetBodygroup(2,28)
-						ply:SetBodygroup(3,9)
+						ply:SetBodygroup(2,26)
+						ply:SetBodygroup(3,7)
 					end
 				elseif ply:GetTeamClass() == CLASS_RESEARCH then
-					ply:SetBodygroup(2,5)
-					ply:SetBodygroup(3,0)
+					ply:SetBodygroup(2,26)
+					ply:SetBodygroup(3,7)
 				else
 					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl")
 					ply:SetSkin(2)
