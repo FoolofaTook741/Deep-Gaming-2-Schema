@@ -586,6 +586,12 @@ impulse.Config.Achievements = {
 		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
 		Points = 20
 	},
+	["ach_thatsnomoon"] = {
+		Name = "That's no Moon...",
+		Desc = "April fools event 4/1/2026, Star Wars RP. Han shot first!",
+		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
+		Points = 20
+	},
 }
 
 impulse.Config.ModQuickReplies = {
