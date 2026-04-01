@@ -157,9 +157,11 @@ function VyHub.Player:change_game_group(ply, group)
     VyHub.Group.group_changes[steamid64] = group
 	
     if group ~= "user" then
-        VyHub.Group.player_groups[steamid64] = { group_name = group } -- update cache
-        save_group_cache()
+        VyHub.Group.player_groups[steamid64] = { group_name = group }
+    else
+        VyHub.Group.player_groups[steamid64] = nil
     end
+    save_group_cache()
 
     if serverguard then
         serverguard.player:SetRank(ply, group, false, true)
