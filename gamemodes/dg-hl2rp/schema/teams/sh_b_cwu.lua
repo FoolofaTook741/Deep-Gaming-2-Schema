@@ -85,7 +85,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(3,0)
 					ply:SetBodygroup(5,3)
 				elseif ply:GetTeamClass() == CLASS_INDUST then
-					ply:SetModel("models/player/impworker.mdl")
+					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
 					ply:GiveInventoryItem("item_ictvocoder", 1, true)
 					ply:GiveInventoryItem("util_nvgs", 1, true)
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
@@ -133,8 +133,7 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(3,0)
 					ply:SetBodygroup(5,3)
 				elseif ply:GetTeamClass() == CLASS_INDUST then
-					ply:SetModel("models/player/impworker.mdl")
-					ply:SetBodygroup(0,0)
+					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
 					ply:GiveInventoryItem("item_ictvocoder", 1, true)
 					ply:GiveInventoryItem("util_nvgs", 1, true)
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
@@ -182,8 +181,8 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(3,0)
 					ply:SetBodygroup(5,3)
 				elseif ply:GetTeamClass() == CLASS_INDUST then
-					ply:SetModel("models/player/impworker.mdl")
-					ply:SetBodygroup(0,2)
+					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
+					ply:SetBodygroup(0,1)
 					ply:GiveInventoryItem("item_ictvocoder", 1, true)
 					ply:GiveInventoryItem("util_nvgs", 1, true)
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
@@ -238,7 +237,7 @@ TEAM_CWU = impulse.Teams.Define({
 				elseif ply:GetTeamClass() == CLASS_INDUST then
 					ply:GiveInventoryItem("item_ictvocoder", 1, true)
 					ply:GiveInventoryItem("util_nvgs", 1, true)
-					ply:SetModel("models/player/impworker.mdl")
+					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
 					ply:SetBodygroup(0,1)
 				elseif ply:GetTeamClass() == CLASS_COMMERCE then
 					ply:SetBodygroup(2,2)

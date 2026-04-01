@@ -36,6 +36,6 @@ end
 
 
 
-ITEM.WeaponClass = "tfa_swch_de10"
+ITEM.WeaponClass = "plutonic_357"
 
 impulse.RegisterItem(ITEM)

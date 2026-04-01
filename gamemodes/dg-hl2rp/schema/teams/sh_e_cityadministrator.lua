@@ -28,17 +28,16 @@ TEAM_CA = impulse.Teams.Define({
 			xp = 0,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel("models/nada/pms/male/bridgecrew.mdl")
-					ply:Give("rw_sw_se14r")
-					ply:SetBodygroup(2,0)
-					ply:SetBodygroup(3,0)
+					ply:SetModel(ply.defaultModel)
+					ply:SetBodygroup(2,32)
+					ply:SetBodygroup(3,9)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(4,0)
 					ply:SetBodygroup(5,0)
 					ply:SetBodygroup(6,0)
 					ply:SetBodygroup(7,0)
 					ply:SetBodygroup(8,0)
-					ply:SetRPName("Petty Officer " .. ply:GetSavedRPName())
+					ply:SetRPName("Assistant " .. ply:GetSavedRPName())
 				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
 					ply:SetModel(ply.defaultModel)
 					ply:SetBodygroup(2,34)
@@ -67,22 +66,21 @@ TEAM_CA = impulse.Teams.Define({
 		{
 			name = "Representative",
 			description = "rep",
-			doorGroup = {1, 2, 3, 4, 5, 6, 7},
+			doorGroup = {1, 2, 3, 6, 7},
 			xp = 5,
 			whitelistLevel = 1,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel("models/nada/pms/male/black_naval_officer.mdl")
-					ply:Give("rw_sw_se14r")
-					ply:SetBodygroup(2,0)
-					ply:SetBodygroup(3,0)
+					ply:SetModel(ply.defaultModel)
+					ply:SetBodygroup(2,4)
+					ply:SetBodygroup(3,5)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(4,0)
 					ply:SetBodygroup(5,0)
 					ply:SetBodygroup(6,0)
 					ply:SetBodygroup(7,0)
 					ply:SetBodygroup(8,0)
-					ply:SetRPName("Lieutenant " .. ply:GetSavedRPName())
+					ply:SetRPName("Representative " .. ply:GetSavedRPName())
 				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
 					ply:SetModel(ply.defaultModel)
 					ply:SetBodygroup(2,34)
@@ -111,24 +109,23 @@ TEAM_CA = impulse.Teams.Define({
 		{
 			name = "Coordinator",
 			description = "coordinator",
-			doorGroup = {1, 2, 3, 4, 5, 6, 7},
+			doorGroup = {1, 2, 3, 6, 7},
 			xp = 5,
 			whitelistLevel = 2,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel("models/nada/pms/male/grey_admiral.mdl")
-					ply:Give("rw_sw_se14r")
-					ply:SetBodygroup(2,0)
-					ply:SetBodygroup(3,0)
+					ply:SetModel(ply.defaultModel)
+					ply:SetBodygroup(2,5)
+					ply:SetBodygroup(3,5)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(4,0)
 					ply:SetBodygroup(5,0)
 					ply:SetBodygroup(6,0)
 					ply:SetBodygroup(7,0)
 					ply:SetBodygroup(8,0)
-					ply:SetRPName("Major " .. ply:GetSavedRPName())
+					ply:SetRPName("Coordinator " .. ply:GetSavedRPName())
 				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
-					ply:SetModel("models/nada/pms/male/grey_admiral.mdl")
+					ply:SetModel(ply.defaultModel)
 					ply:SetBodygroup(2,34)
 					ply:SetBodygroup(3,9)
 					ply:SetBodygroup(1,10)
@@ -160,17 +157,16 @@ TEAM_CA = impulse.Teams.Define({
 			whitelistLevel = 3,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel("models/nada/pms/male/admiral.mdl")
-					ply:Give("rw_sw_se14r")
-					ply:SetBodygroup(2,0)
-					ply:SetBodygroup(3,0)
+					ply:SetModel(ply.defaultModel)
+					ply:SetBodygroup(2,4)
+					ply:SetBodygroup(3,6)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(4,0)
 					ply:SetBodygroup(5,0)
 					ply:SetBodygroup(6,0)
 					ply:SetBodygroup(7,0)
 					ply:SetBodygroup(8,0)
-					ply:SetRPName("Colonel " .. ply:GetSavedRPName())
+					ply:SetRPName("Councilor " .. ply:GetSavedRPName())
 				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
 					ply:SetModel(ply.defaultModel)
 					ply:SetBodygroup(2,34)
@@ -199,22 +195,21 @@ TEAM_CA = impulse.Teams.Define({
 		{
 			name = "Minister",
 			description = "Minister",
-			doorGroup = {1, 2, 3, 4, 5, 6, 7},
+			doorGroup = {1, 2, 3, 4, 6, 7},
 			xp = 5,
 			whitelistLevel = 4,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel("models/nada/pms/male/admiral_esb.mdl")
-					ply:Give("rw_sw_se14r")
-					ply:SetBodygroup(2,0)
-					ply:SetBodygroup(3,0)
+					ply:SetModel(ply.defaultModel)
+					ply:SetBodygroup(2,35)
+					ply:SetBodygroup(3,7)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(4,0)
 					ply:SetBodygroup(5,0)
 					ply:SetBodygroup(6,0)
 					ply:SetBodygroup(7,0)
 					ply:SetBodygroup(8,0)
-					ply:SetRPName("Vice Admiral " .. ply:GetSavedRPName())
+					ply:SetRPName("Minister " .. ply:GetSavedRPName())
 				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
 					ply:SetModel(ply.defaultModel)
 					ply:SetBodygroup(2,34)
@@ -251,20 +246,16 @@ TEAM_CA = impulse.Teams.Define({
 			},]]
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel("models/nada/pms/male/grandadmiral.mdl")
-					ply:Give("rw_sw_se14r")
-					ply:SetModelScale(1.1)
-					ply:SetHealth(100)
-					ply:SetMaxHealth(100)
-					ply:SetBodygroup(2,0)
-					ply:SetBodygroup(3,0)
+					ply:SetModel(ply.defaultModel)
+					ply:SetBodygroup(2,34)
+					ply:SetBodygroup(3,7)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(4,0)
 					ply:SetBodygroup(5,0)
 					ply:SetBodygroup(6,0)
 					ply:SetBodygroup(7,0)
 					ply:SetBodygroup(8,0)
-					ply:SetRPName("Admiral " .. ply:GetSavedRPName())
+					ply:SetRPName("Deputy City Administrator " .. ply:GetSavedRPName())
 				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
 					ply:SetModel(ply.defaultModel)
 					ply:SetBodygroup(2,43)
@@ -301,17 +292,17 @@ TEAM_CA = impulse.Teams.Define({
 			},]]
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel("models/nada/pms/male/grandadmiral.mdl")
-					ply:Give("rw_sw_se14r")
-					ply:SetBodygroup(2,0)
-					ply:SetBodygroup(3,0)
+					ply:SetModel(ply.defaultModel)
+					ply:SetBodygroup(2,34)
+					ply:SetBodygroup(3,7)
 					ply:SetBodygroup(1,0)
 					ply:SetBodygroup(4,0)
 					ply:SetBodygroup(5,0)
 					ply:SetBodygroup(6,0)
 					ply:SetBodygroup(7,0)
 					ply:SetBodygroup(8,0)
-					ply:SetRPName("Grand Admiral " .. ply:GetSavedRPName())
+					ply:Give("plutonic_357")
+					ply:SetRPName("City Administrator " .. ply:GetSavedRPName())
 				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
 					ply:SetModel(ply.defaultModel)
 					ply:SetBodygroup(2,34)

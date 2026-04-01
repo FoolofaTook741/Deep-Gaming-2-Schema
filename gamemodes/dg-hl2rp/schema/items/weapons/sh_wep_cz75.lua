@@ -28,7 +28,7 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "secondary"
 ITEM.CanStack = true
 
-ITEM.WeaponClass = "rw_sw_rk3"
+ITEM.WeaponClass = "plutonic_cz75"
 
 
 

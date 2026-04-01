@@ -27,7 +27,7 @@ ITEM.Equipable = true
 ITEM.EquipGroup = "primary"
 ITEM.CanStack = true
 
-ITEM.WeaponClass = "rw_sw_dlt19s"
+ITEM.WeaponClass = "plutonic_famas"
 
 function ITEM:CanEquip(ply)
 	return ply:Team() ~= TEAM_VORT

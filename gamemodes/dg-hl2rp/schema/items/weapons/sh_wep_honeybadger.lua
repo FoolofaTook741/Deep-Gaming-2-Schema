@@ -27,7 +27,7 @@ ITEM.CanStack = true
 ITEM.EquipTime = 2
 ITEM.UnEquipTime = 2
 
-ITEM.WeaponClass = "rw_sw_dc15a_purge"
+ITEM.WeaponClass = "plutonic_honeybadger"
 
 
 

@@ -26,7 +26,7 @@ ITEM.CanStack = true
 ITEM.EquipTime = 2
 ITEM.UnEquipTime = 2
 
-ITEM.WeaponClass = "tfa_swch_dc17m_br"
+ITEM.WeaponClass = "plutonic_mp7a8"
 
 
 

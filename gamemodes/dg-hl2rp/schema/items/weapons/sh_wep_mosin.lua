@@ -24,7 +24,7 @@ ITEM.CanStack = true
 ITEM.EquipTime = 3
 ITEM.UnEquipTime = 3
 
-ITEM.WeaponClass = "rw_sw_dlt19x"
+ITEM.WeaponClass = "plutonic_mosin"
 
 
 
