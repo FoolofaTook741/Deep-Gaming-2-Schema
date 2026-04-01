@@ -2402,7 +2402,7 @@ local setRogueCommand = {
     description = "For supervisors to mark a Combine unit as rogue. /setrogue steamid. If a unit is rogue, this will remove their rogue status.",
     requiresArg = true,
     onRun = function(ply, arg, rawText)
-		if !ply:IsAdmin() then
+		if not ply:IsAdmin() then
         	if ply:Team() == TEAM_CP and ply:GetTeamRank() < RANK_OFC then
 				ply:Notify("You cannot use this command.")
 				return
@@ -2419,12 +2419,15 @@ local setRogueCommand = {
 		end
         local steamid = arg[1]
 		local targ = player.GetBySteamID(steamid)
-		if !timer.Exists("roguecooldown") then
+		if not timer.Exists("roguecooldown") then
 			if targ:IsCP() and targ:Alive() and (targ:GetTeamRank() < ply:GetTeamRank()) and targ.IsRogue == false then
 				targ.IsRogue = true
 				ply:Notify("Rogue status added for unit: " .. targ:Name())
 				if targ:Team() == TEAM_CP then
-					targ:SetModel("models/player/police_fem.mdl")
+					targ:SetModel("models/wn7new/metropolice_rebel_c24/male_01.mdl")
+					targ:ResetBodyGroups()
+					targ:SetBodygroup(3,1)
+					targ:SetBodygroup(9,15)
 				end
 				targ:SetRPName("Autonomous Unit - "..targ:Name())
 				for k,v in pairs(player.GetAll()) do
@@ -2489,7 +2492,10 @@ local declareRogueCommand = {
 				ply.IsRogue = true
 				ply:Notify("You have declared rogue status.")
 				if targ:Team() == TEAM_CP then
-					targ:SetModel("models/player/police_fem.mdl")
+					targ:SetModel("models/wn7new/metropolice_rebel_c24/male_01.mdl")
+					targ:ResetBodyGroups()
+					targ:SetBodygroup(3,1)
+					targ:SetBodygroup(9,15)
 				end
 				hook.Run("OnRogueDeclare")
 				targ:SetRPName("Autonomous Unit - "..targ:Name())

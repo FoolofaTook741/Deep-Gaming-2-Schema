@@ -974,7 +974,10 @@ net.Receive("DeepToggleRogue", function(len, ply)
 		targ.IsRogue = true
 		ply:Notify("Rogue status added for unit: " .. targ:Name())
 		if targ:Team() == TEAM_CP then
-			targ:SetModel("models/player/police_fem.mdl")
+			targ:SetModel("models/wn7new/metropolice_rebel_c24/male_01.mdl")
+            targ:ResetBodyGroups()
+            targ:SetBodygroup(3,1)
+            targ:SetBodygroup(9,15)
 		end
 		targ:SetRPName("Autonomous Unit - "..targ:Name())
 		for k,v in pairs(player.GetAll()) do

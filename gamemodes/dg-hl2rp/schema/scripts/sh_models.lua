@@ -127,6 +127,7 @@ hook.Add("LoadAnimationClasses", "impulseHL2RPAnimClasses", function()
 	--MPF Anims
 	for i = 1, 9 do
 		impulse.Anim.SetModelClass("models/wn7new/metropolice/male_0" .. i .. ".mdl", "metrocop")
+		impulse.Anim.SetModelClass("models/wn7new/metropolice_rebel_c24/male_0" .. i .. ".mdl", "metrocop")
 	end
 
 	--MISC ANIMS

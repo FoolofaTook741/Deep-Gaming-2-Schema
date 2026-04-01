@@ -49,3 +49,9 @@ end
 concommand.Add("impulse_apartments_reload", function(ply, cmd, args)
     impulse.LoadApartments()
 end)
+
+function meta:ResetBodyGroups()
+    for i = 0, self:GetNumBodyGroups() - 1 do
+        self:SetBodygroup(i, 0)
+    end
+end

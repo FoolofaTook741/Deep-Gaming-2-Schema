@@ -52,7 +52,7 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
 	local fp = {}
 	local tp = {}
 	local gp = {}
-	if LocalPlayer():IsCP() == true and LocalPlayer():GetModel() != "models/player/police_fem.mdl" and (perfOutline or teamVis or combineVis) then
+	if LocalPlayer():IsCP() == true and LocalPlayer():GetModel() != "models/wn7new/metropolice_rebel_c24/male_01.mdl" and (perfOutline or teamVis or combineVis) then
     	for v,k in pairs(team.GetPlayers(lp:Team())) do
 			if k == lp then continue end
 			if k:GetMoveType() == MOVETYPE_NOCLIP then
@@ -76,7 +76,7 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
 				if not k:IsCP() then continue end
 				if k == lp then continue end
 				if k:GetSyncVar(SYNC_SQUAD_ID, -1) == squadId && perfOutline then continue end
-				if k.IsRogue or k:GetModel() == "models/player/police_fem.mdl" then continue end
+				if k.IsRogue or k:GetModel() == "models/wn7new/metropolice_rebel_c24/male_01.mdl" then continue end
 				if k:GetMoveType() == MOVETYPE_NOCLIP then
 					continue
 				end
@@ -111,7 +111,7 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
 			for v,k in pairs(team.GetPlayers(lp:Team())) do
 				if k == lp then continue end
 				if k:GetSyncVar(SYNC_SQUAD_ID, -1) == squadId && perfOutline then continue end
-				if k.IsRogue or k:GetModel() == "models/player/police_fem.mdl" then continue end
+				if k.IsRogue or k:GetModel() == "models/wn7new/metropolice_rebel_c24/male_01.mdl" then continue end
 				if k:GetMoveType() == MOVETYPE_NOCLIP then
 					continue
 				end
