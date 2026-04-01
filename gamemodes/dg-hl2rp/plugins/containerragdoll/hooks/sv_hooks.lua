@@ -4,7 +4,7 @@ DISABLE_LOOT_DROPS = false
 impulse.RagdollContainer.LootPools = {
     ["ctadrops"] = {
         Items = {
-            ["util_heavyceramicplate"] = {Rarity = 90, Rep = 1, RequiredClass = {CLASS_PAYBACK, CLASS_APF, CLASS_FIST}},
+            ["util_heavyceramicplate"] = {Rarity = 65, Rep = 1, RequiredClass = {CLASS_PAYBACK, CLASS_APF, CLASS_FIST}},
             ["item_enhancedvial"]      = {Rarity = 65, Rep = 4},
             ["item_healthvial"]        = {Rarity = 30, Rep = 2},
             ["cos_otavest3"]           = {Rarity = 40, Rep = 1},
