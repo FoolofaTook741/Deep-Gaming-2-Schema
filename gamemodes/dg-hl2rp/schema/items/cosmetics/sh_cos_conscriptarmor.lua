@@ -41,7 +41,7 @@ function ITEM:OnEquip(ply)
     end
 
     local model = ply:GetModel()
-    local newModel = model:gsub("willardnetworks/citizens/", "willardnetworks/conscripts/")
+    local newModel = model:gsub("wnpm_citizens/", "willardnetworks/conscripts/")
     ply:SetModel(newModel)
 
     local isFemale = newModel:find("female")

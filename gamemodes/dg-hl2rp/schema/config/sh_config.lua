@@ -631,29 +631,29 @@ impulse.Config.TrashSpawns = {}
 impulse.Config.DefaultTeam = TEAM_CITIZEN
 
 impulse.Config.DefaultMaleModels = {
-	Model("models/willardnetworks/citizens/male_01.mdl"),
-	Model("models/willardnetworks/citizens/male_02.mdl"),
-	Model("models/willardnetworks/citizens/male_03.mdl"),
-	Model("models/willardnetworks/citizens/male_04.mdl"),
-	Model("models/willardnetworks/citizens/male_05.mdl"),
-	Model("models/willardnetworks/citizens/male_06.mdl"),
-	Model("models/willardnetworks/citizens/male_07.mdl"),
-	Model("models/willardnetworks/citizens/male_08.mdl"),
-	Model("models/willardnetworks/citizens/male_09.mdl"),
-	Model("models/willardnetworks/citizens/male_10.mdl"),
+	Model("models/wnpm_citizens/male_01.mdl"),
+	Model("models/wnpm_citizens/male_02.mdl"),
+	Model("models/wnpm_citizens/male_03.mdl"),
+	Model("models/wnpm_citizens/male_04.mdl"),
+	Model("models/wnpm_citizens/male_05.mdl"),
+	Model("models/wnpm_citizens/male_06.mdl"),
+	Model("models/wnpm_citizens/male_07.mdl"),
+	Model("models/wnpm_citizens/male_08.mdl"),
+	Model("models/wnpm_citizens/male_09.mdl"),
+	Model("models/wnpm_citizens/male_10.mdl"),
 }
 
 impulse.Config.DefaultFemaleModels = {
-	Model("models/willardnetworks/citizens/female_01.mdl"),
-	Model("models/willardnetworks/citizens/female_02.mdl"),
-	Model("models/willardnetworks/citizens/female_03.mdl"),
-	Model("models/willardnetworks/citizens/female_04.mdl"),
-	Model("models/willardnetworks/citizens/female_05.mdl"),
-	Model("models/willardnetworks/citizens/female_06.mdl"),
+	Model("models/wnpm_citizens/female_01.mdl"),
+	Model("models/wnpm_citizens/female_02.mdl"),
+	Model("models/wnpm_citizens/female_03.mdl"),
+	Model("models/wnpm_citizens/female_04.mdl"),
+	Model("models/wnpm_citizens/female_05.mdl"),
+	Model("models/wnpm_citizens/female_06.mdl"),
 }
 
 impulse.Config.DefaultSkinBlacklist = {
-	["models/willardnetworks/citizens/male_02.mdl"] = {14, 22, 6} -- bloody eye skins banned
+	["models/wnpm_citizens/male_02.mdl"] = {14, 22, 6} -- bloody eye skins banned
 }
 
 --

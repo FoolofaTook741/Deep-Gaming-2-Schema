@@ -103,12 +103,11 @@ hook.Add("LoadAnimationClasses", "impulseHL2RPAnimClasses", function()
 
 	--Citizen Anims
 	for i = 1, 10 do
-		impulse.Anim.SetModelClass((i != 10 and "models/willardnetworks/citizens/male_0" .. i or "models/willardnetworks/citizens/male_10") .. ".mdl", "citizen_male")
+		impulse.Anim.SetModelClass((i != 10 and "models/wnpm_citizens/male_0" .. i or "models/wnpm_citizens/male_10") .. ".mdl", "player")
 		impulse.Anim.SetModelClass(i != 10 and "models/willardnetworks/conscripts/male_0" .. i .. ".mdl" or "models/willardnetworks/conscripts/male_10" .. ".mdl", "citizen_male")
 	end
-
 	for i = 1, 6 do
-		impulse.Anim.SetModelClass("models/willardnetworks/citizens/female_0" .. i .. ".mdl", "citizen_female")
+		impulse.Anim.SetModelClass("models/wnpm_citizens/female_0" .. i .. ".mdl", "player")
 		impulse.Anim.SetModelClass("models/willardnetworks/conscripts/female_0" .. i .. ".mdl", "citizen_female")
 	end
 
