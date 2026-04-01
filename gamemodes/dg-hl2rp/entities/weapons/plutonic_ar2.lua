@@ -65,7 +65,7 @@ SWEP.Primary.Damage = 14
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.Cone = 0.01 -- base spread value
-SWEP.Primary.Delay = RPM(465)
+SWEP.Primary.Delay = RPM(445)
 SWEP.Primary.Tracer = "AR2Tracer"
 
 SWEP.Primary.BulletModel = Model("models/weapons/rifleshell.mdl")
