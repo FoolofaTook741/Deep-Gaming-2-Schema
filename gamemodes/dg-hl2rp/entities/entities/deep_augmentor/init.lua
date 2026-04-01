@@ -182,14 +182,16 @@ local function ToggleNova(self, ply)
     local rankName  = OTA_RANK_NAMES[rank] or "UNK"
     local className = (class == CLASS_MACE) and "MACE" or "ECHO"
 
-    if ply.NovaTrooper then
+   if ply.NovaTrooper then
         if rank == RANK_ORD then
+            ply:SetSkin(0)
+        elseif ply:GetTeamClass() == CLASS_ECHO then
             ply:SetSkin(0)
         else
             ply:SetSkin(1)
-            ply:SetRPName("CTA:" .. rankName .. "." .. className .. "-" .. math.random(1, 99))
         end
         ply.NovaTrooper = false
+        hook.Run("PlayerSetCombineRank", ply, rank, class)
     else
         local novaSkin = (rank == RANK_OWG) and 0 or 6
         ply:SetSkin(novaSkin)

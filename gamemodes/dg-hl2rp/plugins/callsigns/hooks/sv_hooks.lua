@@ -5,8 +5,12 @@ local WL_IDENTIFIERS = {
 function PLUGIN:PlayerSetCombineRank(ply, rank, div)
     if not ply:IsCP() then return end
     local wlName = WL_IDENTIFIERS[ply:Team()] or {"NULL", "NULL"}
+    local callSignLine = (ply.Whitelists and ply.Whitelists[wlName[1]]) or -1
+    local callSignNum  = (ply.Whitelists and ply.Whitelists[wlName[2]]) or -1
+    --[[
     local callSignLine = ply:GetTeamWhitelist(wlName[1]) or -1
     local callSignNum = ply:GetTeamWhitelist(wlName[2]) or -1
+    ]]--
     local callsigns = (ply:Team() == TEAM_CP) and CP_CALLSIGNS_LINES or OTA_CALLSIGNS_LINES
     
     if not callsigns[callSignLine] and ply:Team() ~= TEAM_CA then return end
@@ -26,9 +30,10 @@ function PLUGIN:PlayerSetCombineRank(ply, rank, div)
 
         generatedName = string.format("%s:%s.%s-%s", code, rankStr, callsigns[callSignLine or 1].NiceName or "SWAG", callSignNum)
 
+        --[[
         if ply:SteamID() == "STEAM_0:0:581542620" then
             generatedName = string.format("%s:%s.%s-%s", code, rankStr, "THRAWN", 1)
-        end
+        end ]]--
 
         if ply:GetTeamClass() == CLASS_DISPATCH and ply:GetTeamRank() >= RANK_OFC then
             generatedName = "Operator "..ply:GetSavedRPName()
@@ -46,9 +51,10 @@ function PLUGIN:PlayerSetCombineRank(ply, rank, div)
         local otaRank = (ply:GetTeamRank() ~= RANK_ORD) and otaranktable[ply:GetTeamRank()] or otaClassMapping[ply:GetTeamClass()]
         generatedName = string.format("%s:%s.%s-%s", code, otaRank or "ORD", callsigns[callSignLine or 1].NiceName or "SWAG", callSignNum)
 
+        --[[
         if ply:SteamID() == "STEAM_0:0:581542620" then
             generatedName = string.format("%s:%s.%s-%s", code, "TRC", "THRAWN", 1)
-        end
+        end ]]--
     end
 
     if ply:Team() ~= TEAM_CA then
