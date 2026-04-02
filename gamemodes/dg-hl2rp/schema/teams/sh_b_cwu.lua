@@ -43,7 +43,7 @@ TEAM_CWU = impulse.Teams.Define({
 			name = "Refinery Worker",
 			description = "Refinery workers mine various minerals and turn them into metal for the gain of the city.",
 			bodygroups = {
-				{2, 7},
+				{2, 6},
 				{3,0}
 			},
 			xp = 800,
@@ -284,30 +284,52 @@ TEAM_CWU = impulse.Teams.Define({
 				[RANK_OWS] = true,
 			},]]
 			onBecome = function(ply, rank)
-				if ply:GetTeamClass() != CLASS_ICT then
-					if ply:GetTeamClass() == CLASS_INDUST then
-						ply:GiveInventoryItem("item_ictvocoder", 1, true)
-						ply:GiveInventoryItem("util_nvgs", 1, true)
-						ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
-						ply:SetBodygroup(0,1)
-					elseif ply:GetTeamClass() == CLASS_MEDIC then
-						ply:SetBodygroup(2,26)
-						ply:SetBodygroup(3,7)
-						ply:SetBodygroup(5,3)
+				if ply:GetTeamClass() == CLASS_INDUST then
+					ply:GiveInventoryItem("item_ictvocoder", 1, true)
+					ply:GiveInventoryItem("util_nvgs", 1, true)
+					ply:SetModel("models/hlvr/characters/worker/worker_player.mdl")
+					ply:SetBodygroup(0,1)
+				elseif ply:GetTeamClass() == CLASS_REFINERY then
+					if ply:IsCharacterFemale() then
+						ply:SetBodygroup(4,5)
 					else
-						if ply:GetTeamClass() == CLASS_COMMERCE and ply.BuyableTeamRemove then
-						    for v,k in pairs(ply.BuyableTeamRemove) do
-						        if k and IsValid(k) and k.BuyableOwner == ply and k:GetClass() == "impulse_hl2rp_brewingbarrel" then
-						            k:Remove()
-						        end
-						    end
-						end 
-						ply:SetBodygroup(2,26)
-						ply:SetBodygroup(3,7)
+						ply:SetBodygroup(4,3)
 					end
-				elseif ply:GetTeamClass() == CLASS_RESEARCH then
-					ply:SetBodygroup(2,26)
+					ply:SetBodygroup(2,28)
+					ply:SetBodygroup(3,5)
+					ply:SetBodygroup(5,1)
+				elseif ply:GetTeamClass() == CLASS_MEDIC then
+					if ply:IsCharacterFemale() then
+						ply:SetBodygroup(4,5)
+					else
+						ply:SetBodygroup(4,3)
+					end
+					ply:SetBodygroup(2,5)
 					ply:SetBodygroup(3,7)
+					ply:SetBodygroup(5,3)
+				elseif ply:GetTeamClass() == CLASS_COMMERCE then
+					if ply.BuyableTeamRemove then
+					    for v,k in pairs(ply.BuyableTeamRemove) do
+					        if k and IsValid(k) and k.BuyableOwner == ply and k:GetClass() == "impulse_hl2rp_brewingbarrel" then
+					            k:Remove()
+					        end
+						end 
+					end
+					if ply:IsCharacterFemale() then
+						ply:SetBodygroup(4,5)
+					else
+						ply:SetBodygroup(4,3)
+					end
+					ply:SetBodygroup(2,20)
+					ply:SetBodygroup(3,1)
+				elseif ply:GetTeamClass() == CLASS_RESEARCH then
+					if ply:IsCharacterFemale() then
+						ply:SetBodygroup(4,5)
+					else
+						ply:SetBodygroup(4,3)
+					end
+					ply:SetBodygroup(2,5)
+					ply:SetBodygroup(3,5)
 				else
 					ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl")
 					ply:SetSkin(2)
