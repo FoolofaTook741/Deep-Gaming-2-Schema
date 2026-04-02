@@ -617,7 +617,7 @@ resource.AddWorkshop( "2085971768" ) -- impulse: Half-Life 2 Roleplay Content 4
 resource.AddWorkshop( "2117238555" ) -- impulse: Half-Life 2 Roleplay Content 5
 resource.AddWorkshop( "2905875154" ) -- Project: Synapse - Props Pack
 resource.AddWorkshop( "282312812" ) -- HL2RP ID Cards
-resource.AddWorkshop( "3668482007" ) -- Deep Gaming 2 - Main Content
+resource.AddWorkshop( "3690442796" ) -- Deep Gaming 2 - Main Content
 resource.AddWorkshop( "3661022179" ) -- Deep Gaming 2 - Combine Playermodels
 
 resource.AddWorkshop( "3028357706" ) -- [LVS] - Half-Life 2 - Pack
