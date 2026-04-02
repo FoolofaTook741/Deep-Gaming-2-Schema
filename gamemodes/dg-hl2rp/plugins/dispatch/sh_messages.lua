@@ -2,17 +2,21 @@ if SERVER then
 	util.AddNetworkString("impulseHL2RPJoinRank")
 else
 	net.Receive("impulseHL2RPJoinRank", function()
-		local ply = net.ReadUInt(8)
-		ply = Entity(ply)
+	local redColor = Color(255, 0, 0)
+
+		local entIndex = net.ReadUInt(8)
+	    local team = net.ReadUInt(8)
+	    local class = net.ReadUInt(8)
+		local ply = Entity(entIndex)
 		timer.Simple(2.5, function() 
 			if ply and IsValid(ply) and ply:IsPlayer() then
-				if ply:Team() == TEAM_OTA and ply:GetTeamClass() == CLASS_FIST then
-					LocalPlayer():SendCombineMessage("ELITE GRADE ASSET " ..ply:Name().. " IS FULL ACTIVE", Color(255, 0, 0))
-				elseif ply:Team() == TEAM_OTA then
+				if team == TEAM_OTA and class == CLASS_FIST then
+					LocalPlayer():SendCombineMessage("ELITE GRADE ASSET " ..ply:Name().. " IS FULL ACTIVE", redColor)
+				elseif team == TEAM_OTA then
 					LocalPlayer():SendCombineMessage(ply:Name().." IS FULL ACTIVE")
-				elseif ply:Team() == TEAM_CP then
+				elseif team == TEAM_CP then
 					LocalPlayer():SendCombineMessage(ply:Name().." IS 10-8")
-				elseif ply:Team() == TEAM_STALKER then
+				elseif team == TEAM_STALKER then
 					LocalPlayer():SendCombineMessage(string.upper(ply:GetSavedRPName()).." HAS BEEN STALKERIZED")
 				else
 					LocalPlayer():SendCombineMessage(string.upper(ply:Name()).." IS IN SERVICE")

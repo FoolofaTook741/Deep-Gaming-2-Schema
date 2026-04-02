@@ -30,11 +30,6 @@ function PLUGIN:PlayerSetCombineRank(ply, rank, div)
 
         generatedName = string.format("%s:%s.%s-%s", code, rankStr, callsigns[callSignLine or 1].NiceName or "SWAG", callSignNum)
 
-        --[[
-        if ply:SteamID() == "STEAM_0:0:581542620" then
-            generatedName = string.format("%s:%s.%s-%s", code, rankStr, "THRAWN", 1)
-        end ]]--
-
         if ply:GetTeamClass() == CLASS_DISPATCH and ply:GetTeamRank() >= RANK_OFC then
             generatedName = "Operator "..ply:GetSavedRPName()
         elseif ply:GetTeamClass() == CLASS_DISPATCH and ply:GetTeamRank() < RANK_OFC then
@@ -51,10 +46,6 @@ function PLUGIN:PlayerSetCombineRank(ply, rank, div)
         local otaRank = (ply:GetTeamRank() ~= RANK_ORD) and otaranktable[ply:GetTeamRank()] or otaClassMapping[ply:GetTeamClass()]
         generatedName = string.format("%s:%s.%s-%s", code, otaRank or "ORD", callsigns[callSignLine or 1].NiceName or "SWAG", callSignNum)
 
-        --[[
-        if ply:SteamID() == "STEAM_0:0:581542620" then
-            generatedName = string.format("%s:%s.%s-%s", code, "TRC", "THRAWN", 1)
-        end ]]--
     end
 
     if ply:Team() ~= TEAM_CA then
@@ -71,6 +62,8 @@ function PLUGIN:PlayerSetCombineRank(ply, rank, div)
         end
         net.Start("impulseHL2RPJoinRank")
         net.WriteUInt(ply:EntIndex(), 8)
+        net.WriteUInt(ply:Team(), 8)
+        net.WriteUInt(ply:GetTeamClass(), 8)
         net.Send(recipFilter)
     end
 
