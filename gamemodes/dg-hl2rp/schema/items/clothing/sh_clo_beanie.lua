@@ -26,6 +26,11 @@ end
 
 function ITEM:OnEquip(ply)
     ply:SetBodygroup(1, 2)
+    if ply:IsCharacterFemale() then
+    	ply:SetBodygroup(10, 16)
+	else
+	    ply:SetBodygroup(10, 14)
+	end
 end
 
 function ITEM:UnEquip(ply)
