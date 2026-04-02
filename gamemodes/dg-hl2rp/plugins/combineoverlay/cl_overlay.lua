@@ -758,20 +758,21 @@ local function DrawAuxData(offset)
 		local minutes = math.floor((elapsed % 3600) / 60)
 		local seconds = elapsed % 60
 		draw.SimpleText("TIME SINCE LAST CODE CHANGE: " .. string.format("%02d:%02d:%02d", hours, minutes, seconds) .. " AGO ::>", "BudgetLabel", scrW - 8, 80 + add, color_white, TEXT_ALIGN_RIGHT)    end
+    if LocalPlayer():Team() ~= TEAM_CWU then      
+        add = add + 28
 
-    add = add + 28
+        draw.SimpleText("M.P.F. LOSSES [15m]: "..cpdeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(200, 200, 255), TEXT_ALIGN_RIGHT)
+        
+        add = add + 14
 
-    draw.SimpleText("M.P.F. LOSSES [15m]: "..cpdeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(200, 200, 255), TEXT_ALIGN_RIGHT)
-    
-    add = add + 14
+        draw.SimpleText("C.T.A. LOSSES [15m]: "..otadeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(160, 160, 160), TEXT_ALIGN_RIGHT)
 
-    draw.SimpleText("C.T.A. LOSSES [15m]: "..otadeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(160, 160, 160), TEXT_ALIGN_RIGHT)
+        add = add + 14
 
-    add = add + 14
+        draw.SimpleText("O.C.A. LOSSES [15m]: "..ocadeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(150, 0, 0), TEXT_ALIGN_RIGHT)
 
-    draw.SimpleText("O.C.A. LOSSES [15m]: "..ocadeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(150, 0, 0), TEXT_ALIGN_RIGHT)
-
-    add = add + 28
+        add = add + 28
+    end
 
     if (LocalPlayer():Team() == TEAM_CA and LocalPlayer():GetTeamClass() == CLASS_BASE) or LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_OTA and LocalPlayer():GetTeamClass() == CLASS_NOMAD) then
         draw.SimpleText("O.C.A.A.B. TREASURY: C" .. funds .. " ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
