@@ -24,7 +24,7 @@ On average, the server takes between 3 and 7 minutes to start back up.
 crashmenu.Config.Servers = { -- Examples below
     {
         Name = "Content Pack",
-        URL = "https://steamcommunity.com/sharedfiles/filedetails/?id=3473335341"
+        URL = "https://steamcommunity.com/sharedfiles/filedetails/?id=3690442796"
     },
     {
         Name = "Discord",

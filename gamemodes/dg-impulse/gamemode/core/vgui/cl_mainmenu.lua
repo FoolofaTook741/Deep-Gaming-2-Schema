@@ -329,7 +329,7 @@ function PANEL:Init()
 				"impulse",
 				"Subscribe",
 				function()
-					gui.OpenURL("https://steamcommunity.com/sharedfiles/filedetails?id=3666033464")
+					gui.OpenURL("https://steamcommunity.com/sharedfiles/filedetails?id=3690442796")
 				end,
 				"No thanks")
 		end
