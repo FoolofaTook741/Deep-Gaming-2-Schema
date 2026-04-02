@@ -70,7 +70,7 @@ VENDOR.Buy = {
 		Cost = 130 * GL_ICT_MULT
 	},
 	["item_fastheadcrabcrate"] = {
-		Cost = 65 * GL_ICT_MULT
+		Cost = 120 * GL_ICT_MULT
 	},
     ["item_domesticatedheadcrab"] = {
 		Cost = 150 * GL_ICT_MULT
