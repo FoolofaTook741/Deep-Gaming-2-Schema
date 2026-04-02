@@ -117,7 +117,7 @@ SWEP.Attachments = {
 			--}
 		},
 		ModSetup = function(e)
-			local fov = .15
+			local fov = .35
 			e.IronsightsFOV = fov
 			if CLIENT then 
 				impulse.debugPrint("equipped")
