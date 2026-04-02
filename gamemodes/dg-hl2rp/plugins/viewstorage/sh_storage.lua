@@ -35,7 +35,7 @@ end
 
 impulse.RegisterChatCommand("/viewstorage", {
     description = "View a player's inventory + storage (admin)",
-    adminOnly = true,
+    leadAdminOnly = true,
     requiresArg = true,
 
     onRun = function(ply, args)
