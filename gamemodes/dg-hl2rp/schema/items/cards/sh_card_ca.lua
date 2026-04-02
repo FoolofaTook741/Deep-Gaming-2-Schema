@@ -21,9 +21,15 @@ ITEM.UseWorkBarName = "Redeeming..."
 ITEM.UseWorkBarSound = "physics/metal/paintcan_impact_hard3.wav"
 
 function ITEM:OnUse(ply)
-    ply:GiveBankMoney(250)
-    ply:Notify("You have redeemed this card for 350 credits.")
-    return true
+    if ply:Team() == TEAM_CA then
+        ply:GiveBankMoney(250 + (ply:GetTeamRank() * 10))
+        ply:Notify("You have redeemed this card for 250 credits.")
+        return true
+    else
+        ply:GiveBankMoney(250)
+        ply:Notify("You have redeemed this card for 250 credits.")
+        return true
+    end
 end
 
 function ITEM:ShouldTraceUse(ply, ent)
