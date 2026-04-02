@@ -46,7 +46,7 @@ TEAM_CWU = impulse.Teams.Define({
 				{2, 6},
 				{3,0}
 			},
-			xp = 800,
+			xp = 300,
 			percentLimit = false,
 			noMenu = true
 		},
@@ -55,7 +55,7 @@ TEAM_CWU = impulse.Teams.Define({
 			description = "Infestation Control Teams work with Combine units to contain various outbreaks.",
 			skin = 0,
 			model = "models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl",
-			xp = 500,
+			xp = 400,
 			noMenu = true,
 		},
 		{
