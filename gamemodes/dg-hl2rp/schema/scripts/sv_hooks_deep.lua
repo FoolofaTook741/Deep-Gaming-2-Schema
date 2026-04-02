@@ -1445,7 +1445,7 @@ hook.Add( "PlayerChangedTeam", "resetbuyables", function(ply, oldTeam, newTeam)
     ply.NextStorage = 0
 	local loyalistLevel = 0
 	
-    if newTeam == TEAM_CITIZEN and ply.Whitelists then
+    if (newTeam == TEAM_CITIZEN or newTeam == TEAM_CWU) and ply.Whitelists then
         loyalistLevel = ply.Whitelists["TEAM_CITIZEN"] or 0
         ply:SetSyncVar(SYNC_LOYALIST_LEVEL, loyalistLevel, true)
     else

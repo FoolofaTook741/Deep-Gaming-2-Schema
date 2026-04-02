@@ -104,7 +104,7 @@ local loyalistLevelCommand = {
 
 
 		if targ and IsValid(targ) then
-			if targ:Team() == TEAM_CITIZEN then
+			if targ:Team() == TEAM_CITIZEN or targ:Team() == TEAM_CWU then
 				targ:SetSyncVar(SYNC_LOYALIST_LEVEL, level, true)
 			else
 				targ:SetSyncVar(SYNC_LOYALIST_LEVEL, 0, true)
