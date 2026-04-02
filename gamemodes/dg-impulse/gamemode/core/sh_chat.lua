@@ -771,6 +771,18 @@ impulse.RegisterChatCommand("/gotov", {
     end
 })
 
+if SERVER then
+    util.AddNetworkString("impulseOpenContentLink")
+end
+
+impulse.RegisterChatCommand("/content", {
+    description = "Opens the content pack link.",
+    onRun = function(ply)
+        net.Start("impulseOpenContentLink")
+        net.Send(ply)
+    end
+})
+
 if CLIENT then
 	local infoCol = Color(135, 206, 250)
 	local oocCol = color_white
@@ -957,4 +969,9 @@ if CLIENT then
 			chat.AddText(groupCol, "["..groupName.."] ("..groupRank..") ", speaker:Nick(), ": ", message)
 		end
 	end)
+
+	net.Receive("impulseOpenContentLink", function()
+	    gui.OpenURL("https://steamcommunity.com/sharedfiles/filedetails?id=3690442796")
+	end)
+	
 end
