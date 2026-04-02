@@ -12,4 +12,4 @@ MIX.Input = {
 	["util_plastic"] = {take = 5}
 }
 
-impulse.RegisterMixture(MIX)
+--impulse.RegisterMixture(MIX)
