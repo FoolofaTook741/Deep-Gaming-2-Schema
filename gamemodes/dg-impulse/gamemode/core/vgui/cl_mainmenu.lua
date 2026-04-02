@@ -324,7 +324,7 @@ function PANEL:Init()
 			Derma_Message(REFUND_MSG, "impulse", "Claim Refund")
 		end
 
-		if not steamworks.IsSubscribed("3668482007") then
+		if not steamworks.IsSubscribed("3690442796") then
 			Derma_Query("You are not subscribed to the content!\nIf you do not subscribe you will experience missing textures and errors.\nAfter subscribing, rejoin the server.",
 				"impulse",
 				"Subscribe",
