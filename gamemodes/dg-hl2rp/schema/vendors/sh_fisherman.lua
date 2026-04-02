@@ -48,6 +48,8 @@ VENDOR.RandomTrades = {
 		["util_energycore"] = {Rarity = 970, Cost = {900, 1750}, BuyMax = 3},
 		["scrap_ar2"] = {Rarity = 998, Cost = {3000, 4500}, BuyMax = 1},
 		["wep_m60"] = {Rarity = 850, Cost = {1900, 2750}, BuyMax = 1},
+		["wep_w_stunstick"] = {Rarity = 980, Cost = {15000, 30000}, BuyMax = 1},
+		["wep_abracadabra"] = {Rarity = 999, Cost = {75000, 150000}, BuyMax = 1},
 	},
 	Buy = {
 		["util_moonshine"] = {Cost = {400, 500}},
