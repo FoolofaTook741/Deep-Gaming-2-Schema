@@ -21,7 +21,7 @@ ITEM.UseWorkBarSound = "physics/metal/paintcan_impact_hard3.wav"
 
 function ITEM:OnUse(ply)
     if ply:Team() == TEAM_CP then
-        local amount = 125 + (ply:GetTeamRank() * 7) 
+        local amount = 125 + (ply:GetTeamRank() * 18) 
         ply:GiveBankMoney(amount)
         ply:Notify("You have redeemed this card for ".. amount .."  credits.")
         return true
