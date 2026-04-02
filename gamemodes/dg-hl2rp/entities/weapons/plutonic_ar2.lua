@@ -61,7 +61,7 @@ SWEP.Primary.Sound = Sound("LS2.AR2.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.AR2.Inside")
 
 SWEP.Primary.Recoil = .9
-SWEP.Primary.Damage = 14
+SWEP.Primary.Damage = 13
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.Cone = 0.01 -- base spread value
