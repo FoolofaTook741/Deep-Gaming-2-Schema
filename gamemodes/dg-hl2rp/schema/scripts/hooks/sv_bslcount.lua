@@ -32,6 +32,7 @@ timer.Create("AutoUpdateCounters", 10, 0, function()
     net.Broadcast()
 end)
 
+local BSLTimers = {}
 local ExplosionVictims = {}
 hook.Add("PlayerDeath", "bslcounter", function(victim, inflictor, attacker)
     local victimTeam = victim:Team()
@@ -72,14 +73,16 @@ hook.Add("PlayerDeath", "bslcounter", function(victim, inflictor, attacker)
             net.Broadcast()
 
             local timerName = timerSuffix .. "_" .. math.random(1, 100000)
-            timer.Create(timerName, 900, 1, function()
-                if victimTeam == TEAM_CP then
-                    DG_CPBSLCOUNT = math.Clamp(DG_CPBSLCOUNT - 1, 0, 63)
-                elseif victimTeam == TEAM_OTA then
-                    DG_OTABSLCOUNT = math.Clamp(DG_OTABSLCOUNT - 1, 0, 63)
-                elseif victimTeam == TEAM_CA then
-                    DG_OCABSLCOUNT = math.Clamp(DG_OCABSLCOUNT - 1, 0, 63)
-                end
+                BSLTimers[timerName] = true
+                timer.Create(timerName, 900, 1, function()
+                    BSLTimers[timerName] = nil
+                    if victimTeam == TEAM_CP then
+                        DG_CPBSLCOUNT = math.Clamp(DG_CPBSLCOUNT - 1, 0, 63)
+                    elseif victimTeam == TEAM_OTA then
+                        DG_OTABSLCOUNT = math.Clamp(DG_OTABSLCOUNT - 1, 0, 63)
+                    elseif victimTeam == TEAM_CA then
+                        DG_OCABSLCOUNT = math.Clamp(DG_OCABSLCOUNT - 1, 0, 63)
+                    end
 
 				local currentCount = 0
 
@@ -147,3 +150,38 @@ hook.Add("PlayerDeath", "bslcounter", function(victim, inflictor, attacker)
 end)
 
 -- ADDED: Fail safes to the bsl counter, this caused a duping gltich, player would die on unranked and get instantly respawned while keeping items in inv
+
+hook.Add("OnCityCodeChanged", "ResetBSLCountsOnCityCode", function()
+    for timerName in pairs(BSLTimers) do
+        timer.Remove(timerName)
+    end
+    BSLTimers = {}
+
+    DG_CPBSLCOUNT = 0
+    DG_OTABSLCOUNT = 0
+    DG_OCABSLCOUNT = 0
+
+    net.Start("cpmessage")
+    net.WriteUInt(0, 6)
+    net.Broadcast()
+
+    net.Start("staffcpmessage")
+    net.WriteUInt(0, 6)
+    net.Broadcast()
+
+    net.Start("otamessage")
+    net.WriteUInt(0, 6)
+    net.Broadcast()
+
+    net.Start("staffotamessage")
+    net.WriteUInt(0, 6)
+    net.Broadcast()
+
+    net.Start("ocamessage")
+    net.WriteUInt(0, 6)
+    net.Broadcast()
+
+    net.Start("staffocamessage")
+    net.WriteUInt(0, 6)
+    net.Broadcast()
+end)
