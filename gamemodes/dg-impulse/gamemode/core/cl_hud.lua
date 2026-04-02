@@ -128,7 +128,21 @@ local hotPink = Color(148, 0, 211)
 
 local function DrawOverheadInfo(target, alpha)
 	local pos = target:EyePos()
-
+	local healthCol
+	local h = target:Health()
+	if h < 10 then
+	    healthCol = Color(255, 0, 0)
+	elseif h < 25 then
+	    healthCol = Color(255, 50, 0)
+	elseif h < 40 then
+	    healthCol = Color(255, 100, 0)
+	elseif h < 60 then
+	    healthCol = Color(255, 150, 0)
+	elseif h < 80 then
+	    healthCol = Color(255, 175, 0)
+	else
+	    healthCol = Color(0, 255, 0)
+	end
 	pos.z = pos.z + 5
 	pos = pos:ToScreen()
 	pos.y = pos.y - 50
@@ -166,6 +180,8 @@ local function DrawOverheadInfo(target, alpha)
 			draw.DrawText("*WOUNDED*", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
 		elseif (target:GetSyncVar(SYNC_ARRESTED, false) and LocalPlayer():CanArrest(target)) or target:GetSyncVar(SYNC_CUFFED, false) then
 			draw.DrawText("*RESTRAINED*", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+		elseif target:Health() < 100 and not target:IsCP() and LocalPlayer():Team() == TEAM_VORT and (VORTESSENCE_EXPIRE and VORTESSENCE_EXPIRE > CurTime()) then
+			draw.DrawText(tostring(target:Health()) .. " HP", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, healthCol, TEXT_ALIGN_CENTER)
 		elseif target:Health() < 80 then
 			local text, color = target:GetKnownHealth()
 			draw.DrawText(text, "Oswald18", pos.x-25, pos.y + 15, color)
@@ -185,6 +201,8 @@ local function DrawOverheadInfo(target, alpha)
 			draw.DrawText("*WOUNDED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
 		elseif (target:GetSyncVar(SYNC_ARRESTED, false) and LocalPlayer():CanArrest(target)) or target:GetSyncVar(SYNC_CUFFED, false) then
 			draw.DrawText("*RESTRAINED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+		elseif target:Health() < 100 and not target:IsCP() and LocalPlayer():Team() == TEAM_VORT and (VORTESSENCE_EXPIRE and VORTESSENCE_EXPIRE > CurTime()) then
+			draw.DrawText(tostring(target:Health()) .. " HP", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, healthCol, TEXT_ALIGN_CENTER)
 		elseif target:Health() < 80 then
 			local text, color = target:GetKnownHealth()
 			draw.DrawText(text, "Impulse-Elements16-Shadow", pos.x, pos.y + 15, color, TEXT_ALIGN_CENTER)
