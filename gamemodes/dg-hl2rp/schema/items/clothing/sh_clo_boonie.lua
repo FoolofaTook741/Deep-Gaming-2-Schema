@@ -24,10 +24,16 @@ end
 
 function ITEM:OnEquip(ply)
     ply:SetBodygroup(1, 5)
+    if ply:IsCharacterFemale() then
+    	ply:SetBodygroup(10, 16)
+	else
+	    ply:SetBodygroup(10, 14)
+	end
 end
 
 function ITEM:UnEquip(ply)
 	ply:SetBodygroup(1, 0)
+	ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
 end
 
 impulse.RegisterItem(ITEM)
