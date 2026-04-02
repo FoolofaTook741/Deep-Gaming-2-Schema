@@ -147,7 +147,7 @@ if SERVER then
 
 			local x = player.GetBySteamID(v)
 
-			if not IsValid(x) or x:Team() != TEAM_VORT or not IsValid(x:GetActiveWeapon()) or x:GetActiveWeapon():GetClass() != "ls_broom" then
+			if not IsValid(x) or x:Team() != TEAM_VORT or not IsValid(x:GetActiveWeapon()) or x:GetActiveWeapon():GetClass() != "plutonic_broom" then
 				PROP_BROOMS[v]:Remove()
 				PROP_BROOMS[v] = nil
 				continue
