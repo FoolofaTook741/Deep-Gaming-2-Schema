@@ -56,7 +56,7 @@ SWEP.Primary.Recoil = .8
 SWEP.Primary.Damage = 13
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.2
-SWEP.Primary.Cone = 0.0098 -- base spread value
+SWEP.Primary.Cone = 0.01 -- base spread value
 SWEP.Primary.Delay = RPM(455)
 SWEP.Primary.Tracer = "AR2Tracer"
 
@@ -78,7 +78,7 @@ SWEP.UseIronsightsRecoil = false
 SWEP.Spread = {}
 SWEP.Spread.Min = 0.006
 SWEP.Spread.Max = 0.14
-SWEP.Spread.IronsightsMod = 0.75
+SWEP.Spread.IronsightsMod = 0.85
 SWEP.Spread.CrouchMod = 0.60
 SWEP.Spread.AirMod = 1.6
 SWEP.Spread.RecoilMod = 0
@@ -137,7 +137,7 @@ SWEP.Attachments = {
 			end
 			e.IronsightsPos = Vector(-1.81, -2.613, -1)
 			e.IronsightsCrosshair = true
-			e.Primary.Cone = 0.001
+			e.Primary.Cone = copycone * 0.9
 		end,
 		ModCleanup = function(e)
 			e.zoom_optic_equipped = false
