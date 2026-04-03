@@ -598,7 +598,7 @@ ENT.UIVisibleTime = 0
 
 function ENT:Draw()
     self:DrawModel()
-    local pos = Vector(-28, 1, 0)
+    local pos = Vector(-28, 0, 0)
     local ang = Angle(0, 263, 90)
     local lp = LocalPlayer()
 
