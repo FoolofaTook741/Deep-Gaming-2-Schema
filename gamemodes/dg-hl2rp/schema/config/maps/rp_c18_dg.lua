@@ -9,6 +9,9 @@ impulse.Config.SpawnPos2 = Vector(2934.5073242188, -2694.1181640625, 760.03125)
 
 impulse.Config.BroadcastPos = Vector(1599.4530029297, -1520.2065429688, 1652.03125)
 
+impulse.Config.MBExit = Vector(12443.220703125, -2891.8937988281, 672.23669433594)
+impulse.Config.MBEntrance = Vector(9936.373046875, -7312.3984375, 656.03125)
+
 impulse.Config.MapType = "Arctic"
 impulse.Config.CityCode = "C18"
 impulse.Config.OverwatchCode = "S18"
