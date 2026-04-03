@@ -1,4 +1,3 @@
-
 SWEP.Gun							= ("weapon_wallhammershield")
 if (GetConVar(SWEP.Gun.."_allowed")) != nil then
 	if not (GetConVar(SWEP.Gun.."_allowed"):GetBool()) then SWEP.Base = "tfa_blacklisted" SWEP.PrintName = SWEP.Gun return end
@@ -401,7 +400,7 @@ function SWEP:SetupShield()
 
 	local attach = self.Owner:LookupAttachment("anim_attachment_shield")
 
-	up = 0
+	up = 2
 	forward = 20
 	aforward = 0
 	aup = 0
@@ -425,7 +424,7 @@ function SWEP:SetupShield()
 
 	timer.Simple(0.2, function()
 		if IsValid(self) and IsValid(self.shieldProp) then
-			self.shieldProp:SetModelScale(1, 0)
+			self.shieldProp:SetModelScale(1.1, 0)
 		end
 	end)
 end
@@ -446,7 +445,7 @@ function SWEP:CreateFlashSprite()
 	eFlashSprite:SetAngles(shieldAng)
 	eFlashSprite:SetParent(self.shieldProp)
 	eFlashSprite:SetKeyValue("model", "sprites/blueflare1.vmt")
-	eFlashSprite:SetKeyValue("scale", "3")
+	eFlashSprite:SetKeyValue("scale", "5")
 	eFlashSprite:SetKeyValue("rendermode", "5")
 	eFlashSprite:SetKeyValue("rendercolor", "87 53 240")
 	eFlashSprite:Spawn()
@@ -469,7 +468,7 @@ function SWEP:Flash()
 
 	local vPos = self.shieldProp:GetPos()
 
-	for _, eEnt in pairs(ents.FindInSphere(vPos, 128)) do
+	for _, eEnt in pairs(ents.FindInSphere(vPos, 224)) do
 		-- Check if IsCombine exists, default to false for Sandbox
 		local isCombine = type(eEnt.IsCombine) == "function" and eEnt:IsCombine() or false
 		
@@ -518,7 +517,7 @@ function SWEP:Flash()
 	if IsValid(flashLight) then
 		flashLight:SetPos(vPos)
 		flashLight:SetKeyValue("brightness", "8")
-		flashLight:SetKeyValue("distance", "256")
+		flashLight:SetKeyValue("distance", "448")
 		flashLight:SetKeyValue("_light", "87 53 240 255")
 		flashLight:SetParent(self.shieldProp)
 		flashLight:Spawn()
