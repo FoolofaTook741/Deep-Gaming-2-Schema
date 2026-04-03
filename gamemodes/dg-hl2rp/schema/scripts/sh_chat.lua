@@ -1760,7 +1760,7 @@ local setcXPCommand = {
 	requiresAlive = true,
 	superAdminOnly = true,
 	onRun = function(ply, arg, rawText)
-		if ply:SteamID() != "STEAM_0:0:104958683" then
+		if not ply:IsSuperAdmin() then
 			ply:Notify("You cannot use this command.")
 			return
 		else
