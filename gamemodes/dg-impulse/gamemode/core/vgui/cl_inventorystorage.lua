@@ -3,12 +3,15 @@ local PANEL = {}
 local grey = Color(209, 209, 209)
 
 function PANEL:Init()
-	self:SetSize(1094, 734)
-	self:Center()
-	self:SetTitle("Storage")
-	self:MakePopup()
+    local sw, sh = ScrW(), ScrH()
+    local w = math.min(1094, sw - 5)
+    local h = math.min(734, sh - 5)
+    self:SetSize(w, h)
+    self:Center()
+    self:SetTitle("Storage")
+    self:MakePopup()
 
-	self:SetupItems()
+    self:SetupItems()
 end
 
 function PANEL:Think()
