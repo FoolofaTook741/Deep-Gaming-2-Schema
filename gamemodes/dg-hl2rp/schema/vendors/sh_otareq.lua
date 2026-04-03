@@ -161,6 +161,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 2,
 	},
+	--[[
 	["wep_ar2e"] = {
 		Desc = "FIST Only",
 		Restricted = true,
@@ -170,7 +171,7 @@ VENDOR.Sell = {
 				return true
 			else return false end
 		end
-	},
+	}, ]]--
 	["item_broadcastkey"] = {
 		Desc = "A key for the broadcast terminal, do not lose this.",
 		Cost = 0,
@@ -450,6 +451,17 @@ VENDOR.Sell = {
 		end
 	},
 	]]--
+	["att_extendedmag"] = {
+		Desc = "FIST",
+		Restricted = true,
+		Max = 1,
+		CanBuy = function(ply)
+			if ply:GetTeamClass() == CLASS_FIST then
+				return true
+			else return false
+			end
+		end
+	},
 	["att_optic"] = {
 		Desc = "FIST",
 		Restricted = true,

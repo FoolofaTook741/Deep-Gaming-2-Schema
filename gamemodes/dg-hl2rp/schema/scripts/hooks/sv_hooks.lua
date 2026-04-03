@@ -606,9 +606,10 @@ function SCHEMA:PlayerRagdollSpawned(ragdoll, ply, attacker)
 		end
 	end
 
+	--[[
     if inflictorClass == "prop_combine_ball" or inflictorClass == "plutonic_xar2_orb" then
         RagdollDissolve(ragdoll, ragdoll:GetPos(), attacker, 0)
-    end
+    end]]--
 end
 
 function SCHEMA:PlayerShouldBreakLegs(ply)

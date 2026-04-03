@@ -378,7 +378,8 @@ TEAM_OTA = impulse.Teams.Define({
 			model = MDL_ELITE,
 			skin = 0,
 			itemsAdd = {
-				{class = "wep_ar2e", amount = 1},
+				{class = "wep_ar2", amount = 1},
+				{class = "wep_ar2orb", amount = 1},
 				{class = "item_vocoder", amount = 1}
 			},
 			xp = 5,

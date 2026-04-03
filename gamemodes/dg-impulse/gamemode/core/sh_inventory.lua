@@ -100,6 +100,7 @@ function impulse.RegisterItem(item)
 				elseif v.IsPlutonic and v.Attachments and v.Attachments[attClass] then
 					v:GiveAttachment(attClass)
 					local att = v.Attachments[attClass]
+					
 					if att and att.ModSetup then
 						att.ModSetup(v)
 					end

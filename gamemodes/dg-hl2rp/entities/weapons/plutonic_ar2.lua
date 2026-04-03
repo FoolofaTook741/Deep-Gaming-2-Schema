@@ -106,9 +106,86 @@ local copyIronFOV = SWEP.IronsightsFOV + 0
 local copyIronSens = SWEP.IronsightsSensitivity + 0
 local copyIronMod = SWEP.Spread.IronsightsMod + 0
 local copySpreadVel = SWEP.Spread.VelocityMod + 0
+local copyCH = SWEP.IronsightsCrosshair
 local copyDMG = SWEP.Primary.Damage + 0
-local copyCone = SWEP.Primary.Cone + 0
+local copycone = SWEP.Primary.Cone + 0
+local copyRecoil = SWEP.Primary.Recoil + 0
+
+function SWEP:CustomThink()
+	if self.zoom_optic_equipped then
+		if self:GetIronsights() then
+			self.Primary.Recoil = 0.5
+		else
+			self.Primary.Recoil = copyRecoil
+		end
+	end
+end
+
 SWEP.Attachments = {
+	zoom_optic = {
+		Conflicts = {fortyrndmag = true},
+		Cosmetic = {
+			Model = "abv",
+			Bone = "none",
+			Pos = Vector(5.099, -4, -0.9),
+			Ang = Angle(0, 77.5, 0),
+			Scale = 0.85,
+			Skin = 0
+			--World = {
+			--	Pos = Vector(11, 1.5, -6),
+			--	Ang = Angle(0, 180, 90),
+			--	Scale = 0.85
+			--}
+		},
+		ModSetup = function(e)
+			e.zoom_optic_equipped = true
+			local fov = .45
+			e.IronsightsFOV = fov
+			if CLIENT then
+				local copyScopeSens = impulse.GetSetting("scope_sens")
+				e.IronsightsSensitivity = copyScopeSens * (fov / 0.8)
+			end
+			e.IronsightsPos = Vector(-1.81, -2.613, -1)
+			e.IronsightsCrosshair = true
+			e.Primary.Cone = copycone * 0.9
+		end,
+		ModCleanup = function(e)
+			e.zoom_optic_equipped = false
+			e.IronsightsFOV = copyIronFOV
+			e.IronsightsSensitivity = copyIronSens
+			e.IronsightsPos = copyIronPos
+			e.IronsightsCrosshair = copyCH
+			e.Primary.Cone = copycone
+			e.Primary.Recoil = copyRecoil -- safety reset
+		end,
+		Behaviour = "magnifier",
+	},
+	fortyrndmag = {
+		Conflicts = {zoom_optic = true},
+		Cosmetic = {
+			Model = "sheem",
+			Bone = "meeman",
+			Pos = Vector(5.099, -4, -0.9),
+			Ang = Angle(0, 77.5, 0),
+			Scale = 0.85,
+			Skin = 0
+			--World = {
+			--	Pos = Vector(11, 1.5, -6),
+			--	Ang = Angle(0, 180, 90),
+			--	Scale = 0.85
+			--}
+		},
+		ModSetup = function(e)
+			e.Primary.ClipSize = 45
+		end,
+		ModCleanup = function(e)
+			e.Primary.ClipSize = 30
+			if e:Clip1() > 30 then
+				e:SetClip1(30)
+			end
+		end,
+		Behaviour = "extendedmagazine"
+	}
 }
 
 SWEP.LoweredPos = Vector(0, -7, -11)

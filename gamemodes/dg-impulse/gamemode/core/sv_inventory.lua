@@ -623,16 +623,26 @@ function meta:SetInventoryItemEquipped(itemid, state)
 		if itemclass.EquipGroup then
 			self.InventoryEquipGroups[itemclass.EquipGroup] = itemid
 		end
-		onEquip(item, self, itemclass, itemid)
-		hook.Run("OnInventoryItemEquipped", self, item, itemclass, itemid)
-		if isAlive then 
-			self:EmitSound("impulse/equip.wav") 
-			
-			if not isNoclipping and not itemclass.NoOnEquipMessage then
-				local message = item.EquipMessage or "/me equips " .. itemclass.Name .. "."
-				self:Say(message)
-			end
+		if itemclass.AttachmentClass then
+        for _, wep in pairs(self:GetWeapons()) do
+            if IsValid(wep) and wep.IsPlutonic and wep.Attachments and wep.Attachments[itemclass.AttachmentClass] then
+                if not wep:CanAttach(itemclass.AttachmentClass) then
+                	self:Notify("This attachment conflicts with one you already have equipped.")
+                    return
+                end
+            end
+        end
+    end
+	onEquip(item, self, itemclass, itemid)
+	hook.Run("OnInventoryItemEquipped", self, item, itemclass, itemid)
+	if isAlive then 
+		self:EmitSound("impulse/equip.wav") 
+		
+		if not isNoclipping and not itemclass.NoOnEquipMessage then
+			local message = item.EquipMessage or "/me equips " .. itemclass.Name .. "."
+			self:Say(message)
 		end
+	end
 	elseif unEquip then
 		if itemclass.EquipGroup then
 			self.InventoryEquipGroups[itemclass.EquipGroup] = nil
