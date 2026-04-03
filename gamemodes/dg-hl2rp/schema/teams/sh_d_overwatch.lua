@@ -94,12 +94,12 @@ local OTA_STATS = {
 
     -- WALLHAMMER (PAYBACK)
     [7] = { ranks = {
-        CSO = { model=MDL_CHARGER, skin=0, armor=250, health=150, runSpeed=160, walkSpeed=80, forceFlags=true },
-        ECS = { model=MDL_CHARGER, skin=0, armor=275, health=160, runSpeed=160, walkSpeed=80, forceFlags=true },
-        CCP = { model=MDL_CHARGER, skin=0, armor=300, health=170, runSpeed=160, walkSpeed=80, forceFlags=true },
-        CTL = { model=MDL_CHARGER, skin=1, armor=325, health=175, runSpeed=160, walkSpeed=80, forceFlags=true },
-        ORD = { model=MDL_CHARGER, skin=1, armor=350, health=200, runSpeed=160, walkSpeed=80, forceFlags=true, bodygroups=BG_RESET_3 },
-        CSC = { model=MDL_CHARGER, skin=1, armor=400, health=210, runSpeed=160, walkSpeed=80, forceFlags=true, bodygroups=BG_RESET_3 },
+        CSO = { model=MDL_CHARGER, skin=0, armor=250, health=175, runSpeed=160, walkSpeed=80, forceFlags=true },
+        ECS = { model=MDL_CHARGER, skin=0, armor=275, health=185, runSpeed=160, walkSpeed=80, forceFlags=true },
+        CCP = { model=MDL_CHARGER, skin=0, armor=300, health=195, runSpeed=160, walkSpeed=80, forceFlags=true },
+        CTL = { model=MDL_CHARGER, skin=1, armor=325, health=200, runSpeed=160, walkSpeed=80, forceFlags=true },
+        ORD = { model=MDL_CHARGER, skin=1, armor=350, health=225, runSpeed=160, walkSpeed=80, forceFlags=true, bodygroups=BG_RESET_3 },
+        CSC = { model=MDL_CHARGER, skin=1, armor=400, health=235, runSpeed=160, walkSpeed=80, forceFlags=true, bodygroups=BG_RESET_3 },
     }},
 }
 
