@@ -323,7 +323,7 @@ function PANEL:Init()
 		if REFUND_MSG then
 			Derma_Message(REFUND_MSG, "impulse", "Claim Refund")
 		end
-
+		--[[
 		if steamworks.IsSubscribed("3690442796") == false then
 			Derma_Query("You are not subscribed to the content!\nIf you do not subscribe you will experience missing textures and errors.\nAfter subscribing, rejoin the server.",
 				"impulse",
@@ -333,7 +333,7 @@ function PANEL:Init()
 				end,
 				"No thanks")
 		end
-		
+		]]--
 		if impulse.GetSetting("perf_mcore") == false then
 			Derma_Query("Would you like to enable Multi-core rendering?\nThis will often greatly improve your FPS, however if your computer has a low core count and/or\na small amount of RAM, it can cause crashes and performance problems.",
 				"impulse",
