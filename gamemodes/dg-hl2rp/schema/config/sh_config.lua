@@ -592,6 +592,12 @@ impulse.Config.Achievements = {
 		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
 		Points = 20
 	},
+		["ach_operationhijack"] = {
+		Name = "Operation Hijack",
+		Desc = "Gundowns City 20 was so add we went to City 24 synapse. GG",
+		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
+		Points = 20
+	},
 }
 
 impulse.Config.ModQuickReplies = {
