@@ -1629,7 +1629,7 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 	end
 	-- More damage if we're shot in the head
 	if ( hitgroup == HITGROUP_HEAD ) then
-		dmginfo:ScaleDamage( 2 - DR )
+		dmginfo:ScaleDamage( 1.5 - DR )
 	end
 
 	if ( hitgroup == HITGROUP_RIGHTLEG or hitgroup == HITGROUP_LEFTLEG ) then
