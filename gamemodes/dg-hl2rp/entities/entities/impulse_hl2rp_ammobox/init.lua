@@ -60,19 +60,7 @@ function ENT:Use(caller, activator)
         activator:EmitBudgetSound("items/ammo_pickup.wav")
     end)
 
-    local hasPulseOrbWeapon = false
-    for _, weapon in pairs(activator:GetWeapons()) do
-        if weapon.FireModes then
-            for _, firemode in pairs(weapon.FireModes) do
-                if firemode.Name == "pulse orb" then
-                    hasPulseOrbWeapon = true
-                    break
-                end
-            end
-        end
-        if hasPulseOrbWeapon then break end
-    end
-
+    local hasPulseOrbWeapon = activator:HasWeapon("plutonic_xar2_orb")
     if hasPulseOrbWeapon then
         local currentOrbAmmo = activator:GetAmmoCount("AR2AltFire")
         if currentOrbAmmo < 1 and activator:Team() == TEAM_OTA and activator:GetTeamClass() == CLASS_FIST then
@@ -83,12 +71,9 @@ function ENT:Use(caller, activator)
 
     for _, weapon in pairs(activator:GetWeapons()) do
         local ammoName = game.GetAmmoName(weapon:GetPrimaryAmmoType())
-        
-        if ammoName == "AR2AltFire" then
-            continue
-        end
-        
-        if impulse.Dispatch.GetCityCode() >= CODE_AJ or RES_BANDOLIERS == true and ammoName ~= "AR2AltFire" then
+        if ammoName == "AR2AltFire" then continue end
+
+        if impulse.Dispatch.GetCityCode() >= CODE_AJ or RES_BANDOLIERS == true then
             if ammoValues[ammoName] then
                 local ammoCount = activator:GetAmmoCount(ammoName)
                 if ammoCount and ammoCount < ammoValues[ammoName] * 3 then
@@ -98,7 +83,6 @@ function ENT:Use(caller, activator)
         elseif self.Enhanced == true then
             if ammoValues[ammoName] then
                 local ammoCount = activator:GetAmmoCount(ammoName)
-
                 if ammoCount and ammoCount < ammoValues[ammoName] * 1.5 then
                     activator:SetAmmo(math.floor(ammoValues[ammoName] * 1.5), weapon:GetPrimaryAmmoType())
                 end
@@ -106,7 +90,6 @@ function ENT:Use(caller, activator)
         else
             if ammoValues[ammoName] then
                 local ammoCount = activator:GetAmmoCount(ammoName)
-
                 if ammoCount and ammoCount < ammoValues[ammoName] then
                     activator:SetAmmo(ammoValues[ammoName], weapon:GetPrimaryAmmoType())
                 end

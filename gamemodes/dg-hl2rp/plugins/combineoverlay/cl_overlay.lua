@@ -1093,7 +1093,7 @@ local function DrawCombineHUD()
         DrawCombineCompass(sqData)
 
         local wep = lp:GetActiveWeapon()
-        if wep and IsValid(wep) then
+        if wep and IsValid(wep) and wep:GetClass() ~= "plutonic_xar2_orb" then
             local clip = wep:Clip1()
             local maxClip = wep:GetMaxClip1()
 
