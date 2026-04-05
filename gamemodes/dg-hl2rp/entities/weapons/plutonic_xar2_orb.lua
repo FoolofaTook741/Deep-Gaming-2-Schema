@@ -14,7 +14,8 @@ SWEP.WorldModel = Model("models/weapons/w_iiopnirifle.mdl")
 SWEP.ViewModel = Model("models/weapons/c_iiopnirifle.mdl")
 SWEP.ViewModelFOV = 65
 
-SWEP.Slot = 4
+SWEP.Slot = 3
+SWEP.QuickDraw = true
 SWEP.SlotPos = 1
 
 SWEP.Primary.Sound = ""

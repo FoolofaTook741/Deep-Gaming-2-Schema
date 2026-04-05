@@ -764,7 +764,6 @@ impulse.Config.LoadScript = function()
 	local autoLockDoors = {
 		4276,
 		3225,
-		3305,
 		4174,
 		4626,
 		7701,
@@ -793,7 +792,8 @@ impulse.Config.LoadScript = function()
         6195,
         6196,
         6197,
-        6198
+        6198,
+        6188
     }
 
     for _, id in pairs(removeOnStart) do
