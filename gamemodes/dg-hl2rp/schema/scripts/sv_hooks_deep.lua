@@ -1586,7 +1586,7 @@ local function PlayerDeath(ply, killer)
         ply.MPFNLR = CurTime() + 90 -- MPF NLR is 1.5 minutes
         timer = ply.MPFNLR  
     elseif ply:Team() == TEAM_OTA then
-        ply.CTANLR = CurTime() + 180 -- OTA NLR is 3 minutes
+        ply.CTANLR = CurTime() + 120 -- OTA NLR is 3 minutes
         timer = ply.CTANLR
 	else
 		NLR_TABLE[steamID64] = NLR_TABLE[steamID64] or {}
