@@ -854,3 +854,22 @@ function meta:CanMakeMix(mixClass)
 
 	return true
 end
+
+
+--returns if an item is equipped or not.
+-- @realm server
+-- @string uniqueID Item unique ID to check
+-- @treturn bool Has item equipped
+function meta:HasEquippedItem(uniqueID)
+    if not self.impulseID then return false end
+    local inv = impulse.Inventory.Data[self.impulseID]
+    if not inv or not inv[1] then return false end
+
+    for invid, item in pairs(inv[1]) do
+        if item.equipped and item.class == uniqueID then
+            return true
+        end
+    end
+
+    return false
+end
