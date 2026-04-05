@@ -1409,7 +1409,8 @@ local bannedTools = {
 	["wire_hsholoemitter"] = true,
 	["wire_eyepod"] = true,
 	["wire_spu"] = true,
-	["wnpc"] = true
+	["wnpc"] = true,
+	["npctool_spawner"] = true
 }
 
 local dupeBannedTools = {
