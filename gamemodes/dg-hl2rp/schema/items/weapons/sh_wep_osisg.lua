@@ -7,7 +7,7 @@ ITEM.Category = "Weapons"
 ITEM.Model = Model("models/hla/shotgun/w_shotgun.mdl")
 ITEM.FOV = 6.2249283667622
 ITEM.CamPos = Vector(100, 100, 36.10315322876)
-ITEM.Weight = 4
+ITEM.Weight = 2
 
 ITEM.Droppable = true
 ITEM.DropOnDeath = true
