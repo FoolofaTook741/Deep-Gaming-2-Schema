@@ -555,7 +555,7 @@ function GM:PostSetupPlayer(ply)
 	if ply:IsCollaborator() then
         ply:SetLocalSyncVar(SYNC_HUNGER, 100)
     else
-        ply:SetLocalSyncVar(SYNC__HUNGER, 70)
+        ply:SetLocalSyncVar(SYNC_HUNGER, 70)
     end
 	--ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
 end
