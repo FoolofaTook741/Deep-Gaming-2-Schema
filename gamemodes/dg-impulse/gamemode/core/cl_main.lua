@@ -85,7 +85,7 @@ impulse.Badges = {
 	nolife = {Material("icon16/AWARD_STAR_GOLD_3.png"), "This player has the most XP on the server.", function(ply) return not ply:IsIncognito() and (ply:SteamID() == "STEAM_0:0:104556270") end},
 	secretary = {Material("icon16/telephone.png"), "This is Gundown1250, Fool's secretary.", function(ply) return not ply:IsIncognito() and (ply:SteamID() == "STEAM_0:0:25714002") end},
 	betatester = {Material("roleicons/developer.png"), "This player is a contributor or beta tester of the server or development.", function(ply) return betatester[ply:SteamID()] end},
-	communitymanager = {Material("roleicons/upperadmin.png"), "This player is the Community Manager of Deep Gaming.", function(ply) return ply:GetUserGroup() == "communitymanager" end},
+	communitymanager = {Material("roleicons/upperadmin.png"), "This player is a member of the HL2RP Upper Administration.", function(ply) return ply:GetUserGroup() == "communitymanager" end},
 	devers = {Material("roleicons/developer2.png"), "This player is a developer or has made contributions to the developmental branch of Deep Gaming 2", function(ply) return devers[ply:SteamID()] end},
 	director = {Material("roleicons/cdirector_1.png"), "Fool of a Took, director of Deep Gaming.", function(ply) return not ply:IsIncognito() and (ply:SteamID() == "STEAM_0:0:29204032") end},
 	mage = {Material("icon16/cup.png"), "I survived the fall of Landis and all I got was this stupid cup", function(ply) return ply:SteamID() == "STEAM_0:0:176956777" or ply:SteamID() == "STEAM_0:0:48850308" or ply:SteamID() == "STEAM_0:1:97315061" end},
