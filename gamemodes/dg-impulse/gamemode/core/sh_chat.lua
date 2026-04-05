@@ -771,6 +771,27 @@ impulse.RegisterChatCommand("/gotov", {
     end
 })
 
+impulse.RegisterChatCommand("/entid", {
+    description = "Gets the map creation ID of the entity you're looking at.",
+    superAdminOnly = true,
+    onRun = function(ply)
+        local tr = ply:GetEyeTrace()
+        local ent = tr.Entity
+
+        if not IsValid(ent) then
+            ply:Notify("Not looking at a valid entity.")
+            return
+        end
+
+        local id = ent:MapCreationID()
+        local name = ent:GetName()
+        local class = ent:GetClass()
+        local pos = ent:GetPos()
+
+        ply:Notify("Class: " .. class .. " | Name: " .. name .. " | MapID: " .. tostring(id) .. " | Pos: " .. tostring(pos))
+    end
+})
+
 if SERVER then
     util.AddNetworkString("impulseOpenContentLink")
 end
@@ -782,6 +803,17 @@ impulse.RegisterChatCommand("/content", {
         net.Send(ply)
     end
 })
+
+local checkSpeedCommand = {
+    description = "Outputs your current walk and run speed.",
+    superAdminOnly = true,
+    requiresArg = false,
+    onRun = function(ply, arg, rawText)
+        ply:Notify("Walk Speed: " .. ply:GetWalkSpeed() .. " | Run Speed: " .. ply:GetRunSpeed())
+    end
+}
+
+impulse.RegisterChatCommand("/checkspeed", checkSpeedCommand)
 
 if CLIENT then
 	local infoCol = Color(135, 206, 250)
