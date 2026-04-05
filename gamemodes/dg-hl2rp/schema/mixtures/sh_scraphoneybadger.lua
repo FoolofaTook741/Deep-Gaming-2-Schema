@@ -9,7 +9,9 @@ MIX.Output = "wep_honeybadger"
 MIX.Input = {
 	["scrap_hb"] = {take = 1},
 	["util_glue"] = {take = 3},
-	["util_pipe"] = {take = 4}
+	["util_pipe"] = {take = 1},
+	["util_gear"] = {take = 1},
+	["util_refinedmetalplate"] = {take = 3}
 }
 
 impulse.RegisterMixture(MIX)
