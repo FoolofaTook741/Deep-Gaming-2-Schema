@@ -130,7 +130,7 @@ VENDOR.Sell = {
                 return false
             end
         end
-    },
+    }, --[[
     ["wep_medkit"] = {
         Desc = "Charisma Level 10",
         Cost = 50000,
@@ -143,7 +143,7 @@ VENDOR.Sell = {
                 return false
             end
         end
-    },
+    },]]--
 }
 
 VENDOR.Buy = {
