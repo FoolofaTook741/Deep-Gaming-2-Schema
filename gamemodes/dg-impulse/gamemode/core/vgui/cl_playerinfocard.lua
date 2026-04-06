@@ -165,6 +165,18 @@ local quickTools = {
 			addDay.DoClick = function() addTime(259200) end
 		end
 	},
+
+
+	{
+		name = "Auth Rogue",
+		icon = "icon16/monkey.png",
+		onRun = function(ply, sid)
+			Derma_Query("Are you sure you want auth:\n"..ply:Nick().."("..ply:SteamName()..") as rogue?", "ops", "Yes", function()
+				LocalPlayer():ConCommand("say /authrogue "..sid)
+			end, "No, take me back!")
+		end
+	}
+	--[[
 	{
 		name = "IAC Flag",
 		icon = "icon16/flag_red.png",
@@ -173,7 +185,7 @@ local quickTools = {
 				LocalPlayer():ConCommand("say /iacflag "..sid)
 			end, "No, take me back!")
 		end
-	}
+	} ]]--
 }
 
 

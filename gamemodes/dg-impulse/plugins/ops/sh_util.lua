@@ -655,6 +655,27 @@ local giveSCCommand = {
 
 impulse.RegisterChatCommand("/givesc", giveSCCommand)
 
+local ROGUE_CALLSIGNS = {
+    "HERO", "PRESSURE", "QUICK", "ROLLER", "VICE",
+    "XRAY", "JURY", "KING", "VICTOR", "LINE",
+    "TAP", "STAR", "DEFENDER", "PATROL"
+}
+
+local function GetRogueTagNumber()
+    local excluded = {[67] = true, [69] = true, [88] = true}
+    local num
+    repeat
+        num = math.random(11, 99)
+    until not excluded[num]
+    return num
+end
+
+local function ScrambleRogueTag(currentName)
+    local newCallsign = ROGUE_CALLSIGNS[math.random(1, #ROGUE_CALLSIGNS)]
+    local newNumber   = GetRogueTagNumber()
+    return string.gsub(currentName, "%.([A-Z]+%-%d+)$", "." .. newCallsign .. "-" .. newNumber)
+end
+
 AUTHEDROGUES = AUTHEDROGUES or {}
 local authRogue = {
     description = "Auth a rogue MPF unit, this will grant special equipment dependent on class.",
@@ -686,7 +707,7 @@ local authRogue = {
                 if targ.GetTeamClass and targ:GetTeamClass() == CLASS_UNION then
                     targ:GiveInventoryItem("wep_pm63", 1, true)
                     targ:GiveInventoryItem("grenade_flashbang", 1, true)
-                    --targ:GiveInventoryItem("grenade_9bang", 1, true)
+                     --targ:GiveInventoryItem("grenade_9bang", 1, true)
                     targ:GiveInventoryItem("wep_incendiaryb", 1, true)
                     targ:GiveInventoryItem("wep_wsmoke", 1, true)
 
@@ -709,6 +730,12 @@ local authRogue = {
                     return ply:Notify("You can only use this command on GRID, UNION and HELIX MPF units")
                 end
             end
+
+            local rankTag = (targ:GetTeamRank() == RANK_I4) and "i4" or "i3"
+            local newCallsign = ROGUE_CALLSIGNS[math.random(1, #ROGUE_CALLSIGNS)]
+            local newNumber = GetRogueTagNumber()
+            targ:SetRPName("MPF:" .. rankTag .. "." .. newCallsign .. "-" .. newNumber)
+
             AUTHEDROGUES[targ:SteamID()] = true
 
             local sid = targ:SteamID()
@@ -754,7 +781,6 @@ local authRogue = {
     end
 }
 impulse.RegisterChatCommand("/authrogue", authRogue)
-
 
 local BOX_RAID_COOLDOWN = 60 * 60 * 1.5
 impulse.Raid = impulse.Raid or {}
