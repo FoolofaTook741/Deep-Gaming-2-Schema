@@ -126,84 +126,121 @@ local painFde = 1
 local bleedFlash = false
 local hotPink = Color(148, 0, 211)
 
-local function DrawOverheadInfo(target, alpha)
-	local pos = target:EyePos()
-	local healthCol
-	local h = target:Health()
-	if h < 10 then
-	    healthCol = Color(255, 0, 0)
-	elseif h < 25 then
-	    healthCol = Color(255, 50, 0)
-	elseif h < 40 then
-	    healthCol = Color(255, 100, 0)
-	elseif h < 60 then
-	    healthCol = Color(255, 150, 0)
-	elseif h < 80 then
-	    healthCol = Color(255, 175, 0)
-	else
-	    healthCol = Color(0, 255, 0)
+local lastSoundTime = 0
+local SOUND_COOLDOWN = 5
+local deathRegistered = false
+local deathWait = 0
+
+local overheadHealthCols = {
+    [1] = Color(255, 0, 0),
+    [2] = Color(255, 50, 0),
+    [3] = Color(255, 100, 0),
+    [4] = Color(255, 150, 0),
+    [5] = Color(255, 175, 0),
+    [6] = Color(0, 255, 0),
+}
+
+local overheadWhite = Color(255, 255, 255, 255)
+local overheadHotPink = Color(148, 0, 211, 255)
+local overheadTeamCol = Color(255, 255, 255, 255)
+
+local function FormatRespawnTime(timeLeft)
+	if timeLeft <= 0 then return "00:00:00" end
+	local minutes = math.floor(timeLeft / 60)
+	local seconds = math.floor(timeLeft % 60)
+	local milliseconds = math.floor((timeLeft % 1) * 100)
+	return string.format("%02d:%02d:%02d", minutes, seconds, milliseconds)
+end
+
+hook.Add("HUDShouldDraw", "Impulse_DisableDefaultDeathScreen", function(name)
+	local lp = LocalPlayer()
+	if not IsValid(lp) then return end
+	if not lp:Alive() then
+		if name == "CHudDamageIndicator" then
+			return false
+		end
 	end
+end)
+
+local function DrawOverheadInfo(target, alpha)
+	local lp = LocalPlayer()
+	local pos = target:EyePos()
+	local h = target:Health()
+	local healthCol
+
+	if h < 10 then healthCol = overheadHealthCols[1]
+	elseif h < 25 then healthCol = overheadHealthCols[2]
+	elseif h < 40 then healthCol = overheadHealthCols[3]
+	elseif h < 60 then healthCol = overheadHealthCols[4]
+	elseif h < 80 then healthCol = overheadHealthCols[5]
+	else healthCol = overheadHealthCols[6]
+	end
+
 	pos.z = pos.z + 5
 	pos = pos:ToScreen()
 	pos.y = pos.y - 50
 
-	local myGroup = LocalPlayer():GetSyncVar(SYNC_GROUP_NAME, nil)
+	local myGroup = lp:GetSyncVar(SYNC_GROUP_NAME, nil)
 	local group = target:GetSyncVar(SYNC_GROUP_NAME, nil)
 	local rank = target:GetSyncVar(SYNC_GROUP_RANK, nil)
-	local col = ColorAlpha(team.GetColor(target:Team()), alpha)
 
-	if myGroup and not LocalPlayer():IsCP() and not target:IsCP() and group and rank and group == myGroup then
+	local teamColor = team.GetColor(target:Team())
+	overheadTeamCol.r = teamColor.r
+	overheadTeamCol.g = teamColor.g
+	overheadTeamCol.b = teamColor.b
+	overheadTeamCol.a = alpha
+	overheadHotPink.a = alpha
+	overheadWhite.a = alpha
+
+	if myGroup and not lp:IsCP() and not target:IsCP() and group and rank and group == myGroup then
 		if impulse.GetSetting("hudselection") == "Deep - Standard" then
-			draw.DrawText(group.." - "..rank, "Oswald22", pos.x, pos.y - 15, ColorAlpha(hotPink, alpha), 1)
+			draw.DrawText(group.." - "..rank, "Oswald22", pos.x, pos.y - 15, overheadHotPink, 1)
 		else
-			draw.DrawText(group.." - "..rank, "Impulse-Elements16-Shadow", pos.x, pos.y - 15, ColorAlpha(hotPink, alpha), 1)
+			draw.DrawText(group.." - "..rank, "Impulse-Elements16-Shadow", pos.x, pos.y - 15, overheadHotPink, 1)
 		end
 	end
 
 	if impulse.GetSetting("hudselection") == "Deep - Standard" then
-		draw.DrawText(target:KnownName(), "Oswald28", pos.x, pos.y, col, 1)
-	else
-		draw.DrawText(target:KnownName(), "Impulse-Elements18-Shadow", pos.x, pos.y, col, 1)
-	end
-	if impulse.GetSetting("hudselection") == "Deep - Standard" then
+		draw.DrawText(target:KnownName(), "Oswald28", pos.x, pos.y, overheadTeamCol, 1)
 		if target:GetSyncVar(SYNC_TYPING, false) then
-			draw.DrawText("Speaking...", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("Speaking...", "Oswald18", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_STUNNED, false) then
-			draw.DrawText("*STUNNED*", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("*STUNNED*", "Oswald18", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_FLASHED, false) then
-			draw.DrawText("*BLINDED*", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("*BLINDED*", "Oswald18", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_GASSED, false) then
-			draw.DrawText("*GASSED*", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("*GASSED*", "Oswald18", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_BROKENLEGS, false) then
-			draw.DrawText("*CRIPPLED*", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("*CRIPPLED*", "Oswald18", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_WOUNDED, false) then
-			draw.DrawText("*WOUNDED*", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
-		elseif (target:GetSyncVar(SYNC_ARRESTED, false) and LocalPlayer():CanArrest(target)) or target:GetSyncVar(SYNC_CUFFED, false) then
-			draw.DrawText("*RESTRAINED*", "Oswald18", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
-		elseif target:Health() < 100 and not target:IsCP() and LocalPlayer():Team() == TEAM_VORT and (VORTESSENCE_EXPIRE and VORTESSENCE_EXPIRE > CurTime()) then
-			draw.DrawText(tostring(target:Health()) .. " HP", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, healthCol, TEXT_ALIGN_CENTER)
-		elseif target:Health() < 80 then
+			draw.DrawText("*WOUNDED*", "Oswald18", pos.x, pos.y + 15, overheadWhite, 1)
+		elseif (target:GetSyncVar(SYNC_ARRESTED, false) and lp:CanArrest(target)) or target:GetSyncVar(SYNC_CUFFED, false) then
+			draw.DrawText("*RESTRAINED*", "Oswald18", pos.x, pos.y + 15, overheadWhite, 1)
+		elseif h < 100 and not target:IsCP() and lp:Team() == TEAM_VORT and (VORTESSENCE_EXPIRE and VORTESSENCE_EXPIRE > CurTime()) then
+			draw.DrawText(tostring(h) .. " HP", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, healthCol, TEXT_ALIGN_CENTER)
+		elseif h < 80 then
 			local text, color = target:GetKnownHealth()
 			draw.DrawText(text, "Oswald18", pos.x-25, pos.y + 15, color)
 		end
 	else
+		draw.DrawText(target:KnownName(), "Impulse-Elements18-Shadow", pos.x, pos.y, overheadTeamCol, 1)
 		if target:GetSyncVar(SYNC_TYPING, false) then
-			draw.DrawText("Speaking...", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("Speaking...", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_STUNNED, false) then
-			draw.DrawText("*STUNNED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("*STUNNED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_FLASHED, false) then
-			draw.DrawText("*BLINDED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("*BLINDED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_GASSED, false) then
-			draw.DrawText("*GASSED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("*GASSED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_BROKENLEGS, false) then
-			draw.DrawText("*CRIPPLED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
+			draw.DrawText("*CRIPPLED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, overheadWhite, 1)
 		elseif target:GetSyncVar(SYNC_WOUNDED, false) then
-			draw.DrawText("*WOUNDED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
-		elseif (target:GetSyncVar(SYNC_ARRESTED, false) and LocalPlayer():CanArrest(target)) or target:GetSyncVar(SYNC_CUFFED, false) then
-			draw.DrawText("*RESTRAINED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, ColorAlpha(color_white, alpha), 1)
-		elseif target:Health() < 100 and not target:IsCP() and LocalPlayer():Team() == TEAM_VORT and (VORTESSENCE_EXPIRE and VORTESSENCE_EXPIRE > CurTime()) then
-			draw.DrawText(tostring(target:Health()) .. " HP", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, healthCol, TEXT_ALIGN_CENTER)
-		elseif target:Health() < 80 then
+			draw.DrawText("*WOUNDED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, overheadWhite, 1)
+		elseif (target:GetSyncVar(SYNC_ARRESTED, false) and lp:CanArrest(target)) or target:GetSyncVar(SYNC_CUFFED, false) then
+			draw.DrawText("*RESTRAINED*", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, overheadWhite, 1)
+		elseif h < 100 and not target:IsCP() and lp:Team() == TEAM_VORT and (VORTESSENCE_EXPIRE and VORTESSENCE_EXPIRE > CurTime()) then
+			draw.DrawText(tostring(h) .. " HP", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, healthCol, TEXT_ALIGN_CENTER)
+		elseif h < 80 then
 			local text, color = target:GetKnownHealth()
 			draw.DrawText(text, "Impulse-Elements16-Shadow", pos.x, pos.y + 15, color, TEXT_ALIGN_CENTER)
 		end
@@ -409,8 +446,8 @@ local function _drawItemInfo( target, alpha )
         local scrw = ScrW()
         local scrh = ScrH()
 
-		local labelX = (ScrW() / 2) + 24
-		local labelY = ScrH() - 128 + 24
+		local labelX = (scrw / 2) + 24
+		local labelY = scrh - 128 + 24
 		local boxX = labelX - 58 - 58
 		local boxY = labelY - 24
 		local keyX = boxX + 24
@@ -542,9 +579,8 @@ function GM:HUDPaint()
 	local hudWidth, hudHeight = 360, 178
 	local seeColIcons = impulse.GetSetting("hud_iconcolours")
 	local aboveHUDUsed = false
-	local deathSoundPlayed
 
-	if LocalPlayer().CamView == true then
+	if lp.CamView == true then
 		return false
 	end
 	--[[ Quest HUD 
@@ -568,86 +604,60 @@ function GM:HUDPaint()
 		draw.SimpleText(quest.description or "", "terminal24", ScrW() * 0.005, ScrH() * 0.13, color_white, 0, 0, 1, color_black)
 	end
 	]]
-	if CLIENT then
 
 
-		local function FormatRespawnTime(timeLeft)
-			if timeLeft <= 0 then return "00:00:00" end
-			local minutes = math.floor(timeLeft / 60)
-			local seconds = math.floor(timeLeft % 60)
-			local milliseconds = math.floor((timeLeft % 1) * 100)
-			return string.format("%02d:%02d:%02d", minutes, seconds, milliseconds)
+	if not lp:Alive() then
+		local ft = FrameTime()
+
+		if not deathRegistered then
+			if CurTime() - lastSoundTime >= SOUND_COOLDOWN then
+				local deathSound = hook.Run("GetDeathSound") or "impulse/death.mp3"
+				surface.PlaySound(deathSound)
+				lastSoundTime = CurTime()
+			end
+
+			deathWait = CurTime() + impulse.Config.RespawnTime
+			if lp:IsDonator() then
+				deathWait = CurTime() + impulse.Config.RespawnTimeDonator
+			end
+
+			deathRegistered = true
 		end
 
+		fde = math.Clamp(fde + ft * .2, 0, 1)
+		painFde = 0.7
 
-		local lastSoundTime = 0
-		local SOUND_COOLDOWN = 5
+		surface.SetDrawColor(0, 0, 0, math.ceil(fde * 255))
+		surface.DrawRect(-1, -1, scrW + 2, scrH + 2)
 
+		local textAlpha = math.ceil(fde * 255)
+		local textCol = Color(255, 255, 255, textAlpha)
+		local youDiedCol = Color(255, 0, 0, textAlpha)
+		local youDiedShadowCol = Color(139, 0, 0, textAlpha)
 
-		hook.Add("HUDShouldDraw", "Impulse_DisableDefaultDeathScreen", function(name)
-			local lp = LocalPlayer()
-			if not IsValid(lp) then return end
-			if not lp:Alive() then
-				if name == "CHudDamageIndicator" then
-					return false
-				end
-			end
-		end)
+		draw.SimpleText("YOU DIED", "Impulse-DeathHeaderLarge", scrW / 2, scrH / 2 - 50, youDiedCol, TEXT_ALIGN_CENTER)
 
-
-		if not lp:Alive() then
-			local ft = FrameTime()
-
-			if not deathRegistered then
-				if CurTime() - lastSoundTime >= SOUND_COOLDOWN then
-					local deathSound = hook.Run("GetDeathSound") or "impulse/death.mp3"
-					surface.PlaySound(deathSound)
-					lastSoundTime = CurTime()
-				end
-
-				deathWait = CurTime() + impulse.Config.RespawnTime
-				if lp:IsDonator() then
-					deathWait = CurTime() + impulse.Config.RespawnTimeDonator
-				end
-
-				deathRegistered = true
-			end
-
-			fde = math.Clamp(fde + ft * .2, 0, 1)
-			painFde = 0.7
-
-			surface.SetDrawColor(0, 0, 0, math.ceil(fde * 255))
-			surface.DrawRect(-1, -1, ScrW() + 2, ScrH() + 2)
-
-			local textAlpha = math.ceil(fde * 255)
-			local textCol = Color(255, 255, 255, textAlpha)
-			local youDiedCol = Color(255, 0, 0, textAlpha)
-			local youDiedShadowCol = Color(139, 0, 0, textAlpha)
-
-			draw.SimpleText("YOU DIED", "Impulse-DeathHeaderLarge", scrW / 2, scrH / 2 - 50, youDiedCol, TEXT_ALIGN_CENTER)
-
-			local wait = deathWait - CurTime()
-			if wait > 0 then
-				draw.SimpleText("You will respawn in "..FormatRespawnTime(wait).." seconds.", "Impulse-Elements23", scrW/2, (scrH/2)+30, textCol, TEXT_ALIGN_CENTER)
-				draw.SimpleText("WARNING: NLR applies, you may not return to this area until 3 minutes after your death.", "Impulse-Elements18", scrW/2, (scrH/2)+70, textCol, TEXT_ALIGN_CENTER)
-				draw.SimpleText("If you feel you were unfairly killed, submit a report (F3) for assistance.", "Impulse-Elements16", scrW/2, scrH-20, textCol, TEXT_ALIGN_CENTER)
-			end
-
-			if IsValid(PlayerIcon) then
-				PlayerIcon:Remove()
-			end
-
-			return
-		else
-			fde = 0
-			if deathRegistered then
-				deathRegistered = false
-			end
-			LocalPlayer().Ragdoll = nil
+		local wait = deathWait - CurTime()
+		if wait > 0 then
+			draw.SimpleText("You will respawn in "..FormatRespawnTime(wait).." seconds.", "Impulse-Elements23", scrW/2, (scrH/2)+30, textCol, TEXT_ALIGN_CENTER)
+			draw.SimpleText("WARNING: NLR applies, you may not return to this area until 3 minutes after your death.", "Impulse-Elements18", scrW/2, (scrH/2)+70, textCol, TEXT_ALIGN_CENTER)
+			draw.SimpleText("If you feel you were unfairly killed, submit a report (F3) for assistance.", "Impulse-Elements16", scrW/2, scrH-20, textCol, TEXT_ALIGN_CENTER)
 		end
+
+		if IsValid(PlayerIcon) then
+			PlayerIcon:Remove()
+		end
+
+		return
+	else
+		fde = 0
+		if deathRegistered then
+			deathRegistered = false
+		end
+		lp.Ragdoll = nil
 	end
 
-	if impulse.hudEnabled == false or (impulse.CinematicIntro and LocalPlayer():Alive()) or (IsValid(impulse.MainMenu) and impulse.MainMenu:IsVisible()) or hook.Run("ShouldDrawHUDBox") == false then
+	if impulse.hudEnabled == false or (impulse.CinematicIntro and lp:Alive()) or (IsValid(impulse.MainMenu) and impulse.MainMenu:IsVisible()) or hook.Run("ShouldDrawHUDBox") == false then
 		if IsValid(PlayerIcon) then
 			PlayerIcon:Remove()
 		end
@@ -662,12 +672,11 @@ function GM:HUDPaint()
 		healthstate = nil
 	end
 
-	--Crosshair
 	local x, y
 	local curWep = lp:GetActiveWeapon()
 	if curWep then
 		if impulse.GetSetting("view_thirdperson") == true then
-			local p = LocalPlayer():GetEyeTrace().HitPos:ToScreen()
+			local p = lp:GetEyeTrace().HitPos:ToScreen()
 			x, y = p.x, p.y
 		else
 			x, y = scrW/2, scrH/2
@@ -675,7 +684,6 @@ function GM:HUDPaint()
 		DrawCrosshair(x, y)
 	end
 
-	-- HUD
 	if impulse.GetSetting("hudselection") == "impulse - Original" then
 		y = scrH-hudHeight-8-10
 		BlurRect(10, y, hudWidth, hudHeight)
@@ -688,45 +696,7 @@ function GM:HUDPaint()
 		surface.SetTextColor(color_white)
 		surface.SetDrawColor(color_white)
 		surface.SetTextPos(30, y+10)
-		surface.DrawText(LocalPlayer():Name())
-
-		/*if SW.Time then
-			local hr = math.floor( SW.Time )
-			local min = math.floor( 60 * ( SW.Time - hr ) )
-			surface.SetFont("Impulse-Elements19")
-			surface.SetTextColor(color_white)
-			surface.SetDrawColor(color_white)
-			surface.SetTextPos(hudWidth-80, y+30)
-			local timetext = ""
-			local ampm = "AM"
-
-			if hr >= 12 then
-
-				ampm = "PM"
-
-			end
-
-			if hr > 12 then
-
-				hr = hr - 12
-
-			end
-
-			if hr == 0 then
-
-				hr = 12
-
-			end
-
-			if min < 10 then
-
-				min = "0" .. min
-
-			end
-
-			timetext = hr .. ":" .. min .. " " .. ampm
-			surface.DrawText(timetext)
-		end*/
+		surface.DrawText(lp:Name())
 
 		surface.SetTextColor(team.GetColor(lpTeam))
 		surface.SetTextPos(30, y+30)
@@ -738,19 +708,19 @@ function GM:HUDPaint()
 		surface.SetFont("Impulse-Elements19")
 
 		surface.SetTextPos(56, y+64+yAdd)
-		surface.DrawText("Health: "..LocalPlayer():Health())
+		surface.DrawText("Health: "..health)
 		if seeColIcons == true then surface.SetDrawColor(healthCol) end
 		surface.SetMaterial(healthIcon)
 		surface.DrawTexturedRect(30, y+66+yAdd, 18, 16)
 
 		surface.SetTextPos(56, y+86+yAdd)
-		surface.DrawText("Hunger: "..LocalPlayer():GetSyncVar(SYNC_HUNGER, 100))
+		surface.DrawText("Hunger: "..lp:GetSyncVar(SYNC_HUNGER, 100))
 		if seeColIcons == true then surface.SetDrawColor(hungerCol) end
 		surface.SetMaterial(hungerIcon)
 		surface.DrawTexturedRect(30, y+87+yAdd, 18, 18)
 
 		surface.SetTextPos(56, y+108+yAdd)
-		surface.DrawText("Money: "..impulse.Config.CurrencyPrefix..LocalPlayer():GetSyncVar(SYNC_MONEY, 0))
+		surface.DrawText("Money: "..impulse.Config.CurrencyPrefix..lp:GetSyncVar(SYNC_MONEY, 0))
 		if seeColIcons == true then surface.SetDrawColor(moneyCol) end
 		surface.SetMaterial(moneyIcon)
 		surface.DrawTexturedRect(30, y+107+yAdd, 18, 18)
@@ -792,14 +762,13 @@ function GM:HUDPaint()
 
 		surface.SetDrawColor(color_white)
 
-
-		local weapon = LocalPlayer():GetActiveWeapon()
+		local weapon = lp:GetActiveWeapon()
 		if IsValid(weapon) then
 			if weapon:GetMaxClip1() != -1 then
 				surface.SetDrawColor(darkCol)
 				surface.DrawRect(scrW-70, scrH-45, 70, 30)
 				surface.SetTextPos(scrW-60, scrH-40)
-				surface.DrawText(weapon:Clip1().."/"..LocalPlayer():GetAmmoCount(weapon:GetPrimaryAmmoType()))
+				surface.DrawText(weapon:Clip1().."/"..lp:GetAmmoCount(weapon:GetPrimaryAmmoType()))
 			elseif weapon:GetClass() == "weapon_physgun" or weapon:GetClass() == "gmod_tool" then
 				draw.DrawText("Don't have this weapon out in RP.\nYou may be punished for this.", "Impulse-Elements16", 35, y-35, color_white, TEXT_ALIGN_LEFT)
 				surface.SetMaterial(warningIcon)
@@ -811,16 +780,15 @@ function GM:HUDPaint()
 
 				surface.SetFont("Impulse-Elements18-Shadow")
 				surface.SetTextPos(scrW-130, scrH-50)
-				local ply = LocalPlayer()
 
 				local maxProps
-				if ply:IsGameMaster() then
+				if lp:IsGameMaster() then
 					maxProps = "∞"
 				else
-					maxProps = (ply:IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
+					maxProps = (lp:IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
 				end
 
-				surface.DrawText("Props: " ..ply:GetSyncVar(SYNC_PROPCOUNT, 0) .."/" .. maxProps)
+				surface.DrawText("Props: " ..lp:GetSyncVar(SYNC_PROPCOUNT, 0) .."/" .. maxProps)
 			end
 		end
 
@@ -846,7 +814,7 @@ function GM:HUDPaint()
 			surface.SetTextPos(390, y)
 			surface.SetTextColor(watermarkCol)
 			surface.SetFont("Impulse-Elements18-Shadow")
-			surface.DrawText("PREVIEW BUILD - "..impulse.Version.." - "..LocalPlayer():SteamID64().. " - ".. os.date("%H:%M:%S - %d/%m/%Y", os.time()))
+			surface.DrawText("PREVIEW BUILD - "..impulse.Version.." - "..lp:SteamID64().. " - ".. os.date("%H:%M:%S - %d/%m/%Y", os.time()))
 			surface.SetTextPos(390, y + 20)
 			surface.DrawText("SCHEMA: "..SCHEMA_NAME.." VERSION: "..(impulse.Config.SchemaVersion or "?").."  |  COPYRIGHT LOLOLOLOL")
 
@@ -857,7 +825,6 @@ function GM:HUDPaint()
 		end
 
 		-- dev hud
-
 		if impulse_DevHud and (lp:IsSuperAdmin() or lp:IsDeveloper()) then
 			local trace = {}
 			trace.start = lp:EyePos()
@@ -912,26 +879,25 @@ function GM:HUDPaint()
 		end
 
 		lasthealth = health
-	    elseif impulse.GetSetting("hudselection") == "Pinnacle" then
-        y = scrH-hudHeight-8-10
+	elseif impulse.GetSetting("hudselection") == "Pinnacle" then
+		y = scrH-hudHeight-8-10
 
-        local xAdd = 0
+		local xAdd = 0
 
-        local iconSpacing = 200
-        local baseX = 120 + xAdd
-        local baseY = y + 99
+		local iconSpacing = 200
+		local baseX = 120 + xAdd
+		local baseY = y + 99
 
-        -- Health
 		surface.SetTextColor(color_white)
 		surface.SetFont("terminal40")
-		local healthStr = tostring(LocalPlayer():Health())
+		local healthStr = tostring(health)
 		local healthX = baseX + iconSpacing * 0
 		surface.SetTextPos(healthX, baseY)
 		surface.DrawText(healthStr)
 		local healthW, _ = surface.GetTextSize(healthStr)
 		surface.SetTextColor(Color(200,200,200,200))
 		surface.SetFont("terminal32")
-		surface.SetTextPos(healthX + healthW + 8, baseY + 5) -- 8px padding
+		surface.SetTextPos(healthX + healthW + 8, baseY + 5)
 		surface.DrawText(" | 100")
 		surface.SetDrawColor(color_white)
 		if seeColIcons == true then surface.SetDrawColor(healthCol) end
@@ -941,7 +907,7 @@ function GM:HUDPaint()
 		-- Hunger
 		surface.SetTextColor(color_white)
 		surface.SetFont("terminal40")
-		local hungerStr = tostring(LocalPlayer():GetSyncVar(SYNC_HUNGER, 100))
+		local hungerStr = tostring(lp:GetSyncVar(SYNC_HUNGER, 100))
 		local hungerX = baseX + iconSpacing * 1.35
 		surface.SetTextPos(hungerX, baseY)
 		surface.DrawText(hungerStr)
@@ -955,8 +921,8 @@ function GM:HUDPaint()
 		surface.SetMaterial(hungerIcon)
 		surface.DrawTexturedRect(baseX + iconSpacing * 1.1, baseY + 3, 40, 36)
 
--- Ammo (if you want dynamic spacing for ammo as well)
-		local weapon = LocalPlayer():GetActiveWeapon()
+		-- Ammo (if you want dynamic spacing for ammo as well)
+		local weapon = lp:GetActiveWeapon()
 		if IsValid(weapon) and weapon:GetMaxClip1() != -1 then
 			surface.SetFont("terminal64")
 			local ammoStr = tostring(weapon:Clip1())
@@ -968,7 +934,7 @@ function GM:HUDPaint()
 			surface.SetFont("terminal50")
 			surface.SetTextColor(Color(200,200,200,200))
 			surface.SetTextPos(ammoX + ammoW + 8, scrH-115)
-			surface.DrawText(" | "..LocalPlayer():GetAmmoCount(weapon:GetPrimaryAmmoType()))
+			surface.DrawText(" | "..lp:GetAmmoCount(weapon:GetPrimaryAmmoType()))
 		end
 
 		local function IsPlayerMorphed(ply)
@@ -979,12 +945,11 @@ function GM:HUDPaint()
 			return IsValid(pk_pills.getMappedEnt(ply))
 		end
 
-		if IsValid(weapon) and not IsPlayerMorphed(LocalPlayer()) and (weapon:GetClass() == "weapon_physgun" or weapon:GetClass() == "gmod_tool") then
+		if IsValid(weapon) and not IsPlayerMorphed(lp) and (weapon:GetClass() == "weapon_physgun" or weapon:GetClass() == "gmod_tool") then
 			aboveHUDUsed = true
 
-			-- Dynamic spacing for props count
-			local propCount = tostring(LocalPlayer():GetSyncVar(SYNC_PROPCOUNT, 0))
-			local propLimit = (LocalPlayer():IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
+			local propCount = tostring(lp:GetSyncVar(SYNC_PROPCOUNT, 0))
+			local propLimit = (lp:IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
 			local propX = scrW-240
 			surface.SetFont("terminal64")
 			surface.SetTextColor(color_white)
@@ -997,7 +962,7 @@ function GM:HUDPaint()
 			surface.DrawText(" | "..propLimit)
 		end
 
-        -- Money (optional, add if you want)
+		-- Money (optional, add if you want)
         --[[
         surface.SetTextColor(color_white)
         surface.SetFont("terminal32")
@@ -1008,71 +973,69 @@ function GM:HUDPaint()
         surface.DrawTexturedRect(baseX + iconSpacing * 2 - 26, baseY + 3, 18, 18)
         ]]
 
-        surface.SetDrawColor(color_white)
+		surface.SetDrawColor(color_white)
 
-        if lp:GetSyncVar(SYNC_ARRESTED, false) == true and impulse_JailTimeEnd and impulse_JailTimeEnd > CurTime() then
-            local timeLeft = math.ceil(impulse_JailTimeEnd - CurTime())
+		if lp:GetSyncVar(SYNC_ARRESTED, false) == true and impulse_JailTimeEnd and impulse_JailTimeEnd > CurTime() then
+			local timeLeft = math.ceil(impulse_JailTimeEnd - CurTime())
 
-            surface.SetMaterial(exitIcon)
-            surface.DrawTexturedRect(10, y-30, 18, 18)
-            draw.DrawText("Sentence remaining: "..string.FormattedTime(timeLeft, "%02i:%02i"), "Impulse-Elements19", 35, y-30, color_white, TEXT_ALIGN_LEFT)
-            aboveHUDUsed = true
-        end
+			surface.SetMaterial(exitIcon)
+			surface.DrawTexturedRect(10, y-30, 18, 18)
+			draw.DrawText("Sentence remaining: "..string.FormattedTime(timeLeft, "%02i:%02i"), "Impulse-Elements19", 35, y-30, color_white, TEXT_ALIGN_LEFT)
+			aboveHUDUsed = true
+		end
 
-        local iconsX = 315
-        local bleedIconCol
+		local iconsX = 315
+		local bleedIconCol
 
-        if lp:GetSyncVar(SYNC_BLEEDING, false) then
-            if (nextBleedFlash or 0) < CurTime() then
-                bleedFlash = !bleedFlash
-                nextBleedFlash = CurTime() + 1
-            end
+		if lp:GetSyncVar(SYNC_BLEEDING, false) then
+			if (nextBleedFlash or 0) < CurTime() then
+				bleedFlash = !bleedFlash
+				nextBleedFlash = CurTime() + 1
+			end
 
-            if bleedFlash then
-                bleedIconCol = bleedFlashCol
-            else
-                bleedIconCol = iconsWhiteCol
-            end
+			if bleedFlash then
+				bleedIconCol = bleedFlashCol
+			else
+				bleedIconCol = iconsWhiteCol
+			end
 
-            surface.SetDrawColor(bleedIconCol)
-            surface.SetMaterial(bleedingIcon)
-            surface.DrawTexturedRect(iconsX, y + 10, 30, 30)
-        end
+			surface.SetDrawColor(bleedIconCol)
+			surface.SetMaterial(bleedingIcon)
+			surface.DrawTexturedRect(iconsX, y + 10, 30, 30)
+		end
 
-        surface.SetDrawColor(color_white)
+		surface.SetDrawColor(color_white)
 
-        if not aboveHUDUsed then
-            if impulse.ShowZone then
-                if IsValid(zoneLbl) then
-                    zoneLbl:Remove()
-                end
+		if not aboveHUDUsed then
+			if impulse.ShowZone then
+				if IsValid(zoneLbl) then
+					zoneLbl:Remove()
+				end
 
-                zoneLbl = vgui.Create("impulseZoneLabel")
-                zoneLbl:SetPos(45, y - 25)
-                zoneLbl.Zone = lp:GetZoneName()
+				zoneLbl = vgui.Create("impulseZoneLabel")
+				zoneLbl:SetPos(45, y - 25)
+				zoneLbl.Zone = lp:GetZoneName()
 
-                impulse.ShowZone = false
-            end
-        elseif zoneLbl and IsValid(zoneLbl) then
-            zoneLbl:Remove()
-        end
+				impulse.ShowZone = false
+			end
+		elseif zoneLbl and IsValid(zoneLbl) then
+			zoneLbl:Remove()
+		end
 
-        local isPreview = GetConVar("impulse_ispreview"):GetBool()
+		local isPreview = GetConVar("impulse_ispreview"):GetBool()
 
-        if isPreview then
-            -- watermark
-            surface.SetDrawColor(watermarkCol)
-            surface.SetMaterial(watermark)
-            surface.DrawTexturedRect(390, y, 112, 30)
+		if isPreview then
+			surface.SetDrawColor(watermarkCol)
+			surface.SetMaterial(watermark)
+			surface.DrawTexturedRect(390, y, 112, 30)
 
-            surface.SetTextPos(390, y + 30)
-            surface.SetTextColor(watermarkCol)
-            surface.SetFont("Impulse-Elements18-Shadow")
-            surface.DrawText("PREVIEW BUILD - "..impulse.Version.." - "..LocalPlayer():SteamID64().. " - ".. os.date("%H:%M:%S - %d/%m/%Y", os.time()))
-            surface.SetTextPos(390, y + 50)
-            surface.DrawText("SCHEMA: "..SCHEMA_NAME.." VERSION: "..impulse.Config.SchemaVersion or "?")
-        end
-		-- dev hud
+			surface.SetTextPos(390, y + 30)
+			surface.SetTextColor(watermarkCol)
+			surface.SetFont("Impulse-Elements18-Shadow")
+			surface.DrawText("PREVIEW BUILD - "..impulse.Version.." - "..lp:SteamID64().. " - ".. os.date("%H:%M:%S - %d/%m/%Y", os.time()))
+			surface.SetTextPos(390, y + 50)
+			surface.DrawText("SCHEMA: "..SCHEMA_NAME.." VERSION: "..impulse.Config.SchemaVersion or "?")
+		end
 
 		if impulse_DevHud and (lp:IsSuperAdmin() or lp:IsDeveloper()) then
 			local trace = {}
@@ -1129,37 +1092,37 @@ function GM:HUDPaint()
 
 		lasthealth = health
 	elseif impulse.GetSetting("hudselection") == "Deep - Standard" then
-		local dgh_XSize = ScrW() * 0.25
-		local dgh_YSize = ScrH() * 0.06
-		local dgh_XPos = ScrW() * 0.02
-		local dgh_YPos = ScrH() * 0.9
-		local dgh_y5per = ScrH() * 0.05
-		local dgh_x5per = ScrW() * 0.05
-		local dgh_smallx = math.ceil(ScrW() / 384)
-		local dgh_smally = math.ceil(ScrH() / 216)
-		local ammopos = ScrW() * 0.9
-		local dgh_lphunger = LocalPlayer():GetSyncVar(SYNC_HUNGER, 100)
-		local dgh_lpmoney = LocalPlayer():GetSyncVar(SYNC_MONEY, 0)
-		local dgh_lpxp = LocalPlayer():GetSyncVar(SYNC_XP, 0)
-		local dgh_lpname = LocalPlayer():Name()
+		local dgh_XSize = scrW * 0.25
+		local dgh_YSize = scrH * 0.06
+		local dgh_XPos = scrW * 0.02
+		local dgh_YPos = scrH * 0.9
+		local dgh_y5per = scrH * 0.05
+		local dgh_x5per = scrW * 0.05
+		local dgh_smallx = math.ceil(scrW / 384)
+		local dgh_smally = math.ceil(scrH / 216)
+		local ammopos = scrW * 0.9
+		local dgh_lphunger = lp:GetSyncVar(SYNC_HUNGER, 100)
+		local dgh_lpmoney = lp:GetSyncVar(SYNC_MONEY, 0)
+		local dgh_lpxp = lp:GetSyncVar(SYNC_XP, 0)
+		local dgh_lpname = lp:Name()
 
-		local dgh_lpteam = LocalPlayer():Team()
+		local dgh_lpteam = lpTeam
 		local dgh_teamcol = team.GetColor(dgh_lpteam)
-		local dgh_dist = {math.floor(ScrW()/192), math.floor(ScrW()/64), math.floor(ScrW()/96), math.floor(ScrW()/96), math.floor(ScrW()/96), ScrW() + 1.007, ScrW() + 1.007, math.floor(ScrW()/96), math.floor(ScrW()/96)}
+		local dgh_dist = {math.floor(scrW/192), math.floor(scrW/64), math.floor(scrW/96), math.floor(scrW/96), math.floor(scrW/96), scrW + 1.007, scrW + 1.007, math.floor(scrW/96), math.floor(scrW/96)}
 
 		local bigfont
 		local littlefont
 		local iconsize
 
-		if ScrW() >= 1000 then
+		if scrW >= 1000 then
 			bigfont = "MediumOswaldFont"
 			littlefont = "SmallOswaldFont"
 			iconsize = 20
-		elseif ScrW() >= 850 then
+		elseif scrW >= 850 then
 			bigfont = "Oswald22"
 			littlefont = "Oswald18"
 			iconsize = 16
-		elseif ScrW() >= 700 then
+		elseif scrW >= 700 then
 			bigfont = "SmallOswaldFont"
 			littlefont = "TinyOswaldFont"
 			iconsize = 12
@@ -1180,46 +1143,9 @@ function GM:HUDPaint()
 		surface.SetTextPos(dgh_XPos + (dgh_smallx * 3), dgh_YPos + dgh_smally)
 		surface.DrawText(dgh_lpname)
 
-		/*if SW.Time then
-			local hr = math.floor( SW.Time )
-			local min = math.floor( 60 * ( SW.Time - hr ) )
-			surface.SetTextColor(color_white)
-			surface.SetFont(littlefont)
-			surface.SetTextPos(dgh_XPos + (dgh_smallx * 3), dgh_YPos - dgh_smally * 4)
-			local timetext = ""
-			local ampm = "AM"
-
-			if hr >= 12 then
-
-				ampm = "PM"
-
-			end
-
-			if hr > 12 then
-
-				hr = hr - 12
-
-			end
-
-			if hr == 0 then
-
-				hr = 12
-
-			end
-
-			if min < 10 then
-
-				min = "0" .. min
-
-			end
-
-			timetext = hr .. ":" .. min .. " " .. ampm
-			surface.DrawText(timetext)
-		end*/
-
 		surface.SetTextColor(dgh_teamcol)
 		surface.SetFont(bigfont)
-		surface.SetTextPos(dgh_XPos + (dgh_XSize * 0.8) + (dgh_dist[dgh_lpteam]), dgh_YPos + dgh_smally )
+		surface.SetTextPos(dgh_XPos + (dgh_XSize * 0.8) + (dgh_dist[dgh_lpteam] or 0), dgh_YPos + dgh_smally)
 		surface.DrawText((dgh_smallteams[dgh_lpteam] or "Unassigned"))
 
 		surface.SetMaterial(dgh_mediclogo)
@@ -1233,7 +1159,7 @@ function GM:HUDPaint()
 		surface.SetTextColor(color_white)
 		surface.SetFont(littlefont)
 		surface.SetTextPos(dgh_XPos + (dgh_smallx * 8), dgh_YPos + (dgh_smally * 7))
-		surface.DrawText("HP: " .. LocalPlayer():Health())
+		surface.DrawText("HP: " .. health)
 
 		surface.SetMaterial(dgh_foodlogo)
 		if seeColIcons == true then
@@ -1274,26 +1200,25 @@ function GM:HUDPaint()
 		surface.SetTextPos(dgh_XPos + (dgh_smallx * 65), dgh_YPos + (dgh_smally * 7))
 		surface.DrawText("XP: " .. dgh_lpxp)
 
-		local weapon = LocalPlayer():GetActiveWeapon()
+		local weapon = lp:GetActiveWeapon()
 		if IsValid(weapon) then
 			if weapon:GetMaxClip1() != -1 then
 				surface.SetFont(littlefont)
-				surface.SetTextPos(scrW-(ScrW()/20), dgh_YPos+(ScrW()/39))
-				surface.DrawText(weapon:Clip1().."/"..LocalPlayer():GetAmmoCount(weapon:GetPrimaryAmmoType()))
+				surface.SetTextPos(scrW-(scrW/20), dgh_YPos+(scrW/39))
+				surface.DrawText(weapon:Clip1().."/"..lp:GetAmmoCount(weapon:GetPrimaryAmmoType()))
 			elseif weapon:GetClass() == "weapon_physgun" or weapon:GetClass() == "gmod_tool" then
-				draw.DrawText("DON'T HAVE THIS WEAPON OUT IN RP.\nYOU MAY BE PUNISHED FOR THIS.", littlefont, dgh_XPos, dgh_YPos - (ScrW()/35), color_white, TEXT_ALIGN_LEFT)
+				draw.DrawText("DON'T HAVE THIS WEAPON OUT IN RP.\nYOU MAY BE PUNISHED FOR THIS.", littlefont, dgh_XPos, dgh_YPos - (scrW/35), color_white, TEXT_ALIGN_LEFT)
 				aboveHUDUsed = true
 
 				surface.SetFont(littlefont)
-				surface.SetTextPos(ScrW()-(ScrW()/14.769), dgh_YPos+(ScrW()/40))
-				local ply = LocalPlayer()
+				surface.SetTextPos(scrW-(scrW/14.769), dgh_YPos+(scrW/40))
 				local maxProps
-				if ply:IsGameMaster() then
+				if lp:IsGameMaster() then
 					maxProps = "∞"
 				else
-					maxProps = (ply:IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
+					maxProps = (lp:IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
 				end
-				surface.DrawText("Props: " ..ply:GetSyncVar(SYNC_PROPCOUNT, 0) .."/" .. maxProps)
+				surface.DrawText("Props: " ..lp:GetSyncVar(SYNC_PROPCOUNT, 0) .."/" .. maxProps)
 			end
 		end
 
@@ -1324,7 +1249,6 @@ function GM:HUDPaint()
 		-- HIGH QUALITY, FILTER SHADED BAR FOR FRACTION OF THE SHADE TO BE VISIBLE, PREVENTING PIXEL JUMPING!
 		local heightFX = 48 * healthFraction
 		local fxY = flr((scrH - 28) + (heightFX))
-		--print(fxY)
 		local interPixelDistanceShade = ((heightFX) % 1)
 		if colIcons then
 			surface.SetDrawColor(150, 0, 0, 255)
@@ -1337,9 +1261,7 @@ function GM:HUDPaint()
 		surface.DrawTexturedRect(80, scrH - 76, 48, 48)
 		render.SetScissorRect(0, 0, 0, 0, false)
 
-		local health = LocalPlayer():Health()
 		surface.SetFont("terminal64")
-
 
 		local textW, textH = surface.GetTextSize(health)
 		surface.SetTextPos(146, scrH - 50 - (textH/2))
@@ -1358,7 +1280,7 @@ function GM:HUDPaint()
 		surface.SetFont("terminal32")
 		surface.DrawText("| 100")
 
-		local hunger = LocalPlayer():GetSyncVar(SYNC_HUNGER, 100)
+		local hunger = lp:GetSyncVar(SYNC_HUNGER, 100)
 
 		local hungerFraction = hunger / 100
 
@@ -1401,35 +1323,35 @@ function GM:HUDPaint()
 		surface.DrawText("| 100")
 
 	elseif impulse.GetSetting("hudselection") == "Deep - Minimalistic" then
-		local dgh_XPos = ScrW() * 0.02
-		local dghm_YPos = ScrH() * 0.925
-		local dgh_y5per = ScrH() * 0.05
-		local dgh_x5per = ScrW() * 0.05
-		local dgh_smallx = math.ceil(ScrW() / 384)
-		local dgh_smally = math.ceil(ScrH() / 216)
-		local ammopos = ScrW() * 0.9
-		local dgh_lphunger = LocalPlayer():GetSyncVar(SYNC_HUNGER, 100)
-		local dgh_lpmoney = LocalPlayer():GetSyncVar(SYNC_MONEY, 0)
-		local dgh_lpxp = LocalPlayer():GetSyncVar(SYNC_XP, 0)
-		local dgh_lpname = LocalPlayer():Name()
+		local dgh_XPos = scrW * 0.02
+		local dghm_YPos = scrH * 0.925
+		local dgh_y5per = scrH * 0.05
+		local dgh_x5per = scrW * 0.05
+		local dgh_smallx = math.ceil(scrW / 384)
+		local dgh_smally = math.ceil(scrH / 216)
+		local ammopos = scrW * 0.9
+		local dgh_lphunger = lp:GetSyncVar(SYNC_HUNGER, 100)
+		local dgh_lpmoney = lp:GetSyncVar(SYNC_MONEY, 0)
+		local dgh_lpxp = lp:GetSyncVar(SYNC_XP, 0)
+		local dgh_lpname = lp:Name()
 
-		local dgh_lpteam = LocalPlayer():Team()
+		local dgh_lpteam = lpTeam
 		local dgh_teamcol = team.GetColor(dgh_lpteam)
-		local dgh_dist = {math.floor(ScrW()/192), math.floor(ScrW()/64), math.floor(ScrW()/96), math.floor(ScrW()/96), math.floor(ScrW()/96), math.floor(ScrW()/96), math.floor(ScrW()/96), math.floor(ScrW()/96)}
+		local dgh_dist = {math.floor(scrW/192), math.floor(scrW/64), math.floor(scrW/96), math.floor(scrW/96), math.floor(scrW/96), math.floor(scrW/96), math.floor(scrW/96), math.floor(scrW/96)}
 
 		local bigfont
 		local littlefont
 		local iconsize
 
-		if ScrW() >= 1000 then
+		if scrW >= 1000 then
 			bigfont = "MediumOswaldFont"
 			littlefont = "SmallOswaldFont"
 			iconsize = 32
-		elseif ScrW() >= 850 then
+		elseif scrW >= 850 then
 			bigfont = "Oswald22"
 			littlefont = "Oswald18"
 			iconsize = 24
-		elseif ScrW() >= 700 then
+		elseif scrW >= 700 then
 			bigfont = "SmallOswaldFont"
 			littlefont = "TinyOswaldFont"
 			iconsize = 16
@@ -1450,7 +1372,7 @@ function GM:HUDPaint()
 		surface.SetTextColor(color_white)
 		surface.SetFont(bigfont)
 		surface.SetTextPos(dgh_XPos + (dgh_smallx * 10), dghm_YPos + (dgh_smally * 7))
-		surface.DrawText("HP: " .. LocalPlayer():Health())
+		surface.DrawText("HP: " .. health)
 
 		surface.SetMaterial(dgh_foodlogo)
 		if seeColIcons == true then
@@ -1464,7 +1386,6 @@ function GM:HUDPaint()
 		surface.SetFont(bigfont)
 		surface.SetTextPos(dgh_XPos + (dgh_smallx * 57), dghm_YPos + (dgh_smally * 7))
 		surface.DrawText("HNG: " .. dgh_lphunger)
-
 
 		surface.SetMaterial(dgh_moneylogo)
 		if seeColIcons == true then
@@ -1492,12 +1413,12 @@ function GM:HUDPaint()
 		surface.SetTextPos(dgh_XPos + (dgh_smallx * 151), dghm_YPos + (dgh_smally * 7))
 		surface.DrawText("XP: " .. dgh_lpxp)
 
-		local weapon = LocalPlayer():GetActiveWeapon()
+		local weapon = lp:GetActiveWeapon()
 		if IsValid(weapon) then
 			if weapon:GetMaxClip1() != -1 then
 				surface.SetFont(bigfont)
-				surface.SetTextPos(scrW-(dgh_smallx*18),  dghm_YPos + (dgh_smally * 7))
-				surface.DrawText(weapon:Clip1().."/"..LocalPlayer():GetAmmoCount(weapon:GetPrimaryAmmoType()))
+				surface.SetTextPos(scrW-(dgh_smallx*18), dghm_YPos + (dgh_smally * 7))
+				surface.DrawText(weapon:Clip1().."/"..lp:GetAmmoCount(weapon:GetPrimaryAmmoType()))
 			end
 		end
 
@@ -1520,6 +1441,7 @@ local letterboxFde = 0
 local textFde = 0
 local holdTime
 overheadEntCache = {}
+
 -- overhead info is HEAVILY based off nutscript. I'm not taking credit for it. but it saves clients like 70 fps so its worth it
 function GM:HUDPaintBackground()
 
