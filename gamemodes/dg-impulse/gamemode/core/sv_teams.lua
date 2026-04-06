@@ -1,5 +1,6 @@
 meta.OldSetTeam = meta.OldSetTeam or meta.SetTeam
 function meta:SetTeam(teamID, forced)
+	if not IsValid(self) then return end
 	local teamData = impulse.Teams.Data[teamID]
 	local teamPlayers = team.NumPlayers(teamID)
 	self:ResetSubMaterials()
@@ -154,6 +155,7 @@ function meta:SetTeam(teamID, forced)
 end
 
 function meta:SetTeamClass(classID, skipLoadout)
+	if not IsValid(self) then return end
 	local teamData = impulse.Teams.Data[self:Team()]
 	local classData = teamData.classes[classID]
 	local classPlayers = 0
@@ -292,6 +294,7 @@ function meta:SetTeamClass(classID, skipLoadout)
 end
 
 function meta:SetTeamRank(rankID)
+	if not IsValid(self) then return end
 	local teamData = impulse.Teams.Data[self:Team()]
 	local classData = teamData.classes[self:GetTeamClass()]
 	local rankData = teamData.ranks[rankID]
