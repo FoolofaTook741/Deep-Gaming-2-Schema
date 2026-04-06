@@ -52,12 +52,12 @@ SWEP.ReloadSound = Sound("Weapon_357.Reload")
 SWEP.EmptySound = Sound("Weapon_357.Empty")
 
 SWEP.Primary.Recoil = 2 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 32
+SWEP.Primary.Damage = 34
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.0002
 SWEP.Primary.Delay = RPM(160)
 SWEP.ReloadSpeed = 1.5
-SWEP.Primary.PenetrationScale = 1.5
+SWEP.Primary.PenetrationScale = 1.45
 
 --[[
 SWEP.DamageFalloff = false
