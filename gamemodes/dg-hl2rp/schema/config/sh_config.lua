@@ -850,11 +850,11 @@ impulse.Config.LootPools = {
 	["ammobox"] = {
 		Items = {
 			["item_ar2ammocrate"] = {Rarity = 800, Rep = 1},
-			["bl_ar2e"] = {Rarity = 765, Rep = 2},
+			--["bl_ar2e"] = {Rarity = 765, Rep = 2},
 			["bl_ar2r"] = {Rarity = 695, Rep = 2},
-			["bl_ar2"] = {Rarity = 610, Rep = 1},
+			["bl_ar2"] = {Rarity = 610, Rep = 2},
 			["bl_apf"] = {Rarity = 820, Rep = 1},
-			["bl_omr"] = {Rarity = 690, Rep = 3},
+			["bl_omr"] = {Rarity = 690, Rep = 2},
 			["bl_osiprmk1"] = {Rarity = 740, Rep = 2},
 			["wep_ak47ub"] = {Rarity = 750, Rep = 2},
 			["util_heavyceramicplate"] = {Rarity = 680, Rep = 2},
@@ -874,10 +874,10 @@ impulse.Config.LootPools = {
 		Items = {
 			["item_ar2ammocrate"] = {Rarity = 800, Rep = 1},
 			["wep_shotgun"] = {Rarity = 600},
-			["bl_ar2e"] = {Rarity = 765, Rep = 2},
-			["bl_ar2"] = {Rarity = 620, Rep = 1},
+			--["bl_ar2e"] = {Rarity = 765, Rep = 2},
+			["bl_ar2"] = {Rarity = 620, Rep = 2},
 			["bl_apf"] = {Rarity = 820, Rep = 1},
-			["bl_omr"] = {Rarity = 690, Rep = 3},
+			["bl_omr"] = {Rarity = 690, Rep = 2},
 			["wep_ak47ub"] = {Rarity = 750, Rep = 2},
 			["bl_osiprmk1"] = {Rarity = 980, Rep = 2},
 			["util_heavyceramicplate"] = {Rarity = 680, Rep = 2},
