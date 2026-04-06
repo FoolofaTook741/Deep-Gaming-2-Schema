@@ -68,7 +68,7 @@ VENDOR.Sell = {
     },
     ["wep_pm63"] = {
         Desc = "Charisma Level 6+",
-        Cost = 425,
+        Cost = 475,
         BuyMax = 1, 
         TempCooldown = 1200,
         CanBuy = function(ply)
@@ -78,7 +78,7 @@ VENDOR.Sell = {
                 return false
             end
         end
-    },
+    }, --[[
     ["wep_mp7"] = {
         Desc = "Charisma Level 8+",
         Cost = 700,
@@ -91,7 +91,7 @@ VENDOR.Sell = {
                 return false
             end
         end
-    },
+    }, ]]--
     ["book_chinese"] = {
         Desc = "Charisma Level 10",
         Cost = 2000,
