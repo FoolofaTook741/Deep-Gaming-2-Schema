@@ -435,7 +435,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamClass() == CLASS_SWORD or ply:GetTeamRank() >= RANK_DCO or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I1 and impulse.Dispatch.GetCityCode() >= CODE_JW) then
+			if ply:GetTeamClass() == CLASS_SWORD or ply:GetTeamRank() >= RANK_DCO or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I1 and impulse.Dispatch.GetCityCode() >= CODE_AJ) then
 				return true
 			else 
 				return false
