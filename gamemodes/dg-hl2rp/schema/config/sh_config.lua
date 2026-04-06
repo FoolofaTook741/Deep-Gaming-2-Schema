@@ -799,12 +799,12 @@ impulse.Config.TheatreMusic = {
 impulse.Config.LootPools = {
 	["generic"] = {
 		Items = {
-			["util_cloth"] = {Rarity = 570, Rep = 3},
-			["util_gunpowder"] = {Rarity = 550, Rep = 3},
-			["util_metalplate"] = {Rarity = 750, Rep = 1},
+			["util_cloth"] = {Rarity = 625, Rep = 2},
+			["util_gunpowder"] = {Rarity = 560, Rep = 3},
+			["util_metalplate"] = {Rarity = 680, Rep = 1},
 			--["util_wood"] = {Rarity = 600, Rep = 2},
 			--["util_plastic"] = {Rarity = 900, Rep = 2},
-			["util_glue"] = {Rarity = 620, Rep = 4},
+			["util_glue"] = {Rarity = 600, Rep = 4},
 			["util_paint"] = {Rarity = 820, Rep = 1},
 			["wep_pistol"] = {Rarity = 960, Rep = 1},
 			["item_vortessence"] = {Rarity = 910, Rep = 1},
