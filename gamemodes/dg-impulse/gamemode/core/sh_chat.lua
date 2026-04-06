@@ -344,10 +344,11 @@ local advertCommand = {
 			return ply:Notify("Your team cannot make an advert.") 
 		end
 
-		if ply:GetTeamRank() < RANK_EMPLOYEE then
-			ply:Notify("Your must be an employee to advert.") 
-			return
-		end
+		local rank = ply:GetTeamRank()
+        if not rank or rank < RANK_EMPLOYEE then
+            ply:Notify("You must be an employee to advert.") 
+            return
+        end
 
 		timer.Simple(15, function()
 			if IsValid(ply) and ply:IsPlayer() then
