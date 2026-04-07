@@ -1441,7 +1441,14 @@ local gmTools = {
 	["lamp"]     = true,
     ["light"]    = true,
 	["imagetool"] = true,
-	["wire_light"] = true
+	["wire_light"] = true,
+	["rb655_easy_bodygroup"] = true,
+	["npctool_controller"] = true,
+	["npctool_follower"] = true,
+	["npctool_health"] = true,
+	["npctool_notarget"] = true,
+	["npctool_proficiency"] = true,
+	["npctool_relationships"] = true
 }
 
 function GM:CanTool(ply, tr, tool)
