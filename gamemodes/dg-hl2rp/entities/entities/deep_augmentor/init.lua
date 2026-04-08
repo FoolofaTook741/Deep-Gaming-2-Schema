@@ -43,7 +43,7 @@ local CP_CLASS_SKIN = {
     [CLASS_GHOST] = 5,
 }
 
-local CP_RANK_NAMES = { "i4", "i3", "i2", "i1", "OfC", "SqL", "DvL", "DcO", "VCmD", "CmD" }
+local CP_RANK_NAMES = { "i4", "i3", "i2", "i1", "RL", "SqL", "DvL", "DcO", "VCmD", "CmD" }
 local OTA_RANK_NAMES = { "CGR", "CSO", "ECS" }
 
 local function StartAugProcess(self, ply)
