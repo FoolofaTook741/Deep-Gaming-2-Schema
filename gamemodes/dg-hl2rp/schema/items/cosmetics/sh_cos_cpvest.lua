@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "cos_cpvest2"
 ITEM.Name = "Tier II Ballistic Vest"
-ITEM.Desc =  "Medium vest, utilized during emergency situations and by special forces during downtime. This vest offers an additional 20% protection on the body."
+ITEM.Desc =  "Medium vest, utilized during emergency situations and by special forces during downtime. This vest offers an additional 15% protection on the body."
 ITEM.Category = "Clothing"
 ITEM.Model = Model("models/props_junk/cardboard_box002a.mdl")
 ITEM.FOV = 150
