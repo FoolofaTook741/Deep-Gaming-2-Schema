@@ -100,15 +100,34 @@ function SWEP:ClubAttack()
 			end
 
 			ent:DispatchTraceAttack(dmg, trace.start, trace.endpos)
-			if SERVER and ent:IsPlayer() then
-				if self.Primary.FlashTime then
-					ent:ScreenFade(SCREENFADE.IN, self.Primary.FlashColor or color_white, self.Primary.FlashTime, 0)
-					ent.StunTime = CurTime() + self.Primary.FlashTime
-					ent.StunStartTime = CurTime()
-				elseif self.Primary.StunTime then
-					ent.StunTime = CurTime() + self.Primary.StunTime
-					ent.StunStartTime = CurTime()
-				end
+			if SERVER and ent:IsPlayer() and self.Primary.FlashTime then
+			    local activeWep = ent:GetActiveWeapon()
+			    local hasLSWep = IsValid(activeWep) and string.find(activeWep:GetClass(), "plutonic_")
+
+			    if not hasLSWep then
+			        ent:ScreenFade(SCREENFADE.IN, self.Primary.FlashColour or color_white, self.Primary.FlashTime, 0)
+			    end
+
+			    ent.StunTime = CurTime() + self.Primary.FlashTime
+			    ent.StunStartTime = CurTime()
+
+			    if not hasLSWep and not ent:IsFrozen() and self.GetMode and self:GetMode() == 2 then
+			        ent.Hits = (ent.Hits or 0) + 1
+			        if ent.Hits >= 3 then
+			            ent:Freeze(true)
+			            ent:SetSyncVar(SYNC_STUNNED, true, true)
+			            timer.Simple(2, function()
+			                if IsValid(ent) then
+			                    ent:Freeze(false)
+			                    ent.Hits = 0
+			                    ent:SetSyncVar(SYNC_STUNNED, false, true)
+			                end
+			            end)
+			        end
+			    end
+			elseif SERVER and ent:IsPlayer() and self.Primary.StunTime then
+			    ent.StunTime = CurTime() + self.Primary.StunTime
+			    ent.StunStartTime = CurTime()
 			end
 
 			if tr.MatType == MAT_FLESH then
