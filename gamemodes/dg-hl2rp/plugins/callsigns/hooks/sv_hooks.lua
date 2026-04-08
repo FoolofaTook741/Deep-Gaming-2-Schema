@@ -16,7 +16,7 @@ function PLUGIN:PlayerSetCombineRank(ply, rank, div)
     if not callsigns[callSignLine] and ply:Team() ~= TEAM_CA then return end
     
     local code = (ply:Team() == TEAM_CP) and "MPF" or "CTA"
-    local cpranktable = {"i4", "i3", "i2", "i1", "OfC", "SqL", "DvL", "DcO", "VCmD", "CmD"}
+    local cpranktable = {"i4", "i3", "i2", "i1", "RL", "SqL", "DvL", "DcO", "VCmD", "CmD"}
     local otaranktable = {"CGR", "CSO", "ECS", "CCP", "CTL", "ORD", "CSC"}
     local generatedName
 
