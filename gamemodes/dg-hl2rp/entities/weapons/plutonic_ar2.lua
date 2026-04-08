@@ -74,7 +74,7 @@ SWEP.Primary.Damage = 14
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.Cone = 0.01 -- base spread value
-local fireRate = 445
+local fireRate = 450
 SWEP.Primary.Delay = RPM(fireRate)
 SWEP.Primary.Tracer = "AR2Tracer"
 
@@ -161,7 +161,7 @@ SWEP.Attachments = {
 			e.Primary.Cone = copycone * 0.9
 			e.Primary.ClipSize = 45
 			e.Primary.Recoil = copyRecoil - 0.1
-			e.Primary.Delay = RPM(copyFirerate + 15)
+			e.Primary.Delay = RPM(copyFirerate + 10)
 		end,
 		ModCleanup = function(e)
 			e.Primary.Sound = Sound("LS2.AR2.Single")
