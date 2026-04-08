@@ -45,7 +45,7 @@ sound.Add({
 	volume = 1.0,
 	level = SNDLVL_GUNFIRE,
 	pitch = {95, 105},
-	sound = {"weapons/projectmmod_ar2/fire1.wav"}
+	sound = {"weapons/projectmmod_ar3/ar3_fire1.wav"}
 })
 
 sound.Add({
