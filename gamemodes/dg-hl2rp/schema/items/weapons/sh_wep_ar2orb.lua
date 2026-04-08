@@ -1,12 +1,12 @@
 local ITEM = {}
 
 ITEM.UniqueID = "wep_ar2orb"
-ITEM.Name = "Experimental Pulse Orb Attachment"
-ITEM.Desc =  "The experimental pulse orb attachment is an early combine device that fires an explosive pulse projectile that delivers signifcant damage to those around it, experimentation is still being done to make it ricochet."
+ITEM.Name = "Pulse Orb Launcher"
+ITEM.Desc =  "The pulse orb launcher fires a highly energized pulse projectile that delivers significant damage to those that come in contact with it."
 ITEM.Category = "Weapons"
-ITEM.Model = Model("models/Items/combine_rifle_ammo01.mdl")
-ITEM.FOV = 46.239255014327
-ITEM.CamPos = Vector(32.664756774902, -19.484241485596, 9.1690540313721)
+ITEM.Model = Model("models/effects/combineball.mdl")
+ITEM.FOV = 45
+ITEM.CamPos = Vector(22.005731582642, 25, 9)
 ITEM.NoCenter = true
 ITEM.Weight = 3
 

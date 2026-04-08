@@ -380,6 +380,7 @@ TEAM_OTA = impulse.Teams.Define({
 			itemsAdd = {
 				{class = "wep_ar2", amount = 1},
 				{class = "wep_ar2orb", amount = 1},
+				{class = "att_ar2eliteaugment", amount = 1},
 				{class = "item_vocoder", amount = 1}
 			},
 			xp = 5,
