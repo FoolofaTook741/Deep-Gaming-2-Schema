@@ -3,6 +3,9 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+util.AddNetworkString("impulseAugmentorOpen")
+util.AddNetworkString("impulseAugmentorChoice")
+
 local OTA_AUG = {
     [CLASS_ECHO]   = { skin = 0, armor = 180, speed = 190 },
     [CLASS_MACE]   = { skin = 1, armor = 200, speed = 190 },
@@ -213,13 +216,60 @@ function ENT:Initialize()
     self:SetUseType(SIMPLE_USE)
 end
 
+local function CanToggleSkin(ply)
+    local class = ply:GetTeamClass()
+    local rank  = ply:GetTeamRank()
+    return class == CLASS_PAYBACK or class == CLASS_APF or rank == RANK_OWG
+end
+
+local function ToggleSkin(ply)
+    local class = ply:GetTeamClass()
+    local rank  = ply:GetTeamRank()
+
+    if rank == RANK_OWG then
+        ply:SetSkin(ply:GetSkin() == 0 and 1 or 0)
+    elseif class == CLASS_APF then
+        ply:SetSkin(ply:GetSkin() == 0 and 2 or 0)
+    elseif class == CLASS_PAYBACK then
+        ply:SetSkin(ply:GetSkin() == 0 and 2 or 0)
+    end
+end
+
+net.Receive("impulseAugmentorChoice", function(len, ply)
+    local choice = net.ReadUInt(4)
+    local aug    = ply._pendingAugmentor
+
+    if choice == 1 then
+        if CanToggleSkin(ply) then
+            ToggleSkin(ply)
+            aug:EmitSound("items/suitchargeok1.wav")
+        end
+    elseif choice == 2 then
+        if IsValid(aug) then
+            ToggleNova(aug, ply)
+        end
+    end
+
+    ply._pendingAugmentor = nil
+end)
+
 function ENT:Use(ply)
     local cityCode   = impulse.Dispatch.GetCityCode()
     local hasChip    = ply:HasInventoryItem("item_augmentchip")
     local augEnabled = cityCode >= CODE_AJ or hasChip
 
     if ply:Team() == TEAM_OTA and not augEnabled and not ply.IsAugmented then
-        ToggleNova(self, ply)
+        local canSkin = CanToggleSkin(ply)
+        local canNova = (ply:GetTeamClass() == CLASS_MACE or ply:GetTeamClass() == CLASS_ECHO)
+
+        if not canSkin and not canNova then return end
+
+        ply._pendingAugmentor = self
+
+        net.Start("impulseAugmentorOpen")
+        net.WriteBool(canSkin)
+        net.WriteBool(canNova)
+        net.Send(ply)
         return
     end
 
