@@ -65,6 +65,7 @@ function PANEL:PaintOver(w, h)
 end
 
 function PANEL:SetupItems(invscroll, storescroll)
+	local sw = ScrW()
 	local w, h = self:GetSize()
 
 	local preservedCategory = self.currentCategory or "All"
@@ -109,7 +110,9 @@ function PANEL:SetupItems(invscroll, storescroll)
 	table.sort(sortedCategories)
 
 	local showFilter = numCategories > 1
-	if showFilter then table.insert(sortedCategories, 1, "All") end
+	if sw > 900 and showFilter then
+		table.insert(sortedCategories, 1, "All") 
+	end
 
 	self.currentCategory = preservedCategory
 	self.searchText = preservedSearch
@@ -170,7 +173,7 @@ function withdrawBtn:DoClick()
     withdrawEntry:SetValue("")
 end
 
-	if showFilter then
+	if sw > 900 and showFilter then
 		local searchLabel = vgui.Create("DLabel", self.tabContainer)
 		searchLabel:SetPos(w - 520, 8)
 		searchLabel:SetFont("Impulse-Elements18-Shadow")
@@ -222,8 +225,9 @@ end
 				self.panel:PopulateInventories()
 			end
 		end
+	--[[
 	else
-		self.tabContainer:Hide()
+		self.tabContainer:Hide() ]]--
 	end
 
 	local topOffset = showFilter and 90 or 55
