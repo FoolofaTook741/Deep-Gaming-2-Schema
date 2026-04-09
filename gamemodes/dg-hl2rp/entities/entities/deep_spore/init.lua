@@ -19,6 +19,10 @@ function ENT:Initialize()
 end
 
 function ENT:Think()
+    if not self.phase then
+        self:NextThink(CurTime() + 1)
+        return true
+    end
     local basetime = 600
     local basemult = 30
     local spawntime = 120
@@ -50,6 +54,7 @@ function ENT:Think()
 
     if not timer.Exists(id .. "sporephasethink") then
         timer.Create(id .. "sporephasethink", spawntime - (spawnmult * spore.phase), 1, function()
+            if not IsValid(spore) or not spore.phase then return end
             local pos = spore:GetPos() + Vector(0, 0, 50)
             local crabtype
             local crabrandom = math.random(1, 10)
@@ -77,6 +82,7 @@ function ENT:Think()
 
     if not timer.Exists(id .. "sporephasechanges") and phase <= 5 then
         timer.Create(id .. "sporephasechanges", basetime - (basemult * spore.phase), 1, function()
+            if not IsValid(spore) or not spore.phase then return end
             local phase = spore.phase
             if phase + 1 <= 5 then
                 spore.phase = phase + 1
