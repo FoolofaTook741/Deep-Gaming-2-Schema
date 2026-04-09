@@ -197,40 +197,40 @@ end
 		for i, category in ipairs(sortedCategories) do
 			self.categoryDropdown:AddChoice(category)
 		end
+	end
 
-		local searchLabel2 = vgui.Create("DLabel", self.tabContainer)
-		searchLabel2:SetPos(w - 250, 8)
-		searchLabel2:SetFont("Impulse-Elements18-Shadow")
-		searchLabel2:SetText("Search:")
-		searchLabel2:SetTextColor(grey)
-		searchLabel2:SizeToContents()
+	local searchLabel2 = vgui.Create("DLabel", self.tabContainer)
+	searchLabel2:SetPos(w - 250, 8)
+	searchLabel2:SetFont("Impulse-Elements18-Shadow")
+	searchLabel2:SetText("Search:")
+	searchLabel2:SetTextColor(grey)
+	searchLabel2:SizeToContents()
 
-		self.searchBar = vgui.Create("DTextEntry", self.tabContainer)
-		self.searchBar:SetPos(w - 190, 5)
-		self.searchBar:SetSize(180, 25)
-		self.searchBar:SetFont("Impulse-Elements18-Shadow")
-		self.searchBar:SetPlaceholderText("Item name...")
-		self.searchBar:SetValue(preservedSearch)
-		self.searchBar.panel = self
-		self.searchBar.lastValue = preservedSearch
-		function self.searchBar:Paint(pw, ph)
-			draw.RoundedBox(4, 0, 0, pw, ph, dropdownBg)
-			self:DrawTextEntryText(grey, searchCursor, grey)
+	self.searchBar = vgui.Create("DTextEntry", self.tabContainer)
+	self.searchBar:SetPos(w - 190, 5)
+	self.searchBar:SetSize(180, 25)
+	self.searchBar:SetFont("Impulse-Elements18-Shadow")
+	self.searchBar:SetPlaceholderText("Item name...")
+	self.searchBar:SetValue(preservedSearch)
+	self.searchBar.panel = self
+	self.searchBar.lastValue = preservedSearch
+	function self.searchBar:Paint(pw, ph)
+		draw.RoundedBox(4, 0, 0, pw, ph, dropdownBg)
+		self:DrawTextEntryText(grey, searchCursor, grey)
+	end
+	function self.searchBar:Think()
+		local currentValue = self:GetValue()
+		if currentValue ~= self.lastValue then
+			self.lastValue = currentValue
+			self.panel.searchText = string.lower(currentValue)
+			self.panel:PopulateInventories()
 		end
-		function self.searchBar:Think()
-			local currentValue = self:GetValue()
-			if currentValue ~= self.lastValue then
-				self.lastValue = currentValue
-				self.panel.searchText = string.lower(currentValue)
-				self.panel:PopulateInventories()
-			end
-		end
+	end
 	--[[
 	else
 		self.tabContainer:Hide() ]]--
-	end
 
-	local topOffset = showFilter and 90 or 55
+	local topOffset = 90
 	local panelWidth = (w - 8) / 2
 
 	self.invScroll = vgui.Create("DScrollPanel", self)
@@ -309,7 +309,7 @@ function PANEL:PopulateInventories()
 		for v, k in SortedPairsByMemberValue(localInv, "sortWeight", invertSort) do
 			local itemX = impulse.Inventory.Items[k.id]
 			local categoryMatch = self.currentCategory == "All" or (itemX.Category == self.currentCategory)
-			local searchMatch = self.searchText == "" or string.find(string.lower(itemX.Name), self.searchText, 1, true)
+			local searchMatch = (not self.searchText or self.searchText == "") or string.find(string.lower(itemX.Name), self.searchText, 1, true)
 			if categoryMatch and searchMatch then
 				local otherItem = self.items[k.id]
 				if itemX.CanStack and otherItem then
@@ -341,7 +341,7 @@ function PANEL:PopulateInventories()
 		for v, k in SortedPairsByMemberValue(localInvStorage, "sortWeight", invertSort) do
 			local itemX = impulse.Inventory.Items[k.id]
 			local categoryMatch = self.currentCategory == "All" or (itemX.Category == self.currentCategory)
-			local searchMatch = self.searchText == "" or string.find(string.lower(itemX.Name), self.searchText, 1, true)
+			local searchMatch = (not self.searchText or self.searchText == "") or string.find(string.lower(itemX.Name), self.searchText, 1, true)
 			if categoryMatch and searchMatch then
 				local otherItem = self.itemsStorage[k.id]
 				if itemX.CanStack and otherItem then
