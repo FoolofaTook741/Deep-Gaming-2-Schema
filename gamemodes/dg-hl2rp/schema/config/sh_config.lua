@@ -360,7 +360,7 @@ impulse.Config.Achievements = {
 	},
 	["ach_sd"] = {
 		Name = "Decapitation",
-		Desc = "Kill the Server Director or Deputy Community Director.",
+		Desc = "Kill the Server Director.",
 		Icon = Material("sprites/orangecore2_gmod"),
 		Points = 100
 	},
