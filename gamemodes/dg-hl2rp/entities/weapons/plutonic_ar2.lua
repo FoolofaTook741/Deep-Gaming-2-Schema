@@ -125,7 +125,7 @@ local copyFirerate = fireRate + 0
 function SWEP:CustomThink()
 	if self.ar2eliteaugument_equipped then
 		if self:GetIronsights() then
-			self.Primary.Recoil = 0.6
+			self.Primary.Recoil = 0.75
 		else
 			self.Primary.Recoil = copyRecoil
 		end

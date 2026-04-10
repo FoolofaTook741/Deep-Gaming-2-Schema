@@ -71,6 +71,7 @@ SWEP.Primary.Damage = 19
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.01
 SWEP.Primary.Delay = RPM(280)
+SWEP.Primary.Automatic = true
 SWEP.UseIronsightsRecoil = false
 
 SWEP.Primary.Ammo = "Rifle"
