@@ -1,24 +1,118 @@
+CLASS_UNION    = 1
+CLASS_HELIX    = 2
+CLASS_GRID     = 3
+CLASS_SWORD    = 4
+CLASS_GHOST    = 5
+CLASS_DISPATCH = 6
+
 cptagtable = {"UNION", "HELIX", "GRID", "SWORD", "GHOST", "ERROR"}
 
+-- change body groups here
+local CLASS_BG = {
+    [CLASS_UNION]    = { [1]=0, [3]=0, [4]=0, [5]=1, [6]=0, [7]=0, [8]=0 },
+    [CLASS_HELIX]    = { [1]=0, [2]=4, [3]=0, [4]=0, [5]=0, [6]=0, [7]=0, [8]=1 },
+    [CLASS_GRID]     = { [1]=0, [2]=12,[3]=0, [4]=0, [5]=0, [6]=0, [7]=0, [8]=0 },
+    [CLASS_SWORD]    = { [1]=0, [2]=2,[3]=0, [4]=0, [5]=1, [6]=1, [7]=0, [8]=0 },
+    [CLASS_GHOST]    = { [1]=1, [2]=8, [3]=0, [4]=0, [5]=0, [6]=0, [7]=0, [8]=0 },
+    [CLASS_DISPATCH] = { [1]=1, [3]=0, [4]=0, [5]=1, [6]=0, [7]=0, [8]=0 },
+}
+
+local SHOULDERPAD_BG = {
+    [CLASS_HELIX] = { [2]=6 },
+    [CLASS_GRID]  = { [2]=14 },
+    [CLASS_GHOST] = { [2]=10 },
+    [CLASS_SWORD] = { [2]=16 },
+}
+
+
+local function applyBodygroups(ply, bgs)
+    for index, value in pairs(bgs) do
+        ply:SetBodygroup(index, value)
+    end
+end
+
+local function setupDispatch(ply)
+    ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
+    ply:SetMaxArmor(0)
+    applyBodygroups(ply, CLASS_BG[CLASS_DISPATCH])
+    ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
+    ply:SetBodygroup(ply:FindBodygroupByName("hair"),  ply.impulseData.hair  or 0)
+    ply:SetRPName("Operator " .. ply:GetSavedRPName())
+end
+
+--   isJunior = true   | skips pistol for i4
+--   isCommand = true  | overrides bg[1] to 1 for all classes
+--   bgOverride        | is a per-class BG, just union and vcmd rn
+--   model             | per-class model override
+--   submat            | per-class submaterial
+--   globalSubmat = "" | same submaterial applied to all classes
+--   noItems = true    | skips GiveInventoryItem, rank uses itemsAdd instead
+local function makeOnBecome(rankName, opts)
+    opts = opts or {}
+    return function(ply, rank)
+        local class = ply:GetTeamClass()
+
+        if class == CLASS_DISPATCH then
+            setupDispatch(ply)
+            return
+        end
+
+        ply:SetModel(
+            (opts.model and opts.model[class])
+            or ("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
+        )
+
+        ply:SetMaxArmor(0)
+
+        local bgs = {}
+        for k, v in pairs(CLASS_BG[class]) do bgs[k] = v end
+        if opts.bgOverride and opts.bgOverride[class] then
+            for k, v in pairs(opts.bgOverride[class]) do bgs[k] = v end
+        end
+        if opts.isCommand then bgs[1] = 1 end
+        applyBodygroups(ply, bgs)
+
+        if not opts.noItems then
+            if not opts.isJunior then
+                ply:GiveInventoryItem("wep_pistol", 1, true)
+            end
+            ply:GiveInventoryItem("wep_stunstick", 1, true)
+            ply:GiveInventoryItem("clo_cphelmet",  1, true)
+            ply:GiveInventoryItem("item_vocoder",  1, true)
+        end
+
+        if class == CLASS_GRID then
+            ply:Give("weapon_lvsrepair")
+        end
+
+        if opts.submat and opts.submat[class] then
+            ply:SetSubMaterial(2, opts.submat[class])
+        elseif opts.globalSubmat then
+            ply:SetSubMaterial(2, opts.globalSubmat)
+        end
+
+        ply:SetRPName("MPF:" .. rankName .. "." .. cptagtable[class] .. "-" .. math.random(10, 999))
+    end
+end
+
 TEAM_CP = impulse.Teams.Define({
-	name = "Metro Police Force",
-	color = Color(65, 105, 200, 255),
-	-- Description should be on one single line or the formatting will die
-	description = [[The M.P.F. are the Combine's human police force. They are responsible for the enforcement of the Combine’s laws, and controlling the population. The M.P.F. consists of multiple divisions, each with a specific role. Many join the M.P.F. in hopes of getting better rations, or simply for the power it brings over their fellow citizens.]],
-	loadout = {"impulse_hands", "weapon_physgun", "gmod_tool"},
-	salary = 250,
-	model = "models/wn7new/metropolice/male_0" .. math.random(1,6) .. ".mdl",
-	handModel = "models/weapons/c_metrocop_hands.mdl",
-	spawnLoc = true,
-	percentLimit = true,
-	limit = 0.45,
-	xp = 150,
-	cp = true,
-	doorGroup = {1, 2, 6, 7},
-	blockNameChange = true,
-	runSpeed = 225,
-	
-	quiz = {
+    name = "Metro Police Force",
+    color = Color(65, 105, 200, 255),
+    description = [[The M.P.F. are the Combine's human police force. They are responsible for the enforcement of the Combine's laws, and controlling the population. The M.P.F. consists of multiple divisions, each with a specific role. Many join the M.P.F. in hopes of getting better rations, or simply for the power it brings over their fellow citizens.]],
+    loadout = {"impulse_hands", "weapon_physgun", "gmod_tool"},
+    salary = 250,
+    model = "models/wn7new/metropolice/male_0" .. math.random(1,6) .. ".mdl",
+    handModel = "models/weapons/c_metrocop_hands.mdl",
+    spawnLoc = true,
+    percentLimit = true,
+    limit = 0.45,
+    xp = 150,
+    cp = true,
+    doorGroup = {1, 2, 6, 7},
+    blockNameChange = true,
+    runSpeed = 225,
+
+   quiz = {
 		enabled = true,
 		handbook = "https://docs.google.com/document/d/16Ep9L7tQCPm81AAO41TcxHLy4md96m0GgPlGsFhCoCo/edit?tab=t.0",
 		{
@@ -223,7 +317,7 @@ TEAM_CP = impulse.Teams.Define({
 		}
 	},
 
-	classes = {
+    classes = {
 		{ -- 1
 			name = "UNION",
 			description = "UNION is the main patrol force of the Civil Protection. UNION is often tasked with block searches, patrolling and general policing. In the event of civil unrest they can act as riot control units. For this reason UNION units are provided the most powerful weaponry out of all divisions.",
@@ -286,1107 +380,165 @@ TEAM_CP = impulse.Teams.Define({
 		}
 	},
 
-	ranks = {
-		{
-			name = "i4",
-			description = "i4",
-			xp = 0,
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-					return
-				end
-				if ply:GetTeamClass() ~= CLASS_DISPATCH then
-					ply:SetRPName("MPF:i4." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				end
-			end
-		},
-		{
-			name = "i3",
-			description = "i3",
-			xp = 0,
-			whitelistLevel = 1,
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetMaxArmor(0)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 1)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-				if ply:GetTeamClass() ~= CLASS_DISPATCH then
-					ply:SetRPName("MPF:i3." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				end
-			end
-		},
-		{
-			name = "i2",
-			description = "i2",
-			doorGroup = {1, 2, 3, 6, 7},
-			xp = 0,
-			whitelistLevel = 2,
-			whitelistFailMessage = "You must be promoted to use this rank.",
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 1)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-				if ply:GetTeamClass() ~= CLASS_DISPATCH then
-					ply:SetRPName("MPF:i2." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				end
-			end
-		},
-		{
-			name = "i1",
-			description = "i1",
-			doorGroup = {1, 2, 3, 6, 7},
-			xp = 0,
-			whitelistLevel = 3,
-			whitelistFailMessage = "You must be promoted to use this rank.",
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 1)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-				if ply:GetTeamClass() ~= CLASS_DISPATCH then
-					ply:SetRPName("MPF:i1." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				end
-			end
-		},
-		{
-			name = "OfC",
-			description = "OfC",
-			doorGroup = {1, 2, 3, 6, 7},
-			xp = 0,
-			whitelistLevel = 4,
-			whitelistFailMessage = "You must be promoted to use this rank.",
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 8)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 1)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 8)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 8)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 8)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:RL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-			end
-		},
-		{
-			name = "SqL",
-			description = "SqL",
-			doorGroup = {1, 2, 3, 4, 6, 7},
-			xp = 0,
-			whitelistLevel = 5,
-			whitelistFailMessage = "You must be promoted to use this rank.",
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 10)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 1)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:SqL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 10)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:SqL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 10)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:SqL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:SqL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 10)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:SqL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 10)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-			end
-		},
-		{
-			name = "DvL",
-			description = "DvL",
-			doorGroup = {1, 2, 3, 4, 6, 7},
-			xp = 0,
-			whitelistLevel = 6,
-			whitelistFailMessage = "You must be promoted to use this rank.",
-			limit = 5,
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_07.mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 14)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 1)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetSubMaterial(2, "horizons_submats/union_dvl.vmt")
-					ply:SetRPName("MPF:DvL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 14)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetSubMaterial(2, "horizons_submats/defender_dvl.vmt")
-					ply:SetRPName("MPF:DvL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 14)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetSubMaterial(2, "horizons_submats/xray_dvl.vmt")
-					ply:SetRPName("MPF:DvL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetSubMaterial(2, "horizons_submats/union_dvl.vmt")
-					ply:SetRPName("MPF:DvL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 14)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:DvL." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 14)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-			end
-		},
-		{
-			name = "DcO",
-			description = "DcO",
-			doorGroup = {1, 2, 3, 4, 5, 6, 7},
-			xp = 0,
-			whitelistLevel = 7,
-			whitelistFailMessage = "You must be promoted to use this rank.",
-			limit = 3,
-			onBecome = function(ply, rank)
-				ply:SetSubMaterial(2,"horizons_submats/dco.vmt")
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 1)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:DcO." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:DcO." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:DcO." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 0)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:DcO." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:DcO." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-			end
-		},
-		{
-			name = "VCmD",
-			description = "VCmD",
-			itemsAdd = {
-				{class = "wep_sw500", amount = 1},
-				{class = "wep_stunstick", amount = 1},
-				{class = "clo_cphelmet", amount = 1},
-				{class = "item_vocoder", amount = 1}
-			},
-			doorGroup = {1, 2, 3, 4, 5, 6, 7},
-			xp = 0,
-			whitelistLevel = 8,
-			whitelistFailMessage = "You must be promoted to use this rank.",
-			limit = 1,
-			onBecome = function(ply, rank)
-				ply:SetSubMaterial(2,"horizons_submats/cmd.vmt")
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:Give("weapon_lvsrepair")
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-				ply:SetRPName("MPF:VCmD." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-			end
-		},
-		{
-			name = "CmD",
-			description = "CmD",
-			doorGroup = {1, 2, 3, 4, 5, 6, 7},
-			xp = 0,
-			whitelistLevel = 9,
-			whitelistFailMessage = "You must be promoted to use this rank.",
-			limit = 1,
-			onBecome = function(ply, rank)
-				ply:SetSubMaterial(2,"horizons_submats/cmd.vmt")
-				if ply:GetTeamClass() == CLASS_UNION then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 18)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 1)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:CmD." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GRID then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 18)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:Give("weapon_lvsrepair")
-					ply:SetRPName("MPF:CmD." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_HELIX then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 18)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 1)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:CmD." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_SWORD then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.1)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 16)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:CmD." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_GHOST then
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 18)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 0)
-					ply:SetBodygroup(6, 1)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:GiveInventoryItem("wep_pistol", 1, true)
-					ply:GiveInventoryItem("wep_stunstick", 1, true)
-					ply:GiveInventoryItem("clo_cphelmet", 1, true)
-					ply:GiveInventoryItem("item_vocoder", 1, true)
-					ply:SetRPName("MPF:CmD." .. cptagtable[ply:GetTeamClass()] .. "-" .. math.random(10, 999))
-				elseif ply:GetTeamClass() == CLASS_DISPATCH then
-					--ply:SetModel("models/dpfilms/metropolice/playermodels/pm_phoenix_police.mdl")
-					ply:SetModel("models/wn7new/metropolice/male_0" .. math.random(1,9) .. ".mdl")
-					ply:SetMaxArmor(0)
-					ply:SetRunSpeed(impulse.Config.JogSpeed * 1.05)
-					ply:SetBodygroup(1, 1)
-					ply:SetBodygroup(2, 18)
-					ply:SetBodygroup(3, 0)
-					ply:SetBodygroup(4, 0)
-					ply:SetBodygroup(5, 1)
-					ply:SetBodygroup(6, 0)
-					ply:SetBodygroup(7, 0)
-					ply:SetBodygroup(8, 0)
-					ply:SetBodygroup(ply:FindBodygroupByName("beard"), ply.impulseData.beard or 0)
-    				ply:SetBodygroup(ply:FindBodygroupByName("hair"), ply.impulseData.hair or 0)
-					ply:SetRPName("Operator "..ply:GetSavedRPName())
-				end
-			end
-		}
-	}
+    ranks = {
+        {
+            name = "i4",
+            description = "i4",
+            xp = 0,
+            onBecome = makeOnBecome("i4", {
+                isJunior = true,
+                bgOverride = {
+                    [CLASS_UNION] = { [7]=0 }, -- no shoulder lamp at i4
+                },
+            }),
+        },
+        {
+            name = "i3",
+            description = "i3",
+            xp = 0,
+            whitelistLevel = 1,
+            onBecome = makeOnBecome("i3"),
+        },
+        {
+            name = "i2",
+            description = "i2",
+            doorGroup = {1, 2, 3, 6, 7},
+            xp = 0,
+            whitelistLevel = 2,
+            whitelistFailMessage = "You must be promoted to use this rank.",
+            onBecome = makeOnBecome("i2"),
+        },
+        {
+            name = "i1",
+            description = "i1",
+            doorGroup = {1, 2, 3, 6, 7},
+            xp = 0,
+            whitelistLevel = 3,
+            whitelistFailMessage = "You must be promoted to use this rank.",
+            onBecome = makeOnBecome("i1"),
+        },
+        {
+            name = "OfC",
+            description = "OfC",
+            doorGroup = {1, 2, 3, 6, 7},
+            xp = 0,
+            whitelistLevel = 4,
+            whitelistFailMessage = "You must be promoted to use this rank.",
+            onBecome = makeOnBecome("OfC", {
+		        bgOverride = SHOULDERPAD_BG,
+		    }),
+        },
+        {
+            name = "SqL",
+            description = "SqL",
+            doorGroup = {1, 2, 3, 4, 6, 7},
+            xp = 0,
+            whitelistLevel = 5,
+            whitelistFailMessage = "You must be promoted to use this rank.",
+            onBecome = makeOnBecome("SqL", {
+		        bgOverride = SHOULDERPAD_BG,
+		    }),
+        },
+        {
+            name = "DvL",
+            description = "DvL",
+            doorGroup = {1, 2, 3, 4, 6, 7},
+            xp = 0,
+            whitelistLevel = 6,
+            whitelistFailMessage = "You must be promoted to use this rank.",
+            limit = 5,
+            onBecome = makeOnBecome("DvL", {
+            	bgOverride = SHOULDERPAD_BG,
+                model = {
+                    [CLASS_UNION] = "models/wn7new/metropolice/male_07.mdl",
+                },
+                submat = {
+                    [CLASS_UNION] = "horizons_submats/union_dvl.vmt",
+                    [CLASS_HELIX] = "horizons_submats/xray_dvl.vmt",
+                    [CLASS_GRID]  = "horizons_submats/defender_dvl.vmt",
+                    [CLASS_SWORD] = "horizons_submats/union_dvl.vmt",
+                },
+            }),
+        },
+        {
+            name = "DcO",
+            description = "DcO",
+            doorGroup = {1, 2, 3, 4, 5, 6, 7},
+            xp = 0,
+            whitelistLevel = 7,
+            whitelistFailMessage = "You must be promoted to use this rank.",
+            limit = 3,
+            onBecome = makeOnBecome("DcO", {
+            	bgOverride = {
+                    [CLASS_UNION] = { [2]=16, [5]=0, [7]=0 },
+                    [CLASS_HELIX]  = { [2]=16 },
+		            [CLASS_GRID]   = { [2]=16 },
+		            [CLASS_SWORD]  = { [2]=16 },
+		            [CLASS_GHOST]  = { [2]=16 },
+		        },
+                globalSubmat = "horizons_submats/dco.vmt",
+            }),
+        },
+        {
+            name = "VCmD",
+            description = "VCmD",
+            itemsAdd = {
+                {class = "wep_sw500",    amount = 1},
+                {class = "wep_stunstick",amount = 1},
+                {class = "clo_cphelmet", amount = 1},
+                {class = "item_vocoder", amount = 1},
+            },
+            doorGroup = {1, 2, 3, 4, 5, 6, 7},
+            xp = 0,
+            whitelistLevel = 8,
+            whitelistFailMessage = "You must be promoted to use this rank.",
+            limit = 1,
+            onBecome = makeOnBecome("VCmD", {
+                isCommand = true,
+                noItems = true,
+                globalSubmat = "horizons_submats/cmd.vmt",
+                bgOverride = {
+                    [CLASS_UNION] = { [2]=16, [5]=0, [7]=0 },
+                    [CLASS_HELIX]  = { [2]=16 },
+		            [CLASS_GRID]   = { [2]=16 },
+		            [CLASS_SWORD]  = { [2]=16 },
+		            [CLASS_GHOST]  = { [2]=16 },
+		        },
+            }),
+        },
+        {
+            name = "CmD",
+            description = "CmD",
+            doorGroup = {1, 2, 3, 4, 5, 6, 7},
+            xp = 0,
+            whitelistLevel = 9,
+            whitelistFailMessage = "You must be promoted to use this rank.",
+            limit = 1,
+            onBecome = makeOnBecome("CmD", {
+                isCommand = true,
+                globalSubmat = "horizons_submats/cmd.vmt",
+                bgOverride = {
+		            [CLASS_UNION] = { [2]=16, [5]=0, [7]=0 },
+	                [CLASS_HELIX]  = { [2]=16 },
+		            [CLASS_GRID]   = { [2]=16 },
+		            [CLASS_SWORD]  = { [2]=16 },
+		            [CLASS_GHOST]  = { [2]=16 },
+		        }
+            }),
+        },
+    }
 })
 
-CLASS_UNION = 1
-CLASS_HELIX = 2
-CLASS_GRID = 3
-CLASS_SWORD = 4
-CLASS_GHOST = 5
-CLASS_DISPATCH = 6
-
-RANK_I4 = 1
-RANK_I3 = 2
-RANK_I2 = 3
-RANK_I1 = 4
-RANK_OFC = 5
-RANK_SQL = 6
-RANK_DVL = 7
-RANK_DCO = 8
+RANK_I4   = 1
+RANK_I3   = 2
+RANK_I2   = 3
+RANK_I1   = 4
+RANK_OFC  = 5
+RANK_SQL  = 6
+RANK_DVL  = 7
+RANK_DCO  = 8
 RANK_VCMD = 9
-RANK_CMD = 10
-
+RANK_CMD  = 10
 
 impulse.SubmatsConfig = {
 	[TEAM_CP] = {
