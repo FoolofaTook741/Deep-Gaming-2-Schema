@@ -35,3 +35,25 @@ end
 
 
 impulse.RegisterItem(ITEM)
+
+local BATON_DRAWN_SPEED = impulse.Config.JogSpeed * 1.1
+
+if SERVER then
+	hook.Add("PlayerSwitchWeapon", "MPF_StunstickSpeedBonus", function(ply, oldWeapon, newWeapon)
+		if not IsValid(ply) or ply:Team() ~= TEAM_CP then return end
+
+		local newClass = IsValid(newWeapon) and newWeapon:GetClass() or ""
+		local oldClass = IsValid(oldWeapon) and oldWeapon:GetClass() or ""
+
+		if newClass == "plutonic_stunstick" then
+			ply:SetRunSpeed(BATON_DRAWN_SPEED)
+		elseif oldClass == "plutonic_stunstick" then
+			ply:SetRunSpeed(impulse.Config.JogSpeed)
+		end
+	end)
+
+	hook.Add("PlayerDeath", "MPF_StunstickSpeedBonus_Death", function(ply)
+		if not IsValid(ply) or ply:Team() ~= TEAM_CP then return end
+		ply:SetRunSpeed(impulse.Config.JogSpeed)
+	end)
+end
