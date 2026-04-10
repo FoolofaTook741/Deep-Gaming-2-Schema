@@ -52,11 +52,11 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("LS2.SW500.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.SW500.Inside")
-SWEP.Primary.Recoil = 8 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 49
+SWEP.Primary.Recoil = 5 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 60
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Cone = 0.010
+SWEP.Primary.Cone = 0.0002
 SWEP.Primary.Delay = RPM(120)
 
 SWEP.Primary.Ammo = "357"
