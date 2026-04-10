@@ -39,7 +39,7 @@ function ITEM:OnEquip(ply)
 end
 
 function ITEM:CanEquip(ply)
-	return not ply:IsCP() and ply:Team() ~= TEAM_VORT
+	return not ply:IsCP() and ply:Team() ~= TEAM_VORT and not ply.HasConscriptArmor
 end
 
 function ITEM:UnEquip(ply)
