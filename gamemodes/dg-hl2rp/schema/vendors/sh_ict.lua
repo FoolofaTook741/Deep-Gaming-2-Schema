@@ -9,7 +9,7 @@ VENDOR.Desc = "Can sell supplies to the members of the I.C.T."
 VENDOR.Model = "models/hlvr/characters/hazmat_worker/hazmat_worker_female.mdl"
 VENDOR.Skin = 1
 VENDOR.Gender = "female" -- male, female, cp
-VENDOR.Talk = false
+VENDOR.Talk = true
 
 VENDOR.Sell = {
 	["item_emptybag"] = {
