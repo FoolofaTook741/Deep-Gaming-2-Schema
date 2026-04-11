@@ -280,7 +280,7 @@ function SWEP:ShootBullet(damage, num_bullets, aimcone, override_src, override_d
 	end
 
 	bullet.Tracer = self.Primary.TracerEveryX or 1 -- Show a tracer on every x bullets
-	bullet.Force = 1 -- Amount of force to give to phys objects
+	bullet.Force = 0 -- Amount of force to give to phys objects
 	bullet.Damage = damage
 	bullet.AmmoType = "Pistol"
 	Plutonic.Framework.FireBullets(self, bullet)
