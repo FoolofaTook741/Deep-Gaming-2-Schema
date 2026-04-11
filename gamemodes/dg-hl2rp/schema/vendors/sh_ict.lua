@@ -6,9 +6,9 @@ VENDOR.UniqueID = "ictvendor"
 VENDOR.Name = "Infestation Control Team Supplier"
 VENDOR.Desc = "Can sell supplies to the members of the I.C.T."
 
-VENDOR.Model = "models/hlvr/characters/worker/npc/worker_combine.mdl"
-VENDOR.Skin = 0
-VENDOR.Gender = "male" -- male, female, cp
+VENDOR.Model = "models/hlvr/characters/hazmat_worker/hazmat_worker_female.mdl"
+VENDOR.Skin = 1
+VENDOR.Gender = "female" -- male, female, cp
 VENDOR.Talk = false
 
 VENDOR.Sell = {
