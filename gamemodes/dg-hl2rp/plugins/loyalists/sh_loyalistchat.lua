@@ -8,7 +8,7 @@ local loyalistLevelCommand = {
     onRun = function(ply, arg, rawText)
     	if ply:GetTeamWhitelist("TEAM_CA") < 1 then
 			if ply:GetTeamWhitelist("TEAM_CP") < 6 then
-				if !ply:IsSuperAdmin() then
+				if not ply:IsSuperAdmin() then
     				ply:Notify("You cannot use this command.")
 					return
 				end
@@ -22,8 +22,11 @@ local loyalistLevelCommand = {
 
 		if level then
 			level = tonumber(level)
-
 			level = math.floor(level)
+			if level < 0 or level > 6 then
+		        ply:Notify("Invalid level. Must be between 0 and 6.")
+		        return
+		    end
 		else
 			level = 0
 		end
