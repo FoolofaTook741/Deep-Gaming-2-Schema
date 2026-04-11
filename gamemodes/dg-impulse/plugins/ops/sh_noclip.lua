@@ -4,7 +4,7 @@ hook.Add("PlayerNoClip", "opsNoclip", function(ply, state)
 			if state then
 				impulse.Ops.Cloak(ply)
 				ply:GodEnable()
-				ply:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+				ply:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 				ply:SetNoTarget(true)
 				ply.FlashSafe = true
 
