@@ -13,14 +13,14 @@ function entMeta:SetupCombineCamera()
 		DISPATCH_FINDER = ents.Create("base_entity")
 		DISPATCH_FINDER:SetName("__cctvhook")
 		
-		function DISPATCH_FINDER:AcceptInput(name, ply, camera, data)
-			if data == "OnFoundPlayer" then
-				if impulse.Dispatch.Cameras[camera] and ply.GetMoveType(ply) != MOVETYPE_NOCLIP then
-					if not impulse.Dispatch.Cameras[camera][ply] then
-						impulse.Dispatch.Cameras[camera][ply] = {}
-					end
-				end
-			end
+		function DISPATCH_FINDER:AcceptInput(name, activator, caller, data)
+		    if data == "OnFoundPlayer" then
+		        if impulse.Dispatch.Cameras[caller] and IsValid(activator) and activator:GetMoveType() != MOVETYPE_NOCLIP then
+		            if not impulse.Dispatch.Cameras[caller][activator] then
+		                impulse.Dispatch.Cameras[caller][activator] = {}
+		            end
+		        end
+		    end
 		end
 
 		DISPATCH_FINDER:Spawn()
@@ -134,7 +134,7 @@ local function CameraTick()
 			continue
 		end 
 
-		local pos = v.GetPos(v)
+		local pos = v:GetPos()
 
 		for ply,info in pairs(k) do
 			if not IsValid(ply) or not ply:Alive() or ply:GetSyncVar(SYNC_ARRESTED, false) then
@@ -142,11 +142,11 @@ local function CameraTick()
 				continue
 			end
 
-			if pos.DistToSqr(pos, ply.GetPos(ply)) > range or not v.IsLineOfSightClear(v, ply) then
+			if pos:DistToSqr(ply:GetPos()) > range or not v:IsLineOfSightClear(ply) then
 				k[ply] = nil
 			else
 				local violations = {}
-				local isCrime, idKnown, crimes, firstCrime = ply.IsRebelSmart(ply)
+				local isCrime, idKnown, crimes, firstCrime = ply:IsRebelSmart()
 
 				if isCrime then
 					if not info.Detected then

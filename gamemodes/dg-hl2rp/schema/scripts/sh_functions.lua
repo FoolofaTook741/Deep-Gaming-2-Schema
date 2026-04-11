@@ -19,7 +19,7 @@ end
 function meta:IsRebel() -- if u want a smarter is rebel then make it SEPERATE to this func, this function should just be based off team,class and bodygroups/skins/models.
 
 	if self:Team() == TEAM_CITIZEN or self:Team() == TEAM_CWU then
-		if (self:GetBodygroup(2) == 8) or (self:GetBodygroup(2) == 9) or (self:GetBodygroup(2) == 10) or (self:GetBodygroup(2) == 11) or (self:GetBodygroup(2) == 12) or (self:GetBodygroup(2) == 38) or (self:GetBodygroup(2) == 39) then -- if torso is rebel
+		if (self:GetBodygroup(2) == 8) or (self:GetBodygroup(2) == 7) or (self:GetBodygroup(2) == 9) or (self:GetBodygroup(2) == 10) or (self:GetBodygroup(2) == 11) or (self:GetBodygroup(2) == 12) or (self:GetBodygroup(2) == 25) or (self:GetBodygroup(2) == 26) then -- if torso is rebel
 			return true
 		elseif self:GetBodygroup(3) == 2 or self:GetBodygroup(3) == 3 or self:GetBodygroup(3) == 4 then
 			return true
@@ -73,7 +73,7 @@ function meta:IsRebelSmart()
 	local firstCrime
 	local crimes = {}
 
-	if self.IsCP(self) and not self.IsRogue then
+	if self:IsCP() and not self.IsRogue then
 		return false, false, {}
 	end
 
@@ -94,10 +94,10 @@ function meta:IsRebelSmart()
 		crimes[CRIME_BOL] = true
 	end
 
-	local wep = self:GetActiveWeapon(self)
+	local wep = self:GetActiveWeapon()
 
 	if IsValid(wep) then
-		local wepclass = wep.GetClass(wep)
+		local wepclass = wep:GetClass()
 
 		if (strsub(wepclass, 1, 3) == "plutonic_" or strsub(wepclass, 1, 3) == "plutonic") and not allowedWeps[wepclass] then
 			isCriminal = true
@@ -106,9 +106,9 @@ function meta:IsRebelSmart()
 		end
 	end
 
-	local t = self.Team(self)
+	local t = self:Team()
 
-	if t == TEAM_CITIZEN and (self:GetBodygroup(2) == 8 or self:GetBodygroup(2) == 9 or self:GetBodygroup(2) == 11 or self:GetBodygroup(2) == 12 or self:GetBodygroup(2) == 11 or self:GetBodygroup(3) == 6 or self.IsARebel) then -- rebel suit
+	if t == TEAM_CITIZEN and ((self:GetBodygroup(2) == 8) or (self:GetBodygroup(2) == 7) or (self:GetBodygroup(2) == 9) or (self:GetBodygroup(2) == 10) or (self:GetBodygroup(2) == 11) or (self:GetBodygroup(2) == 12) or (self:GetBodygroup(2) == 25) or (self:GetBodygroup(2) == 26)) then -- rebel suit
 		isCriminal = true
 		firstCrime = firstCrime or CRIME_ANTCIITIZEN
 		crimes[CRIME_ANTCIITIZEN] = true
@@ -275,7 +275,7 @@ local gasMaskTeams = {
 }
 
 function meta:HasGasMask()
-	if gasMaskTeams[self.Team(self)] then
+	if gasMaskTeams[self:Team()] then
 		return true
 	end
 
@@ -283,7 +283,7 @@ function meta:HasGasMask()
 		return true
 	end
 
-	if self:GetMoveType(self) == MOVETYPE_NOCLIP then
+	if self:GetMoveType() == MOVETYPE_NOCLIP then
 		return true
 	end
 
