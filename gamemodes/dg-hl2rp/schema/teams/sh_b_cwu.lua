@@ -46,7 +46,7 @@ TEAM_CWU = impulse.Teams.Define({
 				{2, 6},
 				{3,0}
 			},
-			xp = 800,
+			xp = 300,
 			percentLimit = false,
 			noMenu = true
 		},
