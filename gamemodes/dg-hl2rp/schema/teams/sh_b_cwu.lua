@@ -46,7 +46,7 @@ TEAM_CWU = impulse.Teams.Define({
 				{2, 6},
 				{3,0}
 			},
-			xp = 300,
+			xp = 800,
 			percentLimit = false,
 			noMenu = true
 		},
@@ -55,7 +55,7 @@ TEAM_CWU = impulse.Teams.Define({
 			description = "Infestation Control Teams work with Combine units to contain various outbreaks.",
 			skin = 0,
 			model = "models/hlvr/characters/hazmat_worker/hazmat_worker_player.mdl",
-			xp = 400,
+			xp = 500,
 			noMenu = true,
 		},
 		{
@@ -105,8 +105,8 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(2,5)
 					ply:SetBodygroup(3,0)
 				else
-					if ply:IsFemale() then
-						ply:setmodel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
+					if ply:IsCharacterFemale() then
+						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
 					else
 						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
 					end
@@ -158,8 +158,8 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(3,0)
 					table.insert(ply.DoorGroups, 7) -- Add Research Doorgroup
 				else
-					if ply:IsFemale() then
-						ply:setmodel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
+					if ply:IsCharacterFemale() then
+						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
 					else
 						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
 					end
@@ -213,8 +213,8 @@ TEAM_CWU = impulse.Teams.Define({
 				else
 					ply:SetBodygroup(1,1)
 					ply:SetBodygroup(2,0)
-					if ply:IsFemale() then
-						ply:setmodel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
+					if ply:IsCharacterFemale() then
+						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
 					else
 						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
 					end
@@ -269,8 +269,9 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(3,0)
 					table.insert(ply.DoorGroups, 7) -- Add Research Doorgroup
 				else
-					if ply:IsFemale() then
-						ply:setmodel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
+
+					if ply:IsCharacterFemale() then
+						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
 					else
 						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
 					end
@@ -347,8 +348,8 @@ TEAM_CWU = impulse.Teams.Define({
 					ply:SetBodygroup(2,5)
 					ply:SetBodygroup(3,5)
 				else
-					if ply:IsFemale() then
-						ply:setmodel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
+					if ply:IsCharacterFemale() then
+						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_female_player.mdl")
 					else
 						ply:SetModel("models/hlvr/characters/hazmat_worker/hazmat_worker_male_player.mdl")
 					end
