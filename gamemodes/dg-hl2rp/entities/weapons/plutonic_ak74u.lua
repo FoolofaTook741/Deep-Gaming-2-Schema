@@ -57,12 +57,12 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("LS2.AK47U.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.AK47U.Inside")
-SWEP.Primary.Recoil = 2.0 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 13
+SWEP.Primary.Recoil = 1.0 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Damage = 11
 SWEP.Primary.PenetrationScale = 1.6
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.015
-SWEP.Primary.Delay = RPM(650)
+SWEP.Primary.Delay = RPM(750)
 
 SWEP.Primary.Ammo = "Rifle"
 SWEP.Primary.Automatic = true
