@@ -167,6 +167,14 @@ if SERVER then
 		container:SetAngles(entAng)
 		container:Spawn()
 
-		ply:Notify("Lootable container for with pool as "..pool.." created. Please mark and save the generated entity.")
+		container.impulseSaveEnt = true
+
+		timer.Simple(0.1, function()
+			if IsValid(container) then
+				ply:ConCommand("impulse_save_saveall")
+			end
+		end)
+
+		ply:Notify("Lootable container with pool '"..pool.."' created, marked, and saved.")
 	end)
 end

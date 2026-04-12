@@ -49,6 +49,7 @@ function SpawnCluster(num)
     spore:Spawn()
 end
 
+--[[
 function SpawnTrash(num)
     local pos = impulse.Config.TrashSpawns[num]
     if not pos then return end
@@ -63,7 +64,7 @@ function SpawnTrash(num)
     spore:SetUnFreezable(true)
     spore:SetMoveType(MOVETYPE_NONE)
     spore:Spawn()
-end
+end ]]--
 
 function SpawnBarnacleSpawner(num)
     local pos = impulse.Config.SporeClusters[num]

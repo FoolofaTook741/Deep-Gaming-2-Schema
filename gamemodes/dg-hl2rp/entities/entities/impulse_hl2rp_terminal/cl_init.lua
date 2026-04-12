@@ -2,13 +2,13 @@ include("shared.lua")
 
 local SCREEN_OFFSET_UP      = 49
 local SCREEN_OFFSET_FORWARD = -2.36
-local SCREEN_OFFSET_RIGHT   = 9.8
+local SCREEN_OFFSET_RIGHT   = 8.3
 
 local SCREEN_ROT_SPIN = 90
 local SCREEN_ROT_TILT = 42
 
 local SCREEN_SCALE  = 0.07
-local SCREEN_WIDTH  = 221
+local SCREEN_WIDTH  = 265
 local SCREEN_HEIGHT = 135
 
 surface.CreateFont("Terminal_Title", {
