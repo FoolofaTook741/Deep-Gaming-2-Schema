@@ -111,6 +111,7 @@ EV_OCA_SPAWN = Vector(0, 0, 0)
 EV_VORT_SPAWN = Vector(0, 0, 0)
 EV_ZOMBIE_SPAWN = Vector(0, 0, 0)
 EV_STALKER_SPAWN = Vector(0, 0, 0)
+EV_CREMATOR_SPAWN = Vector(0, 0, 0)
 
 PRIORITY_ONE_SUSPECT = nil
 
@@ -1515,13 +1516,15 @@ hook.Add( "PlayerChangedTeam", "trackeventspawns", function(ply, oldTeam, newTea
 			if spawnLocation then
 				ply:SetPos(spawnLocation)
 			end
+    elseif newTeam == TEAM_CREMATOR and impulse.Config.CrematorSpawnLocations and #impulse.Config.CrematorSpawnLocations > 0 then
+        ply:SetPos(impulse.Config.CrematorSpawnLocations[math.random(1, #impulse.Config.CrematorSpawnLocations)])
 	elseif newTeam == TEAM_VORT or newTeam == TEAM_CITIZEN or newTeam == TEAM_CW then
 			if spawnLocation then
 				ply:SetPos(spawnLocation)
 			end
     end
     local teams = {"Citizen", "CW", "MPF", "CTA", "OCA", "Vortigaunt", "Zombie", "Stalker"}
-	local teambools = {EV_CITIZEN_SPAWN, EV_CW_SPAWN, EV_MPF_SPAWN, EV_CTA_SPAWN, EV_OCA_SPAWN, EV_VORT_SPAWN, EV_ZOMBIE_SPAWN, EV_STALKER_SPAWN}
+	local teambools = {EV_CITIZEN_SPAWN, EV_CW_SPAWN, EV_MPF_SPAWN, EV_CTA_SPAWN, EV_OCA_SPAWN, EV_VORT_SPAWN, EV_ZOMBIE_SPAWN, EV_STALKER_SPAWN, EV_CREMATOR_SPAWN}
     if teambools[newTeam] != Vector(0,0,0) then
         ply:SetPos(teambools[newTeam] + Vector(math.random(0,100), math.random(0,100), 0))
         ply:Notify("You have been set to the event spawn point.")
@@ -1532,11 +1535,12 @@ hook.Add( "PlayerChangedTeam", "trackeventspawns", function(ply, oldTeam, newTea
                 v:Remove()
             end
         end
-    end
+    end 
+    --[[
     if oldTeam == TEAM_CITIZEN and newTeam == TEAM_CW then
         local ppp = math.random(1,2)
         ply:SetPos(impulse.Config.SpawnPos .. ppp)
-    end
+    end ]]--
 end)
 
 hook.Add("PlayerInitialSpawn", "retardfix", function(ply)
@@ -1599,6 +1603,13 @@ end
 local function CanPlayerChangeTeam(ply, toTeam)
     local steamID64 = ply:SteamID64()
     local sid = ply:SteamID()
+    local teamData = impulse.Teams.Data[toTeam]
+    if teamData and teamData.collaboratorOnly and teamData.collaboratorOnly == true then
+        if not ply:IsCollaborator() then
+            ply:Notify("You must be a collaborator to join this team.")
+            return false
+        end
+    end
     if timer.Exists(sid .. "stalkerization") and toTeam != TEAM_STALKER then
         ply:Notify("There is no escape from stalkerization...")
         return false
@@ -2001,7 +2012,7 @@ hook.Add("EntityTakeDamage", "DG_MergedDamage", function(target, dmginfo)
     if attackerIsPlayer and targetIsPlayer then
         if target:Team() ~= TEAM_ZOMBIE and attacker:Team() == TEAM_ZOMBIE and attacker:Name() == "Zombified Metrocop" then
             target:EmitSound(Sound("NPC_RollerMine.Shock"))
-            if not (target:Team() == TEAM_OTA and (target:GetTeamClass() == CLASS_PAYBACK or target:GetTeamClass() == CLASS_APF)) then
+            if not (target:Team() == TEAM_OTA and (target:GetTeamClass() == CLASS_PAYBACK or target:GetTeamClass() == CLASS_APF)) and target:Team() ~= TEAM_CREMATOR then
                 if not target:HasBrokenLegs() then
                     local runspeeds = {200, 200, 205, 180, 220, 220, 4}
                     target:SetRunSpeed(120)

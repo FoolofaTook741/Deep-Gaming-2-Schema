@@ -13,6 +13,7 @@ TEAM_STALKER = impulse.Teams.Define({
 	xp = 9999999,
     donatorOnly = false,
 	cp = true,
+    noMenu = true,
 })
 
 hook.Add("PlayerFootstep", "StalkerFootsteps", function(ply, pos, foot, sound) 

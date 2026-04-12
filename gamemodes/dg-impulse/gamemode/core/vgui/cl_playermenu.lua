@@ -181,6 +181,7 @@ function PANEL:Teams()
 	self.modelPreview:MoveToBack()
 	self.modelPreview:SetCursor("arrow")
 	self.modelPreview:SetFOV(self.modelPreview:GetFOV() - 19)
+	self.modelPreviewDefaultFOV = self.modelPreview:GetFOV()
  	function self.modelPreview:LayoutEntity(ent)
  		ent:SetAngles(Angle(0, 43, 0))
  		--ent:SetSequence(ACT_IDLE)
@@ -209,7 +210,10 @@ function PANEL:Teams()
 		return true
 	end
 
-	self.availibleTeams = vgui.Create("DCollapsibleCategory", self.teamsInner)
+	self.teamsScroll = vgui.Create("DScrollPanel", self.teamsInner)
+	self.teamsScroll:Dock(FILL)
+
+	self.availibleTeams = vgui.Create("DCollapsibleCategory", self.teamsScroll)
 	self.availibleTeams:SetLabel("Available teams")
 	self.availibleTeams:Dock(TOP)
 	local colInv = Color(0, 0, 0, 0)
@@ -226,7 +230,7 @@ function PANEL:Teams()
 	availibleList:SetSpaceY(5)
 	availibleList:SetSpaceX(5)
 
-	self.unavailibleTeams = vgui.Create("DCollapsibleCategory", self.teamsInner)
+	self.unavailibleTeams = vgui.Create("DCollapsibleCategory", self.teamsScroll)
 	self.unavailibleTeams:SetLabel("Unavailable teams")
 	self.unavailibleTeams:Dock(TOP)
 	function self.unavailibleTeams:Paint()
@@ -243,9 +247,10 @@ function PANEL:Teams()
 	unavailibleList:SetSpaceX(5)
 
 	for v,k in pairs(impulse.Teams.Data) do
+		if k.noMenu then continue end
 		local selectedList
 
-		if (k.xp > LocalPlayer():GetXP()) or (k.donatorOnly and k.donatorOnly == true and LocalPlayer():IsDonator() == false) then
+		if (k.xp > LocalPlayer():GetXP()) or (k.donatorOnly and k.donatorOnly == true and LocalPlayer():IsDonator() == false) or (k.collaboratorOnly and k.collaboratorOnly == true and LocalPlayer():IsCollaborator() == false) then
 			selectedList = unavailibleList
 		else
 			selectedList = availibleList
@@ -261,27 +266,35 @@ function PANEL:Teams()
 		local realSelf = self
 
 		function teamCard:OnCursorEntered()
-			local model = impulse.Teams.Data[self.team].model
-			local skin = impulse.Teams.Data[self.team].skin or 0
-			local desc = impulse.Teams.Data[self.team].description
-			local bodygroups = impulse.Teams.Data[self.team].bodygroups
+		    local model = impulse.Teams.Data[self.team].model
+		    local skin = impulse.Teams.Data[self.team].skin or 0
+		    local desc = impulse.Teams.Data[self.team].description
+		    local bodygroups = impulse.Teams.Data[self.team].bodygroups
 
-			if not model then
-				model = impulse_defaultModel or "models/Humans/Group01/male_02.mdl"
-				skin = impulse_defaultSkin or 0
+		    if not model then
+		        model = impulse_defaultModel or "models/Humans/Group01/male_02.mdl"
+		        skin = impulse_defaultSkin or 0
+		    end
+
+		    realSelf.modelPreview:SetModel(model)
+		    realSelf.modelPreview.Entity:SetSkin(skin)
+
+		    if self.team == TEAM_CREMATOR then
+			    realSelf.modelPreview:SetFOV(realSelf.modelPreviewDefaultFOV + 10)
+			    realSelf.modelPreview:SetPos(373, 80)
+			else
+			    realSelf.modelPreview:SetFOV(realSelf.modelPreviewDefaultFOV)
+			    realSelf.modelPreview:SetPos(373, 0)
 			end
 
-			realSelf.modelPreview:SetModel(model)
-			realSelf.modelPreview.Entity:SetSkin(skin)
+		    if bodygroups then
+		        for v, bodygroupData in pairs(bodygroups) do
+		            realSelf.modelPreview.Entity:SetBodygroup(bodygroupData[1], (bodygroupData[2] or 0))
+		        end
+		    end
 
-			if bodygroups then
-				for v, bodygroupData in pairs(bodygroups) do
-					realSelf.modelPreview.Entity:SetBodygroup(bodygroupData[1], (bodygroupData[2] or 0))
-				end
-			end
-
-			realSelf.descLblT:SetText(desc)
-			realSelf.descLblT:SetWrap(true)
+		    realSelf.descLblT:SetText(desc)
+		    realSelf.descLblT:SetWrap(true)
 		end
 
 		function teamCard:OnMousePressed()

@@ -370,9 +370,10 @@ if SERVER then
             ply.restrictMovement = false
 	        ply.disableSprint = false
 	        ply:SetJumpPower(160)
-	        if ply:Team() ~= TEAM_ZOMBIE then
+	        if ply:Team() ~= TEAM_ZOMBIE and ply:Team() ~= TEAM_CREMATOR  then
 	            ply:SetRunSpeed(impulse.Config.JogSpeed)
 	            ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+	            ply:SetSlowWalkSpeed(impulse.Config.WalkSpeed * impulse.Config.SlowWalkRatio)
 	        end
 	        end)
     end)

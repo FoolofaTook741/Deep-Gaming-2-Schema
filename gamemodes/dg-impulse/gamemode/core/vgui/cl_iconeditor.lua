@@ -1,7 +1,7 @@
 local PANEL = {}
 
 function PANEL:Init()
-	self:SetSize(800, 700)
+	self:SetSize(800, 750)
 	self:Center()
 	self:SetTitle("Icon Camera Editor")
 	self:MakePopup()
@@ -12,11 +12,11 @@ function PANEL:Init()
 	lbl:SetPos(5, 280)
 
 	local panel = self
+	local noCnt = false
 
 	self.bg = vgui.Create("DPanel", self)
 	self.bg:SetPos(5, 300)
 	self.bg:SetSize(64, 64)
-
 	function self.bg:Paint(w, h)
 		draw.RoundedBox(1, 0, 0, w, h, color_white)
 	end
@@ -28,34 +28,15 @@ function PANEL:Init()
 	self.model:SetSkin(0)
 	self.model:SetFOV(55)
 
-	local ang = Angle(0, 90, 0)
-	local noCnt = false
-
 	function self.model:LayoutEntity(ent)
-		ent:SetAngles(ang)
-
-		if not noCnt then
-			self:SetLookAt(Vector(0, 0, 0))
-		else
-			local min, max = ent:GetRenderBounds()
-			self:SetLookAt((max + min) / 2)
-		end
-
+		ent:SetAngles(Angle(0, 90, 0))
 		return
 	end
 
-	local camPos = self.model.Entity:GetPos()
-	camPos:Add(Vector(0, 25, 25))
-
-	local min, max = self.model.Entity:GetRenderBounds()
-	self.model:SetCamPos(camPos -  Vector(10, 0, 16))
-	self.model:SetLookAt((max + min) / 2)
-
-	self.bg = vgui.Create("DPanel", self)
-	self.bg:SetPos(100, 300)
-	self.bg:SetSize(255, 255)
-
-	function self.bg:Paint(w, h)
+	self.bg2 = vgui.Create("DPanel", self)
+	self.bg2:SetPos(100, 300)
+	self.bg2:SetSize(255, 255)
+	function self.bg2:Paint(w, h)
 		draw.RoundedBox(1, 0, 0, w, h, color_white)
 	end
 
@@ -66,33 +47,27 @@ function PANEL:Init()
 	self.modelBig:SetSkin(0)
 	self.modelBig:SetFOV(55)
 
-	local ang = Angle(0, 90, 0)
-
 	function self.modelBig:LayoutEntity(ent)
-		ent:SetAngles(ang)
-
-		if not noCnt then
-			self:SetLookAt(Vector(0, 0, 0))
-		else
-			local min, max = ent:GetRenderBounds()
-			self:SetLookAt((max + min) / 2)
-		end
-
+		ent:SetAngles(Angle(0, 90, 0))
 		return
 	end
 
-	local camPos = self.modelBig.Entity:GetPos()
-	camPos:Add(Vector(0, 25, 25))
+	local function updateCamera()
+		local x = panel.camLeftRightSlider:GetValue()
+		local y = panel.camForwardBackSlider:GetValue()
+		local z = panel.camUpDownSlider:GetValue()
+		local lookZ = panel.lookZSlider:GetValue()
 
-	local min, max = self.modelBig.Entity:GetRenderBounds()
-	self.modelBig:SetCamPos(camPos -  Vector(10, 0, 16))
-	self.modelBig:SetLookAt((max + min) / 2)
+		panel.model:SetCamPos(Vector(x, y, z))
+		panel.modelBig:SetCamPos(Vector(x, y, z))
+		panel.model:SetLookAt(Vector(0, 0, lookZ))
+		panel.modelBig:SetLookAt(Vector(0, 0, lookZ))
+	end
 
 	self.modelEntry = vgui.Create("DTextEntry", self)
 	self.modelEntry:SetPos(100, 50)
 	self.modelEntry:SetSize(400, 20)
 	self.modelEntry:SetText("Model name here")
-
 	function self.modelEntry:OnEnter()
 		panel.model:SetModel(self:GetValue())
 		panel.modelBig:SetModel(self:GetValue())
@@ -103,7 +78,6 @@ function PANEL:Init()
 	self.useNoCenter:SetText("No Center")
 	self.useNoCenter:SetValue(0)
 	self.useNoCenter:SizeToContents()
-
 	function self.useNoCenter:OnChange(v)
 		noCnt = v
 	end
@@ -111,82 +85,85 @@ function PANEL:Init()
 	self.fovSlider = vgui.Create("DNumSlider", self)
 	self.fovSlider:SetPos(100, 80)
 	self.fovSlider:SetSize(700, 30)
-	self.fovSlider:SetText("FOV")
+	self.fovSlider:SetText("FOV (zoom)")
 	self.fovSlider:SetMin(2)
 	self.fovSlider:SetMax(100)
 	self.fovSlider:SetDecimals(0)
 	self.fovSlider:SetValue(55)
-
 	function self.fovSlider:OnValueChanged(val)
 		panel.model:SetFOV(val)
 		panel.modelBig:SetFOV(val)
 	end
 
-	self.camXSlider = vgui.Create("DNumSlider", self)
-	self.camXSlider:SetPos(100, 110)
-	self.camXSlider:SetSize(700, 30)
-	self.camXSlider:SetText("Camera X")
-	self.camXSlider:SetMin(-160)
-	self.camXSlider:SetMax(160)
-	self.camXSlider:SetDecimals(0)
-	self.camXSlider:SetValue(10)
-
-	function self.camXSlider:OnValueChanged(val)
-		local curPos = panel.model:GetCamPos()
-		panel.model:SetCamPos(Vector(val, curPos.y, curPos.z))
-		panel.modelBig:SetCamPos(Vector(val, curPos.y, curPos.z))
+	self.camLeftRightSlider = vgui.Create("DNumSlider", self)
+	self.camLeftRightSlider:SetPos(100, 110)
+	self.camLeftRightSlider:SetSize(700, 30)
+	self.camLeftRightSlider:SetText("Camera Left / Right")
+	self.camLeftRightSlider:SetMin(-160)
+	self.camLeftRightSlider:SetMax(160)
+	self.camLeftRightSlider:SetDecimals(0)
+	self.camLeftRightSlider:SetValue(0)
+	function self.camLeftRightSlider:OnValueChanged(val)
+		updateCamera()
 	end
 
-	self.camYSlider = vgui.Create("DNumSlider", self)
-	self.camYSlider:SetPos(100, 140)
-	self.camYSlider:SetSize(700, 30)
-	self.camYSlider:SetText("Camera Y")
-	self.camYSlider:SetMin(-160)
-	self.camYSlider:SetMax(160)
-	self.camYSlider:SetDecimals(0)
-	self.camYSlider:SetValue(25)
-
-	function self.camYSlider:OnValueChanged(val)
-		local curPos = panel.model:GetCamPos()
-		panel.model:SetCamPos(Vector(curPos.x, val, curPos.z))
-		panel.modelBig:SetCamPos(Vector(curPos.x, val, curPos.z))
+	self.camForwardBackSlider = vgui.Create("DNumSlider", self)
+	self.camForwardBackSlider:SetPos(100, 140)
+	self.camForwardBackSlider:SetSize(700, 30)
+	self.camForwardBackSlider:SetText("Camera Distance (forward / back)")
+	self.camForwardBackSlider:SetMin(-160)
+	self.camForwardBackSlider:SetMax(160)
+	self.camForwardBackSlider:SetDecimals(0)
+	self.camForwardBackSlider:SetValue(58)
+	function self.camForwardBackSlider:OnValueChanged(val)
+		updateCamera()
 	end
 
-	self.camZSlider = vgui.Create("DNumSlider", self)
-	self.camZSlider:SetPos(100, 170)
-	self.camZSlider:SetSize(700, 30)
-	self.camZSlider:SetText("Camera Z")
-	self.camZSlider:SetMin(-660)
-	self.camZSlider:SetMax(660)
-	self.camZSlider:SetDecimals(0)
-	self.camZSlider:SetValue(9)
+	self.camUpDownSlider = vgui.Create("DNumSlider", self)
+	self.camUpDownSlider:SetPos(100, 170)
+	self.camUpDownSlider:SetSize(700, 30)
+	self.camUpDownSlider:SetText("Camera Up / Down")
+	self.camUpDownSlider:SetMin(-160)
+	self.camUpDownSlider:SetMax(160)
+	self.camUpDownSlider:SetDecimals(0)
+	self.camUpDownSlider:SetValue(66)
+	function self.camUpDownSlider:OnValueChanged(val)
+		updateCamera()
+	end
 
-	function self.camZSlider:OnValueChanged(val)
-		local curPos = panel.model:GetCamPos()
-		panel.model:SetCamPos(Vector(curPos.x, curPos.y, val))
-		panel.modelBig:SetCamPos(Vector(curPos.x, curPos.y, val))
+	self.lookZSlider = vgui.Create("DNumSlider", self)
+	self.lookZSlider:SetPos(100, 200)
+	self.lookZSlider:SetSize(700, 30)
+	self.lookZSlider:SetText("Look At Height (aim camera up / down)")
+	self.lookZSlider:SetMin(-160)
+	self.lookZSlider:SetMax(160)
+	self.lookZSlider:SetDecimals(0)
+	self.lookZSlider:SetValue(66)
+	function self.lookZSlider:OnValueChanged(val)
+		updateCamera()
 	end
 
 	self.output = vgui.Create("DButton", self)
-	self.output:SetPos(105, 200)
+	self.output:SetPos(105, 240)
 	self.output:SetSize(650, 25)
 	self.output:SetText("Output (copy data to clipboard)")
-
 	function self.output:DoClick()
 		local camPos = panel.model:GetCamPos()
-		local output = "ITEM.FOV = "..panel.model:GetFOV().."\n"
-		output = output.."ITEM.CamPos = Vector("..camPos.x..", "..camPos.y..", "..camPos.z..")"
-
-		if noCnt then
-			output = output.."\nITEM.NoCenter = true"
-		end
+		local lookZ = panel.lookZSlider:GetValue()
+		local output = "iconFOV = "..panel.model:GetFOV()..",\n"
+		output = output.."iconCamPos = Vector("..camPos.x..", "..camPos.y..", "..camPos.z.."),\n"
+		output = output.."iconLookAt = Vector(0, 0, "..lookZ.."),"
 
 		print(output)
 		SetClipboardText(output)
-
-		LocalPlayer():Notify("Exported.")
+		LocalPlayer():Notify("Exported to clipboard.")
 	end
-end
 
+	-- Set initial camera
+	panel.model:SetCamPos(Vector(0, 58, 66))
+	panel.modelBig:SetCamPos(Vector(0, 58, 66))
+	panel.model:SetLookAt(Vector(0, 0, 66))
+	panel.modelBig:SetLookAt(Vector(0, 0, 66))
+end
 
 vgui.Register("impulseIconEditor", PANEL, "DFrame")

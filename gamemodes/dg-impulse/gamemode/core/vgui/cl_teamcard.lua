@@ -16,7 +16,6 @@ function PANEL:SetTeam(teamID)
 	self.bodygroups = impulse.Teams.Data[teamID].bodygroups
 	self.requirements = ""
 	local teamData = impulse.Teams.Data[teamID]
-
 	if teamData.limit then
 		if teamData.percentLimit and teamData.percentLimit == true then
 			self.playerCount = self.players.."/"..math.ceil((teamData.limit * #player.GetAll()))
@@ -24,36 +23,59 @@ function PANEL:SetTeam(teamID)
 			self.playerCount = self.players.."/"..teamData.limit
 		end
 	end
-
 	if teamData.model then
 		self.model = teamData.model
 		self.skin = 0
 	end
-
 	if teamData.xp > 0 then
 		self.requirements = teamData.xp.."XP"
 	end
-
 	if teamData.donatorOnly and teamData.donatorOnly == true then
 		self.requirements = self.requirements.." (Donator only)"
 	end
-
+	if teamData.collaboratorOnly and teamData.collaboratorOnly == true then
+		self.requirements = "Collaborator Only"
+	end
  	self.modelIcon = vgui.Create("impulseSpawnIcon", self)
 	self.modelIcon:SetPos(10,4)
 	self.modelIcon:SetSize(52,52)
-	self.modelIcon:SetModel(self.model, self.skin)
 	self.modelIcon:SetTooltip(false)
 	self.modelIcon:SetDisabled(true)
 	self.modelIcon:SetDrawBorder(false)
+
+	if teamData.iconCamPos then
+	    local iconCamPos = teamData.iconCamPos
+	    local iconLookAt = teamData.iconLookAt or Vector(0,0,0)
+	    local iconFOV = teamData.iconFOV or 45
+
+	    function self.modelIcon:SetModel(model, skin)
+	        self:OldSetModel(model)
+	        local entity = self.Entity
+	        if skin then entity:SetSkin(skin) end
+	        entity:SetIK(false)
+	        entity:SetEyeTarget(Vector(0, 0, 64))
+	        self:SetFOV(iconFOV)
+	        self:SetCamPos(iconCamPos)
+	        self:SetLookAng((iconLookAt - iconCamPos):Angle())
+	    end
+
+	    function self.modelIcon:LayoutEntity(ent)
+	        ent:SetAngles(Angle(0, 90, 0))
+	        self:SetFOV(iconFOV)
+	        self:SetCamPos(iconCamPos)
+	        self:SetLookAt(iconLookAt)
+	        return
+	    end
+	end
+
+	self.modelIcon:SetModel(self.model, self.skin)
 
 	if self.bodygroups then
 	 	timer.Simple(0, function()
 			if not IsValid(self.modelIcon) then
 				return
 			end
-
 			local ent = self.modelIcon.Entity
-
 			if IsValid(ent) then
 				for v,bodygroupData in pairs(self.bodygroups) do
 					ent:SetBodygroup(bodygroupData[1], (bodygroupData[2]) or 0)
