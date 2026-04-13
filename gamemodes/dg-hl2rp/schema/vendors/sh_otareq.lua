@@ -62,11 +62,11 @@ VENDOR.Sell = {
 		end
 	},
 	["item_armorrepairkit"] = {
-		Desc = "CSO+",
+		--Desc = "CGR+",
 		Restricted = true,
 		Max = 2,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_OWS then
+			if ply:GetTeamRank() >= RANK_OWG then
 				return true
 			else 
 				return false 
