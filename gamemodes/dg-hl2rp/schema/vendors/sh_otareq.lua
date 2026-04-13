@@ -450,7 +450,6 @@ VENDOR.Sell = {
 			end
 		end
 	},
-	]]--
 	["att_extendedmag"] = {
 		Desc = "FIST",
 		Restricted = true,
@@ -472,7 +471,7 @@ VENDOR.Sell = {
 			else return false
 			end
 		end
-	},
+	}, ]]--
 	["grenade_flashbang"] = {
 		Desc = "CCP+",
 		Restricted = true,
