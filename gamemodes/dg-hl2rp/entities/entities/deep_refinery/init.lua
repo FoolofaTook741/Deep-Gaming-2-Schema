@@ -18,6 +18,18 @@ end
 
 
 function ENT:Use( activator, caller )
+	local ws = impulse.SmeltingWorkshift
+	if ws and ws.active then
+		if self.smeltingCopperReady then
+			self.smeltingCopperReady = false
+			activator:GiveInventoryItem("item_steelbar", 1)
+			activator:Notify("You collected a steel bar from the refinery.")
+			return
+		elseif self.smeltingCopperActive then
+			activator:Notify("The refinery is already processing copper. Please wait.")
+			return
+		end
+	end
 	local chance = math.random(1, 100)
 	local id = self:GetCreationID()
 	local ammo
