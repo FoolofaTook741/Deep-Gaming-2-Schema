@@ -496,19 +496,27 @@ do
 	end
 
 	function meta:IsWeaponRaised()
-		local weapon = self:GetActiveWeapon()
-		if IsValid(weapon) then
-			if weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()] then return true end
-			if weapon.IsAlwaysLowered then return false end
-		end
+	    local ct = CurTime()
+	    if self._impulseRaisedT == ct then
+	        return self._impulseRaisedV
+	    end
 
-		local ct = CurTime()
-		if self._impulseRaisedT ~= ct then
-			self._impulseRaisedT = ct
-			self._impulseRaisedV = self:GetSyncVar(SYNC_WEPRAISED, false)
-		end
+	    self._impulseRaisedT = ct
 
-		return self._impulseRaisedV
+	    local weapon = self:GetActiveWeapon()
+	    if IsValid(weapon) then
+	        if weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()] then
+	            self._impulseRaisedV = true
+	            return true
+	        end
+	        if weapon.IsAlwaysLowered then
+	            self._impulseRaisedV = false
+	            return false
+	        end
+	    end
+
+	    self._impulseRaisedV = self:GetSyncVar(SYNC_WEPRAISED, false)
+	    return self._impulseRaisedV
 	end
 
 	if SERVER then
