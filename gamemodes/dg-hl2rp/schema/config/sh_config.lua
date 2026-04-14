@@ -598,6 +598,12 @@ impulse.Config.Achievements = {
 		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
 		Points = 20
 	},
+		["ach_"] = {
+		Name = "Close Encounters",
+		Desc = "City 24, where we never saw the City Administrator. What a ride.",
+		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
+		Points = 20
+	},
 }
 
 impulse.Config.ModQuickReplies = {
