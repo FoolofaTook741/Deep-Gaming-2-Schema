@@ -720,4 +720,5 @@ if SERVER then
 	resource.AddWorkshop( "3705009094" ) -- RTB:R Cremator [PM] (JSQO)
 	resource.AddWorkshop( "3674814581" ) -- map_77content
 	resource.AddWorkshop( "3405237141" ) -- LocalInterval_map | C77
-end
+	resource.AddWorkshop( "131736822" ) -- Flamethrower SWEP
+	end
