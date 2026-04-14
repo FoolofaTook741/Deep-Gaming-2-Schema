@@ -59,6 +59,8 @@ net.Receive("_Detect", function(len,ply)
 	end
 end)
 
+
+--[[
 net.OldIncoming = net.OldIncoming or net.Incoming
 local netplys = {}
 local nextlog = 0
@@ -66,7 +68,7 @@ local nextlog = 0
 function net.Incoming(length, client)
     netplys[client] = (netplys[client] or 0) + 1
     net.OldIncoming(length, client)
-end
+end ]]--
 
 --[[timer.Create("netabuse_timer", 1, 0, function() 
     for pl, num  in pairs(netplys) do
