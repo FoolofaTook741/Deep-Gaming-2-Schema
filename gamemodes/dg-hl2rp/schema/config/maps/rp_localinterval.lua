@@ -705,7 +705,6 @@ if SERVER then
 	resource.AddWorkshop( "2685051966" ) -- Image Tool - Your pictures in the world!
 	resource.AddWorkshop( "2840031720" ) -- TFA Base
 	resource.AddWorkshop( "2043900984" ) -- [Half Life: Alyx] Infestation Control props
-	resource.AddWorkshop( "3668479326" ) -- Half-Life 2 RP | City 26 V2 [BETA]
 	resource.AddWorkshop( "3118788923" ) -- Advanced Material | REBORN
 	resource.AddWorkshop( "104603291" ) -- Extended Spawnmenu
 	resource.AddWorkshop( "104604943" ) -- Easy Bodygroup Tool
