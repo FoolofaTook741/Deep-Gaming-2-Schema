@@ -30,15 +30,41 @@ end
 //
 // PLAYER extensions
 local PLAYER = FindMetaTable( "Player" )
-function PLAYER:IsHandcuffed()
-	local wep = self:GetWeapon( "weapon_handcuffed" )
-	if IsValid(wep) and wep.IsHandcuffs then
-		return true,wep
-	end
-	
-	return false
+
+local function InvalidateCuffsCache( ply )
+    if IsValid(ply) and ply:IsPlayer() then
+        ply.__cuffs_cache = nil
+    end
 end
 
+hook.Add( "WeaponEquip", "Cuffs InvalidateCache", function( wep, ply )
+    InvalidateCuffsCache( ply )
+end )
+
+hook.Add( "PlayerDroppedWeapon", "Cuffs InvalidateCache", function( ply, wep )
+    InvalidateCuffsCache( ply )
+end )
+
+hook.Add( "PlayerDeath", "Cuffs InvalidateCache", function( ply )
+    InvalidateCuffsCache( ply )
+end )
+
+function PLAYER:IsHandcuffed()
+    if self.__cuffs_cache ~= nil then
+        if self.__cuffs_cache == false then return false end
+        if IsValid( self.__cuffs_cache ) then return true, self.__cuffs_cache end
+        self.__cuffs_cache = nil
+    end
+
+    local wep = self:GetWeapon( "weapon_handcuffed" )
+    if IsValid(wep) and wep.IsHandcuffs then
+        self.__cuffs_cache = wep
+        return true, wep
+    end
+
+    self.__cuffs_cache = false
+    return false
+end
 
 
 // Server Think //
