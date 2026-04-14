@@ -1,3 +1,6 @@
 function meta:HasBrokenLegs()
-	return self:GetSyncVar(SYNC_BROKENLEGS, false)
+    if SERVER then
+        return impulse.BrokenLegsPlayers[self] == true
+    end
+    return self:GetSyncVar(SYNC_BROKENLEGS, false)
 end
