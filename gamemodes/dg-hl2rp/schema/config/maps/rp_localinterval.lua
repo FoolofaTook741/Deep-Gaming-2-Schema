@@ -583,7 +583,11 @@ impulse.Config.LoadScript = function()
         7397,
         7400,
         6576,
-        6033
+        6033,
+        2093, -- execution chamber button, breaks refinery zapper
+        2097, -- execution chamber door toggle
+        2077, -- execution chamber door
+
     }
 
     for _, id in pairs(removeOnStart) do
