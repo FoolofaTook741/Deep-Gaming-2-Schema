@@ -4,9 +4,9 @@ ITEM.UniqueID = "wep_osr"
 ITEM.Name = "O.S.I.S.R."
 ITEM.Desc =  "The O.S.I.S.R. was a long ranged sniper rifle that fires powerful anti-matter rounds with removed tracers."
 ITEM.Category = "Weapons"
-ITEM.Model = Model("models/props_junk/cardboard_box004a_gib01.mdl")
-ITEM.FOV = 12.2249283667622
-ITEM.CamPos = Vector(100, 100, 36.10315322876)
+ITEM.Model = Model("models/tnb/weapons/w_cisr.mdl")
+iconFOV = 14.214899713467
+iconCamPos = Vector(-69.684814453125, -143.0372467041, 5.5014328956604)
 ITEM.Weight = 9
 
 ITEM.Droppable = true
