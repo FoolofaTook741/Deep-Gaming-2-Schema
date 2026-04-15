@@ -41,16 +41,11 @@ function ENT:StartTouch(ent)
 
 	local refineryID = ent:EntIndex()
 	timer.Create("SmeltingRefinery_" .. refineryID, 30, 1, function()
-		if not IsValid(ent) then return end
+	if not IsValid(ent) then return end
 		ent:StopSound("ambient/machines/spin_loop.wav")
 		ent:EmitSound("ambient/machines/spindown.wav")
 		ent.smeltingCopperActive = false
 		ent.smeltingCopperReady = true
-
-		for _, ply in ipairs(player.GetAll()) do
-			if ply:Team() == TEAM_CWU then
-				ply:Notify("A refinery has finished processing copper. Press E to collect the steel bar.")
-			end
-		end
+		ent:SetColor(Color(0, 255, 0))
 	end)
 end

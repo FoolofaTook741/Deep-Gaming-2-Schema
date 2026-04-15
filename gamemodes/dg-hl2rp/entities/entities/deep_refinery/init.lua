@@ -22,6 +22,7 @@ function ENT:Use( activator, caller )
 	if ws and ws.active then
 		if self.smeltingCopperReady then
 			self.smeltingCopperReady = false
+			self:SetColor(Color(255, 255, 255, 255))
 			activator:GiveInventoryItem("item_steelbar", 1)
 			activator:Notify("You collected a steel bar from the refinery.")
 			return
@@ -30,6 +31,7 @@ function ENT:Use( activator, caller )
 			return
 		end
 	end
+	
 	local chance = math.random(1, 100)
 	local id = self:GetCreationID()
 	local ammo

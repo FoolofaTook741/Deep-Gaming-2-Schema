@@ -1,8 +1,8 @@
-local smeltGoal = 200
-local refinedGoal = 200
+local smeltGoal = 275 --not used anymore as the main goal, refinedGoal is
+local refinedGoal = 275 -- set this value to determine how much refinining needs to be done.
 local basePayout = 7500
-local recycleBonus = 25
-local turtleBonus = 50
+local recycleBonus = 20
+local turtleBonus = 35
 local completedCooldown = 20 * 60
 local cancelledCooldown = 5 * 60
 
@@ -175,7 +175,7 @@ hook.Add("EntityRemoved", "SmeltingFizzleTrack", function(ent)
 
 	ws.smeltCount = ws.smeltCount + 1
 
-	BroadcastCWU("[REFINERY] Scrap smelted: " .. ws.smeltCount .. " available for copper processing.")
+	--BroadcastCWU("[REFINERY] Scrap smelted: " .. ws.smeltCount .. " available for copper processing.")
 
 	impulse.SmeltingPushUpdate()
 end)
@@ -183,7 +183,7 @@ end)
 hook.Add("Use", "SmeltingRefineryCollect", function(ent, activator, caller, useType, value)
 	if not IsValid(ent) or ent:GetClass() ~= "deep_refinery" then return end
 	if not IsValid(activator) or not activator:IsPlayer() then return end
-	if activator:Team() ~= TEAM_CWU and activator:GetTeamClass() ~= CLASS_REFINERY then return end
+	if activator:Team() ~= TEAM_CWU or activator:GetTeamClass() ~= CLASS_REFINERY then return end
 
 	local ws = impulse.SmeltingWorkshift
 	if not ws or not ws.active then return end
@@ -205,8 +205,13 @@ net.Receive("SmeltingWorkshift_Payout", function(len, ply)
 		return
 	end
 
-	if ply:Team() ~= TEAM_CWU and ply:GetTeamRank() < RANK_SUPERVISOR then
-		ply:Notify("Only a CWU Supervisor can collect the workshift payout.")
+	if ply:Team() ~= TEAM_CWU or ply:GetTeamClass() ~= CLASS_REFINERY or ply:GetTeamRank() < RANK_SUPERVISOR then
+		ply:Notify("Only the workshift Supervisor can collect the workshift payout.")
+		return
+	end
+
+	if ply:SteamID64() ~= tostring(ws.supervisorID) then
+		ply:Notify("Only the shift lead can collect the workshift payout.")
 		return
 	end
 

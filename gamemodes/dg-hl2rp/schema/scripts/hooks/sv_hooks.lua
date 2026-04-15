@@ -191,6 +191,7 @@ function SCHEMA:Think()
 		end)
 	end
 
+	--[[
 	if not impulse.NextTrashNotify or CurTime() < impulse.NextTrashNotify then
 	    if not impulse.NextTrashNotify then
 	        impulse.NextTrashNotify = CurTime() + 1200
@@ -202,7 +203,7 @@ function SCHEMA:Think()
 	        end
 	    end
 	    impulse.NextTrashNotify = CurTime() + 1200
-	end
+	end ]]--
 
 	nextThink = CurTime() + 2
 end
