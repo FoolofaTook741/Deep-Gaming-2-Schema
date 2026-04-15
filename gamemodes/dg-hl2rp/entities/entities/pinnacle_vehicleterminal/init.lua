@@ -16,13 +16,13 @@ local Vehicles = {
         Cost = 18000,
         class = CLASS_NOMAD,
         faction = TEAM_OTA,
-        spawnVec = Vector(11015.068359375, -1971.912109375, 8237.3134765625)
+        spawnVec = Vector(4532.4228515625, 4595.2587890625, 219.46025085449)
     },
     ["lvs_helicopter_hl2_combine_hunter"] = {
         Cost = 25000,
         class = CLASS_NOMAD,
         faction = TEAM_OTA,
-        spawnVec = Vector(10500.033203125, -2662.5539550781, 8213.939453125)
+        spawnVec = Vector(4369.9853515625, 4603.8139648438, 219.46025085449)
     }
 }
 
