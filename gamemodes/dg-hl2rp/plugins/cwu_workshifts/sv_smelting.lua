@@ -1,8 +1,8 @@
-local smeltGoal = 275 --not used anymore as the main goal, refinedGoal is
-local refinedGoal = 275 -- set this value to determine how much refinining needs to be done.
-local basePayout = 7500
-local recycleBonus = 20
-local turtleBonus = 35
+local smeltGoal = 200 --not used anymore as the main goal, refinedGoal is
+local refinedGoal = 200 -- set this value to determine how much refinining needs to be done.
+local basePayout = 8000
+local recycleBonus = 25
+local turtleBonus = 50
 local completedCooldown = 20 * 60
 local cancelledCooldown = 5 * 60
 
