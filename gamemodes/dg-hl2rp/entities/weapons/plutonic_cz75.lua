@@ -68,6 +68,9 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = 12
 SWEP.Primary.DefaultClip = 12
 
+SWEP.CenteredPos = Vector(-5, -4, -5.5)
+SWEP.CenteredAng = Angle(3,3,0)
+
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.ClipSize = -1
