@@ -587,6 +587,10 @@ impulse.Config.LoadScript = function()
         2093, -- execution chamber button, breaks refinery zapper
         2097, -- execution chamber door toggle
         2077, -- execution chamber door
+        10074, -- power button in slums, turns plaza city lights off & factory
+        10076, -- button prop for above
+        10069, --other power button for oil refinery building lights
+        10071, -- button prop for above
 
     }
 
