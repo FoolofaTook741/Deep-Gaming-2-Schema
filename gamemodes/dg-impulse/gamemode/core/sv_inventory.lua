@@ -13,7 +13,8 @@ local logClasses = {
 	wep_goldendeagle = true,
 	wep_goldenak47 = true,
 	wep_tau = true,
-	util_particleaccelerator = true
+	util_particleaccelerator = true,
+	wep_ak47u = true
 
 }
 
