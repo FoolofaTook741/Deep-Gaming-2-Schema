@@ -594,10 +594,18 @@ impulse.Config.LoadScript = function()
 
     }
 
+    local removeOnStartNames = {
+    	"BreakRock1",
+	}
+
     for _, id in pairs(removeOnStart) do
         local ent = ents.GetMapCreatedEntity(id)
         if IsValid(ent) then ent:Remove() end
     end
+    for _, name in pairs(removeOnStartNames) do
+	    local ent = ents.FindByName(name)[1]
+	    if IsValid(ent) then ent:Remove() end
+	end
 end
 
 
