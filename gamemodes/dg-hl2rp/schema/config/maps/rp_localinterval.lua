@@ -13,7 +13,7 @@ impulse.Config.TP2Pos = Vector(-7601.6416015625, 15007.870117188, -892.96875)
 impulse.Config.TP3Pos = Vector(8846.765625, 1204.0496826172, -576.96875)
 impulse.Config.MBEntrance = Vector(5042.2504882813, 13896.99609375, -559.90112304688)
 
-impulse.Config.BroadcastPos = Vector(2725.4353027344, 4052.03125, 3416.03125)
+impulse.Config.BroadcastPos = Vector(2627.4841308594, 608.908203125, 3291.78125)
 
 impulse.Config.MapType = "Woodland"
 
