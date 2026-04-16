@@ -229,7 +229,7 @@ function eMeta:IsFemale(modelov)
         return modelCache[model]
     end
 
-    local isFemale = string.find(self:GetModel(), "/female_")
+    local isFemale = string.find(model, "/female_")
 
     if isFemale then
         modelCache[model] = true
