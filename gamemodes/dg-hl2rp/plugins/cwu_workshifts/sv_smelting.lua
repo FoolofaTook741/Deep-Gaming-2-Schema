@@ -1,16 +1,19 @@
-local smeltGoal = 200 --not used anymore as the main goal, refinedGoal is
-local refinedGoal = 200 -- set this value to determine how much refinining needs to be done.
+local smeltGoal = 200
+local refinedGoal = 200 --use this one to define the goals, it scales based on group
 local basePayout = 8000
-local recycleBonus = 25
-local turtleBonus = 50
+local recycleBonus = 40
+local turtleBonus = 75
 local completedCooldown = 20 * 60
 local cancelledCooldown = 5 * 60
+local minGroupSize = 4
+local maxGroupSize = 10
 
 impulse.SmeltingRecycleBonus = recycleBonus
 impulse.SmeltingTurtleBonus = turtleBonus
 
 util.AddNetworkString("SmeltingNPC_OpenMenu")
-util.AddNetworkString("SmeltingWorkshift_Start")
+util.AddNetworkString("SmeltingWorkshift_Form")
+util.AddNetworkString("SmeltingWorkshift_Begin")
 util.AddNetworkString("SmeltingWorkshift_Payout")
 util.AddNetworkString("SmeltingWorkshift_Update")
 util.AddNetworkString("SmeltingWorkshift_Broadcast")
@@ -18,11 +21,14 @@ util.AddNetworkString("SmeltingWorkshift_Cancel")
 
 impulse.SmeltingWorkshift = impulse.SmeltingWorkshift or {
 	active         = false,
+	forming        = false,
+	formingSquadID = nil,
 	smeltCount     = 0,
 	refinedCount   = 0,
 	bonusCredits   = 0,
 	smeltGoal      = smeltGoal,
 	refinedGoal    = refinedGoal,
+	scaledPayout   = basePayout,
 	supervisorID   = 0,
 	supervisorName = "",
 	paid           = false,
@@ -54,52 +60,138 @@ end
 
 LoadShiftLog()
 
-local function BroadcastAll(msg)
-	for _, ply in ipairs(player.GetAll()) do
-		ply:ChatPrint(msg)
-	end
-end
-
 local function BroadcastCWU(msg)
 	for _, ply in ipairs(team.GetPlayers(TEAM_CWU)) do
 		ply:ChatPrint(msg)
 	end
 end
 
-local function BroadcastChat(msgType, supervisorName, completedShifts)
+local function BroadcastChat(msgType, supervisorName, completedShifts, extra)
 	for _, ply in ipairs(player.GetAll()) do
 		net.Start("SmeltingWorkshift_Broadcast")
 			net.WriteString(msgType)
 			net.WriteString(supervisorName)
 			net.WriteInt(completedShifts or 0, 16)
+			net.WriteString(extra or "")
 		net.Send(ply)
 	end
+end
+
+local function GetSquadSize(squadID)
+	local count = 0
+	for _, ply in ipairs(team.GetPlayers(TEAM_CWU)) do
+		if ply:GetSyncVar(SYNC_CWU_SQUAD) == squadID then
+			count = count + 1
+		end
+	end
+	return count
+end
+
+local function GetFormingSquadSize()
+	local ws = impulse.SmeltingWorkshift
+	if not ws.formingSquadID then return 0 end
+	return GetSquadSize(ws.formingSquadID)
+end
+
+local function AutoCreateSquad(supervisor)
+	local existingSquad = supervisor:GetSyncVar(SYNC_CWU_SQUAD)
+	if existingSquad and existingSquad ~= 0 then
+		return existingSquad
+	end
+
+	local lowestFree = 1
+	local squads = {}
+	local biggestSquad = 0
+
+	for _, ply in ipairs(team.GetPlayers(TEAM_CWU)) do
+		local squad = ply:GetSyncVar(SYNC_CWU_SQUAD)
+		if not squad then continue end
+		squads[squad] = true
+		if squad > biggestSquad then
+			biggestSquad = squad
+		end
+	end
+
+	for i = 1, biggestSquad + 1 do
+		if not squads[i] then
+			lowestFree = i
+			break
+		end
+	end
+
+	supervisor:SetSyncVar(SYNC_CWU_SQUADLEAD, true, true)
+	supervisor:SetSyncVar(SYNC_CWU_SQUAD, lowestFree, true)
+
+	return lowestFree
+end
+
+local plyMeta = FindMetaTable("Player")
+local OriginalCWUSquadCanJoin = plyMeta.CWUSquadCanJoin
+function plyMeta:CWUSquadCanJoin(squadID)
+	local ws = impulse.SmeltingWorkshift
+	if ws and ws.formingSquadID and ws.formingSquadID == squadID and ws.active then
+		return false
+	end
+	return OriginalCWUSquadCanJoin(self, squadID)
+end
+
+local function GetDisplayPayout(ws, squadSize)
+	if ws.active then
+		return ws.scaledPayout or basePayout
+	end
+	if ws.forming then
+		local size = squadSize or GetFormingSquadSize()
+		local scale = math.Clamp(math.max(size, 1), 1, maxGroupSize) / maxGroupSize
+		return math.Round(basePayout * scale)
+	end
+	return basePayout
 end
 
 function impulse.SmeltingPushUpdate()
 	local ws = impulse.SmeltingWorkshift
 	local payoutReady = ws.active and ws.refinedCount >= ws.refinedGoal and not ws.paid
+	local squadSize = (ws.forming or ws.active) and GetFormingSquadSize() or 0
+	local displayPayout = GetDisplayPayout(ws, squadSize)
 
 	for _, ply in ipairs(player.GetAll()) do
 		net.Start("SmeltingWorkshift_Update")
 			net.WriteBool(ws.active)
+			net.WriteBool(ws.forming or false)
 			net.WriteInt(ws.smeltCount, 16)
 			net.WriteInt(ws.smeltGoal, 16)
 			net.WriteInt(ws.refinedCount, 16)
 			net.WriteInt(ws.refinedGoal, 16)
 			net.WriteInt(ws.bonusCredits, 16)
+			net.WriteInt(displayPayout, 16)
 			net.WriteString(ws.supervisorName)
 			net.WriteInt(impulse.SmeltingCompletedShifts, 16)
 			net.WriteBool(payoutReady)
+			net.WriteInt(squadSize, 8)
+			net.WriteInt(minGroupSize, 8)
 		net.Send(ply)
 	end
 end
 
-local function StartSmeltingWorkshift(supervisor)
+local function CleanupSmeltingProps()
+	local toRemove = {}
+	for _, ent in ipairs(ents.GetAll()) do
+		if not IsValid(ent) then continue end
+		if ent:GetNWBool("IsSmeltingItem", false)
+		or ent:GetNWBool("IsRecycleItem", false)
+		or ent:GetClass() == "impulse_hl2rp_copperbar" then
+			table.insert(toRemove, ent)
+		end
+	end
+	for _, ent in ipairs(toRemove) do
+		if IsValid(ent) then ent:Remove() end
+	end
+end
+
+local function FormSmeltingWorkshift(ply)
 	local ws = impulse.SmeltingWorkshift
 
-	if ws.active then
-		supervisor:Notify("A smelting workshift is already in progress!")
+	if ws.active or ws.forming then
+		ply:Notify("A smelting workshift is already in progress or being formed!")
 		return
 	end
 
@@ -107,42 +199,78 @@ local function StartSmeltingWorkshift(supervisor)
 		local remaining = math.ceil(impulse.SmeltingCooldownEnd - CurTime())
 		local mins = math.floor(remaining / 60)
 		local secs = remaining % 60
-		supervisor:Notify("The refinery is on cooldown. Available in " .. mins .. "m " .. secs .. "s.")
+		ply:Notify("The refinery is on cooldown. Available in " .. mins .. "m " .. secs .. "s.")
 		return
 	end
 
-	ws.active          = true
-	ws.smeltCount      = 0
-	ws.refinedCount    = 0
-	ws.bonusCredits    = 0
-	ws.smeltGoal       = smeltGoal
-	ws.refinedGoal     = refinedGoal
-	ws.paid            = false
-	ws.supervisorID    = supervisor:SteamID64() or 0
-	ws.supervisorName  = supervisor:Nick()
-	ws.startTime       = os.time()
+	local squadID = AutoCreateSquad(ply)
+	if not squadID then
+		ply:Notify("Could not create a workshift group. All squad slots may be full.")
+		return
+	end
 
-	BroadcastAll(
-		"[CIVIC BROADCAST] " .. supervisor:Nick() ..
-		" has started a REFINERY SMELTING workshift. Report to the refinery with your CWU unit!"
-	)
-	BroadcastChat("start", supervisor:Nick(), 0)
+	ws.forming        = true
+	ws.formingSquadID = squadID
+	ws.supervisorID   = ply:SteamID64() or 0
+	ws.supervisorName = ply:Nick()
+
+	BroadcastChat("forming", ply:Nick(), 0)
 
 	impulse.SmeltingPushUpdate()
 end
 
-local function CleanupSmeltingProps()
-	for _, ent in ipairs(ents.GetAll()) do
-		if not IsValid(ent) then continue end
-		if ent:GetNWBool("IsSmeltingItem", false) 
-		or ent:GetNWBool("IsRecycleItem", false) then
-			ent:Remove()
-		end
-		if ent:GetClass() == "impulse_hl2rp_copperbar" then
-			ent:Remove()
-		end
+net.Receive("SmeltingWorkshift_Form", function(len, ply)
+	if not IsValid(ply) then return end
+	if ply:Team() ~= TEAM_CWU then return end
+	if ply:GetTeamClass() ~= CLASS_REFINERY then return end
+	if ply:GetTeamRank() < RANK_SUPERVISOR then return end
+	FormSmeltingWorkshift(ply)
+end)
+
+net.Receive("SmeltingWorkshift_Begin", function(len, ply)
+	if not IsValid(ply) then return end
+	if ply:Team() ~= TEAM_CWU then return end
+	if ply:GetTeamClass() ~= CLASS_REFINERY then return end
+	if ply:GetTeamRank() < RANK_SUPERVISOR then return end
+
+	local ws = impulse.SmeltingWorkshift
+
+	if not ws.forming then
+		ply:Notify("No workshift group is being formed.")
+		return
 	end
-end
+
+	if ply:SteamID64() ~= tostring(ws.supervisorID) then
+		ply:Notify("Only the workshift organiser can begin the shift.")
+		return
+	end
+
+	local squadSize = GetFormingSquadSize()
+	if squadSize < minGroupSize then
+		ply:Notify("Not enough workers. Need at least " .. minGroupSize .. " (currently " .. squadSize .. ").")
+		return
+	end
+
+	local scale        = math.Clamp(squadSize, 1, maxGroupSize) / maxGroupSize
+	local scaledGoal   = math.max(1, math.Round(refinedGoal * scale))
+	local scaledSmelt  = math.max(1, math.Round(smeltGoal * scale))
+	local scaledPayout = math.Round(basePayout * scale)
+
+	ws.active        = true
+	ws.forming       = false
+	ws.smeltCount    = 0
+	ws.refinedCount  = 0
+	ws.bonusCredits  = 0
+	ws.smeltGoal     = scaledSmelt
+	ws.refinedGoal   = scaledGoal
+	ws.scaledPayout  = scaledPayout
+	ws.paid          = false
+	ws.startTime     = os.time()
+
+	BroadcastChat("start", ply:Nick(), 0, tostring(squadSize))
+
+	impulse.SmeltingPushUpdate()
+end)
 
 net.Receive("DeepStartWorkshift", function(len, ply)
 	if not IsValid(ply) then return end
@@ -152,17 +280,8 @@ net.Receive("DeepStartWorkshift", function(len, ply)
 
 	local wsType = net.ReadString()
 	if wsType == "mining" then
-		StartSmeltingWorkshift(ply)
+		FormSmeltingWorkshift(ply)
 	end
-end)
-
-net.Receive("SmeltingWorkshift_Start", function(len, ply)
-	if not IsValid(ply) then return end
-	if ply:Team() ~= TEAM_CWU then return end
-	if ply:GetTeamClass() ~= CLASS_REFINERY then return end
-	if ply:GetTeamRank() < RANK_SUPERVISOR then return end
-
-	StartSmeltingWorkshift(ply)
 end)
 
 hook.Add("EntityRemoved", "SmeltingFizzleTrack", function(ent)
@@ -175,8 +294,6 @@ hook.Add("EntityRemoved", "SmeltingFizzleTrack", function(ent)
 
 	ws.smeltCount = ws.smeltCount + 1
 
-	--BroadcastCWU("[REFINERY] Scrap smelted: " .. ws.smeltCount .. " available for copper processing.")
-
 	impulse.SmeltingPushUpdate()
 end)
 
@@ -187,7 +304,6 @@ hook.Add("Use", "SmeltingRefineryCollect", function(ent, activator, caller, useT
 
 	local ws = impulse.SmeltingWorkshift
 	if not ws or not ws.active then return end
-
 	if not ent.smeltingCopperReady then return end
 
 	ent.smeltingCopperReady = false
@@ -229,25 +345,21 @@ net.Receive("SmeltingWorkshift_Payout", function(len, ply)
 
 	CleanupSmeltingProps()
 
-	local totalPayout = basePayout + (ws.bonusCredits or 0)
+	local totalPayout = (ws.scaledPayout or basePayout) + (ws.bonusCredits or 0)
 	ply:GiveMoney(totalPayout)
-	ply:Notify("Workshift payout collected: " .. totalPayout .. " credits (" .. basePayout .. " base + " .. (ws.bonusCredits or 0) .. " recycle bonus). Distribute to your workers.")
+	ply:Notify("Workshift payout collected: " .. totalPayout .. " credits (" .. (ws.scaledPayout or basePayout) .. " base + " .. (ws.bonusCredits or 0) .. " recycle bonus). Distribute to your workers.")
 
-	BroadcastAll(
-		"[CIVIC BROADCAST] Smelting workshift completed by " .. ply:Nick() ..
-		". " .. ws.refinedCount .. " steel bars delivered. Well done, workers!"
-	)
 	BroadcastChat("end", ws.supervisorName, impulse.SmeltingCompletedShifts + 1)
 
 	impulse.SmeltingCompletedShifts = impulse.SmeltingCompletedShifts + 1
 
 	table.insert(impulse.SmeltingShiftLog, {
-		completedAt   = os.date("%Y-%m-%d %H:%M:%S"),
-		supervisor    = ws.supervisorName,
+		completedAt    = os.date("%Y-%m-%d %H:%M:%S"),
+		supervisor     = ws.supervisorName,
 		steelDelivered = ws.refinedCount,
-		bonusCredits  = ws.bonusCredits,
-		totalPayout   = totalPayout,
-		shiftNumber   = impulse.SmeltingCompletedShifts,
+		bonusCredits   = ws.bonusCredits,
+		totalPayout    = totalPayout,
+		shiftNumber    = impulse.SmeltingCompletedShifts,
 	})
 
 	SaveShiftLog()
@@ -256,11 +368,14 @@ net.Receive("SmeltingWorkshift_Payout", function(len, ply)
 
 	impulse.SmeltingWorkshift = {
 		active         = false,
+		forming        = false,
+		formingSquadID = nil,
 		smeltCount     = 0,
 		refinedCount   = 0,
 		bonusCredits   = 0,
 		smeltGoal      = smeltGoal,
 		refinedGoal    = refinedGoal,
+		scaledPayout   = basePayout,
 		supervisorID   = 0,
 		supervisorName = "",
 		paid           = false,
@@ -271,31 +386,40 @@ end)
 
 net.Receive("SmeltingWorkshift_Cancel", function(len, ply)
 	if not IsValid(ply) then return end
-	if ply:Team() ~= TEAM_CWU or ply:GetTeamRank() < RANK_SUPERVISOR then
-		ply:Notify("Only a CWU Supervisor can cancel the workshift.")
+	if ply:Team() ~= TEAM_CWU or ply:GetTeamClass() ~= CLASS_REFINERY or ply:GetTeamRank() < RANK_SUPERVISOR then
+		ply:Notify("Only a CWU Refinery Supervisor can cancel the workshift.")
 		return
 	end
 
 	local ws = impulse.SmeltingWorkshift
-	if not ws.active then
+	if not ws.active and not ws.forming then
 		ply:Notify("There is no active workshift to cancel.")
+		return
+	end
+
+	if ply:SteamID64() ~= tostring(ws.supervisorID) then
+		ply:Notify("Only the shift lead can cancel the workshift.")
 		return
 	end
 
 	local supervisorName = ws.supervisorName
 	BroadcastChat("cancel", supervisorName, 0)
 
-	impulse.SmeltingCooldownEnd = CurTime() + cancelledCooldown
-
-	CleanupSmeltingProps()
+	if ws.active then
+		impulse.SmeltingCooldownEnd = CurTime() + cancelledCooldown
+		CleanupSmeltingProps()
+	end
 
 	impulse.SmeltingWorkshift = {
 		active         = false,
+		forming        = false,
+		formingSquadID = nil,
 		smeltCount     = 0,
 		refinedCount   = 0,
 		bonusCredits   = 0,
 		smeltGoal      = smeltGoal,
 		refinedGoal    = refinedGoal,
+		scaledPayout   = basePayout,
 		supervisorID   = 0,
 		supervisorName = "",
 		paid           = false,
@@ -310,19 +434,32 @@ function impulse.SmeltingNPC_SendMenu(caller)
 		return
 	end
 
+	if caller:GetTeamClass() ~= CLASS_REFINERY then
+		caller:Notify("You must be on the refinery branch to speak to this person!")
+		return
+	end
+
 	local ws = impulse.SmeltingWorkshift
 	local payoutReady = ws.active and ws.refinedCount >= ws.refinedGoal and not ws.paid
+	local squadSize = (ws.forming or ws.active) and GetFormingSquadSize() or 0
+	local isShiftLead = caller:SteamID64() == tostring(ws.supervisorID)
+	local displayPayout = GetDisplayPayout(ws, squadSize)
 
 	net.Start("SmeltingNPC_OpenMenu")
 		net.WriteBool(ws.active)
+		net.WriteBool(ws.forming or false)
 		net.WriteInt(ws.smeltCount, 16)
 		net.WriteInt(ws.smeltGoal, 16)
 		net.WriteInt(ws.refinedCount, 16)
 		net.WriteInt(ws.refinedGoal, 16)
 		net.WriteInt(ws.bonusCredits, 16)
+		net.WriteInt(displayPayout, 16)
 		net.WriteString(ws.supervisorName)
 		net.WriteInt(impulse.SmeltingCompletedShifts, 16)
 		net.WriteBool(payoutReady)
 		net.WriteBool(caller:GetTeamRank() >= RANK_SUPERVISOR)
+		net.WriteInt(squadSize, 8)
+		net.WriteInt(minGroupSize, 8)
+		net.WriteBool(isShiftLead)
 	net.Send(caller)
 end
