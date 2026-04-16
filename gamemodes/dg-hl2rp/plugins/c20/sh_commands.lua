@@ -128,97 +128,112 @@ if game.GetMap() == "rp_c18_dg" then
 	impulse.RegisterChatCommand("/outlandsgate", outlandsgateCommand)
 elseif game.GetMap() == "rp_localinterval" then
 	local outlandsgateCommand = {
-		description = "Opens the Outlands Gate. (Combine only)",
-		requiesAlive = true,
-		onRun = function(ply, arg, rawText)
-			if ply:SteamID() ~= "STEAM_0:0:29204032" then
-				if (ply:Team() != TEAM_OTA) or (ply:Team() == TEAM_CP and ply:GetTeamClass() < CLASS_OFC) then
-					ply:Notify("You must be a member of the OTA or CP OFC+ to use this.")
-					return
-				end
-			end
-			if (ply:GetPos() - Vector(3832.000000, 1248.000000, 297.959991)):LengthSqr() <= (800 ^ 2) then
-				if timer.Exists("ozgatecooldown") then
-					ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozgatecooldown")) .. " seconds before using this command.")
-				else
-					local buttons = 0
-					for v,k in pairs(ents.FindByClass("func_door")) do
-						if k:GetPos():Distance(Vector(3832.000000, 1248.000000, 297.959991)) < 30 then
-							buttons = buttons + 1
-							k:Fire("open", "", .6)
-							timer.Simple(20, function() k:Fire("close", "", .6) end)
-							for k, v in pairs(player.GetAll()) do
-								if v:IsCP() then
-									v:SendCombineMessage(ply:Name() .. " HAS OPENED THE OUTLANDS GATE.", Color(0, 100, 0))
-								end
-							end
-							timer.Simple(20, function()
-								for k, v in pairs(player.GetAll()) do
-									if v:IsCP() then
-										v:SendCombineMessage("THE OUTLANDS GATE HAS CLOSED.", Color(0, 100, 0))
-									end
-								end
-							end)
-						end
-					end
-					timer.Create("ozgatecooldown", 30, 1, function() timer.Remove("ozgatecooldown") end)
-					ply:Notify("You have opened the outlands gate.")
-				end
-			else
-				ply:Notify("You are not near the outlands gate.")
-			end
-
-		end
-	}
-	impulse.RegisterChatCommand("/ozg", outlandsgateCommand)
-
-	local ozffCommand = {
-	    description = "Opens the Outlands Forcefield. (Combine only)",
-	    requiesAlive = true,
+	    description = "Opens the Outlands Gate. (Combine only)",
+	    requiresAlive = true,
 	    onRun = function(ply, arg, rawText)
 	        if ply:SteamID() ~= "STEAM_0:0:29204032" then
-	            if (ply:Team() != TEAM_OTA) or (ply:Team() == TEAM_CP and ply:GetTeamClass() < CLASS_OFC) then
+	            if (ply:Team() != TEAM_OTA) and not (ply:Team() == TEAM_CP and ply:GetTeamClass() >= CLASS_OFC) then
 	                ply:Notify("You must be a member of the OTA or CP OFC+ to use this.")
 	                return
 	            end
 	        end
 
-	        if (ply:GetPos() - Vector(3827.5505371094, 4021.0310058594, 219.78125)):LengthSqr() <= (800 ^ 2) then
-	            if timer.Exists("ozffcooldown") then
-	                ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozffcooldown")) .. " seconds before using this command.")
-	            else
-	                for v,k in pairs(ents.FindByClass("func_button")) do
-	                    if k:GetName() == "nexus_globe_bulkhead_open_button" then
-	                        k:Fire("use")
-	                    end
-	                end
-
-	                for k, v in pairs(player.GetAll()) do
-	                    if v:IsCP() then
-	                        v:SendCombineMessage(ply:Name() .. " HAS OPENED THE OUTLANDS FORCEFIELD.", Color(0, 100, 0))
-	                    end
-	                end
-
-	                timer.Simple(60, function()
-	                    for v,k in pairs(ents.FindByClass("func_button")) do
-	                        if k:GetName() == "nexus_globe_bulkhead_close_button" then
-	                            k:Fire("use")
-	                        end
-	                    end
-
-	                    for k, v in pairs(player.GetAll()) do
-	                        if v:IsCP() then
-	                            v:SendCombineMessage("THE OUTLANDS FORCEFIELD HAS CLOSED.", Color(0, 100, 0))
-	                        end
-	                    end
-	                end)
-
-	                timer.Create("ozffcooldown", 30, 1, function() timer.Remove("ozffcooldown") end)
-	                ply:Notify("You have opened the outlands forcefield.")
-	            end
-	        else
-	            ply:Notify("You are not near the outlands forcefield controls.")
+	        if (ply:GetPos() - Vector(3832.000000, 1248.000000, 297.959991)):LengthSqr() > (800 ^ 2) then
+	            ply:Notify("You are not near the outlands gate.")
+	            return
 	        end
+
+	        if timer.Exists("ozgatecooldown") then
+	            ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozgatecooldown")) .. " seconds before using this command.")
+	            return
+	        end
+
+	        local door = ents.FindByName("outerbulkhead")[1]
+
+	        if not IsValid(door) then
+	            ply:Notify("The gate could not be found.")
+	            return
+	        end
+
+	        door:Fire("open", "", .6)
+
+	        for _, v in pairs(player.GetAll()) do
+	            if v:IsCP() then
+	                v:SendCombineMessage(ply:Name() .. " HAS OPENED THE OUTLANDS GATE.", Color(0, 100, 0))
+	            end
+	        end
+
+	        timer.Simple(20, function()
+	            local d = ents.FindByName("outerbulkhead")[1]
+	            if IsValid(d) then
+	                d:Fire("close", "", .6)
+	            end
+
+	            for _, v in pairs(player.GetAll()) do
+	                if v:IsCP() then
+	                    v:SendCombineMessage("THE OUTLANDS GATE HAS CLOSED.", Color(0, 100, 0))
+	                end
+	            end
+	        end)
+
+	        timer.Create("ozgatecooldown", 30, 1, function() timer.Remove("ozgatecooldown") end)
+	        ply:Notify("You have opened the outlands gate.")
+	    end
+	}
+
+	impulse.RegisterChatCommand("/ozg", outlandsgateCommand)
+
+	local ozffCommand = {
+	    description = "Opens the Outlands Forcefield. (Combine only)",
+	    requiresAlive = true,
+	    onRun = function(ply, arg, rawText)
+	        if ply:SteamID() ~= "STEAM_0:0:29204032" then
+	            if (ply:Team() != TEAM_OTA) and not (ply:Team() == TEAM_CP and ply:GetTeamClass() >= CLASS_OFC) then
+	                ply:Notify("You must be a member of the OTA or CP OFC+ to use this.")
+	                return
+	            end
+	        end
+
+	        if (ply:GetPos() - Vector(3827.5505371094, 4021.0310058594, 219.78125)):LengthSqr() > (800 ^ 2) then
+	            ply:Notify("You are not near the outlands forcefield controls.")
+	            return
+	        end
+
+	        if timer.Exists("ozffcooldown") then
+	            ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozffcooldown")) .. " seconds before using this command.")
+	            return
+	        end
+
+	        local shield = ents.FindByName("outerbulkhead_shield")[1]
+
+	        if not IsValid(shield) then
+	            ply:Notify("The forcefield could not be found.")
+	            return
+	        end
+
+	        shield:Fire("Disable")
+
+	        for _, v in pairs(player.GetAll()) do
+	            if v:IsCP() then
+	                v:SendCombineMessage(ply:Name() .. " HAS OPENED THE OUTLANDS FORCEFIELD.", Color(0, 100, 0))
+	            end
+	        end
+
+	        timer.Simple(60, function()
+	            local s = ents.FindByName("outerbulkhead_shield")[1]
+	            if IsValid(s) then
+	                s:Fire("Enable")
+	            end
+
+	            for _, v in pairs(player.GetAll()) do
+	                if v:IsCP() then
+	                    v:SendCombineMessage("THE OUTLANDS FORCEFIELD HAS CLOSED.", Color(0, 100, 0))
+	                end
+	            end
+	        end)
+
+	        timer.Create("ozffcooldown", 30, 1, function() timer.Remove("ozffcooldown") end)
+	        ply:Notify("You have opened the outlands forcefield.")
 	    end
 	}
 	impulse.RegisterChatCommand("/ozff", ozffCommand)
@@ -237,40 +252,46 @@ elseif game.GetMap() == "rp_localinterval" then
 	            end
 	        end
 
-	        if (ply:GetPos() - Vector(1567.790039, -301.329987, 187.740005)):LengthSqr() <= (800 ^ 2) then
-	            if timer.Exists("apcgatecooldown") then
-	                ply:Notify("You must wait " .. math.floor(timer.TimeLeft("apcgatecooldown")) .. " seconds before using this command.")
-	            else
-	                local buttons = 0
-	                for _, k in pairs(ents.FindByClass("func_button")) do
-	                    if k:GetPos():Distance(Vector(1479.930054, -282.329987, 76.739998)) < 3 then
-	                        buttons = buttons + 1
-	                        k:Fire("use")
-	                        timer.Simple(20, function() k:Fire("use") end)
-	                        for _, v in pairs(player.GetAll()) do
-	                            if v:IsCP() then
-	                                v:SendCombineMessage(ply:Name() .. " HAS OPENED THE APC GARAGE.", Color(0, 100, 0))
-	                            end
-	                        end
-	                        timer.Simple(20, function()
-	                            for _, v in pairs(player.GetAll()) do
-	                                if v:IsCP() then
-	                                    v:SendCombineMessage("THE APC GARAGE DOOR HAS CLOSED.", Color(0, 100, 0))
-	                                end
-	                            end
-	                        end)
-	                    end
-	                end
-	                if buttons > 0 then
-	                    timer.Create("apcgatecooldown", 30, 1, function() timer.Remove("apcgatecooldown") end)
-	                    ply:Notify("You have opened the APC Garage.")
-	                else
-	                    ply:Notify("No valid buttons were found near the garage.")
+	        if (ply:GetPos() - Vector(1567.790039, -301.329987, 187.740005)):LengthSqr() > (800 ^ 2) then
+	            ply:Notify("You are not near the APC Garage.")
+	            return
+	        end
+
+	        if timer.Exists("apcgatecooldown") then
+	            ply:Notify("You must wait " .. math.floor(timer.TimeLeft("apcgatecooldown")) .. " seconds before using this command.")
+	            return
+	        end
+
+	        local door = ents.FindByName("nexus_garagedoor1")[1]
+
+	        if not IsValid(door) then
+	            ply:Notify("The garage door could not be found.")
+	            return
+	        end
+
+	        door:Fire("open", "", .6)
+
+	        for _, v in pairs(player.GetAll()) do
+	            if v:IsCP() then
+	                v:SendCombineMessage(ply:Name() .. " HAS OPENED THE APC GARAGE.", Color(0, 100, 0))
+	            end
+	        end
+
+	        timer.Simple(20, function()
+	            local d = ents.FindByName("nexus_garagedoor1")[1]
+	            if IsValid(d) then
+	                d:Fire("close", "", .6)
+	            end
+
+	            for _, v in pairs(player.GetAll()) do
+	                if v:IsCP() then
+	                    v:SendCombineMessage("THE APC GARAGE DOOR HAS CLOSED.", Color(0, 100, 0))
 	                end
 	            end
-	        else
-	            ply:Notify("You are not near the APC Garage.")
-	        end
+	        end)
+
+	        timer.Create("apcgatecooldown", 30, 1, function() timer.Remove("apcgatecooldown") end)
+	        ply:Notify("You have opened the APC Garage.")
 	    end
 	}
 	impulse.RegisterChatCommand("/apcgarage", apcgarageCommand)
