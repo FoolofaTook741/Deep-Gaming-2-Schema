@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "cos_m1helmet"
 ITEM.Name = "M1 Helmet"
-ITEM.Desc =  "An old school steel American helmet from World War 2. Offers 20% protection."
+ITEM.Desc =  "An old school steel American helmet from World War 2. Offers 25% protection."
 ITEM.Category = "Clothing"
 ITEM.Model = Model("models/willardnetworks/clothingitems/head_helmet.mdl")
 ITEM.FOV = 17.929799426934

@@ -337,7 +337,7 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			dmginfo:ScaleDamage(0.9)
 			ply:EmitSound("player/bhit_helmet-1.wav")
 		elseif ply.HasHelmet2 == true and hitgroup == HITGROUP_HEAD then
-			dmginfo:ScaleDamage(0.8)
+			dmginfo:ScaleDamage(0.75)
 			ply:EmitSound("player/bhit_helmet-1.wav")
 		elseif ply.HasHelmet3 == true and hitgroup == HITGROUP_HEAD then
 			dmginfo:ScaleDamage(0.6)
