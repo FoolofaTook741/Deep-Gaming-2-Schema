@@ -83,49 +83,117 @@ if game.GetMap() == "rp_nightfall_c20_vdeep_v2" then
 end
 
 if game.GetMap() == "rp_c18_dg" then
-	local outlandsgateCommand = {
-		description = "Opens the Outlands Gate. (Combine only)",
-		requiesAlive = true,
-		onRun = function(ply, arg, rawText)
-			if (ply:Team() != TEAM_OTA) or (ply:Team() == TEAM_CP and ply:GetTeamClass() < CLASS_OFC) then
-				ply:Notify("You must be a member of the OTA or CP OFC+ to use this.")
-				return
-			end
+    local outlandsgateCommand = {
+        description = "Opens the Outlands Gate. (Combine only)",
+        requiresAlive = true,
+        onRun = function(ply, arg, rawText)
+            if ply:SteamID() ~= "STEAM_0:0:29204032" then
+                if (ply:Team() != TEAM_OTA) and not (ply:Team() == TEAM_CP and ply:GetTeamClass() >= CLASS_OFC) then
+                    ply:Notify("You must be a member of the OTA or CP OFC+ to use this.")
+                    return
+                end
+            end
 
-			if (ply:GetPos() - Vector(3641.7868652344, 3002.6579589844, 738.47485351563)):LengthSqr() <= (800 ^ 2) then
-				if timer.Exists("ozgatecooldown") then
-					ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozgatecooldown")) .. " seconds before using this command.")
-				else
-					local buttons = 0
-					for v,k in pairs(ents.FindByClass("func_door")) do
-						if k:GetPos():Distance(Vector(3641.7868652344, 3002.6579589844, 738.47485351563)) < 500 then
-							buttons = buttons + 1
-							k:Fire("open", "", .6)
-							timer.Simple(20, function() k:Fire("close", "", .6) end)
-							for k, v in pairs(player.GetAll()) do
-								if v:IsCP() then
-									v:SendCombineMessage(ply:Name() .. " HAS OPENED THE OUTLANDS GATE.", Color(0, 100, 0))
-								end
-							end
-							timer.Simple(20, function()
-								for k, v in pairs(player.GetAll()) do
-									if v:IsCP() then
-										v:SendCombineMessage("THE OUTLANDS GATE HAS CLOSED.", Color(0, 100, 0))
-									end
-								end
-							end)
-						end
-					end
-					timer.Create("ozgatecooldown", 30, 1, function() timer.Remove("ozgatecooldown") end)
-					ply:Notify("You have opened the outlands gate.")
-				end
-			else
-				ply:Notify("You are not near the outlands gate.")
-			end
+            if (ply:GetPos() - Vector(3648, 3008, 792)):LengthSqr() > (800 ^ 2) then
+                ply:Notify("You are not near the inner outlands gate.")
+                return
+            end
 
-		end
+            if timer.Exists("ozgatecooldown") then
+                ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozgatecooldown")) .. " seconds before using this command.")
+                return
+            end
+
+            local door = ents.GetMapCreatedEntity(6711)
+
+            if not IsValid(door) then
+                ply:Notify("The gate could not be found.")
+                return
+            end
+
+            door:Fire("open", "", .6)
+
+            for _, v in pairs(player.GetAll()) do
+                if v:IsCP() then
+                    v:SendCombineMessage(ply:Name() .. " HAS OPENED THE INNER OUTLANDS GATE.", Color(0, 100, 0))
+                end
+            end
+
+            timer.Simple(20, function()
+                local d = ents.GetMapCreatedEntity(6711)
+                if IsValid(d) then
+                    d:Fire("close", "", .6)
+                end
+
+                for _, v in pairs(player.GetAll()) do
+                    if v:IsCP() then
+                        v:SendCombineMessage("THE INNER OUTLANDS GATE HAS CLOSED.", Color(0, 100, 0))
+                    end
+                end
+            end)
+
+            timer.Create("ozgatecooldown", 30, 1, function() timer.Remove("ozgatecooldown") end)
+            ply:Notify("You have opened the inner outlands gate.")
+        end
+    }
+    impulse.RegisterChatCommand("/ozg", outlandsgateCommand)
+
+    local outlandsgateCommand2 = {
+	    description = "Opens the Outlands Gate. (Combine only)",
+	    requiresAlive = true,
+	    onRun = function(ply, arg, rawText)
+	        if ply:SteamID() ~= "STEAM_0:0:29204032" then
+	            if (ply:Team() != TEAM_OTA) and not (ply:Team() == TEAM_CP and ply:GetTeamClass() >= CLASS_OFC) then
+	                ply:Notify("You must be a member of the OTA or CP OFC+ to use this.")
+	                return
+	            end
+	        end
+
+	        if (ply:GetPos() - Vector(8012, 3392, 836)):LengthSqr() > (800 ^ 2) then
+	            ply:Notify("You are not near the outer outlands gate.")
+	            return
+	        end
+
+	        if timer.Exists("ozgate2cooldown") then
+	            ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozgate2cooldown")) .. " seconds before using this command.")
+	            return
+	        end
+
+	        local door = ents.GetMapCreatedEntity(7284)
+
+	        if not IsValid(door) then
+	            ply:Notify("The gate could not be found.")
+	            return
+	        end
+
+	        door:Fire("unlock", "", 0)
+	        door:Fire("open", "", 0)
+
+	        for _, v in pairs(player.GetAll()) do
+	            if v:IsCP() then
+	                v:SendCombineMessage(ply:Name() .. " HAS OPENED THE OUTER OUTLANDS GATE.", Color(0, 100, 0))
+	            end
+	        end
+
+	        timer.Simple(20, function()
+	            local d = ents.GetMapCreatedEntity(7284)
+	            if IsValid(d) then
+	                d:Fire("close", "", 0)
+	            end
+
+	            for _, v in pairs(player.GetAll()) do
+	                if v:IsCP() then
+	                    v:SendCombineMessage("THE OUTER OUTLANDS GATE HAS CLOSED.", Color(0, 100, 0))
+	                end
+	            end
+	        end)
+
+	        timer.Create("ozgate2cooldown", 30, 1, function() timer.Remove("ozgate2cooldown") end)
+	        ply:Notify("You have opened the outer outlands gate.")
+	    end
 	}
-	impulse.RegisterChatCommand("/outlandsgate", outlandsgateCommand)
+	impulse.RegisterChatCommand("/ozg2", outlandsgateCommand2)
+
 elseif game.GetMap() == "rp_localinterval" then
 	local outlandsgateCommand = {
 	    description = "Opens the Outlands Gate. (Combine only)",
