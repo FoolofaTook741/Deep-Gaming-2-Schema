@@ -1,5 +1,6 @@
 --zones where players cannot spawn props
 
+--[[
 local restrictedZones = {
     --start c77
     {
@@ -54,4 +55,4 @@ hook.Add("PlayerSpawnedSENT", "impulseRestrictedZoneSENTCheck", function(ply, en
         ent:Remove()
         ply:Notify("You cannot spawn entities in this area (" .. zoneName .. ").")
     end
-end)
+end) ]]--
