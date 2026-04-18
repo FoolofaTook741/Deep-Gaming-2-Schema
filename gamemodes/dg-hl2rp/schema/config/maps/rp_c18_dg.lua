@@ -257,6 +257,20 @@ impulse.Config.LoadScript = function()
 	    door:Fire("unlock")
 	    door:Fire("open")
 	end
+
+	local removeOnStart = {
+		2425,
+		2416,
+		2407,
+		2399,
+		
+
+	}
+
+	for _, id in pairs(removeOnStart) do
+        local ent = ents.GetMapCreatedEntity(id)
+        if IsValid(ent) then ent:Remove() end
+    end
 end
 
 impulse.Config.CPSpawnLocations = {Vector(1500.1013183594, 213.04747009277, 512.03125),
