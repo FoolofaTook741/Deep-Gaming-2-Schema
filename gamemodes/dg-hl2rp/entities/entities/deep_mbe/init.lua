@@ -18,6 +18,12 @@ end
 
 function ENT:Use( activator, caller )
 	if activator:IsCP() or activator:Team() == TEAM_ZOMBIE then return end
+
+	if impulse.Dispatch.GetCityCode() < CODE_JW then
+		activator:Notify("The door is locked.")
+		return
+	end
+
 	if CurTime() > self.NextTP or CurTime() > activator.NextTeleport then
 		activator:SetPos(impulse.Config.MBEntrance)
 		self.NextTP = CurTime() + 1.5
