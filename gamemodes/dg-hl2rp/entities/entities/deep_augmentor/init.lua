@@ -136,7 +136,7 @@ end
 local function ApplyMPFAug(self, ply)
     local sid = StartAugProcess(self, ply)
 
-    timer.Create(sid .. "augmentation", 25, 1, function()
+    timer.Create(sid .. "augmentation", 15, 1, function()
         if not IsValid(ply) or not ply:Alive() or ply:Team() ~= TEAM_CP then
             FinishAugProcess(self, ply)
             return
