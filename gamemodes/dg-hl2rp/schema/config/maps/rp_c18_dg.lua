@@ -241,6 +241,22 @@ impulse.Config.LoadScript = function()
 			end
 		end
 	end
+
+		local autoUnlockDoors = {
+	    	6711, --ozg near nexus
+	    	7284 --ozg near outlands
+	}
+
+	for v, k in pairs(autoUnlockDoors) do
+	    local door = ents.GetMapCreatedEntity(k)
+
+	    if not IsValid(door) or not door:IsDoor() then
+	        continue
+	    end
+
+	    door:Fire("unlock")
+	    door:Fire("open")
+	end
 end
 
 impulse.Config.CPSpawnLocations = {Vector(1500.1013183594, 213.04747009277, 512.03125),
@@ -281,3 +297,59 @@ Vector(12993.887695313, -1303.5673828125, 880.03125),
 
 impulse.Config.StalkerSpawnLocations = {Vector(2503.96875, 496.03125, 928.03125)
 }
+
+if SERVER then
+	resource.AddWorkshop( "3668482007" ) -- Deep Gaming 2 - Main Content
+	resource.AddWorkshop( "3661022179" ) -- Deep Gaming 2 - Combine Playermodels
+
+	resource.AddWorkshop( "2920298301" ) -- Willard Networks V2 Models
+	resource.AddWorkshop( "1651398810" ) -- impulse framework content
+	resource.AddWorkshop( "1689357640" ) -- impulse: Half-Life 2 Roleplay Content
+	resource.AddWorkshop( "1929148608" ) -- impulse: Christmas Content
+	resource.AddWorkshop( "1931077830" ) -- impulse: Half-Life 2 Roleplay Content 2
+	resource.AddWorkshop( "1967574455" ) -- impulse: Half-Life 2 Roleplay Content 3
+	resource.AddWorkshop( "2085971768" ) -- impulse: Half-Life 2 Roleplay Content 4
+	resource.AddWorkshop( "2117238555" ) -- impulse: Half-Life 2 Roleplay Content 5
+	resource.AddWorkshop( "2905875154" ) -- Project: Synapse - Props Pack
+	resource.AddWorkshop( "282312812" ) -- HL2RP ID Cards
+	resource.AddWorkshop( "3028357706" ) -- [LVS] - Half-Life 2 - Pack
+	resource.AddWorkshop( "2912816023" ) -- [LVS] - Framework
+	resource.AddWorkshop( "3027255911" ) -- [LVS] - Military - Pack
+	resource.AddWorkshop( "2922255746" ) -- [LVS] - Helicopters - Pack
+	resource.AddWorkshop( "173482196" ) -- SProps Workshop Edition
+	resource.AddWorkshop( "2942500044" ) -- Project: Synapse - Resource Pack
+	resource.AddWorkshop( "206166550" ) -- Sabre-aN's Headcrab Zombie Mod
+	resource.AddWorkshop( "1574676244" ) -- Half-Life 2 Building Kit
+	resource.AddWorkshop( "1784911999" ) -- LED screens
+	resource.AddWorkshop( "1996672418" ) -- [TFA] Half-Life: Alyx - Shotgun
+	resource.AddWorkshop( "2109019567" ) -- [Half Life: Alyx] Combine Workers (Player, NPC, Ragdoll)
+	resource.AddWorkshop( "2160883169" ) -- [TFA] BAR M1918 - Service Model
+	resource.AddWorkshop( "2521715069" ) -- [TFA] Combine-Modified SMG
+	resource.AddWorkshop( "2630235485" ) -- [TFA] AK47 and Type 56 (Call of Duty Black Ops: Cold War)
+	resource.AddWorkshop( "2665902404" ) -- [TFA] [AT] Project HL2 MMod Pack
+	resource.AddWorkshop( "2797830728" ) -- TFA HL:A Weapons
+	resource.AddWorkshop( "2866027579" ) -- AmmoWorkbench
+	resource.AddWorkshop( "2891252709" ) -- Half Life 2 Props Extended
+	resource.AddWorkshop( "2941435647" ) -- Fast Zombie With Headcrab Playermodel
+	resource.AddWorkshop( "2965143123" ) -- [TFA] PTRS-41
+	resource.AddWorkshop( "1909557607" ) -- [TTT/Sandbox] Combine Sniper
+	resource.AddWorkshop( "3616199913" ) -- Fallout 76 – Workstation Props (REUPLOAD)
+	resource.AddWorkshop( "2685051966" ) -- Image Tool - Your pictures in the world!
+	resource.AddWorkshop( "2840031720" ) -- TFA Base
+	resource.AddWorkshop( "2043900984" ) -- [Half Life: Alyx] Infestation Control props
+	resource.AddWorkshop( "3118788923" ) -- Advanced Material | REBORN
+	resource.AddWorkshop( "104603291" ) -- Extended Spawnmenu
+	resource.AddWorkshop( "104604943" ) -- Easy Bodygroup Tool
+	resource.AddWorkshop( "104486597" ) -- NPC Tools
+	resource.AddWorkshop( "3696110768" ) -- Willard Networks V2 Models [PM]
+	resource.AddWorkshop( "2855280603" ) -- [Entropy: Zero 2] Prototype gauss pistol
+	resource.AddWorkshop( "3646589578" ) -- Bofors Defense OICW
+	resource.AddWorkshop( "730187817" ) -- More materials
+	resource.AddWorkshop( "2228994615" ) -- [Half Life: Alyx] Xen Pack (Props)
+	resource.AddWorkshop( "2853989986" ) -- Half-Life Alyx: Hazmat male and female
+	resource.AddWorkshop( "105042805" ) -- Combine Administrators v2
+	resource.AddWorkshop( "3009154057" ) -- RTB:R Cremator [Model]
+	resource.AddWorkshop( "3705009094" ) -- RTB:R Cremator [PM] (JSQO)
+	resource.AddWorkshop( "3303394137" ) -- rp_c18_dg
+	resource.AddWorkshop( "131736822" ) -- Flamethrower SWEP
+end
