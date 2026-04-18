@@ -4,7 +4,7 @@ VENDOR.UniqueID = "ca"
 VENDOR.Name = "O.C.A. Supplies"
 VENDOR.Desc = "Distributes permits and weapons for O.C.A."
 
-VENDOR.Model = "models/props_combine/breenconsole.mdl"
+VENDOR.Model = "models/taggart/gallahan.mdl"
 VENDOR.Skin = 0
 VENDOR.Bodygroups = "0"
 VENDOR.Gender = "male" -- male, female, cp
