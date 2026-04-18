@@ -65,7 +65,7 @@ SWEP.Primary.Sound = Sound("CUST.MP5.Single")
 SWEP.Primary.Inside_Sound = Sound("CUST.MP5.Inside")
 
 SWEP.Primary.Recoil = 1 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 11
+SWEP.Primary.Damage = 10
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.015
 SWEP.Primary.Delay = RPM(450)

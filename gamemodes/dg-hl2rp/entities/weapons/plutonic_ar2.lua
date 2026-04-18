@@ -70,11 +70,11 @@ SWEP.Primary.Sound = Sound("LS2.AR2.Single")
 SWEP.Primary.Inside_Sound = Sound("LS2.AR2.Inside")
 
 SWEP.Primary.Recoil = .9
-SWEP.Primary.Damage = 14
+SWEP.Primary.Damage = 12
 SWEP.Primary.NumShots = 1
 SWEP.Primary.PenetrationScale = 1.2
 SWEP.Primary.Cone = 0.01 -- base spread value
-local fireRate = 450
+local fireRate = 445
 SWEP.Primary.Delay = RPM(fireRate)
 SWEP.Primary.Tracer = "AR2Tracer"
 
@@ -125,7 +125,7 @@ local copyFirerate = fireRate + 0
 function SWEP:CustomThink()
 	if self.ar2eliteaugument_equipped then
 		if self:GetIronsights() then
-			self.Primary.Recoil = 0.75
+			self.Primary.Recoil = 0.6
 		else
 			self.Primary.Recoil = copyRecoil
 		end
@@ -162,6 +162,7 @@ SWEP.Attachments = {
 			e.Primary.ClipSize = 45
 			e.Primary.Recoil = copyRecoil - 0.1
 			e.Primary.Delay = RPM(copyFirerate + 10)
+			e.Primary.Damage = copyDMG + 2
 		end,
 		ModCleanup = function(e)
 			e.Primary.Sound = Sound("LS2.AR2.Single")
@@ -174,6 +175,7 @@ SWEP.Attachments = {
 			e.Primary.Recoil = copyRecoil -- safety reset
 			e.Primary.ClipSize = 30
 			e.Primary.Delay = RPM(copyFirerate)
+			e.Primary.Damage = copyDMG
 			if e:Clip1() > 30 then
 				e:SetClip1(30)
 			end
