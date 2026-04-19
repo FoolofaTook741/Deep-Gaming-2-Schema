@@ -492,6 +492,12 @@ if SERVER then
 		if health <= 0 then
 			self:EmitSound("NPC_Hunter.Death")
 
+			local driver = self.Driver:GetDriver()
+	        if IsValid(driver) then
+	            driver:SetNoDraw(false)
+	            driver:Kill()
+	        end
+
 			local ragdoll = ents.Create("prop_ragdoll")
 			ragdoll:SetModel(self:GetModel())
 			ragdoll:SetPos(self:GetPos())
