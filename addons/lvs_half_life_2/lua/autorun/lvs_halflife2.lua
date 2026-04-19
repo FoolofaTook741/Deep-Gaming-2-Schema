@@ -1,3 +1,5 @@
+--[[
+
 local function Initialize()
     if ( !tobool(LVS) ) then
         print("[LVS] - Unable to load Half Life 2 Vehicles, LVS not found.")
@@ -54,4 +56,4 @@ hook.Add("PrePlayerDraw", "LVS.HalfLife2", function(ply)
 
         return true
     end
-end)
+end) ]]--

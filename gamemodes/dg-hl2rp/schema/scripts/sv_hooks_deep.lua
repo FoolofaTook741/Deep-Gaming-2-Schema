@@ -1797,7 +1797,7 @@ hook.Add("EntityTakeDamage", "DG_MergedDamage", function(target, dmginfo)
             if string.StartWith(cls, "lvs_helicopter_hl2_combine_dropship") then
                 dmginfo:AddDamage(7400)
             else
-                dmginfo:AddDamage(2000)
+                dmginfo:AddDamage(2400)
             end
             return
         end

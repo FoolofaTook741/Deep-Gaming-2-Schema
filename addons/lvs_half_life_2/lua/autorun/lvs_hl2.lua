@@ -26,7 +26,7 @@ timer.Simple(5, Initialize)
 hook.Add("InitPostEntity", "LVS.HL2", function()
     Initialize()
 end)
-
+    
 local combineAPCs = {
     ["lvs_wheeldrive_hl2_combine_apc"] = true,
     ["lvs_wheeldrive_hl2_combine_apc_armed"] = true,
