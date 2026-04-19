@@ -1,6 +1,15 @@
 --prevents player collisions in spawns and on both sides of the teleporters
 local NOCOLLIDE_ZONES = {
-    -- Spawn
+    --C18 DG Spawn
+    {
+        mins = Vector(4416.39453125, -2072.4858398438, 1592.1525878906),
+        maxs = Vector(2160.5895996094, -3397.1796875, 581.06512451172)
+    },
+
+
+
+
+    --[[ Spawn C77
     {
         mins = Vector(-5197.2314453125, -2152.765625, 1081.2270507813),
         maxs = Vector(-1867.6784667969, -1155.8692626953, 189.2728729248)
@@ -14,7 +23,8 @@ local NOCOLLIDE_ZONES = {
     {
         mins = Vector(8935.267578125, 1430.4084472656, -418.28143310547),
         maxs = Vector(8754.814453125, 1007.2616577148, -595.40618896484)
-    },
+    }, ]]-- C77
+
     --[[
     -- Teleporter SSE vent
     {
