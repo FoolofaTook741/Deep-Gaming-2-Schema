@@ -1796,6 +1796,8 @@ hook.Add("EntityTakeDamage", "DG_MergedDamage", function(target, dmginfo)
         if wepClass == "plutonic_ptrs" or wepClass == "plutonic_ptrs41" then
             if string.StartWith(cls, "lvs_helicopter_hl2_combine_dropship") then
                 dmginfo:AddDamage(7400)
+            elseif cls == "gw_hunter" then
+                dmginfo:AddDamage(336)
             else
                 dmginfo:AddDamage(2400)
             end
@@ -1803,7 +1805,11 @@ hook.Add("EntityTakeDamage", "DG_MergedDamage", function(target, dmginfo)
         end
 
         if wepClass == "plutonic_m60" then
-            dmginfo:ScaleDamage(10)
+            if cls ~= "gw_hunter" then
+                dmginfo:ScaleDamage(10)
+            else
+                dmginfo:AddDamage(8)
+            end
             return
         end
 
