@@ -125,7 +125,7 @@ local copyFirerate = fireRate + 0
 function SWEP:CustomThink()
 	if self.ar2eliteaugument_equipped then
 		if self:GetIronsights() then
-			self.Primary.Recoil = 0.6
+			self.Primary.Recoil = 0.8
 		else
 			self.Primary.Recoil = copyRecoil
 		end
@@ -161,8 +161,7 @@ SWEP.Attachments = {
 			e.Primary.Cone = copycone * 0.9
 			e.Primary.ClipSize = 45
 			e.Primary.Recoil = copyRecoil - 0.1
-			e.Primary.Delay = RPM(copyFirerate + 10)
-			e.Primary.Damage = copyDMG + 2
+			e.Primary.Delay = RPM(copyFirerate + 15)
 		end,
 		ModCleanup = function(e)
 			e.Primary.Sound = Sound("LS2.AR2.Single")
@@ -175,7 +174,6 @@ SWEP.Attachments = {
 			e.Primary.Recoil = copyRecoil -- safety reset
 			e.Primary.ClipSize = 30
 			e.Primary.Delay = RPM(copyFirerate)
-			e.Primary.Damage = copyDMG
 			if e:Clip1() > 30 then
 				e:SetClip1(30)
 			end
