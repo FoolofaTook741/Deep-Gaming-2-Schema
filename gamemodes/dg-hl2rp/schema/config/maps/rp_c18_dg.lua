@@ -148,10 +148,10 @@ impulse.Config.IntroScenes = {
 }
 
 impulse.Config.DealerLocations = {
-	{pos = Vector(188.19854736328, 4309.6215820313, 315.03125), ang = Angle(0, 90, 0)},
-	{pos = Vector(-2078.9794921875, 4210.8125, 624.03125), ang = Angle(0,0,0)},
+	{pos = Vector(188.19854736328, 4309.6215820313, 315.03125), ang = Angle(0, -90, 0)},
+	{pos = Vector(-2078.9794921875, 4210.8125, 624.03125), ang = Angle(0,-135,0)},
 	{pos = Vector(710.86926269531, 1883.3258056641, 337.03125), ang = Angle(0, 180, 0)},
-	{pos = Vector(2516.2634277344, 2836.8894042969, 661.37115478516), ang = Angle(0, 90, 0)},
+	{pos = Vector(2516.2634277344, 2836.8894042969, 661.37115478516), ang = Angle(0, 180, 0)},
 }
 
 impulse.Config.ConverterLocations = {
