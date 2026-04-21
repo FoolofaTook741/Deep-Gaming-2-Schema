@@ -51,7 +51,7 @@ function PANEL:PaintOver(w, h)
     end
 
     draw.SimpleText("Container", "Impulse-Elements23-Shadow", w - 5, 30, grey, TEXT_ALIGN_RIGHT)
-    if self.storageWeight and self.container then
+    if self.storageWeight and self.container and IsValid(self.container) then
         local capacity = 0
         if self.container:GetClass() == "prop_ragdoll" then
             capacity = self.container:GetNWInt("Capacity", 0)
