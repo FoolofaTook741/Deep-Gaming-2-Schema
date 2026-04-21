@@ -128,7 +128,7 @@ end)
 
 local _sendingLuaError = false
 
-local function SendLuaErrorToDiscord(err)
+local function SendLuaErrorToDiscord(err, stack)
     local embeds = {
         {
             title = "Lua Error Detected",
@@ -145,6 +145,8 @@ local function SendLuaErrorToDiscord(err)
     local ok, payload = pcall(util.TableToJSON, { embeds = embeds })
     if not ok then
         print("[ReportLuaErrorsToDiscord] Failed to serialize payload: " .. tostring(payload))
+        print("[ReportLuaErrorsToDiscord] Raw stack dump:")
+        PrintTable(stack or {})
         return
     end
 
@@ -175,7 +177,7 @@ hook.Add("OnLuaError", "ReportLuaErrorsToDiscord", function(err, realm, stack)
                 end
             end
         end
-        SendLuaErrorToDiscord(errorMsg)
+        SendLuaErrorToDiscord(errorMsg, stack)
     end)
 
     if not ok then
