@@ -61,7 +61,7 @@ function HUD2_setMaxOps( player, command, arguments )
 	
 	return false;
 end
-concommand.Add("HUD2_setMaxOps", setHUD2MaxOps, nil);
+concommand.Add("HUD2_setMaxOps", HUD2_setMaxOps, nil);
 
 function HUD2_showStats( player, command, arguments )
 	
@@ -157,13 +157,13 @@ net.Receive("HUD2_REG", HUD2_Register)
 
 
 //-- Hook the user message 'HUD2_UNREG' so we can unregister
-local function HUD2_Register()
+local function HUD2_UnRegister()
 	local eindex = net.ReadInt(16)
 
 	HUD_System.hookedEnts[eindex] = nil
 	GAMEMODE:AddNotify("[HUD] Link broken!", NOTIFY_CLEANUP, 3)
 end
-net.Receive("HUD2_UNREG", HUD2_Register)
+net.Receive("HUD2_UNREG", HUD2_UnRegister)
 
 function HML_RenderTableUpdate()
 	local tbl = net.ReadTable()
