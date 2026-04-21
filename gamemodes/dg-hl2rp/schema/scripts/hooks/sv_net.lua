@@ -795,8 +795,8 @@ net.Receive("impulseHL2RPUseLocker", function(lem, ply)
 	end
 
 	if ply.IsARebel then
-		ply:SetBodygroup(2, ply.lastTorsoBodygroup) 
-		ply:SetBodygroup(3, ply.lastLegBodgroup)
+		ply:SetBodygroup(2, ply.lastTorsoBodygroup or 0) 
+		ply:SetBodygroup(3, ply.lastLegBodygroup or 0)
 		ply.HasJacket = false
 		ply.IsARebel = false
 		ply.HasRadio = false
@@ -804,7 +804,7 @@ net.Receive("impulseHL2RPUseLocker", function(lem, ply)
 		hook.Run("HL2RPRebelState", ply, false)
 	else
 		ply.lastTorsoBodygroup = ply:GetBodygroup(2)
-		ply.lastLegBodgroup = ply:GetBodygroup(3)
+		ply.lastLegBodygroup = ply:GetBodygroup(3)
 		if ply:Team() == TEAM_CWU and ply.GetTeamClass and ply:GetTeamClass() == CLASS_MEDIC then
 			ply:SetBodygroup(2, 12)
 			ply:SetBodygroup(3, 2)
