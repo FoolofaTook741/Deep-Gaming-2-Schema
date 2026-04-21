@@ -183,7 +183,7 @@ function PANEL:SetUpCWPDA()
 		surface.PlaySound("buttons/button9.wav")
 	end
 
-    if LocalPlayer():GetTeamRank() >= RANK_SUPERVISOR then
+    if LocalPlayer():GetTeamRank() >= RANK_SUPERVISOR or LocalPlayer():Team() == TEAM_CREMATOR then
 		self.workshiftpnl = vgui.Create("DPanel", self.sheet)
 		self.workshiftpnl:Dock(FILL)
 

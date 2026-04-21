@@ -176,7 +176,11 @@ local function DrawOverheadInfo(target, alpha)
 	else healthCol = overheadHealthCols[6]
 	end
 
-	pos.z = pos.z + 5
+	if target:Team() == TEAM_CREMATOR then
+	    pos.z = pos.z + 25
+	else
+	    pos.z = pos.z + 5
+	end
 	pos = pos:ToScreen()
 	pos.y = pos.y - 50
 

@@ -1,5 +1,5 @@
 function PLUGIN:CheckMenuInput()
-	if input.IsKeyDown(KEY_F9) and not IsValid(impulse.cwPanel) and LocalPlayer():Team() == TEAM_CWU and LocalPlayer():GetTeamRank() >= RANK_INTERN then
+	if input.IsKeyDown(KEY_F9) and not IsValid(impulse.cwPanel) and ((LocalPlayer():Team() == TEAM_CWU and LocalPlayer():GetTeamRank() >= RANK_INTERN) or (LocalPlayer():Team() == TEAM_CREMATOR)) then
 		impulse.cwPanel = vgui.Create("DeepCWPDAMenu")
 	end
 end
