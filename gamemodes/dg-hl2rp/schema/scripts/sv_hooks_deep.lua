@@ -2019,9 +2019,10 @@ hook.Add("EntityTakeDamage", "DG_MergedDamage", function(target, dmginfo)
                     target:SetWalkSpeed(120)
                     local sid = target:SteamID()
                     timer.Create(sid .. "metrocopzomstun", 1, 1, function()
+                        if not IsValid(target) or not target:Alive() then return end
                         target:SetRunSpeed(runspeeds[target:Team()])
                         target:SetWalkSpeed(runspeeds[target:Team()] / 2)
-                    end)
+                    end)            
                 end
             end
         end
