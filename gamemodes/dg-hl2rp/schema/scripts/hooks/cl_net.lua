@@ -16,6 +16,8 @@ net.Receive("impulseHL2RPTerminal", function()
 	local terminal = vgui.Create("impulseTerminalMenu") 
 	local arrestedPly = net.ReadUInt(8)
 
+	if not IsValid(terminal) then return end
+
 	if arrestedPly != 0 then
 		terminal.ArrestedPlayer = Entity(arrestedPly)
 	end
@@ -28,6 +30,8 @@ net.Receive("impulseHL2RPTerminalConvict", function()
 	local arrestedPly = net.ReadUInt(8)
 	local loopCount = net.ReadUInt(8)
 	local convicts = {}
+
+	if not IsValid(terminal) then return end
 
 	for i = 1, loopCount do
 		local convict = net.ReadEntity()
