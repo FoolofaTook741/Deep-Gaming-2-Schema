@@ -126,6 +126,8 @@ hook.Add("PlayerUse", "detectNoclipAboose", function(ply, ent)
     ReqwestLog(embeds, DG_SENT)
 end)
 
+local _sendingLuaError = false
+
 local function SendLuaErrorToDiscord(err)
     local embeds = {
         {
@@ -134,25 +136,51 @@ local function SendLuaErrorToDiscord(err)
             color = 16711680,
             fields = {
                 { name = "Error Message:", value = "```" .. err .. "```" },
-                { name = "Timestamp:", value = os.date("%Y-%m-%d %H:%M:%S") }
+                { name = "Timestamp:", value = os.date("%Y-%m-%d %H:%M:%S") },
+                { name = "Server:", value = (GetConVar("hostname"):GetString() == "Deep Gaming 2 | Half Life 2 Roleplay | discord.gg/deepgaming") and "Main" or "Dev" }
             }
         }
     }
-    ReqwestLog(embeds, DG_LUA)
+
+    local ok, payload = pcall(util.TableToJSON, { embeds = embeds })
+    if not ok then
+        print("[ReportLuaErrorsToDiscord] Failed to serialize payload: " .. tostring(payload))
+        return
+    end
+
+    reqwest({
+        url     = DG_LUA,
+        method  = "POST",
+        headers = { ["Content-Type"] = "application/json", ["User-Agent"] = "Pinnacle Gaming" },
+        body    = payload,
+        success = function(code, body) print(("[LuaErrorWebhook] %d %s"):format(code, body)) end,
+        failed  = function(errMsg) print("[LuaErrorWebhook] Request failed: " .. tostring(errMsg)) end,
+    })
 end
 
 hook.Add("OnLuaError", "ReportLuaErrorsToDiscord", function(err, realm, stack)
-    local errorMsg = "[" .. (realm or "UNKNOWN") .. "] " .. err .. "\n"
-    if stack then
-        for _, line in ipairs(stack) do
-            if type(line) == "table" and line.source and line.currentline then
-                errorMsg = errorMsg .. "\n" .. line.source .. ":" .. line.currentline
-            elseif type(line) == "string" then
-                errorMsg = errorMsg .. "\n" .. line
-            else
-                errorMsg = errorMsg .. "\n[Unknown stack entry]"
+    if _sendingLuaError then return end
+    _sendingLuaError = true
+
+    local ok = pcall(function()
+        local errorMsg = "[" .. (realm or "UNKNOWN") .. "] " .. err .. "\n"
+        if stack then
+            for _, line in ipairs(stack) do
+                if type(line) == "table" and line.File and line.Line then
+                    errorMsg = errorMsg .. "\n" .. (line.Function or "?") .. " - " .. line.File .. ":" .. line.Line
+                elseif type(line) == "string" then
+                    errorMsg = errorMsg .. "\n" .. line
+                else
+                    errorMsg = errorMsg .. "\n[Unknown stack entry]"
+                end
             end
         end
+        SendLuaErrorToDiscord(errorMsg)
+    end)
+
+    if not ok then
+        print("[ReportLuaErrorsToDiscord] Failed to process error report")
     end
-    SendLuaErrorToDiscord(errorMsg)
+
+    _sendingLuaError = false
 end)
