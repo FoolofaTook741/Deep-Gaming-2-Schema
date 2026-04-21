@@ -26,17 +26,14 @@ function ENT:CanPlayerUse(ply)
 	if not self.impulseSaveKeyValue or not self.impulseSaveKeyValue["MasterDoor"] then
 		return true
 	end
-
 	if impulse.Dispatch.GetCityCode() > CODE_AJ then
 		return ply:Notify("You cannot access this storage during this Autonomous Judgement.")
 	end
-
 	local door = ents.GetMapCreatedEntity(self.impulseSaveKeyValue["MasterDoor"])
-
-	if not door:IsValid() or not door:IsDoor() then
+	if not door or not door:IsValid() or not door:IsDoor() then
+		ply:Notify("This storage is broken, please contact an admin!")
 		return true
 	end
-
 	if ply.OwnedDoors and ply.OwnedDoors[door] then
 		return true
 	else
