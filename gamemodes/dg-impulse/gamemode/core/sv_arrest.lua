@@ -150,6 +150,11 @@ function meta:Jail(time, jailData)
 end
 
 function meta:UnJail()
+	if not self.InJail then return end
+	if not impulse.Arrest.Prison[self.InJail] then
+		self.InJail = nil
+		return
+	end
 	impulse.Arrest.Prison[self.InJail][self:EntIndex()] = nil
 	self.InJail = nil
 
