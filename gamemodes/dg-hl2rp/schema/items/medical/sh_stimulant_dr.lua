@@ -47,6 +47,7 @@ function ITEM:OnUse(ply)
             ply:Notify("You have taken the Ibuprofen Pills but had a negative reaction, you now take 5% more damage to all parts.")
         end
 	    timer.Create(ply:SteamID() .. "drstim", 600, 1, function()
+            if not IsValid(ply) then return end
             ply.DR = 0
             ply:Notify("The effects of the Ibuprofen Pills have worn off.")
         end)
