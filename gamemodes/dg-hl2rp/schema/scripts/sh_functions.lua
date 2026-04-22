@@ -365,7 +365,7 @@ end
 function meta:Stalkerize()
 	self:UnArrest()
 	self:SetTeam(TEAM_STALKER)
-	timer.Create(self:SteamID() .. "stalkerization", 3600, 1, function()
+	timer.Create(self:SteamID() .. "stalkerization", 1800, 1, function()
 		self:SetTeam(TEAM_CITIZEN)
 		self:Spawn()
 	end)
