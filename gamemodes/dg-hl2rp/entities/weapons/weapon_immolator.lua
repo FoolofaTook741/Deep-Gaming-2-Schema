@@ -75,18 +75,9 @@ local MUZZLE_UP      =  -8.25
 local MUZZLE_FORWARD =  36
 
 function SWEP:GetMuzzlePos()
-    local owner = self.Owner
-    local boneIndex = owner:LookupBone("ValveBiped.Bip01_R_Hand")
-    if boneIndex then
-        local bonePos, boneAng = owner:GetBonePosition(boneIndex)
-        if bonePos then
-            return bonePos + owner:GetAimVector() * 25 + owner:GetRight() * 15 + Vector(0, 0, -100)
-        end
-    end
-    local aimVec = owner:GetAimVector()
-    local rightVec = owner:GetRight()
-    local pos = owner:GetPos() + aimVec * 20 + Vector(0, 0, owner:GetViewOffset().z * 0.9)
-    return pos + Vector(0, 0, 10) + rightVec * 8 + aimVec * 10
+    local att = self.Weapon:GetAttachment(1)
+    if att then return att.Pos end
+    return self.Owner:GetShootPos()
 end
 
 function SWEP:PrimaryAttack()
@@ -171,7 +162,7 @@ function SWEP:lase( par, stat, from, to, noise )
     local dmginfo  = DamageInfo()
     self.burnradius = math.Clamp( self.burnradius + ( 5 / 6 ), 0.1, 64 )
     local brightness  = 255 * ( self.burnradius / 256 )
-    local explodebeam = to + Vector( beamx, beamy, beamz ) * self.burnradius
+    local explodebeam = self.Owner:GetEyeTrace().HitPos + Vector( beamx, beamy, beamz ) * self.burnradius
 
     if SERVER then
         local entItem  = ents.Create( "info_teleport_destination" )
