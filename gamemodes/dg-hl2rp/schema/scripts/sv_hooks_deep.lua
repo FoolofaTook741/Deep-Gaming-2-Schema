@@ -1468,7 +1468,7 @@ hook.Add( "PlayerChangedTeam", "resetbuyables", function(ply, oldTeam, newTeam)
     elseif newTeam == TEAM_OTA then
         ply:SetRPName("CTA:UR-"..math.random(10,99))
     end
-    ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
+    --ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
     if newTeam == TEAM_CP or newTeam == TEAM_OTA or newTeam == TEAM_CA or newTeam == TEAM_ZOMBIE then
         if ply.OwnedDoors then
             for v,k in pairs(ply.OwnedDoors) do
@@ -2053,6 +2053,10 @@ hook.Add("PlayerSpawnNPC", "DeepNPCHook", function(ply)
     else
         return false
     end
+end)
+
+hook.Add("PlayerSpawn", "RemoveKnockback", function(ply)
+    ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
 end)
 
 hook.Add( "PlayerUse", "UseOnDoors", function( ply, ent )

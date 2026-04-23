@@ -132,11 +132,12 @@ local function ApplyOTARank(ply, rankName)
 
     ply:SetWalkSpeed(s.walkSpeed or impulse.Config.WalkSpeed)
 
+    --[[
     if s.forceFlags then
         ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
     else
         ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
-    end
+    end ]]--
 
     if s.bodygroups then
         for _, bg in ipairs(s.bodygroups) do

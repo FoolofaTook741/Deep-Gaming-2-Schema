@@ -45,11 +45,11 @@ function ITEM:OnUse(ply)
 	if timer.Exists(ply:SteamID() .. "drstim") then
 		ply.DR = 0
 		timer.Remove(ply:SteamID() .. "drstim")
-	end
+	end --[[
 	if timer.Exists(ply:SteamID() .. "creatinestim") then
 		ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 		timer.Remove(ply:SteamID() .. "creatinestim")
-	end
+	end ]]--
 	if timer.Exists(ply:SteamID() .. "adrstim") then
 		ply:SetRunSpeed(impulse.Config.JogSpeed)
 		timer.Exists(ply:SteamID() .. "adrstim")
