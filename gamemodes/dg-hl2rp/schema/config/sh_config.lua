@@ -723,8 +723,8 @@ impulse.Config.DispatchLines = {
 
 -- 	{name = "Name", text = "text", sound = "path", volume = 85}
 
-impulse.Config.MaxJailTime = 1800
-impulse.Config.MaxJailTimeGrunt = 1800
+impulse.Config.MaxJailTime = 1200
+impulse.Config.MaxJailTimeGrunt = 1200
 impulse.Config.MinJailTime = 60
 impulse.Config.MaxArrestCharges = 5
 
