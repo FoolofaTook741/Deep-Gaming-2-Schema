@@ -2055,8 +2055,13 @@ hook.Add("PlayerSpawnNPC", "DeepNPCHook", function(ply)
     end
 end)
 
+
 hook.Add("PlayerSpawn", "RemoveKnockback", function(ply)
     ply:AddEFlags(EFL_NO_DAMAGE_FORCES)
+end)
+
+hook.Add("PlayerDeath", "RestoreKnockbackForRagdoll", function(ply, inflictor, attacker)
+    ply:RemoveEFlags(EFL_NO_DAMAGE_FORCES)
 end)
 
 hook.Add( "PlayerUse", "UseOnDoors", function( ply, ent )
