@@ -140,13 +140,13 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_shotgun"] = {
-		Desc = "SWORD i1+/UNION RL+/DvL+",
+		Desc = "UNION RL+/SWORD/DvL+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
 			local teamClass = ply:GetTeamClass()
 			local teamRank = ply:GetTeamRank()
-			if (teamClass == CLASS_SWORD and teamRank >= RANK_I1) or (teamClass == CLASS_UNION and teamRank > RANK_I1) or (teamRank >= RANK_SQL) then
+			if (teamClass == CLASS_SWORD) or (teamClass == CLASS_UNION and teamRank >= RANK_I1) or (teamRank >= RANK_SQL) then
 				return true
 			else
 				return false
