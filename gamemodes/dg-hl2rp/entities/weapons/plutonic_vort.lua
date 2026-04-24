@@ -105,11 +105,11 @@ function SWEP:PrePrimaryAttack()
 			local vortSkillData = ply.vortComputedSkills
 			local damageMultiplier = (vortSkillData.power_overload or 1)
 			if ply.UsedEnrichedVortessence == true then
-				util.BlastDamage(self,ply,blastPos,190,35*damageMultiplier)
+				util.BlastDamage(self,ply,blastPos,190,40*damageMultiplier)
 			elseif ply.UsedVortessence == true then
-				util.BlastDamage(self,ply,blastPos,150,30*damageMultiplier)
+				util.BlastDamage(self,ply,blastPos,150,35*damageMultiplier)
 			else
-				util.BlastDamage(self,ply,blastPos,100,25*damageMultiplier)
+				util.BlastDamage(self,ply,blastPos,100,30*damageMultiplier)
 			end
 			local edf = EffectData()
 			edf:SetOrigin(blastPos)
