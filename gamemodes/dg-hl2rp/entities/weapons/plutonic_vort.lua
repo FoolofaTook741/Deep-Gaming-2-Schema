@@ -139,7 +139,7 @@ function SWEP:SecondaryAttack()
 			timer.Adjust(ply:SteamID() .. "vortessence", math.Clamp(timer.TimeLeft(ply:SteamID() .. "vortessence") - 2, 1, 99999), 1)
 			for k, v in pairs(player.GetAll()) do
 				if v:GetPos():Distance(pos) < 140 then
-					if v:Team() != TEAM_ZOMBIE and not v:IsCP() then
+					if v:Team() != TEAM_ZOMBIE and (not v:IsCP() or v.IsRogue) then
 						if v:Health() + 2 <= v:GetMaxHealth() then
 							v:SetHealth(v:Health() + (2 + restorativePulseLevel) * (1 - (v.Antiheal or 0)))
 						else
@@ -154,7 +154,7 @@ function SWEP:SecondaryAttack()
 			ply:EmitSound("npc/vort/health_charge.wav")
 			for k, v in pairs(player.GetAll()) do
 				if v:GetPos():Distance(pos) < 280 then
-					if v:Team() != TEAM_ZOMBIE and not v:IsCP() then
+					if v:Team() != TEAM_ZOMBIE and (not v:IsCP() or v.IsRogue) then
 						if v:Health() + 3 <= v:GetMaxHealth() then
 							v:SetHealth(v:Health() + (3 + restorativePulseLevel) * (1 - (ply.Antiheal or 0)))
 						else
