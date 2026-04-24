@@ -360,7 +360,7 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		elseif ply.HasConscriptArmor == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
 			dmginfo:ScaleDamage(0.50)
 		elseif ply:Team() == TEAM_VORT and ply.HasVortArmor == true then
-			dmginfo:ScaleDamage(0.70)
+			dmginfo:ScaleDamage(0.65)
 		elseif ply.winebuffed then
 			dmginfo:ScaleDamage(0.9)
 		else
