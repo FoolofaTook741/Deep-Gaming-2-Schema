@@ -1080,6 +1080,24 @@ impulse.Config.LootPools = {
 	}
 }
 
+impulse.Config.LootCratePools = {
+    ["lowtiercrate"] = {
+        { {class = "wep_pm63", count = 1}, {class = "ammo_pistol", count = 3} },
+        { {class = "wep_mp7",  count = 1}, {class = "ammo_smg",    count = 3} },
+        { {class = "wep_bar",  count = 1}, {class = "ammo_rifle",  count = 3} },
+        { {class = "wep_tt",   count = 1}, {class = "ammo_deagle", count = 3} },
+        { {class = "wep_p90",  count = 1}, {class = "ammo_smg",    count = 3} },
+    },
+    ["mediumtiercrate"] = {
+        { {class = "wep_m4a1",   count = 1}, {class = "ammo_rifle",   count = 4} },
+        { {class = "wep_ak47",   count = 1}, {class = "ammo_rifle",   count = 4} },
+        { {class = "wep_357",    count = 1}, {class = "ammo_357",     count = 4} },
+        { {class = "wep_shotgun",count = 1}, {class = "ammo_buckshot",count = 3} },
+        { {class = "wep_mg34",   count = 1}, {class = "ammo_lmg",     count = 3} },
+        { {class = "wep_g3a3",   count = 1}, {class = "ammo_54r",     count = 4}, {class = "att_optic", count = 1} },
+    }
+}
+
 --
 -- Plugins
 --
