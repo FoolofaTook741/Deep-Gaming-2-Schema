@@ -31,11 +31,6 @@ function ITEM:CanUse(ply)
 end	
 
 function ITEM:OnUse(ply, door)
-    if not ply:IsDonator() then
-        ply:Notify("Only donators can use this item.")
-        return false
-    end
-
     if ply:Team() ~= TEAM_VORT then
         ply:Notify("You are not sure how to use this...")
         return false
