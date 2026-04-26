@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "cos_gp5gasmask"
 ITEM.Name = "GP-5 Gas Mask"
-ITEM.Desc =  "A full face gas mask used to protect the wearer from flash grenades."
+ITEM.Desc =  "A full face gas mask used to protect the wearer from flash & gas attacks."
 ITEM.Category = "Clothing"
 ITEM.Model = Model("models/tnb/items/gasmask.mdl")
 ITEM.FOV = 12.213467048711
@@ -24,12 +24,14 @@ end
 
 function ITEM:OnEquip(ply)
 	ply.FlashSafe = true
+	ply.GasSafe = true
 	ply:SetBodygroup(9, 2)
 	ply:AddVoiceFX("Masked")
 end
 
 function ITEM:UnEquip(ply)
 	ply.FlashSafe = false
+	ply.GasSafe = false
 	ply:SetBodygroup(9, 0)
 	ply:RemoveVoiceFX("Masked")
 end
