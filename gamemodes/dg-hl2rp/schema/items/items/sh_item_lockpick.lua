@@ -137,6 +137,14 @@ function ITEM:ShouldTraceUse(ply, ent)
     if ent:IsPlayer() and ent:GetModel() == "models/willardnetworks/vortigaunt.mdl" then
     	return true
     end
+
+    if ent:GetClass() == "func_door" then
+		local allowedMapIDs = { [1521] = true } --c18 prison vent
+		if allowedMapIDs[ent:MapCreationID()] then
+			return true
+		end
+		return false
+	end
 	
 	if ent:GetClass() == "func_door" then
 		return false
