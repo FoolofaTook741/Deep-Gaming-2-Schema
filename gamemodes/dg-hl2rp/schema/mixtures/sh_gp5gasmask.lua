@@ -8,6 +8,7 @@ MIX.Bench = "general"
 MIX.Output = "cos_gp5gasmask"
 MIX.Input = {
 	["util_refinedmetalplate"] = {take = 2},
+	["util_cloth"] = {take = 5},
 	["util_glue"] = {take = 3},
 	["util_plastic"] = {take = 2},
     ["util_lens"] = {take = 4},
@@ -15,3 +16,4 @@ MIX.Input = {
 }
 
 impulse.RegisterMixture(MIX)
+	
