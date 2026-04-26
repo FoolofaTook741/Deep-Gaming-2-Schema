@@ -34,10 +34,10 @@ function ITEM:OnUse(ply, target)
 	-- using sync vars instead of HasBrokenLegs() on other players
 	if targ then
 		if targ:GetSyncVar( SYNC_BROKENLEGS, false ) then
-			targ:SetSyncVar( SYNC_BROKENLEGS, false, true )
-			targ:Notify(ply:Name() .. " has fixed your legs.")
-			ply:Notify( targ:Name() .. "'s legs have been fixed.")
-			return true
+		    targ:FixLegs()
+		    targ:Notify(ply:Name() .. " has fixed your legs.")
+		    ply:Notify( targ:Name() .. "'s legs have been fixed.")
+		    return true
 		end
 	end
 	if ply:HasBrokenLegs() then
