@@ -140,7 +140,7 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_shotgun"] = {
-		Desc = "UNION RL+/SWORD/DvL+",
+		Desc = "UNION i1+/SWORD/DvL+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
