@@ -30,10 +30,10 @@ ITEM.UseWorkBarSound = "physics/plastic/plastic_box_impact_bullet3.wav"
 function ITEM:OnUse(ply, ent)
 	local pc = GetPlayerCount()
 	--local cc = GetCombineCount()
-	if GetPlayerCount() < 30 and GetCPCount() < 8 and ply:IsSuperAdmin() == false then
+	if GetPlayerCount() < 30 and GetCPCount() < 6 and ply:IsSuperAdmin() == false then
 		ply:Notify("There are not enough players online (30).")
 		return false
-	elseif GetCPCount() >= 8 then
+	elseif GetCPCount() >= 6 then
 		if timer.Exists(ent:GetCreationID() .. "DeepMPFCBox") then
 			ply:Notify("This cache already being raided...")
 			return
