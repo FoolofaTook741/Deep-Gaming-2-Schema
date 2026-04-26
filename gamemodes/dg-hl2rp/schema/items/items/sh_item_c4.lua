@@ -33,7 +33,7 @@ function ITEM:OnUse(ply, ent)
 	if GetPlayerCount() < 30 and ply:IsSuperAdmin() == false then
 		ply:Notify("There are not enough players online (30).")
 		return false
-	elseif GetOTACount() >= 7 then
+	elseif GetOTACount() >= 5 then
 		ply:AchievementGive("ach_cache")
 		if timer.Exists(ent:GetCreationID() .. "DeepPWCBox") then
 			ply:Notify("This cache already being blown open...")
