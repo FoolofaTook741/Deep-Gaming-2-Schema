@@ -42,8 +42,8 @@ SWEP.Primary.Delay = RPM(730)
 
 SWEP.Primary.Ammo = "SMG1"
 SWEP.Primary.Automatic = true
-SWEP.Primary.ClipSize = 30
-SWEP.Primary.DefaultClip = 30
+SWEP.Primary.ClipSize = 40
+SWEP.Primary.DefaultClip = 40
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
