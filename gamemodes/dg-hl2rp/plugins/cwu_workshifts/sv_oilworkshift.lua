@@ -1,7 +1,7 @@
 local OIL_GOAL    = 2000
 local BASE_PAYOUT = 12000
 local DATA_FILE   = "impulse_oil_log.json"
-local MIN_GROUP   = 1
+local MIN_GROUP   = 4
 local MAX_GROUP   = 10
 
 util.AddNetworkString("OilNPC_OpenMenu")
