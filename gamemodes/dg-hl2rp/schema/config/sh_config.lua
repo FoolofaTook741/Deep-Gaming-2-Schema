@@ -1103,29 +1103,29 @@ impulse.Config.LootCratePools = {
 --
 
 impulse.Config.PassiveMusic = {
-	{"music/passive/passivemusic_01.mp3", 39},
-	{"music/passive/passivemusic_02.mp3", 98},
-	{"music/passive/passivemusic_03.mp3", 29},
-	{"music/passive/passivemusic_04.mp3", 53},
-	{"music/passive/passivemusic_05.mp3", 61},
-	{"music/passive/passivemusic_06.mp3", 115},
-	{"music/passive/passivemusic_07.mp3", 69},
-	{"music/passive/passivemusic_08.mp3", 90},
-    {"music/passive/passivemusic_09.mp3", 84},
-    {"music/passive/passivemusic_10.mp3", 59}
+	{"music/HL2_song0.mp3", 39},
+	{"music/HL2_song1.mp3", 98},
+	{"music/HL2_song10.mp3", 29},
+	{"music/HL2_song13.mp3", 53},
+	{"music/HL2_song17.mp3", 61},
+	{"music/HL2_song19.mp3", 115},
+	{"music/HL2_song26.mp3", 69},
+	{"music/HL2_song26_trainstation1.mp3", 90},
+    {"music/HL2_song33.mp3", 84},
+    {"music/HL2_song8.mp3", 59}
 }
 
 impulse.Config.CombatMusic = {
-	{"music/action/a1_intro_trek2.mp3", 73},
+	{"music/HL2_song12_long.mp3", 73},
 	{"music/HL2_song14.mp3", 159},
 	{"music/HL2_song15.mp3", 69},
 	{"music/HL2_song16.mp3", 170},
 	{"music/HL2_song20_submix0.mp3", 103},
-	{"music/action/a1_intro_trek2.mp3", 139},
+	{"music/HL2_song20_submix4.mp3", 139},
 	{"music/HL2_song29.mp3", 135},
 	{"music/HL2_song3.mp3", 90},
 	{"music/HL2_song31.mp3", 98},
-	{"music/action/a1_intro_trek3.mp3", 65},
+	{"music/HL2_song4.mp3", 65},
 	{"music/HL2_song6.mp3", 45}
 }
 
