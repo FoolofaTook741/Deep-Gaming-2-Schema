@@ -5,7 +5,7 @@ include("shared.lua")
 local REFINERY_CLASS = "deep_oilrefinery"
 local REFINE_TIME    = 30
 local ITEMS_FULL     = 2
-local ITEMS_CONTAM   = 1
+local ITEMS_CONTAM   = 2
 
 local function WrapRefinery(ent)
 	if not IsValid(ent) then return end
