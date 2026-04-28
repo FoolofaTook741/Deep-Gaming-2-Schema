@@ -543,6 +543,7 @@ local fixLegs = {
 
         if targ and IsValid(targ) then
             targ:SetSyncVar(SYNC_BROKENLEGS, false, true)
+            targ:FixLegs()
             ply:Notify("You have fixed the legs of " .. targ:Nick() .. " (" .. steamID .. ").")
             targ:Notify(ply:Nick() .. " has fixed your legs.")
         else
