@@ -25,6 +25,7 @@ function ENT:Initialize()
 		phys:SetMass(80)
 		phys:Wake()
 	end
+	self.CanPickup   = false
 	self.drums       = 0
 	self.barrelProps = {}
 	self.contamFlags = {}
