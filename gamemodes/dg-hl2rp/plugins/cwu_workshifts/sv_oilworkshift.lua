@@ -1,7 +1,7 @@
 local OIL_GOAL    = 2000
 local BASE_PAYOUT = 12000
 local DATA_FILE   = "impulse_oil_log.json"
-local MIN_GROUP   = 4
+local MIN_GROUP   = 1
 local MAX_GROUP   = 10
 
 util.AddNetworkString("OilNPC_OpenMenu")
@@ -12,6 +12,26 @@ util.AddNetworkString("OilWorkshift_Update")
 util.AddNetworkString("OilWorkshift_GoalMet")
 util.AddNetworkString("OilWorkshift_End")
 util.AddNetworkString("OilWorkshift_Broadcast")
+
+local function CleanupOilProps()
+	local classes = {
+		"impulse_hl2rp_oildrum",
+		"impulse_hl2rp_citybarrel",
+		"impulse_hl2rp_oilcart",
+	}
+	for _, class in ipairs(classes) do
+		for _, ent in ipairs(ents.FindByClass(class)) do
+			if IsValid(ent) then ent:Remove() end
+		end
+	end
+	for _, ply in ipairs(player.GetAll()) do
+		if IsValid(ply) then
+			while ply:HasInventoryItem("item_oilcan") do
+				ply:TakeInventoryItemClass("item_oilcan")
+			end
+		end
+	end
+end
 
 impulse.OilWorkshift = impulse.OilWorkshift or {
 	active          = false,
@@ -194,6 +214,11 @@ net.Receive("OilWorkshift_Begin", function(len, ply)
 	ws.paid             = false
 
 	BroadcastChat("start", ply:Nick(), 0, tostring(size))
+
+	local barrelsNeeded = math.ceil(scaledGoal / 40)
+	local crudeNeeded   = barrelsNeeded * 200
+	ply:Notify("Shift goal: " .. barrelsNeeded .. " barrels (" .. crudeNeeded .. "L crude) needed to produce " .. scaledGoal .. "L refined oil.")
+
 	PushUpdate()
 end)
 
@@ -228,6 +253,8 @@ net.Receive("OilWorkshift_Payout", function(len, ply)
 	SaveLog()
 
 	BroadcastChat("end", ws.supervisorName, impulse.OilCompletedShifts)
+
+	CleanupOilProps()
 
 	impulse.OilWorkshift = {
 		active          = false,
@@ -282,6 +309,7 @@ net.Receive("OilWorkshift_End", function(len, ply)
 		BroadcastChat("cancel", supName, 0)
 	else
 		BroadcastChat("cancelactive", supName, 0)
+		CleanupOilProps()
 	end
 
 	net.Start("OilWorkshift_End")

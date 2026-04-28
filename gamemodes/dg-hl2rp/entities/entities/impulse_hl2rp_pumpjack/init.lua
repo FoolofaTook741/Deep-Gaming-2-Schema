@@ -9,7 +9,7 @@ function ENT:Initialize()
     self:SetModel("models/tsbb/pump_jack.mdl")
     self:SetMoveType(MOVETYPE_NONE)
     self:SetSolid(SOLID_BBOX)
-    self:SetCollisionBounds(Vector(-104, -32, 12), Vector(134, 47, 200))
+    self:SetCollisionBounds(Vector(-104 + 30, -32, 12), Vector(60 + 30, 47, 200))
     self.cooldowns = {}
 end
 

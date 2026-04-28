@@ -72,9 +72,15 @@ function ENT:Use(activator, caller)
         activator:Notify("[RESERVOIR] Deposited drum: +" .. addLiters .. "L crude. Total: " .. ws.reservoirLiters .. "L / " .. RESERVOIR_MAX .. "L")
     end
 
-    for _, ply in ipairs(team.GetPlayers(TEAM_CWU)) do
-        if ply ~= activator then
-            ply:ChatPrint("[OIL WS] " .. activator:Nick() .. " deposited " .. addLiters .. "L crude. Reservoir: " .. ws.reservoirLiters .. "L/" .. RESERVOIR_MAX .. "L")
+    local barrelsNeeded = math.ceil((ws.scaledGoal or 2000) / 40)
+    local crudeNeeded   = barrelsNeeded * 200
+    local crudeLeft     = math.max(0, crudeNeeded - ws.reservoirLiters)
+    local barrelsLeft   = math.ceil(crudeLeft / 200)
+
+    for _, ply in ipairs(player.GetAll()) do
+        if ply:SteamID64() == tostring(ws.supervisorID) then
+            ply:Notify("[OIL WS] Reservoir: " .. ws.reservoirLiters .. "L | Still needed: " .. barrelsLeft .. " barrels (" .. crudeLeft .. "L)")
+            break
         end
     end
 end
