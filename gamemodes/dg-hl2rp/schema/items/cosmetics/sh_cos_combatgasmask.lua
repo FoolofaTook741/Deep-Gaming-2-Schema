@@ -26,13 +26,13 @@ end
 function ITEM:OnEquip(ply)
 	ply.GasSafe = true
 	ply:SetBodygroup(9, 3)
-	ply:AddVoiceFX("Masked")
+	--ply:AddVoiceFX("Masked")
 end
 
 function ITEM:UnEquip(ply)
 	ply.GasSafe = false
 	ply:SetBodygroup(9, 0)
-	ply:RemoveVoiceFX("Masked")
+	--ply:RemoveVoiceFX("Masked")
 end
 
 impulse.RegisterItem(ITEM)
