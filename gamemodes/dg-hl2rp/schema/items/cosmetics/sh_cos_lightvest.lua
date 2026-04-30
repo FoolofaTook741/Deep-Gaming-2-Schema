@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "cos_lightvest"
 ITEM.Name = "Level 2 Kevlar Vest"
-ITEM.Desc =  "A light vest made to protect the wearer against light munitions, not a strong piece of armor but not very expensive either. Offers 25% resistance to the chest."
+ITEM.Desc =  "A light vest made to protect the wearer against light munitions, not a strong piece of armor but not very expensive either. Offers 30% resistance to the chest."
 ITEM.Category = "Clothing"
 ITEM.Model = Model("models/willardnetworks/clothingitems/torso_rebel_torso_1.mdl")
 ITEM.FOV = 50
