@@ -639,10 +639,11 @@ function meta:SetInventoryItemEquipped(itemid, state)
 	if isAlive then 
 		self:EmitSound("impulse/equip.wav") 
 		
+		--[[
 		if not isNoclipping and not itemclass.NoOnEquipMessage then
 			local message = item.EquipMessage or "/me equips " .. itemclass.Name .. "."
 			self:Say(message)
-		end
+		end ]]--
 	end
 	elseif unEquip then
 		if itemclass.EquipGroup then
@@ -653,10 +654,11 @@ function meta:SetInventoryItemEquipped(itemid, state)
 		if isAlive then 
 			self:EmitSound("impulse/unequip.wav")
 			
+			--[[
 			if not isNoclipping and not itemclass.NoOnEquipMessage then
 				local message = item.UnequipMessage or "/me unequips " .. itemclass.Name .. "."
 				self:Say(message)
-			end
+			end ]]--
 		end
 	end
 
