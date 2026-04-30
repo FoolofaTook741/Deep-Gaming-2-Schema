@@ -35,10 +35,10 @@ SWEP.Primary.Sound = Sound("LS2.HB.Single")
 
 SWEP.Primary.Sound = "ma85_mw3/silencer/smg_mp5.wav"
 SWEP.Primary.Recoil = 0.06 -- base recoil value, SWEP.Spread mods can change this
-SWEP.Primary.Damage = 6
+SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.022
-SWEP.Primary.Delay = RPM(730)
+SWEP.Primary.Delay = RPM(715)
 
 SWEP.Primary.Ammo = "SMG1"
 SWEP.Primary.Automatic = true

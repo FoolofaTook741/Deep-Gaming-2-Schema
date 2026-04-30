@@ -45,7 +45,7 @@ SWEP.Primary.Recoil = 1 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Cone = 0.010
-SWEP.Primary.Delay = RPM(650)
+SWEP.Primary.Delay = RPM(700)
 
 SWEP.ReloadAttach = 1
 

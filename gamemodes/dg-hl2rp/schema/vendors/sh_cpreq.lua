@@ -176,11 +176,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_mp7"] = {
-		Desc = "i1+ / i2 AJ+",
+		Desc = "U i2+/i1+/GHOST/i2 AJ+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I1 or (ply:GetTeamRank() >= RANK_I2 && impulse.Dispatch.GetCityCode() >= CODE_JW) then
+			if (ply:GetTeamClass() == CLASS_UNION && ply:GetTeamRank() >= RANK_I2) or (ply:GetTeamRank() >= RANK_I1 or ply:GetTeamClass() == CLASS_GHOST) or (ply:GetTeamRank() >= RANK_I2 && impulse.Dispatch.GetCityCode() >= CODE_JW) then
 				return true
 			else return false
 			end
@@ -209,22 +209,22 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_pm63"] = {
-		Desc = "Union i3 / i2+",
+		Desc = "i2+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_I2 or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I3) then
+			if ply:GetTeamRank() >= RANK_I2 then
 				return true
 			else return false
 			end
 		end
 	},
 	["wep_p90"] = {
-		Desc = "Union and Grid i2+",
+		Desc = "UNION i2+/AJ:UNION i3+ /i1+",
 		Restricted = true,
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamClass() == CLASS_UNION or ply:GetTeamClass() == CLASS_GRID) and ply:GetTeamRank() >= RANK_I2 then
+			if (ply:GetTeamRank() >= RANK_I1) or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I2) or (ply:GetTeamClass() == CLASS_UNION and ply:GetTeamRank() >= RANK_I3 and impulse.Dispatch.GetCityCode() >= CODE_JW) then
 				return true
 			else return false
 			end
