@@ -636,30 +636,28 @@ function meta:SetInventoryItemEquipped(itemid, state)
     end
 	onEquip(item, self, itemclass, itemid)
 	hook.Run("OnInventoryItemEquipped", self, item, itemclass, itemid)
-		--[[
+	if isAlive then 
+		self:EmitSound("impulse/equip.wav") 
+		
+		if not isNoclipping and not itemclass.NoOnEquipMessage then
+			local message = item.EquipMessage or "/me equips " .. itemclass.Name .. "."
+			self:Say(message)
+		end
+	end
+	elseif unEquip then
+		if itemclass.EquipGroup then
+			self.InventoryEquipGroups[itemclass.EquipGroup] = nil
+		end
+		unEquip(item, self, itemclass, itemid)
+		hook.Run("OnInventoryItemUnequipped", self, item, itemclass, itemid)
 		if isAlive then 
-			self:EmitSound("impulse/equip.wav") 
+			self:EmitSound("impulse/unequip.wav")
 			
 			if not isNoclipping and not itemclass.NoOnEquipMessage then
-				local message = item.EquipMessage or "/me equips " .. itemclass.Name .. "."
+				local message = item.UnequipMessage or "/me unequips " .. itemclass.Name .. "."
 				self:Say(message)
 			end
 		end
-		elseif unEquip then
-			if itemclass.EquipGroup then
-				self.InventoryEquipGroups[itemclass.EquipGroup] = nil
-			end
-			unEquip(item, self, itemclass, itemid)
-			hook.Run("OnInventoryItemUnequipped", self, item, itemclass, itemid)
-			if isAlive then 
-				self:EmitSound("impulse/unequip.wav")
-				
-				if not isNoclipping and not itemclass.NoOnEquipMessage then
-					local message = item.UnequipMessage or "/me unequips " .. itemclass.Name .. "."
-					self:Say(message)
-				end
-			end
-		end ]]--
 	end
 
 	item.equipped = state
