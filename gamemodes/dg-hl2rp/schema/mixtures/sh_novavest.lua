@@ -10,7 +10,7 @@ MIX.Input = {
 	["util_steel"] = {take = 2},
 	["util_glue"] = {take = 3},
 	["util_heavyceramicplate"] = {take = 1},
-	["util_cloth"] = {take = 6}
+	["util_platecarrier"] = {take = 1}
 }
 
 impulse.RegisterMixture(MIX)
