@@ -78,7 +78,7 @@ local function makeOnBecome(rankName, opts)
             end
             ply:GiveInventoryItem("wep_stunstick", 1, true)
             ply:GiveInventoryItem("clo_cphelmet",  1, true)
-            ply:GiveInventoryItem("item_vocoder",  1, true)
+            --ply:GiveInventoryItem("item_vocoder",  1, true)
         end
 
         if class == CLASS_GRID then

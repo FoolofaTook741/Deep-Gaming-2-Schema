@@ -342,7 +342,7 @@ TEAM_OTA = impulse.Teams.Define({
 			skin = 1,
 			itemsAdd = {
 				{class = "wep_osips", amount = 1},
-				{class = "item_vocoder", amount = 1}
+				--{class = "item_vocoder", amount = 1}
 			},
 			xp = 0,
 			noMenu = true
@@ -354,7 +354,7 @@ TEAM_OTA = impulse.Teams.Define({
 			skin = 1,
 			itemsAdd = {
 				{class = "wep_osisg", amount = 1},
-				{class = "item_vocoder", amount = 1}
+				--{class = "item_vocoder", amount = 1}
 			},
 			xp = 2000,
 			noMenu = true
@@ -367,7 +367,7 @@ TEAM_OTA = impulse.Teams.Define({
 			itemsAdd = {
 				{class = "wep_omr", amount = 1},
 				{class = "att_optic", amount = 1},
-				{class = "item_vocoder", amount = 1}
+				--{class = "item_vocoder", amount = 1}
 			},
 			limit = 3,
 			xp = 5,
@@ -382,7 +382,7 @@ TEAM_OTA = impulse.Teams.Define({
 				{class = "wep_ar2", amount = 1},
 				{class = "wep_ar2orb", amount = 1},
 				{class = "att_ar2eliteaugment", amount = 1},
-				{class = "item_vocoder", amount = 1}
+				--{class = "item_vocoder", amount = 1}
 			},
 			xp = 5,
 			percentLimit = false,
@@ -399,7 +399,7 @@ TEAM_OTA = impulse.Teams.Define({
 			skin = 1,
 			itemsAdd = {
 				{class = "wep_apf", amount = 1},
-				{class = "item_vocoder", amount = 1}
+				--{class = "item_vocoder", amount = 1}
 			},
 			xp = 0,
 			percentLimit = false,
@@ -416,7 +416,7 @@ TEAM_OTA = impulse.Teams.Define({
 			skin = 6,
 			itemsAdd = {
 				{class = "wep_osips", amount = 1},
-				{class = "item_vocoder", amount = 1}
+				--{class = "item_vocoder", amount = 1}
 			},
 			xp = 0,
 			percentLimit = false,
@@ -434,7 +434,7 @@ TEAM_OTA = impulse.Teams.Define({
 			itemsAdd = {
 				{class = "wep_osihs", amount = 1},
 				{class = "wep_w_stunstick", amount = 1},
-				{class = "item_vocoder", amount = 1}
+				--{class = "item_vocoder", amount = 1}
 			},
 			xp = 0,
 			percentLimit = false,
