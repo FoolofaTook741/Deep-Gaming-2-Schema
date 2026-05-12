@@ -23,7 +23,7 @@ hook.Add("PlayerContainerTake", "noclipInventory", function(ply, item, source, d
             assistantID = "1365691288586027008" -- AEM
 			role = "Gamemaster"
         end
-        local serverName = (hostname == "Deep Gaming 2 | Half Life 2 Roleplay | discord.gg/deepgaming") and "Main" or "Dev"
+        local serverName = (hostname == "Deep Gaming 2 | Half Life 2 Roleplay") and "Main" or "Dev"
 
         local embed = {
             {
