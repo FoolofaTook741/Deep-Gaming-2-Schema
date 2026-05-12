@@ -99,7 +99,7 @@ function ReqwestLog(embeddedmessages, webhook)
         impulse.debugPrint("Discord webhooks disabled on development servers")
         return
     end
-    local serverName = (hostname == "Deep Gaming 2 | Half Life 2 Roleplay | discord.gg/deepgaming") and "Main" or "Dev"
+    local serverName = (hostname == "Deep Gaming 2 | Half Life 2 Roleplay") and "Main" or "Dev"
 
     for _, embed in ipairs(embeddedmessages) do
         embed.fields = embed.fields or {}
