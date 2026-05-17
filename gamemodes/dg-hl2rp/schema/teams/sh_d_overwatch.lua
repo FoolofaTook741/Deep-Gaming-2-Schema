@@ -219,7 +219,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Overwatch Transhuman Arm, Stabilization Arm.", false},
                 {"Combine Overwatch, Infestation Response Team.", false},
-                {"Transhuman Forces, Stabilization Forces.", true}
+                {"Transhuman Forces, Stabilization Forces.", true},
                 {"Combine Military, Stabilization Squad.", false}
             }
         },
@@ -229,7 +229,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"All transhuman assets.", true},
                 {"All Half Life: 2 soldiers; Half Life: Alyx units are exempt from the requirement.", false},
-                {"All units ranked CSO+.", false}
+                {"All units ranked CSO+.", false},
                 {"All units ranked ECS+.", false}
             }
         },
@@ -258,7 +258,7 @@ TEAM_OTA = impulse.Teams.Define({
             question = "Which emotion is strictly forbidden from being exhibited on the Transhuman Arm regardless of what class you are playing on?",
             answers = {
                 {"Fear.", false},
-                {"Disgust.", false}
+                {"Disgust.", false},
                 {"Empathy.", true},            
             }
         },
@@ -268,7 +268,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Combine Grunt (CGR)", false},
                 {"Combine Soldier (CSO)", false},
-                {"Enhanced Combine Soldier (ECS)", false}
+                {"Enhanced Combine Soldier (ECS)", false},
                 {"CGR and CSO", true}
 
             }
@@ -279,7 +279,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Team 2 is ready to contain the xen infestation. Fire in the hole!", false},
                 {"Team 2 is attacking a rebel holdout. Grenade out!", true},
-                {"Team 2 is extracting high-value contraband from rebels. Ready weapons.", false}
+                {"Team 2 is extracting high-value contraband from rebels. Ready weapons.", false},
                 {"Team 2 is attacking a rebel holdout. Stay alert!", false},                
             }
         },
@@ -299,7 +299,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Conducting sweeps in the outlands sector, amputating any hostiles found.", false},
                 {"Ensuring the security of the Stabilization Jurisdiction.", false},
-                {"Deploying to the city and assisting MPF in containing any rebel attacks.", true}
+                {"Deploying to the city and assisting MPF in containing any rebel attacks.", true},
                 {"Ensuring the security of the high-priority regions.", false},                
             }
         },
@@ -319,7 +319,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"The target has lost sight; continue the sweep.", true},
                 {"The target has been neutralized; continue the sweep.", false},
-                {"The target has lost consciousness; continue the sweep.", false}
+                {"The target has lost consciousness; continue the sweep.", false},
                 {"The target has burned alive; continue the sweep.", false}
             }
         },
@@ -329,7 +329,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Quickly deploy to storm system and head over to them.", false},
                 {"If there's another team, interlock to them, or wait for the team leader's directives.", true},
-                {"Request team to head to the nearest storm system exit so you can uniform and sweep together with them.", false}
+                {"Request team to head to the nearest storm system exit so you can uniform and sweep together with them.", false},
                 {"Leave the team and sweep city and outlands on your own", false},                
             }
         },
@@ -339,7 +339,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"All hostile targets have been neutralized. Sweep the sector.", false},
                 {"All citizens have been neutralized. Confiscate their contraband.", false},
-                {"All unarmed targets have been neutralized. Hold the area and build fortifications. ", false}
+                {"All unarmed targets have been neutralized. Hold the area and build fortifications. ", false},
                 {"All armed targets have been neutralized. Remove enemy fortifications and equipment.", true},                
             }
         },
@@ -349,7 +349,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Deploy to the storm system and engage hostiles.", false},
                 {"Move to high-priority regions and secure the Combine equipment.", false},
-                {"Locate and neutralize the enemies causing the code escalation within the city regions.", true}
+                {"Locate and neutralize the enemies causing the code escalation within the city regions.", true},
                 {"Deploy to Outlands and secure the area.", false}
             }
         },
@@ -359,7 +359,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"There are antlions in the area: all units, stay alert.", false},
                 {"There are zombies in the area: all units, stay alert.", false},
-                {"There are vortigaunts in the area: all units, stay alert.", true}
+                {"There are vortigaunts in the area: all units, stay alert.", true},
                 {"There are headcrabs in the area: all units, stay alert.", false},
             }
         },
@@ -369,7 +369,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Listen to the ECS, as they are your team lead.", false},
                 {"Listen to the CCP, as they are a command unit.", true},
-                {"Ask who you should listen to in TAC-3.", false}
+                {"Ask who you should listen to in TAC-3.", false},
                 {"Ignore both of them and remain at your position until clarified.", false}
             }
         },
@@ -379,7 +379,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Sir.", true},
                 {"With their tagline.", false},
-                {"Asset.", false}
+                {"Asset.", false},
                 {"Delegate.", false}
             }
         },
@@ -389,7 +389,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Remain in position and wait for the rebels to approach.", false},
                 {"Retreat back to HPR-1 with your team as there is likely an overwhelming resistance force approaching.", false},
-                {"Stick with your team and follow the lead of your superiors to effectively counter the raid.", true}
+                {"Stick with your team and follow the lead of your superiors to effectively counter the raid.", true},
                 {"Immediately move in to intercept the raid and stop the resistance.", false}
             }
         },
@@ -399,7 +399,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Announce you are preparing to engage and move into the target location.", false},
                 {"Stay silent on radios, stick close to your team, and silent walk.", true},
-                {"Proceed as normal, this code is merely a formality.", true}
+                {"Proceed as normal, this code is merely a formality.", true},
                 {"Return to your original position prior to Shadow raid.", false}
             }
         },
@@ -409,7 +409,7 @@ TEAM_OTA = impulse.Teams.Define({
             answers = {
                 {"Rebel attack at Outland Zone 2. One soldier killed and my armor is taking damage.", true},
                 {"Infestation at Outland Zone 2. One soldier killed and I am about to die.", false},
-                {"Rebel attack at Outlands Hardpoint 2. One rebel down and I am recharging my armor.", false}
+                {"Rebel attack at Outlands Hardpoint 2. One rebel down and I am recharging my armor.", false},
                 {"Infestation at Outlands Hardpoint 2. One zombie down, and I am about to die.", false}
             }
         },
