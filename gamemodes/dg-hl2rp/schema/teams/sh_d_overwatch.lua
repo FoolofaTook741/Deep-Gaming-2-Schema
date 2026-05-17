@@ -172,7 +172,7 @@ TEAM_OTA = impulse.Teams.Define({
 
 	quiz = {
 		enabled = true,
-		handbook = "https://docs.google.com/document/d/105Im8kXD8LXiLTFQSFtqMjtR1vSXWIOB_5PEf5ULO0E/edit?tab=t.0",
+		handbook = "https://docs.google.com/document/d/1ja5Bd-S-ihti1wXbCVVG1AEh0tAcD7gpFHcqh93c0DM/edit?usp=sharing",
 		{
 			id = 1,
 			question = "Scenario: Your stabilization team is tasked to perform an outlands sector sweep. You spot an unarmed scavenger looting that is unaware of your presence. How do you proceed?",
@@ -183,156 +183,261 @@ TEAM_OTA = impulse.Teams.Define({
 				{"Contain them in an area and call in a protection unit to arrest them.", false}
 			}
 		},
+        {
+            id = 2,
+            question = "As a Grunt, what are the extents of your cognitive faculties?",
+            answers = {
+                {"Being the least augmented transhuman asset, Grunts are effectively the same as a normal human and can express emotions such as empathy.", false},
+                {"Although Grunts have had their memories of their previous lives erased, they may still display certain emotions. For example, disgust or fear", true},
+                {"Since they are of a prior augmentation phase, Grunts are essentially the same as metrocops in terms of emotions.", false},
+                {"Grunts are heavily restricted on their faculties and must remain stoic at all times. They are unable to show emotions outside of a select few such as frustration.", false}
+            }
+        },
 		{
-			id = 2,
-			question = "As a Grunt, what are the extents of your cognitive faculties?",
-			answers = {
-				{"Grunts retain partial memories of their past lives and have part of their personality intact. Thus they can express themselves in a multitude of ways.", true},
-				{"Being the least augmented transhuman asset, Grunts are effectively the same as a normal human and can express emotions such as empathy.", false},
-				{"Since they are of a prior augmentation phase, Grunts are essentially the same as metrocops in terms of emotions.", false},
-				{"Grunts are heavily restricted on their faculties and must remain stoic at all times. They are unable to show emotions outside of a select few such as frustration.", true}
-			}
-		},
+            id = 3,
+            question = "What is Condition Alpha and when is it used?",
+            answers = {
+                {"Called prior to code de-escalation. All units must recall and form divisional lines at the vector.", true},
+                {"Used during outlands sweeps. Tell your team lead it to inform that you are almost done sweeping an area.", false},
+                {"Called after clearing a resistance holdout. It means that the area is clear of all contaminants.", false},
+                {"Used when under heavy fire. Tells fellow CTA that your team is overrun and needs backup.", false},
+            }
+        },
 		{
-			id = 3,
-			question = "Define the term: Sundown.",
-			answers = {
-				{"Called prior to code de-escalation where all units must recall and form divisional lines at the vector.", false},
-				{"You are almost done sweeping an area.", false},
-				{"The area is clear of all contaminants.", true},
-				{"Your team is overrun and needs backup.", false},
-			}
-		},
-		{
-			id = 4,
-			question = "Scenario: The current city code is MARGINAL, your stabilization team is assigned to ice above the plaza area. In an apartment nearby, protection units begin taking losses due to an anti-civil jackpot. What is your course of action?",
-			answers = {
-				{"Move in with your team and sterilize the block of all hostiles.", false},
-				{"Attach yourself to a PT and move in alongside MPF to clear the building.", false},
-				{"Await code escalation, shadow raid, or lockdown activation before intervening.", true},
-				{"Ask MPF if they need help before moving in to assist.", false}
-			}
-		},
-		{
-			id = 5,
-			question = " What other names does the Transhuman Arm go by?",
-			answers = {
-				{"Overwatch Transhuman Arm, Stabilization Arm", false},
-				{"Combine Overwatch, Infestation Response Team", false},
-				{"Transhuman Forces, Stabilization Forces", true}
-			}
-		},
-		{
-			id = 6,
-			question = "What classes are vocoders mandatory for?",
-			answers = {
-				{"All transhuman assets.", true},
-				{"All Half Life: 2 soldiers; Half Life: Alyx units are exempt from the requirement.", false},
-				{"All units ranked CSO+.", false}
-			}
-		},
-		{
-			id = 7,
-			question = "What is the primary purpose of the SWEEPER (APF) division?",
-			answers = {
-				{"To lay down suppressive fire on opponents.", true},
-				{"To provide ammunition for fellow assets with their ammo crate.", false},
-				{"To act as close quarters combat specialists.", false},
-				{"To push into holdouts and tank damage for their teammates.", false}
-			}
-		},
-		{
-			id = 8,
-			question = "Scenario: The current city code is AUTONOMOUS JUDGMENT. Your stabilization team has been assigned to containment procedures. What will your team do?",
-			answers = {
-				{"Deploy to the outlands sector and contain all xenian spores.", false},
-				{"Deploy to the city sector and sweep all apartment blocks. After the apartment blocks are swept, ripcord for condition alpha.", false},
-				{"Sterilize any active anti-civil incursions within high-priority regions or the city. Then deploy throughout the entire sector and sweep for any hostiles.", true}
-			}
-		},
-		{
-			id = 9,
-			question = "Which emotion is strictly forbidden from being exhibited on the Transhuman Arm regardless of what class you are playing on?",
-			answers = {
-				{"Fear", false},
-				{"Empathy", true},
-				{"Disgust", false}
-			}
-		},
-		{
-			id = 10,
-			question = "What is the first rank of the command units?",
-			answers = {
-				{"Enhanced Soldier (ECS)", false},
-				{"Team Leader (CTL)", false},
-				{"Captain (CCP)", true}
-			}
-		},
-		{
-			id = 11,
-			question =[[Translate the following radio transmission: "ST-2 going sharp on contaminant jackpot. Prepping extractors"]],
-			answers = {
-				{"Team is ready to contain the xen infestation. Preparing grenades.", false},
-				{"Team is attacking a rebel holdout. Preparing grenades.", true},
-				{"Team is extracting high-value contraband from rebels. Ready weapons.", false}
-			}
-		},
-		{
-			id = 12,
-			question = "Which TAC is CTA radio on?",
-			answers = {
-				{"TAC-1.", false},
-				{"TAC-2.", false},
-				{"TAC-3.", true},
-				{"TAC-4.", false}
-			}
-		},
-		{
-			id = 13,
-			question = "Which of the following is NOT a duty of stabilization teams during city code STABLE?",
-			answers = {
-				{"Conducting sweeps of the outlands sector, amputating any hostiles found.", false},
-				{"Performing a strike on an anti-citizen base that intel has been gathered on.", false},
-				{"Ensuring the security of the contraband caches.", false},
-				{"Deploying to the city and assisting MPF in containing any incursions.", true}
-			}
-		},
-		{
-			id = 14,
-			question = [[Translate the following radio transmission: "ST-1 is at code: ice at SJ-1. Report all radials free."]],
-			answers = {
-				{"Team is holding at the Nexus. Nothing to report.", false},
-				{"Team is holding at the Outlands Hardpoint. All sightlines are clear.", true},
-				{"Team is building fortifications at the Plaza Catwalks. All sightlines are clear.", false},
-				{"Team is finding cover at Outlands Hardpoint. Requesting backup!", false}
-			}
-		},
-		{
-			id = 15,
-			question = "What is the main purpose of the Transhuman Arm?",
-			answers = {
-				{"To secure and guard the prison area.", false},
-				{"To assist MPF in patrolling and securing the city.", false},
-				{"To maintain security of high-priority regions and contain high level anti-civil incursions.", true}
-			}
-		},
-		{
-			id = 998,
-			question = "Do you understand that breaking character on CTA will result in severe punishment?",
-			answers = {
-				{"Yes.", true},
-				{"No.", false}
-			}
-		},
-		{
-			id = 999,
-			question = " Do you agree to respect and adhere to CTA guidelines while playing the faction?",
-			answers = {
-				{"Yes.", true},
-				{"No", false}
-			}
-		},
-	},
+            id = 4,
+            question = "Scenario: The current city code is MARGINAL, your stabilization team is assigned to ice at high-priority region one. In a residential block nearby, protection units begin taking losses due to a jackpot. What is your course of action?",
+            answers = {
+                {"Move in with your team and sterilize the block of all hostiles.", false},
+                {"Attach yourself to a PT and move in alongside MPF to clear the building.", false},
+                {"Await code escalation or shadow raid to happen to deploy and engage.", true},
+                {"Ask MPF if they need help before moving in to assist.", false}
+            }
+        },
+        {
+            id = 5,
+            question = " What other names does the Transhuman Arm go by?",
+            answers = {
+                {"Overwatch Transhuman Arm, Stabilization Arm.", false},
+                {"Combine Overwatch, Infestation Response Team.", false},
+                {"Transhuman Forces, Stabilization Forces.", true}
+                {"Combine Military, Stabilization Squad.", false}
+            }
+        },
+        {
+            id = 6,
+            question = "What classes are vocoders mandatory for?",
+            answers = {
+                {"All transhuman assets.", true},
+                {"All Half Life: 2 soldiers; Half Life: Alyx units are exempt from the requirement.", false},
+                {"All units ranked CSO+.", false}
+                {"All units ranked ECS+.", false}
+            }
+        },
+        {
+            id = 7,
+            question = "Translate the following radio transmission: “Echo one, daggers free on non-tagged viromes in three.”",
+            answers = {
+                {"Grunt, free to shoot at antlions in three.", true},
+                {"Echo, free to shoot at antlions in three.", false},
+                {"Grunt, free to shoot at zombies in three.", false},
+                {"Echo, free to shoot at headcrabs in three.", false}
+            }
+        },
+        {
+            id = 8,
+            question = "Scenario: The current city code is AUTONOMOUS JUDGMENT. Your stabilization team has been assigned to containment protocol. What will you and your team do?",
+            answers = {
+                {"Deploy to the outlands sector and sweep.", false},
+                {"Deploy to the city sector and sweep all apartment blocks.", false},
+                {"Deploy to the storm system and sweep.", false},
+                {"All of the above.", true}
+            }
+        },
+        {
+            id = 9,
+            question = "Which emotion is strictly forbidden from being exhibited on the Transhuman Arm regardless of what class you are playing on?",
+            answers = {
+                {"Fear.", false},
+                {"Disgust.", false}
+                {"Empathy.", true},            
+            }
+        },
+        {
+            id = 10,
+            question = "Which rank have absolutely no command authority (unless delegated it by a superior)?",
+            answers = {
+                {"Combine Grunt (CGR)", false},
+                {"Combine Soldier (CSO)", false},
+                {"Enhanced Combine Soldier (ECS)", false}
+                {"CGR and CSO", true}
+
+            }
+        },
+        {
+            id = 11,
+            question = "Translate the following radio transmission: “ST-2 going sharp on jackpot. Extractor is live!”",
+            answers = {
+                {"Team 2 is ready to contain the xen infestation. Fire in the hole!", false},
+                {"Team 2 is attacking a rebel holdout. Grenade out!", true},
+                {"Team 2 is extracting high-value contraband from rebels. Ready weapons.", false}
+                {"Team 2 is attacking a rebel holdout. Stay alert!", false},                
+            }
+        },
+        {
+            id = 12,
+            question = "Which TAC is CTA radio on?",
+            answers = {
+                {"TAC-1.", false},
+                {"TAC-2.", true},
+                {"TAC-3.", false},
+                {"TAC-4.", false}
+            }
+        },
+        {
+            id = 13,
+            question = "Which of the following is NOT a duty of stabilization teams during city code STABLE?",
+            answers = {
+                {"Conducting sweeps in the outlands sector, amputating any hostiles found.", false},
+                {"Ensuring the security of the Stabilization Jurisdiction.", false},
+                {"Deploying to the city and assisting MPF in containing any rebel attacks.", true}
+                {"Ensuring the security of the high-priority regions.", false},                
+            }
+        },
+        {
+            id = 14,
+            question = "Translate the following radio transmission: “ST-1 is at code: ice at SJ-1. Report all radials free.”",
+            answers = {
+                {"Team is holding at the Nexus. Nothing to report.", false},
+                {"Team is holding at the Outlands Hardpoint. All sightlines are clear.", true},
+                {"Team is building fortifications at the Plaza Catwalks. All sightlines are clear.", false},
+                {"Team is finding cover at Outlands Hardpoint. Requesting backup!", false}
+            }
+        },
+        {
+            id = 15,
+            question = "Translate the following radio transmission: “Target black out, sweep and resume.”",
+            answers = {
+                {"The target has lost sight; continue the sweep.", true},
+                {"The target has been neutralized; continue the sweep.", false},
+                {"The target has lost consciousness; continue the sweep.", false}
+                {"The target has burned alive; continue the sweep.", false}
+            }
+        },
+        {
+            id = 16,
+            question = "Scenario: You interlocked to a ST and they are conducting suppression sweep. What would you do?",
+            answers = {
+                {"Quickly deploy to storm system and head over to them.", false},
+                {"If there's another team, interlock to them, or wait for the team leader's directives.", true},
+                {"Request team to head to the nearest storm system exit so you can uniform and sweep together with them.", false}
+                {"Leave the team and sweep city and outlands on your own", false},                
+            }
+        },
+        {
+            id = 17,
+            question = "Translate the following radio transmission: “All contaminants flatline, code breakdown on sector.”",
+            answers = {
+                {"All hostile targets have been neutralized. Sweep the sector.", false},
+                {"All citizens have been neutralized. Confiscate their contraband.", false},
+                {"All unarmed targets have been neutralized. Hold the area and build fortifications. ", false}
+                {"All armed targets have been neutralized. Remove enemy fortifications and equipment.", true},                
+            }
+        },
+        {
+            id = 18,
+            question = "Scenario: The city code has escalated to FRACTURED. Your stabilization team has been assigned to sociostability protocol. What should you and your team do?",
+            answers = {
+                {"Deploy to the storm system and engage hostiles.", false},
+                {"Move to high-priority regions and secure the Combine equipment.", false},
+                {"Locate and neutralize the enemies causing the code escalation within the city regions.", true}
+                {"Deploy to Outlands and secure the area.", false}
+            }
+        },
+        {
+            id = 20,
+            question = "Translate the following radio transmission: “We have biotics at perimeter, all units stay sharp.”",
+            answers = {
+                {"There are antlions in the area: all units, stay alert.", false},
+                {"There are zombies in the area: all units, stay alert.", false},
+                {"There are vortigaunts in the area: all units, stay alert.", true}
+                {"There are headcrabs in the area: all units, stay alert.", false},
+            }
+        },
+        {
+            id = 21,
+            question = "Scenario: You in a Stabilization Team led by an ECS. The ECS is ordering you to go to SJ-1, but a CCP from another team is telling you to go to HPR-1. What will you do?",
+            answers = {
+                {"Listen to the ECS, as they are your team lead.", false},
+                {"Listen to the CCP, as they are a command unit.", true},
+                {"Ask who you should listen to in TAC-3.", false}
+                {"Ignore both of them and remain at your position until clarified.", false}
+            }
+        },
+        {
+            id = 22,
+            question = "How should you NOT address other soldiers?",
+            answers = {
+                {"Sir.", true},
+                {"With their tagline.", false},
+                {"Asset.", false}
+                {"Delegate.", false}
+            }
+        },
+        {
+            id = 23,
+            question = "Scenario: You are holding at the Outlands Hardpoint with your team, and a contraband cache raid occurs. What do you do?",
+            answers = {
+                {"Remain in position and wait for the rebels to approach.", false},
+                {"Retreat back to HPR-1 with your team as there is likely an overwhelming resistance force approaching.", false},
+                {"Stick with your team and follow the lead of your superiors to effectively counter the raid.", true}
+                {"Immediately move in to intercept the raid and stop the resistance.", false}
+            }
+        },
+        {
+            id = 24,
+            question = "Scenario: You are in a team that is actively in transit to a Shadow Raid location. Your team lead calls out to engage code Midnight. How do you proceed?",
+            answers = {
+                {"Announce you are preparing to engage and move into the target location.", false},
+                {"Stay silent on radios, stick close to your team, and silent walk.", true},
+                {"Proceed as normal, this code is merely a formality.", true}
+                {"Return to your original position prior to Shadow raid.", false}
+            }
+        },
+        {
+            id = 25,
+            question = "Translate the following radio transmission: “Incursion at OZ-2. One duty vacated and bodypack holding!”",
+            answers = {
+                {"Rebel attack at Outland Zone 2. One soldier killed and my armor is taking damage.", true},
+                {"Infestation at Outland Zone 2. One soldier killed and I am about to die.", false},
+                {"Rebel attack at Outlands Hardpoint 2. One rebel down and I am recharging my armor.", false}
+                {"Infestation at Outlands Hardpoint 2. One zombie down, and I am about to die.", false}
+            }
+        },
+        {
+            id = 997,
+            question = "Do you understand that the consequences of disobeying orders coming from ST leaders and command units will be severe?",
+            answers = {    
+                {"Yes.", true},
+                {"No.", false},
+            }
+        },
+        {
+            id = 998,
+            question = "Do you understand that breaking character on CTA will result in severe punishment?",
+            answers = {
+                {"Yes.", true},
+                {"No.", false}
+            }
+        },
+        {
+            id = 999,
+            question = "Do you agree to respect and adhere to CTA guidelines while playing the faction?",
+            answers = {
+                {"Yes.", true},
+                {"No", false}
+            }
+        },
+    },
 
 	classes = {
 		{
