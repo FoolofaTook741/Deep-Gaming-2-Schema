@@ -811,7 +811,7 @@ impulse.Config.LootPools = {
 			--["util_wood"] = {Rarity = 600, Rep = 2},
 			--["util_plastic"] = {Rarity = 900, Rep = 2},
 			["util_glue"] = {Rarity = 620, Rep = 4},
-			["util_paint"] = {Rarity = 750, Rep = 1},
+			["util_paint"] = {Rarity = 700, Rep = 1},
 			["wep_pistol"] = {Rarity = 960, Rep = 1},
 			["item_vortessence"] = {Rarity = 910, Rep = 1},
 			["item_enrichedvortessence"] = {Rarity = 990, Rep = 1},
