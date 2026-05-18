@@ -35,7 +35,7 @@ function SWEP:CanAttach(att)
 		end
 	end
 
-	print("[MS] [CanAttach::Success] Attachment can be attached!")
+	--print("[MS] [CanAttach::Success] Attachment can be attached!")
 
 	return true
 end
