@@ -1701,7 +1701,7 @@ local caWhitelistCommand = {
 						if level < 10 and level != 0 then
 							targ:Notify("Your OCA faction rank has been edited to " .. rank .. " by supervisor "..ply:SteamName()..".")
 						elseif level == 0 then
-							targ:Notify("Your OCA faction rank has been removed, you are now an Assistant.")
+							targ:Notify("Your OCA faction rank has been removed.")
 						else
 							targ:Notify("Your OCA faction rank has been edited to level " .. level .. " by supervisor "..ply:SteamName()..".")
 						end
