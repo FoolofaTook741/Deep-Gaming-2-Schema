@@ -666,7 +666,7 @@ RetrieveRestrictedTool = function(um)
     local tool, admin, Teams = um, 0, {}--Settings when it's not a usermessage
     if not istable(um) then
         tool = net.ReadString()
-        admin = net.ReadUInt(2)
+        admin = net.ReadUInt(3)
         local teamCount = net.ReadUInt(10)
 
         for i = 1, teamCount do
@@ -718,6 +718,22 @@ RetrieveRestrictedTool = function(um)
         adminsCHKboxes[3].Button:SetValue(1)
     end
     pan:AddItem(adminsCHKboxes[3])
+
+    adminsCHKboxes[4] = vgui.Create("DCheckBoxLabel")
+    adminsCHKboxes[4]:SetText("Gamemaster only")
+    adminsCHKboxes[4].GoodValue = 3
+    if admin == 3 then
+        adminsCHKboxes[4].Button:SetValue(1)
+    end
+    pan:AddItem(adminsCHKboxes[4])
+
+    adminsCHKboxes[5] = vgui.Create("DCheckBoxLabel")
+    adminsCHKboxes[5]:SetText("Senior Gamemaster only")
+    adminsCHKboxes[5].GoodValue = 4
+    if admin == 4 then
+        adminsCHKboxes[5].Button:SetValue(1)
+    end
+    pan:AddItem(adminsCHKboxes[5])
 
     for k in pairs(adminsCHKboxes) do
         adminsCHKboxes[k].Button.Toggle = function()
