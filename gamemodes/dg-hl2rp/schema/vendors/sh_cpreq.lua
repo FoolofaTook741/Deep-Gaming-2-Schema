@@ -121,8 +121,9 @@ VENDOR.Sell = {
 		Desc = "GRID/SWORD",
 		Restricted = true,
 		Max = 1,
+		Cooldown = 600,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_GRID) or ply:GetTeamClass() == CLASS_SWORD then
+			if (ply:GetTeamRank() >= RANK_SQL and ply:GetTeamClass() == CLASS_GRID) or ply:GetTeamClass() == CLASS_SWORD then
 				return true
 			else return false
 			end
@@ -703,7 +704,7 @@ VENDOR.Sell = {
 VENDOR.Buy = {
 	["item_emptymedkit"] = {
 		Desc = "An empty medical kit used to carry various medications and first aid items.",
-		Cost = 65,
+		Cost = 150,
 	}
 }
 
