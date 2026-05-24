@@ -416,6 +416,14 @@ hook.Add("PlayerDeath", "dg_shield_cleanup_death", function(ply)
     RemoveShield(ply)
 end)
 
+hook.Add("PlayerDeath", "RemoveSteroidStimOnDeath", function(ply)
+    local timerName = ply:SteamID() .. "steroidstim"
+    if timer.Exists(timerName) then
+        timer.Remove(timerName)
+        ply.MeleeMult = 1
+    end
+end)
+
 local function canHearCheck(listener, allPlayers) -- based on darkrps voice chat optomization this is called every 0.5 seconds in the think hook
     if not IsValid(listener) then return end
 
