@@ -118,7 +118,7 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_incendiary"] = {
-		Desc = "GRID/SWORD",
+		Desc = "GRID SQL+/SWORD",
 		Restricted = true,
 		Max = 1,
 		Cooldown = 600,
