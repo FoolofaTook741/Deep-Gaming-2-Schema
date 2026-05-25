@@ -265,11 +265,11 @@ function PANEL:SetupUI()
     self.lblReminder:SetTextColor(COMBINE_MUTED)
     self.lblReminder:SetText("\nCHAIN OF COMMAND REGISTRY\n" ..
         "---------------------------------\n" ..
-        "Acting Sovereign Protection Unit: Commander LINE-2\n" ..
+        "Acting Sovereign Protection Unit: Commander PATROL-5\n" ..
         "---------------------------------\n" ..
-        "Acting Sovereign Transhuman Unit: Commander LEADER-1\n" ..
+        "Acting Sovereign Transhuman Unit: Commander SPEAR-3\n" ..
         "---------------------------------\n" ..
-        "Acting City Administrator: Lucas Hutchens\n" ..
+        "Acting City Administrator: Jesqo Smith\n" ..
         "---------------------------------")
     self.lblReminder:SizeToContents()
     self.lblReminder:Dock(TOP)
