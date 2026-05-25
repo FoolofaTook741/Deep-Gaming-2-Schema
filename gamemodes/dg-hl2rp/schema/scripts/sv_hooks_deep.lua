@@ -2143,7 +2143,7 @@ end )
 
 CHAT_BANNED = { --Manage this list for players to not speak in any chats but the below.
     ["STEAM_0:1:104618787"] = true, --Tupoy
-    ["STEAM_0:0:20815"] = true, -- Yang
+    --["STEAM_0:0:20815"] = true, -- Yang
     ["STEAM_0:1:110245383"] = true, -- Maekar
     --["STEAM_0:0:584507256"] = true, -- Goldplated
     --["STEAM_0:0:162595846"] = true, -- Fishy
