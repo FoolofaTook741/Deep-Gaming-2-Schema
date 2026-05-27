@@ -114,7 +114,7 @@ TEAM_CP = impulse.Teams.Define({
 
    quiz = {
 		enabled = true,
-		handbook = "https://docs.google.com/document/d/16Ep9L7tQCPm81AAO41TcxHLy4md96m0GgPlGsFhCoCo/edit?tab=t.0",
+		handbook = "https://docs.google.com/document/d/1ELXJhWy782W8SqdiqwuZ4iciNbwZT36apBG2_ne1EOQ/edit?usp=sharing",
 		{
 			id = 1,
 			question = "Which radio code indicates that a friendly is down and you're under fire?",
@@ -131,8 +131,8 @@ TEAM_CP = impulse.Teams.Define({
 				{"415, Arrest", true},
 				{"10-103m, Re-Education", false},
 				{"10-103m, Arrest", false},
-				{"51b & 99, Arrest", true},
-				{"None of the above", false},
+				{"51b & 99, Arrest", false},
+				{"None of the above", false}
 			}
 		},
 		{
@@ -168,7 +168,7 @@ TEAM_CP = impulse.Teams.Define({
 			answers = {
 				{"Rank Leader.", false},
 				{"Intention 3.", false},
-				{"Intention 2.", true}
+				{"Intention 1.", true}
 			}
 		},
 		{
@@ -232,16 +232,6 @@ TEAM_CP = impulse.Teams.Define({
 		},
 		{
 			id = 13,
-			question = "Do OCA have any authority over MPF personnel?",
-			answers = {
-				{"Yes", false},
-				{"No", false},
-				{"OCA Sv's only.", false},
-				{"OCA Sv's only in the absence of any equal or higher rank MPF SVs.", true}
-			}
-		},
-		{
-			id = 14,
 			question = "Do CTA have any authority over MPF personnel?",
 			answers = {
 				{"Yes", true},
@@ -251,7 +241,7 @@ TEAM_CP = impulse.Teams.Define({
 			}
 		},
 		{
-			id = 15,
+			id = 14,
 			question = "A citizen is calling you names such as idiot after you have arrested them what do you do?",
 			answers = {
 				{"Ask a supervisor to increase their sentence", true},
@@ -261,7 +251,7 @@ TEAM_CP = impulse.Teams.Define({
 			}
 		},
 		{
-			id = 16,
+			id = 15,
 			question = "What do you do if there is no PT to interlock into?",
 			answers = {
 				{"Wait for a PT team to become available", false},
@@ -271,7 +261,7 @@ TEAM_CP = impulse.Teams.Define({
 			}
 		},
 		{
-			id = 17,
+			id = 16,
 			question = "There is an i5 in nexus who is untrained what do you do?",
 			answers = {
 				{"Train them yourself.", false},
@@ -280,7 +270,7 @@ TEAM_CP = impulse.Teams.Define({
 			}
 		},
 		{
-			id = 18,
+			id = 17,
 			question = "What is the primary purpose of the MPF?",
 			answers = {
 				{"Policing the civic populous.", true},
@@ -290,7 +280,7 @@ TEAM_CP = impulse.Teams.Define({
 			}
 		},
 		{
-			id = 19,
+			id = 18,
 			question = "What is the MPF's primary area of responsibility?",
 			answers = {
 				{"Nexus", false},
