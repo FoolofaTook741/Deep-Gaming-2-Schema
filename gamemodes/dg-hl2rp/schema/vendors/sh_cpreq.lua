@@ -166,11 +166,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_osisg"] = {
-		Desc = "UNION i1+/Grid i2+",
+		Desc = "UNION i1+/Grid i2+/Sword i1+",
 		Restricted = true, 
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() == RANK_I1 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID) then
+			if (ply:GetTeamRank() == RANK_I1 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID) or (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_SWORD) then
 				return true
 			else return false
 			end
