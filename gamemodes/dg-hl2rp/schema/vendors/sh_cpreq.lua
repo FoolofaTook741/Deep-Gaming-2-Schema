@@ -170,7 +170,7 @@ VENDOR.Sell = {
 		Restricted = true, 
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() == RANK_I1 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID) or (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_SWORD) then
+			if (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID) or (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_SWORD) then
 				return true
 			else return false
 			end
