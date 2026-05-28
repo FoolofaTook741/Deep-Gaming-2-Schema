@@ -1098,7 +1098,7 @@ impulse.Voice.Register("grunt", "BOUNCER FREE", "Bouncer free.", "dg2grunt/annou
 -- Flushing
 impulse.Voice.Register("grunt", "CLEARING LAST", "Clearing last known.", "dg2grunt/flushing_01.wav" , "-FLUSH")
 impulse.Voice.Register("grunt", "DISTRIBUTION ON", "Distribution on three.", "dg2grunt/flushing_02.wav", "-FLUSH")
-impulse.Voice.Register("grunt", "DISTRIBUTING", "Distributing.", "dg2grunt/reconnoiter_start_03.wav" "-FLUSH")
+impulse.Voice.Register("grunt", "DISTRIBUTING", "Distributing.", "dg2grunt/reconnoiter_start_03.wav", "-FLUSH")
 impulse.Voice.Register("grunt", "FLUSHING", "Flushing sector", "dg2grunt/flushing_03.wav", "-FLUSH")
 impulse.Voice.Register("grunt", "EXTRACTING LAST", "Extracting at last known.", "dg2grunt/flushing_04.wav", "-FLUSH")
 impulse.Voice.Register("grunt", "FLUSHING1", "Flushing hostile.", "dg2grunt/flushing_06.wav", "-FLUSH")
