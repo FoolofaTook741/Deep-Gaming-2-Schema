@@ -385,7 +385,7 @@ TEAM_CP = impulse.Teams.Define({
         {
             name = "i3",
             description = "i3",
-            xp = 0,
+            xp = 500,
             whitelistLevel = 1,
             onBecome = makeOnBecome("i3"),
         },
@@ -393,7 +393,7 @@ TEAM_CP = impulse.Teams.Define({
             name = "i2",
             description = "i2",
             doorGroup = {1, 2, 3, 6, 7},
-            xp = 0,
+            xp = 1000,
             whitelistLevel = 2,
             whitelistFailMessage = "You must be promoted to use this rank.",
             onBecome = makeOnBecome("i2"),
