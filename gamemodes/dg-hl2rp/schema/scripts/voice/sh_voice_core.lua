@@ -20,11 +20,24 @@ function impulse.Voice.GetClass(ply)
 	return def
 end
 
-function impulse.Voice.Register(class, key, replacement, source, max)
-	class = class:lower()
+-- jsqo 28.03.2026
+-- added the category parameter to the register function, 
+-- this allows us to group certain voicelines together for random selection. 
+function impulse.Voice.Register(class, key, replacement, source, category)
+    class = class:lower()
 
-	impulse.Voice.List[class] = impulse.Voice.List[class] or {}
-	impulse.Voice.List[class][key:lower()] = {replacement = replacement, source = source}
+    impulse.Voice.List[class] = impulse.Voice.List[class] or {}
+    impulse.Voice.List[class][key:lower()] = {replacement = replacement, source = source}
+
+    if category then
+        local catKey = tostring(category):lower()
+
+        if not impulse.Voice.List[class][catKey] then
+            impulse.Voice.List[class][catKey] = { isCategory = true, choices = {} }
+        end
+
+        table.insert(impulse.Voice.List[class][catKey].choices, { replacement = replacement, source = source })
+    end
 end
 
 function impulse.Voice.GetVoiceList(class, text, delay)
@@ -41,7 +54,7 @@ function impulse.Voice.GetVoiceList(class, text, delay)
 	local skip = 0
 	local current = 0
 
-	max = max or 5
+	max = max or 10 -- I increased the max to 10, sometimes CTA/MPF larpers having hard time with the 5 voiceline limit.
 
 	for k, v in ipairs(exploded) do
 		if (k < skip) then
@@ -84,15 +97,22 @@ function impulse.Voice.GetVoiceList(class, text, delay)
 
 			if (info[key]) then
 				local source = info[key].source
+				local replacement = info[key].replacement
 				
-				if (type(source) == "table") then
+				-- jsqo 28.03.2026
+				-- this is for the random voiceline system. 
+				if (info[key].isCategory) then
+					local picked = table.Random(info[key].choices)
+					source = picked.source
+					replacement = picked.replacement
+				elseif (type(source) == "table") then 
 					source = table.Random(source)
-				else
-					source = tostring(source)
 				end
 				
+				source = tostring(source)
+				
 				output[#output + 1] = {source, delay or 0.1}
-				phrase = phrase..info[key].replacement.." "
+				phrase = phrase..replacement.." "
 				skip = i
 				current = current + 1
 

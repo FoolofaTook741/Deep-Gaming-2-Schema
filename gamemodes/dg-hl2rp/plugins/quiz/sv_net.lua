@@ -123,6 +123,9 @@ if SERVER then
 				ply.impulseData.quiz[teamID] = { passed = true }
 				ply:SaveData()
 				ply:Notify("You have passed the quiz. You will not need to retake it again.")
+				if teamID == TEAM_OTA then
+					impulse.Teams.SetWhitelist(ply:SteamID(), "TEAM_OTA", RANK_CGR)
+				end
 
 				if ply:CanBecomeTeam(teamID, true) then
 					ply:SetTeam(teamID)

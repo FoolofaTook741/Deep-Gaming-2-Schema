@@ -165,10 +165,21 @@ TEAM_OTA = impulse.Teams.Define({
 	handModel = "models/weapons/c_arms_combine.mdl",
 	percentLimit = true,
 	limit = 0.125,
-	xp = 750,
+	xp = 0,
 	cp = true,
 	doorGroup = {1, 2, 3, 6, 7},
 	blockNameChange = true,
+    customCheck = function(ply, teamID)
+        local hasOTA = ply:HasTeamWhitelist("TEAM_OTA", RANK_CGR)
+        local cpRank = ply:HasTeamWhitelist("TEAM_CP", RANK_I1)
+
+        if hasOTA or cpRank then
+            return true
+        end
+
+        ply:Notify("Requires Civil Protection Rank I1+")
+        return false
+    end,
 
 	quiz = {
 		enabled = true,

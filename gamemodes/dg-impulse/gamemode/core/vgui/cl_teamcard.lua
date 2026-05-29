@@ -36,6 +36,9 @@ function PANEL:SetTeam(teamID)
 	if teamData.collaboratorOnly and teamData.collaboratorOnly == true then
 		self.requirements = "Collaborator Only"
 	end
+	if teamData.name == "Combine Transhuman Arm" then
+		self.requirements = "Civil Protection Rank I1+"
+	end
  	self.modelIcon = vgui.Create("impulseSpawnIcon", self)
 	self.modelIcon:SetPos(10,4)
 	self.modelIcon:SetSize(52,52)
