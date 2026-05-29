@@ -449,6 +449,14 @@ function impulse.Teams.SetWhitelist(steamid, team, level)
 			query:Insert("steamid", steamid)
 			query:Execute()	
 		end
+
+		for v, ply in ipairs(player.GetAll()) do
+			if ply:SteamID() == steamid then
+				ply.Whitelists = ply.Whitelists or {}
+				ply.Whitelists[team] = level
+				break
+			end
+		end
 	end)
 end
 
