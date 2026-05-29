@@ -118,11 +118,12 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_incendiary"] = {
-		Desc = "GRID/SWORD",
+		Desc = "GRID SQL+/SWORD",
 		Restricted = true,
 		Max = 1,
+		Cooldown = 600,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_GRID) or ply:GetTeamClass() == CLASS_SWORD then
+			if (ply:GetTeamRank() >= RANK_SQL and ply:GetTeamClass() == CLASS_GRID) or ply:GetTeamClass() == CLASS_SWORD then
 				return true
 			else return false
 			end
@@ -165,11 +166,11 @@ VENDOR.Sell = {
 		end
 	},
 	["wep_osisg"] = {
-		Desc = "UNION i1+/Grid i2+",
+		Desc = "UNION i1+/Grid i2+/Sword i1+",
 		Restricted = true, 
 		Max = 1,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() == RANK_I1 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID) then
+			if (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_UNION) or (ply:GetTeamRank() >= RANK_I2 and ply:GetTeamClass() == CLASS_GRID) or (ply:GetTeamRank() >= RANK_I1 and ply:GetTeamClass() == CLASS_SWORD) then
 				return true
 			else return false
 			end
@@ -703,7 +704,7 @@ VENDOR.Sell = {
 VENDOR.Buy = {
 	["item_emptymedkit"] = {
 		Desc = "An empty medical kit used to carry various medications and first aid items.",
-		Cost = 65,
+		Cost = 150,
 	}
 }
 

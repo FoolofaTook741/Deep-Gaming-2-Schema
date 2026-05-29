@@ -26,6 +26,7 @@ TEAM_CA = impulse.Teams.Define({
 			description = "intern",
 			doorGroup = {2},
 			xp = 0,
+			whitelistlevel = 50,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
 					ply:SetModel(ply.defaultModel)
@@ -68,7 +69,7 @@ TEAM_CA = impulse.Teams.Define({
 			description = "rep",
 			doorGroup = {1, 2, 3, 6, 7},
 			xp = 5,
-			whitelistLevel = 1,
+			whitelistLevel = 51,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
 					ply:SetModel(ply.defaultModel)
@@ -111,7 +112,7 @@ TEAM_CA = impulse.Teams.Define({
 			description = "coordinator",
 			doorGroup = {1, 2, 3, 6, 7},
 			xp = 5,
-			whitelistLevel = 2,
+			whitelistLevel = 52,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
 					ply:SetModel(ply.defaultModel)
@@ -154,7 +155,7 @@ TEAM_CA = impulse.Teams.Define({
 			description = "councilor",
 			doorGroup = {1, 2, 3, 4, 6, 7},
 			xp = 5,
-			whitelistLevel = 3,
+			whitelistLevel = 53,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
 					ply:SetModel(ply.defaultModel)
@@ -197,7 +198,7 @@ TEAM_CA = impulse.Teams.Define({
 			description = "Minister",
 			doorGroup = {1, 2, 3, 4, 6, 7},
 			xp = 5,
-			whitelistLevel = 4,
+			whitelistLevel = 54,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
 					ply:SetModel(ply.defaultModel)
@@ -255,7 +256,8 @@ TEAM_CA = impulse.Teams.Define({
 					ply:SetBodygroup(6,0)
 					ply:SetBodygroup(7,0)
 					ply:SetBodygroup(8,0)
-					ply:SetRPName("Deputy City Administrator " .. ply:GetSavedRPName())
+					ply:Give("plutonic_357")
+					ply:SetRPName("Councilor " .. ply:GetSavedRPName())
 				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
 					ply:SetModel(ply.defaultModel)
 					ply:SetBodygroup(2,43)

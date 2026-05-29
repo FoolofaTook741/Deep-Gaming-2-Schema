@@ -416,6 +416,14 @@ hook.Add("PlayerDeath", "dg_shield_cleanup_death", function(ply)
     RemoveShield(ply)
 end)
 
+hook.Add("PlayerDeath", "RemoveSteroidStimOnDeath", function(ply)
+    local timerName = ply:SteamID() .. "steroidstim"
+    if timer.Exists(timerName) then
+        timer.Remove(timerName)
+        ply.MeleeMult = 1
+    end
+end)
+
 local function canHearCheck(listener, allPlayers) -- based on darkrps voice chat optomization this is called every 0.5 seconds in the think hook
     if not IsValid(listener) then return end
 
@@ -2135,7 +2143,7 @@ end )
 
 CHAT_BANNED = { --Manage this list for players to not speak in any chats but the below.
     ["STEAM_0:1:104618787"] = true, --Tupoy
-    ["STEAM_0:0:20815"] = true, -- Yang
+    --["STEAM_0:0:20815"] = true, -- Yang
     ["STEAM_0:1:110245383"] = true, -- Maekar
     --["STEAM_0:0:584507256"] = true, -- Goldplated
     --["STEAM_0:0:162595846"] = true, -- Fishy

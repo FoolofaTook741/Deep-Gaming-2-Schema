@@ -729,7 +729,7 @@ local function SendRestrictedTools(ply, cmd, args)
     if not args[1] then return end
     net.Start("FPP_RestrictedToolList")
         net.WriteString(args[1]) -- tool name
-        net.WriteUInt(FPP.RestrictedTools[args[1]] and FPP.RestrictedTools[args[1]].admin or 0, 2) -- user, admin or superadmin
+        net.WriteUInt(FPP.RestrictedTools[args[1]] and FPP.RestrictedTools[args[1]].admin or 0, 3) -- user, admin or superadmin
 
         local teams = FPP.RestrictedTools[args[1]] and FPP.RestrictedTools[args[1]].team or {}
         net.WriteUInt(#teams, 10)

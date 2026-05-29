@@ -4,6 +4,18 @@ FPP.DisconnectedPlayers = FPP.DisconnectedPlayers or {}
 local PLAYER = FindMetaTable("Player")
 local ENTITY = FindMetaTable("Entity")
 
+
+local function IsGamemaster(ply)
+    local group = ply:GetUserGroup()
+    return group == "gamemaster" or group == "seniorgamemaster" or ply:IsAdmin() or ply:IsSuperAdmin()
+end
+
+local function IsSeniorGamemaster(ply)
+    local group = ply:GetUserGroup()
+    return group == "seniorgamemaster" or ply:IsAdmin() or ply:IsSuperAdmin()
+end
+
+
 --[[-------------------------------------------------------------------------
 Checks if a model is blocked
 ---------------------------------------------------------------------------]]
@@ -449,8 +461,17 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
             elseif tonumber(FPP.RestrictedTools[tool].admin) == 2 and not ply:IsSuperAdmin() then
                 FPP.Notify(ply, "Toolgun restricted! Superadmin only!", false)
                 return false
-            elseif (tonumber(FPP.RestrictedTools[tool].admin) == 1 and ply:IsAdmin()) or (tonumber(FPP.RestrictedTools[tool].admin) == 2 and ply:IsSuperAdmin()) then
-                CanGroup = true -- If the person is not in the BUT has admin access, he should be able to use the tool
+            elseif tonumber(FPP.RestrictedTools[tool].admin) == 3 and not IsGamemaster(ply) then
+                FPP.Notify(ply, "Toolgun restricted! Gamemaster only!", false)
+                return false
+            elseif tonumber(FPP.RestrictedTools[tool].admin) == 4 and not IsSeniorGamemaster(ply) then
+                FPP.Notify(ply, "Toolgun restricted! Senior Gamemaster only!", false)
+                return false
+            elseif (tonumber(FPP.RestrictedTools[tool].admin) == 1 and ply:IsAdmin()) or
+                   (tonumber(FPP.RestrictedTools[tool].admin) == 2 and ply:IsSuperAdmin()) or
+                   (tonumber(FPP.RestrictedTools[tool].admin) == 3 and IsGamemaster(ply)) or
+                   (tonumber(FPP.RestrictedTools[tool].admin) == 4 and IsSeniorGamemaster(ply)) then
+                CanGroup = true
             end
 
             if FPP.RestrictedTools[tool]["team"] and #FPP.RestrictedTools[tool]["team"] > 0 and not table.HasValue(FPP.RestrictedTools[tool]["team"], ply:Team()) then
