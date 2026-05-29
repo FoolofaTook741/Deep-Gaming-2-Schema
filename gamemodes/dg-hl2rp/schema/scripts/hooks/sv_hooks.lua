@@ -224,15 +224,46 @@ function SCHEMA:PlayerDisconnected(ply)
 end
 
 function SCHEMA:CanPlayerChangeTeam(ply, newTeam)
-	if impulse.Teams.Data[newTeam].cp and ply.impulseData and ply.impulseData.CombineBan then
-		local endTime = ply.impulseData.CombineBan
-		local curTime = os.time()
+	print(newTeam)
+
+	local data = ply.impulseData
+	local curTime = os.time()
+
+	-- Global combine ban
+	if impulse.Teams.Data[newTeam].cp and data and data.CombineBan then
+		local endTime = data.CombineBan
 
 		if endTime > curTime then
-			ply:Notify("You can not become this team as you have an active combine ban that will remain for "..string.NiceTime(endTime - curTime)..".")
+			ply:Notify("You can not become this team as you have an active combine ban that will remain for " .. string.NiceTime(endTime - curTime) .. ".")
 			return false
 		else
-			ply.impulseData.CombineBan = nil -- garbage cleanup
+			data.CombineBan = nil
+			ply:SaveData()
+		end
+	end
+
+	-- CTA BAN
+	if newTeam == TEAM_OTA and data and data.CTABan then
+		local endTime = data.CTABan
+
+		if endTime > curTime then
+			ply:Notify("You can not become this team as you have an active C.T.A ban that will remain for " .. string.NiceTime(endTime - curTime) .. ".")
+			return false
+		else
+			data.CTABan = nil
+			ply:SaveData()
+		end
+	end
+
+	-- MPF BAN
+	if newTeam == TEAM_CP and data and data.MPFBan then
+		local endTime = data.MPFBan
+
+		if endTime > curTime then
+			ply:Notify("You can not become this team as you have an active M.P.F ban that will remain for " .. string.NiceTime(endTime - curTime) .. ".")
+			return false
+		else
+			data.MPFBan = nil
 			ply:SaveData()
 		end
 	end

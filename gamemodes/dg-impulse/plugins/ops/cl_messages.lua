@@ -236,7 +236,7 @@ net.Receive("opsGiveCombineBan", function()
 	local time = net.ReadUInt(16)
 	local endTime =  os.time() + time
 	local endDate = os.date("%H:%M:%S - %d/%m/%Y", endTime)
-	local template = "You have an active combine ban for a violation of the server rules.\nExpiry time: "..endDate
+	local template = "You have an active combine ban for a violation of faction rules.\nExpiry time: "..endDate
 	local id = "combineban_"..endDate
 
 	impulse.MenuMessage.Add(id, "Combine Ban Notice", template, Color(179, 58, 58), impulse.Config.RulesURL, "Read the rules", endTime)
