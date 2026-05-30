@@ -892,7 +892,7 @@ impulse.Config.LootPools = {
 			["wep_ak47u"] = {Rarity = 910, Rep = 1},
 			--["util_energycore"] = {Rarity = 730, Rep = 6},
 			["item_ammocrate"] = {Rarity = 600, Rep = 5},
-			["cos_conscriptarmor"] = {Rarity = 500, Rep = 4},
+			["cos_conscriptarmor"] = {Rarity = 500, Rep = 2},
 		},
 		MaxItems = 18,
 		MinItems = 9
