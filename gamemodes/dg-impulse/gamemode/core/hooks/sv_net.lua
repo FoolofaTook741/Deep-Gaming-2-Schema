@@ -91,7 +91,8 @@ util.AddNetworkString("impulseGetButtons")
 util.AddNetworkString("DeepMultiDrop")
 util.AddNetworkString("Deep_AirSupport_Marker")
 util.AddNetworkString("OverheadChatBubbleMessage")
-
+util.AddNetworkString("impulseInvBeginEquip")
+util.AddNetworkString("impulseCancelCraft")
 
 local AUTH_FAILURE = "Invalid argument (rejoin to continue)"
 
@@ -794,38 +795,36 @@ net.Receive("impulseSellAllDoors", function(len, ply)
 end)
 
 net.Receive("impulseInvDoEquip", function(len, ply)
-	if not ply.beenInvSetup or (ply.nextInvEquip or 0) > CurTime() then return end
-	ply.nextInvEquip = CurTime() + 0.5
+    if not ply.beenInvSetup or (ply.nextInvEquip or 0) > CurTime() then return end
+    ply.nextInvEquip = CurTime() + 0.5
 
-	if not ply:Alive() or ply:GetSyncVar(SYNC_ARRESTED, false) then
-		return
-	end
+    if not ply:Alive() or ply:GetSyncVar(SYNC_ARRESTED, false) then return end
 
-	local canUse = hook.Run("CanUseInventory", ply)
+    local canUse = hook.Run("CanUseInventory", ply)
+    if canUse != nil and canUse == false then return end
 
-	if canUse != nil and canUse == false then
-		return
-	end
+    local invid = net.ReadUInt(16)
+    local equipState = net.ReadBool()
 
-	local invid = net.ReadUInt(16)
-	local equipState = net.ReadBool()
+    local hasItem, item = ply:HasInventoryItemSpecific(invid)
+    if not hasItem then return end
 
-	local hasItem, item = ply:HasInventoryItemSpecific(invid)
+    local itemClass = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(item.class)]
+    local time = (equipState and itemClass.EquipTime) or (not equipState and itemClass.UnEquipTime) or nil
 
-	if not hasItem then return end
+    if time then
+        local startKey = ply:SteamID() .. "eq_start"
+        local startTime = ply[startKey]
 
-	local itemClass = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(item.class)]
+        if not startTime or (CurTime() - startTime) < (time - 0.5) then
+            return
+        end
 
-	local time = (equipState and itemClass.EquipTime) or (not equipState and itemClass.UnEquipTime) or nil
-
-	if time then
-		timer.Create( ply:SteamID().."eq", time, 1, function()
-			ply:SetInventoryItemEquipped(invid, equipState or false)
-		end )
-	else
-		ply:SetInventoryItemEquipped(invid, equipState or false)
-	end
-
+        ply[startKey] = nil
+        ply:SetInventoryItemEquipped(invid, equipState or false)
+    else
+        ply:SetInventoryItemEquipped(invid, equipState or false)
+    end
 end)
 
 net.Receive("impulseInvDoDrop", function(len, ply)
@@ -2720,4 +2719,29 @@ net.Receive("impulseGroupDoSetInfo", function(len, ply)
 	impulse.Group.NetworkMetaDataToOnline(name)
 
 	ply:Notify("You have updated the info for your group.")
+end)
+
+net.Receive("impulseInvBeginEquip", function(len, ply)
+    if not ply.beenInvSetup then return end
+    if (ply.nextBeginEquip or 0) > CurTime() then return end
+    ply.nextBeginEquip = CurTime() + 0.5
+
+    local invid = net.ReadUInt(16)
+    local hasItem, item = ply:HasInventoryItemSpecific(invid)
+    if not hasItem then return end
+
+    local itemClass = impulse.Inventory.Items[impulse.Inventory.ClassToNetID(item.class)]
+    if not itemClass.EquipTime and not itemClass.UnEquipTime then return end
+
+    ply[ply:SteamID() .. "eq_start"] = CurTime()
+end)
+
+net.Receive("impulseCancelCraft", function(len, ply)
+    if not ply.beenInvSetup then return end
+    ply.CraftFail = true
+
+    local bench = ply.currentBench
+    if bench and IsValid(bench) then
+        bench.InUse = false
+    end
 end)

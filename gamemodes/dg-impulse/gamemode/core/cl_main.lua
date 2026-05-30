@@ -127,21 +127,27 @@ end
 -- @string[opt] text Text to display on the bar
 -- @func[opt] onDone Called when bar is complete
 -- @bool[opt=false] popup If the bar should stop player input
-function impulse.MakeWorkbar(time, text, onDone, popup)
-	local bar = vgui.Create("impulseWorkbar")
-	bar:SetEndTime(CurTime() + time)
+function impulse.MakeWorkbar(time, text, onDone, popup, onCancel)
+    local bar = vgui.Create("impulseWorkbar")
+    bar:SetEndTime(CurTime() + time)
 
-	if text then
-		bar:SetText(text)
-	end
+    if text then
+        bar:SetText(text)
+    end
 
-	if onDone then
-		bar.OnEnd = onDone
-	end
+    if onDone then
+        bar.OnEnd = onDone
+    end
 
-	if popup then
-		bar:MakePopup()
-	end
+    if onCancel then
+        bar.OnCancel = onCancel
+    end
+
+    if popup then
+        bar:MakePopup()
+    end
+
+    return bar
 end
 
 local myscrw, myscrh = 1920, 1080

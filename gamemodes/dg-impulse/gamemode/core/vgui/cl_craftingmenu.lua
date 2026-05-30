@@ -258,6 +258,10 @@ function PANEL:Think()
 	if LocalPlayer():GetSyncVar(SYNC_ARRESTED, false) then
 		return self:Remove()
 	end
+
+	if self.IsCrafting and input.IsKeyDown(KEY_SPACE) then
+        self:OnCraftCancel()
+    end
 end
 
 function PANEL:ShowNormal(should)
@@ -339,6 +343,7 @@ function PANEL:DoCraft(item, mix)
 			panel.craftBar:Remove()
 			panel.model:Remove()
 			panel.IsCrafting = false
+			if IsValid(panel.cancelLabel) then panel.cancelLabel:Remove() end
 
 			timer.Simple(0.2, function()
 				if IsValid(panel) then
@@ -351,6 +356,26 @@ function PANEL:DoCraft(item, mix)
 			end)
 		end
 	end
+
+	function self:OnCraftCancel()
+	    if not self.IsCrafting then return end
+	    self.IsCrafting = false
+	    self:ShowNormal(true)
+	    self:ShowCloseButton(true)
+
+	    if IsValid(self.craftBar) then self.craftBar:Remove() end
+	    if IsValid(self.model) then self.model:Remove() end
+
+	    net.Start("impulseCancelCraft")
+	    net.SendToServer()
+	end
+
+	self.cancelLabel = vgui.Create("DLabel", self)
+	self.cancelLabel:SetPos((wide / 2) - 300, 452)
+	self.cancelLabel:SetSize(600, 20)
+	self.cancelLabel:SetText("Press SPACE to cancel")
+	self.cancelLabel:SetFont("Impulse-Elements16")
+	self.cancelLabel:SetContentAlignment(5)
 
 	self.model = vgui.Create("DModelPanel", self)
 	self.model:SetPaintBackground(false)

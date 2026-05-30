@@ -271,10 +271,14 @@ function PANEL:OnMousePressed(keycode)
 					end
 
 					impulse.MakeWorkbar(self.Item.UseWorkBarTime, self.Item.UseWorkBarName or "Using...", function()
-						net.Start("impulseInvDoUse")
-						net.WriteUInt(invid, 16)
-						net.SendToServer()
-					end, self.Item.UseWorkBarFreeze or false)
+					    net.Start("impulseInvDoUse")
+					    net.WriteUInt(invid, 16)
+					    net.SendToServer()
+					end, self.Item.UseWorkBarFreeze or false, function()
+					    if self.Item.UseWorkBarSound then
+					        surface.PlaySound("common/null.wav")
+					    end
+					end)
 
 					self.InvPanel:Remove()
 				else
@@ -290,27 +294,46 @@ function PANEL:OnMousePressed(keycode)
 		if not self.Item.CanEquip or self.Item.CanEquip(self.Item, LocalPlayer()) then
 			if not self.IsEquipped then
 				popup:AddOption(self.Item.EquipName or "Equip", function()
-					net.Start("impulseInvDoEquip")
-					net.WriteUInt(self.InvID, 16)
-					net.WriteBool(true)
-					net.SendToServer()
+				    local invid = self.InvID
+				    if self.Item.EquipTime then
+				        net.Start("impulseInvBeginEquip")
+				        net.WriteUInt(invid, 16)
+				        net.SendToServer()
 
-					if self.Item.EquipTime then
-						-- send net independent of workbar
-						-- to avoid net exploit ;-;
-						impulse.MakeWorkbar( self.Item.EquipTime, "Equipping...", nil, self.Item.EquipFreeze or false )
-					end
+				        impulse.MakeWorkbar(self.Item.EquipTime, "Equipping...", function()
+				            net.Start("impulseInvDoEquip")
+				            net.WriteUInt(invid, 16)
+				            net.WriteBool(true)
+				            net.SendToServer()
+				        end, self.Item.EquipFreeze or false)
+				    else
+				        net.Start("impulseInvDoEquip")
+				        net.WriteUInt(invid, 16)
+				        net.WriteBool(true)
+				        net.SendToServer()
+				    end
 				end)
 			else
-				popup:AddOption(self.Item.UnEquipName or "Un-Equip", function()
-					net.Start("impulseInvDoEquip")
-					net.WriteUInt(self.InvID, 16)
-					net.WriteBool(false)
-					net.SendToServer()
+			    popup:AddOption(self.Item.UnEquipName or "Un-Equip", function()
+				    local invid = self.InvID
+				    if self.Item.UnEquipTime then
+				        -- Tell server we started
+				        net.Start("impulseInvBeginEquip")
+				        net.WriteUInt(invid, 16)
+				        net.SendToServer()
 
-					if self.Item.UnEquipTime then
-						impulse.MakeWorkbar( self.Item.UnEquipTime, "Stowing...", nil, self.Item.EquipFreeze or false )
-					end
+				        impulse.MakeWorkbar(self.Item.UnEquipTime, "Stowing...", function()
+				            net.Start("impulseInvDoEquip")
+				            net.WriteUInt(invid, 16)
+				            net.WriteBool(false)
+				            net.SendToServer()
+				        end, self.Item.EquipFreeze or false)
+				    else
+				        net.Start("impulseInvDoEquip")
+				        net.WriteUInt(invid, 16)
+				        net.WriteBool(false)
+				        net.SendToServer()
+				    end
 				end)
 			end
 		end

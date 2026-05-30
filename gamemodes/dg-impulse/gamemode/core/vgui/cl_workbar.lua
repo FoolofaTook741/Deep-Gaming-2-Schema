@@ -32,6 +32,22 @@ function PANEL:Think()
 			endFunc()
 		end
 	end
+
+	if input.IsKeyDown(KEY_SPACE) then
+        self:Cancel()
+    end
+end
+
+function PANEL:Cancel()
+    if self.Cancelled then return end
+    self.Cancelled = true
+    impulse_ActiveWorkbar = false
+    gui.EnableScreenClicker(false)
+    if self.OnCancel then
+        self.OnCancel()
+    end
+
+    self:Remove()
 end
 
 local bgCol = impulse.Config.MainColour
