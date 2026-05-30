@@ -519,16 +519,16 @@ TEAM_CP = impulse.Teams.Define({
     }
 })
 
-RANK_I4   = 0
-RANK_I3   = 1
-RANK_I2   = 2
-RANK_I1   = 3
-RANK_OFC  = 4
-RANK_SQL  = 5
-RANK_DVL  = 6
-RANK_DCO  = 7
-RANK_VCMD = 8
-RANK_CMD  = 9
+RANK_I4   = 1
+RANK_I3   = 2
+RANK_I2   = 3
+RANK_I1   = 4
+RANK_OFC  = 5
+RANK_SQL  = 6
+RANK_DVL  = 7
+RANK_DCO  = 8
+RANK_VCMD = 9
+RANK_CMD  = 10
 
 impulse.SubmatsConfig = {
 	[TEAM_CP] = {
