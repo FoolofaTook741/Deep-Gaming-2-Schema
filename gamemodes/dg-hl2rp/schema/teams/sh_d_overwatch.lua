@@ -567,7 +567,7 @@ TEAM_OTA = impulse.Teams.Define({
 			name = "CGR",
 			description = "owg",
 			xp = 0,
-            whitelistLevel = 1
+            whitelistLevel = 1,
 			onBecome = function(ply, rank)
 				ApplyOTARank(ply, "CGR")
 			end
