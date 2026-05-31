@@ -55,7 +55,7 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = 6
 SWEP.Primary.DefaultClip = 6
 
-SWEP.Primary.ReloadSpeed = .65
+SWEP.Primary.ReloadSpeed = 0.65
 SWEP.ShellInsertDelay = 0.45
 
 SWEP.QuickDraw = true
