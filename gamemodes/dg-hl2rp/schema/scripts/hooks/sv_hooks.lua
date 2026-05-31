@@ -374,7 +374,7 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			dmginfo:ScaleDamage(0.6)
 			ply:EmitSound("player/bhit_helmet-1.wav")
 		elseif ply.HasConscriptArmor == true and hitgroup == HITGROUP_HEAD then
-			dmginfo:ScaleDamage(0.5)
+			dmginfo:ScaleDamage(0.55)
 			ply:EmitSound("player/bhit_helmet-1.wav")
 		elseif ply.HasTier1Vest == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) and ply:Team() != TEAM_CP then
 			dmginfo:ScaleDamage(0.70)
@@ -389,7 +389,7 @@ function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		elseif ply.HasEliteOTAVest == true and (hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
 			dmginfo:ScaleDamage(0.60)
 		elseif ply.HasConscriptArmor == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
-			dmginfo:ScaleDamage(0.50)
+			dmginfo:ScaleDamage(0.55)
 		elseif ply:Team() == TEAM_VORT and ply.HasVortArmor == true then
 			dmginfo:ScaleDamage(0.65)
 		elseif ply.winebuffed then

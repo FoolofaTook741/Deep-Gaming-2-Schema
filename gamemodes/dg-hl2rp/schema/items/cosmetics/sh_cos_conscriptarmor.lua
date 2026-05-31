@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "cos_conscriptarmor"
 ITEM.Name = "Concscript Armor"
-ITEM.Desc =  "A full suit of military armor that offers 50% head and body protection. It also provides immunity to gas and flash attacks. "
+ITEM.Desc =  "A full suit of military armor that offers 45% head and body protection. It also provides immunity to gas and flash attacks. "
 ITEM.Category = "Clothing"
 ITEM.Model = Model("models/willardnetworks/clothingitems_conscripts/torso_vest_3.mdl")
 ITEM.FOV = 50
