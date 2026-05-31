@@ -30,12 +30,21 @@ SWEP.ReloadSound = "sniper_military_slideback_1.wav"
 SWEP.EmptySound = "weapons/clipempty_pistol.wav"
 
 sound.Add({
-	name = "CUST.OSR.Single",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	level = SNDLVL_GUNFIRE,
-	pitch = {95, 105},
-	sound = {"weapons/osr2mr/fire.wav"}
+    name = "CUST.OSR.Single",
+    channel = CHAN_WEAPON,
+    volume = 1.0,
+    level = SNDLVL_GUNFIRE,
+    pitch = {95, 105},
+    sound = {"npc/sniper/sniper1.wav"}
+})
+
+sound.Add({
+    name = "CUST.OSR.Echo",
+    channel = CHAN_STATIC,
+    volume = 1.0,
+    level = SNDLVL_GUNFIRE,
+    pitch = {95, 105},
+    sound = {"npc/sniper/echo1.wav"}
 })
 
 SWEP.Primary.Sound = Sound("CUST.OSR.Single")
@@ -121,4 +130,10 @@ SWEP.Attachments = {
 local CopyViewModelOrigin = SWEP.ViewModelFOV
 function SWEP:PostDrawViewModel(viewmodel, player)
     self.ViewModelFOV = CopyViewModelOrigin + impulse.GetSetting("firstperson_fov")
+end
+
+function SWEP:ShootEffects()
+    self.BaseClass.ShootEffects(self)
+
+    self:EmitSound("CUST.OSR.Echo", 75, math.random(95, 105), 1.0, CHAN_STATIC)
 end
