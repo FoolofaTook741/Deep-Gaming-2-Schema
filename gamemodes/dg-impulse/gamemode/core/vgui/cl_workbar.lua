@@ -19,22 +19,22 @@ function PANEL:SetText(text)
 end
 
 function PANEL:Think()
-	if not self.EndTime then return end
-	local timeDist = self.EndTime - CurTime()
-	self.Progress = math.Clamp(((self.StartTime - CurTime()) / (self.StartTime - self.EndTime)), 0, 1)
+    if not self.EndTime then return end
 
-	if self.Progress == 1 then
-		impulse_ActiveWorkbar = false
-		self:Remove()
+    self.Progress = math.Clamp(((self.StartTime - CurTime()) / (self.StartTime - self.EndTime)), 0, 1)
 
-		local endFunc = self.OnEnd
-		if endFunc then
-			endFunc()
-		end
-	end
+    if self.Progress == 1 then
+        impulse_ActiveWorkbar = false
+        local endFunc = self.OnEnd
+        self:Remove()
+        if endFunc then endFunc() end
+        return
+    end
 
-	if input.IsKeyDown(KEY_SPACE) then
-        self:Cancel()
+    if not self.NoCancelOnSpace then
+        if input.IsKeyDown(KEY_SPACE) then
+            self:Cancel()
+        end
     end
 end
 

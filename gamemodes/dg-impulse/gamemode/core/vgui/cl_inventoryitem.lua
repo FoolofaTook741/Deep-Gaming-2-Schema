@@ -264,6 +264,7 @@ function PANEL:OnMousePressed(keycode)
 				end
 				if self.Item.UseWorkBarTime then
 					local invid = self.InvID
+					local useWorkBarSound = self.Item.UseWorkBarSound
 					gui.EnableScreenClicker(false)
 
 					if self.Item.UseWorkBarSound then
@@ -275,7 +276,7 @@ function PANEL:OnMousePressed(keycode)
 					    net.WriteUInt(invid, 16)
 					    net.SendToServer()
 					end, self.Item.UseWorkBarFreeze or false, function()
-					    if self.Item.UseWorkBarSound then
+					    if useWorkBarSound then
 					        surface.PlaySound("common/null.wav")
 					    end
 					end)
