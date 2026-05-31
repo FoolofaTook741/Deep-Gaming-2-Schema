@@ -40,11 +40,11 @@ sound.Add({
 
 SWEP.Primary.Sound = Sound("LS2.APF.Single")
 
-SWEP.Primary.Recoil = 0.9 -- base recoil value, SWEP.Spread mods can change this
+SWEP.Primary.Recoil = 0.8 -- base recoil value, SWEP.Spread mods can change this
 SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 2
 SWEP.Primary.Cone = 0.035
-SWEP.Primary.Delay = RPM(700)
+SWEP.Primary.Delay = RPM(750)
 SWEP.Primary.Tracer = "AR2Tracer"
 SWEP.UseIronsightsRecoil = false
 SWEP.SpeedReduction = 170
@@ -116,22 +116,24 @@ sound.Add({
 SWEP.IsRevving         = false
 SWEP.CanFireAfterRev   = false
 SWEP.RevStartTime      = 0
-SWEP.RevUpDuration     = 1.7
+SWEP.RevUpDuration     = 1.2
 SWEP.RevDownDuration   = 0.5
 SWEP.SpinUpSound       = "suppressor/wpn_combine_mg_wind_up_01.wav"
 SWEP.SpinDownSound     = "suppressor/wpn_combine_mg_wind_down_01.wav"
 SWEP.LoopFireSound     = "suppressor/suppressor_fire_loop.wav"
 
 function SWEP:Think()
-	BaseClass.Think(self)
+    BaseClass.Think(self)
 
-    local owner     = self.Owner
-    local holding   = owner:KeyDown(IN_ATTACK)
-    local canShoot  = holding and self:CanPrimaryAttack()
+    local owner       = self.Owner
+    local holding     = owner:KeyDown(IN_ATTACK)
+    local isSprinting = owner:KeyDown(IN_SPEED) and owner:KeyDown(IN_FORWARD)
+    local canShoot    = holding and self:CanPrimaryAttack()
 
-    if canShoot and not self.IsRevving then
-        self.IsRevving       = true
-        self.RevStartTime    = CurTime()
+    if canShoot and not self.IsRevving and not isSprinting and (self.RevCooldown or 0) < CurTime() then
+        self.IsRevving     = true
+        self.IsWindingDown = false
+        self.RevStartTime  = CurTime()
         self:EmitSound(self.SpinUpSound)
     end
 
@@ -141,9 +143,13 @@ function SWEP:Think()
         end
     end
 
-    if not holding and self.IsRevving then
-        self.IsRevving         = false
-        self.CanFireAfterRev   = false
+    if (not holding or isSprinting) and self.IsRevving and not self.IsWindingDown then
+        self.IsWindingDown   = true
+        self.IsRevving       = false
+        self.CanFireAfterRev = false
+        self.PlayingLoop     = false
+        self.RevCooldown     = CurTime() + self.RevDownDuration
+        self:StopSound(self.SpinUpSound)
         self:EmitSound(self.SpinDownSound)
         self:StopSound(self.LoopFireSound)
     end

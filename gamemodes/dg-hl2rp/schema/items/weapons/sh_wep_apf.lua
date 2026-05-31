@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "wep_apf"
 ITEM.Name = "O.S.I.A.E.R."
-ITEM.Desc =  "The Overwatch Standard Issue Antimatter Enforcement Regulator is a powerful weapon weilded by members of the Antibody Protection Force. [Dev Note: Thanks Thrawn.]"
+ITEM.Desc =  "The Overwatch Standard Issue Antimatter Enforcement Regulator is a powerful weapon weilded by members of the Antibody Protection Force."
 ITEM.Category = "Weapons"
 ITEM.Model = Model("models/weapons/suppressor/w_suppressor.mdl")
 ITEM.FOV = 46.239255014327
