@@ -94,10 +94,14 @@ function FPP.entGetTouchReason(ent, touchType)
     local reason = reasons[reasonNr]
     local owner = ent:CPPIGetOwner()
 
-    if reasonNr == 1 then -- convert owner to the actual player
-        return not isnumber(owner) and IsValid(owner) and owner:Nick() or "Unknown player"
+    if reasonNr == 1 then
+        local dbID = ent:GetNW2Int("FPP_OwnerDBID", 0)
+        local faction = ent:GetNW2String("FPP_OwnerFaction", "CIV")
+        return dbID ~= 0 and tostring(dbID) .. " [" .. faction .. "]" or "Unknown player"
     elseif reasonNr == 6 then
-        return "Buddy (" .. (IsValid(owner) and owner:Nick() or "Unknown player") .. ")"
+        local dbID = ent:GetNW2Int("FPP_OwnerDBID", 0)
+        local faction = ent:GetNW2String("FPP_OwnerFaction", "CIV")
+        return "Buddy (" .. (dbID ~= 0 and tostring(dbID) .. " [" .. faction .. "]" or "Unknown player") .. ")"
     end
 
     return reason

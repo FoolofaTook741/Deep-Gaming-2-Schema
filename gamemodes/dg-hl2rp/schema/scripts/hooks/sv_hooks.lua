@@ -792,3 +792,14 @@ hook.Add("InitPostEntity", "LVSWarmup", function()  --hook to initialize LVS on 
         end
     end)
 end)
+
+hook.Add("OnPlayerChangedTeam", "FPP_UpdateFaction", function(ply, oldTeam, newTeam)
+    local faction = (newTeam == TEAM_CP or newTeam == TEAM_OTA or newTeam == TEAM_CA) and "CMB" or "CIV"
+    local steamID = ply:SteamID()
+
+    for _, ent in ipairs(ents.GetAll()) do
+        if ent.FPPOwnerID == steamID then
+            ent:SetNW2String("FPP_OwnerFaction", faction)
+        end
+    end
+end)

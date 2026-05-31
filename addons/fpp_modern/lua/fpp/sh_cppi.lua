@@ -41,6 +41,14 @@ end
 if SERVER then
     function ENTITY:CPPISetOwner(ply)
         if ply == self.FPPOwner then return end
+        
+        if IsValid(ply) and ply.impulseID then
+            self:SetNW2Int("FPP_OwnerDBID", ply.impulseID)
+            self:SetNW2String("FPP_OwnerFaction", ply:IsCP() and "CMB" or "CIV")
+        else
+            self:SetNW2Int("FPP_OwnerDBID", 0)
+            self:SetNW2String("FPP_OwnerFaction", "CIV")
+        end
 
         assert(ply == nil or IsEntity(ply), "The owner of an entity must be set to either nil, NULL or a valid entity.")
 

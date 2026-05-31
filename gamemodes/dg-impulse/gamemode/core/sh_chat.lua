@@ -816,6 +816,46 @@ local checkSpeedCommand = {
 
 impulse.RegisterChatCommand("/checkspeed", checkSpeedCommand)
 
+impulse.RegisterChatCommand("/whois", {
+    description = "Returns player information by their database ID.",
+    adminOnly = true,
+    requiresArg = true,
+    onRun = function(ply, args, rawText)
+        local id = tonumber(args[1])
+
+        if not id then
+            ply:Notify("Usage: /whois <id>")
+            return
+        end
+
+        local query = mysql:Select("impulse_players")
+        query:Select("rpname")
+        query:Select("steamid")
+        query:Where("id", id)
+        query:Callback(function(result)
+            if not IsValid(ply) then return end
+
+            if not result or #result == 0 then
+                ply:Notify("No player found with ID " .. id .. ".")
+                return
+            end
+
+            local data = result[1]
+            local steamName = "Offline"
+
+            for _, p in ipairs(player.GetAll()) do
+                if p:SteamID() == data.steamid then
+                    steamName = p:SteamName()
+                    break
+                end
+            end
+			ply:SendChatClassMessage(13, "RP Name: " .. (data.rpname or "N/A") .. " | Steam Name: " .. steamName, ply)
+			ply:SendChatClassMessage(13, "SteamID: " .. (data.steamid or "N/A"), ply)
+        end)
+        query:Execute()
+    end
+})
+
 if CLIENT then
 	local infoCol = Color(135, 206, 250)
 	local oocCol = color_white
