@@ -47,6 +47,10 @@ sound.Add({
 	pitch = 100
 })
 
+function SWEP:Reload()
+    self:DefaultReload(ACT_VM_RELOAD)
+end
+
 function SWEP:ProjectileFire()
 	local pos = self:GetPos()
 	local owner = self:GetOwner()
@@ -70,4 +74,23 @@ SWEP.ViewModelString = "models/v92/weapons/bf3/m320/combo.mdl"
 local CopyViewModelOrigin = SWEP.ViewModelFOV
 function SWEP:PostDrawViewModel(viewmodel, player)
     self.ViewModelFOV = CopyViewModelOrigin + impulse.GetSetting("firstperson_fov")
+end
+
+function SWEP:PrimaryAttack()
+    if self:Clip1() < 1 then
+        self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
+        return
+    end
+
+    self:ThrowAttack()
+    self:ViewPunch()
+
+    if self.Primary.Sound ~= "" then
+        self:EmitSound(self.Primary.Sound)
+    end
+
+    self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
+    self:SendWeaponAnim(ACT_VM_THROW)
+    self:GetOwner():SetAnimation(PLAYER_ATTACK1)
+    self:SendWeaponAnim(ACT_VM_DRAW)
 end
