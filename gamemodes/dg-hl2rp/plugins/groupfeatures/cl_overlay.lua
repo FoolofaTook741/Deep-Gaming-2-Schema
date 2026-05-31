@@ -16,7 +16,7 @@ local GRP_OVERLAY_COLS = {
 }
 
 local GRP_OVERLAY_ICONS = {
-    Material("vgui/killicons/iw4_choppergunner"),
+    Material("icons/caution-triangle.png"),
 }
 
 impulse.GroupWaypoints = impulse.GroupWaypoints or {}
@@ -29,10 +29,18 @@ local function DrawGroupWaypoints()
 
         if not waypointData.nextUpdate or waypointData.nextUpdate < CurTime() then
             local plyPos = LocalPlayer():GetPos()
-
-            waypointData.dist = (waypointData.pos:Distance(plyPos) / 39.3701) -- 39 inches in meter
+            waypointData.dist = (waypointData.pos:Distance(plyPos) / 39.3701)
             waypointData.nextUpdate = CurTime() + 0.5
         end
+
+        local eyeForward = LocalPlayer():EyeAngles():Forward()
+        local toWaypoint = (waypointData.pos - LocalPlayer():EyePos()):GetNormalized()
+        local dot = math.Clamp(eyeForward:Dot(toWaypoint), 0, 1)
+        local scale = Lerp(dot, 3.0, 0.15)
+
+        local iconSize = 32 * scale
+        local iconOffset = iconSize / 2
+
         if not waypointData.mat then
             surface.SetMaterial(Material("impulse/hl2rp/overlay/move"))
         else
@@ -43,17 +51,17 @@ local function DrawGroupWaypoints()
         else   
             surface.SetDrawColor(waypointData.colour)
         end
-        surface.DrawTexturedRect(pos.x - 16, pos.y, 32, 32)
-        draw.SimpleText("[ "..waypointData.text.." ]", "BudgetLabel", pos.x, pos.y + 30, waypointData.textcolour or color_white, TEXT_ALIGN_CENTER)
+        surface.DrawTexturedRect(pos.x - iconOffset, pos.y, iconSize, iconSize)
+
+        local textY = pos.y + iconSize - 2
+        draw.SimpleText("[ "..waypointData.text.." ]", "BudgetLabel", pos.x, textY, waypointData.textcolour or color_white, TEXT_ALIGN_CENTER)
 
         if waypointData.name then
             local prefix = waypointData.prefix or "MEMBER"
-            local text = waypointData.name
-
-            draw.SimpleText("[ "..prefix..": "..text.." ]", "BudgetLabel", pos.x, pos.y + 42, color_white, TEXT_ALIGN_CENTER)
-            draw.SimpleText("[ DIST: "..math.Round(waypointData.dist).."m ]", "BudgetLabel", pos.x, pos.y + 54, color_white, TEXT_ALIGN_CENTER)
+            draw.SimpleText("[ "..prefix..": "..waypointData.name.." ]", "BudgetLabel", pos.x, textY + 12, color_white, TEXT_ALIGN_CENTER)
+            draw.SimpleText("[ DIST: "..math.Round(waypointData.dist).."m ]", "BudgetLabel", pos.x, textY + 24, color_white, TEXT_ALIGN_CENTER)
         else
-            draw.SimpleText("[ DIST: "..math.Round(waypointData.dist).."m ]", "BudgetLabel", pos.x, pos.y + 42, color_white, TEXT_ALIGN_CENTER)
+            draw.SimpleText("[ DIST: "..math.Round(waypointData.dist).."m ]", "BudgetLabel", pos.x, textY + 12, color_white, TEXT_ALIGN_CENTER)
         end
 
         if waypointData.endtime and waypointData.endtime < CurTime() then
