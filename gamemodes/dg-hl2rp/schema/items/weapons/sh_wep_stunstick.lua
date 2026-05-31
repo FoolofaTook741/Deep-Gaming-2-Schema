@@ -40,7 +40,7 @@ local BATON_DRAWN_SPEED = impulse.Config.JogSpeed * 1.1
 
 if SERVER then
 	hook.Add("PlayerSwitchWeapon", "MPF_StunstickSpeedBonus", function(ply, oldWeapon, newWeapon)
-		if not IsValid(ply) or ply:Team() ~= TEAM_CP then return end
+		if not IsValid(ply) or ply:Team() ~= TEAM_CP or ply.IsAugmented then return end
 
 		local newClass = IsValid(newWeapon) and newWeapon:GetClass() or ""
 		local oldClass = IsValid(oldWeapon) and oldWeapon:GetClass() or ""
