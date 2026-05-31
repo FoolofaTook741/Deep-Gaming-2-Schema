@@ -45,7 +45,7 @@ sound.Add({
 	volume = 1.0,
 	level = SNDLVL_GUNFIRE,
 	pitch = {95, 105},
-	sound = {"weapons/projectmmod_ar2/fire1.wav"}
+	sound = {"weapons/projectmmod_ar2/fire1.ogg"}
 })
 
 sound.Add({
@@ -54,7 +54,7 @@ sound.Add({
 	volume = 1.0,
 	level = SNDLVL_GUNFIRE,
 	pitch = {95, 105},
-	sound = {"weapons/ar2/fire1.wav"}
+	sound = {"weapons/ar2/fire1.ogg"}
 })
 
 sound.Add({
@@ -63,7 +63,7 @@ sound.Add({
 	volume = 1.0,
 	level = SNDLVL_GUNFIRE,
 	pitch = {90, 105},
-	sound = {"weapons/projectmmod_ar3/ar3_fire1.wav"}
+	sound = {"weapons/projectmmod_ar3/ar3_fire1.ogg"}
 })
 
 SWEP.Primary.Sound = Sound("LS2.AR2.Single")
