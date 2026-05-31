@@ -14,7 +14,7 @@ local setHealthCommand = {
             return
         end
         local targ = impulse.FindPlayer(arg[1])
-        local hp = arg[2]
+        local hp = tonumber(arg[2])
 
         if not hp or not tonumber(hp) then
             return
@@ -27,6 +27,7 @@ local setHealthCommand = {
 
         if targ and IsValid(targ) then
             targ:SetHealth(hp)
+            targ:SetSyncVar(SYNC_HEALTH, hp, true)
             ply:Notify("You have set "..targ:Nick().."'s health to "..hp..".")
             if ply == targ and targ:SteamID() ~= "STEAM_0:0:29204032" then
                 for v,k in pairs(player.GetAll()) do

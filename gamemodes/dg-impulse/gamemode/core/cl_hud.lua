@@ -165,7 +165,7 @@ end)
 local function DrawOverheadInfo(target, alpha)
 	local lp = LocalPlayer()
 	local pos = target:EyePos()
-	local h = target:Health()
+	local h = target:GetSyncVar(SYNC_HEALTH, 100)
 	local healthCol
 
 	if h < 10 then healthCol = overheadHealthCols[1]
@@ -223,7 +223,7 @@ local function DrawOverheadInfo(target, alpha)
 		elseif h < 100 and not target:IsCP() and lp:Team() == TEAM_VORT and (VORTESSENCE_EXPIRE and VORTESSENCE_EXPIRE > CurTime()) then
 			draw.DrawText(tostring(h) .. " HP", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, healthCol, TEXT_ALIGN_CENTER)
 		elseif h < 80 then
-			local text, color = target:GetKnownHealth()
+			local text, color = target:GetKnownHealth(h)
 			draw.DrawText(text, "Oswald18", pos.x-25, pos.y + 15, color)
 		end
 	else
@@ -245,7 +245,7 @@ local function DrawOverheadInfo(target, alpha)
 		elseif h < 100 and not target:IsCP() and lp:Team() == TEAM_VORT and (VORTESSENCE_EXPIRE and VORTESSENCE_EXPIRE > CurTime()) then
 			draw.DrawText(tostring(h) .. " HP", "Impulse-Elements16-Shadow", pos.x, pos.y + 15, healthCol, TEXT_ALIGN_CENTER)
 		elseif h < 80 then
-			local text, color = target:GetKnownHealth()
+			local text, color = target:GetKnownHealth(h)
 			draw.DrawText(text, "Impulse-Elements16-Shadow", pos.x, pos.y + 15, color, TEXT_ALIGN_CENTER)
 		end
 	end
@@ -523,19 +523,19 @@ local function DrawButtonInfo(target, alpha)
 	draw.DrawText(buttonData.desc, HIGH_RES("Impulse-Elements18-Shadow", "Impulse-Elements20A-Shadow"), pos.x, pos.y + 20, ColorAlpha(hudCol, alpha), 1)
 end
 
-function meta:GetKnownHealth()
-	local h = self.Health(self)
-	if h < 10 then
-		return "(Extremely Injured)", Color(255, 0, 0)
-	elseif h < 25 then
-		return "(Heavily Injured)", Color(255, 50, 0)
-	elseif h < 40 then
-		return "(Injured)", Color(255, 100, 0)
-	elseif h < 60 then
-		return "(Hurt)", Color(255, 150, 0)
-	elseif h < 80 then
-		return "(Bruised)", Color(255, 175, 0)
-	end
+function meta:GetKnownHealth(h)
+    h = h or self:GetSyncVar(SYNC_HEALTH, 100)
+    if h < 10 then
+        return "(Extremely Injured)", Color(255, 0, 0)
+    elseif h < 25 then
+        return "(Heavily Injured)", Color(255, 50, 0)
+    elseif h < 40 then
+        return "(Injured)", Color(255, 100, 0)
+    elseif h < 60 then
+        return "(Hurt)", Color(255, 150, 0)
+    elseif h < 80 then
+        return "(Bruised)", Color(255, 175, 0)
+    end
 end
 
 local function DrawCrosshair(x, y)
