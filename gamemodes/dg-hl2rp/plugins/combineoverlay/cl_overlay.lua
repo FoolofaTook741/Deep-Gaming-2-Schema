@@ -414,7 +414,7 @@ local function DrawCombineSquad()
 
     local squadName = "SQUAD"
     if lp:Team() == TEAM_CP then
-        squadName = "PATROL TEAM"
+        squadName = "PROTECTION TEAM"
     end
 
     surface.DrawText(squadName.." "..squadId..":")
