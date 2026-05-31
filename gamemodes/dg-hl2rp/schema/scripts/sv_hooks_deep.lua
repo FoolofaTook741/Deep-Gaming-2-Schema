@@ -2173,6 +2173,7 @@ local allowedCommands = {
     ["/rs"] = true,
     ["/rcmd"] = true,
     ["/dropmoney"] = true,
+    ["/roll"] = true,
 }
 
 local allowedPrefixes = {
