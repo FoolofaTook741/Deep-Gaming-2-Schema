@@ -14,3 +14,16 @@ function ENT:Draw()
     --AddWorldTip( self:EntIndex(), "BATHTUB TIME!", 0.5, self:GetPos(), self  ) -- Add an example tip.
 end
  
+ net.Receive("impulseMBBeginUse", function()
+    local ent = net.ReadEntity()
+    if not IsValid(ent) then return end
+
+    impulse.MakeWorkbar(6, "Entering metabase..", function()
+        net.Start("impulseMBCompleteUse")
+        net.WriteEntity(ent)
+        net.SendToServer()
+    end, false, function()
+        net.Start("impulseMBCancelUse")
+        net.SendToServer()
+    end)
+end)

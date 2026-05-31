@@ -11,3 +11,9 @@ ENT.Spawnable = true
 
 ENT.HUDName = "Secure Door"
 ENT.HUDDesc = "A special secure door that disallows Combine from entering."
+
+if SERVER then
+    util.AddNetworkString("impulseMBBeginUse")
+    util.AddNetworkString("impulseMBCompleteUse")
+    util.AddNetworkString("impulseMBCancelUse")
+end
