@@ -365,6 +365,7 @@ function PANEL:DoCraft(item, mix)
 
 	    if IsValid(self.craftBar) then self.craftBar:Remove() end
 	    if IsValid(self.model) then self.model:Remove() end
+	    if IsValid(self.cancelLabel) then self.cancelLabel:Remove() end  -- add this
 
 	    net.Start("impulseCancelCraft")
 	    net.SendToServer()
