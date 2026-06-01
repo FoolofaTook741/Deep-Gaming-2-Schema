@@ -18,7 +18,7 @@ end
 
 function ENT:Use( activator, caller )
 	if activator:IsCP() or activator:Team() == TEAM_ZOMBIE then return end
-	if CurTime() > self.NextTP or CurTime() > activator.NextTeleport then
+	if CurTime() > self.NextTP or CurTime() > (activator.NextTeleport or 0) then
 		activator:SetPos(impulse.Config.MBExit)
 		self.NextTP = CurTime() + 1.5
 		activator.NextTeleport = CurTime() + 10
