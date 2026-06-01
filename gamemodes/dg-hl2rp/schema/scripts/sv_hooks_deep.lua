@@ -1145,6 +1145,7 @@ net.Receive("DeepTerminalWhitelistChange", function(len, ply)
                 targ:Notify("You have been " .. stringy .. " by " .. ply:Name())
 		    end
         end)
+        QueueDiscordSync(steamid)
         local newrank = (ranktable[level + 1]) or "Invalid Rank"
         if promotion == true then
             local embeds = {{

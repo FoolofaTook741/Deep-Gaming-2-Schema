@@ -49,6 +49,26 @@ function SpawnCluster(num)
     spore:Spawn()
 end
 
+function QueueDiscordSync(steamid)
+    if not steamid then return end
+
+    http.Post(
+        "https://hl2rp.deepgaming2.com/discord/api/queue_sync.php",
+        {
+            steamid = steamid
+        },
+        function(body)
+            print("[DISCORD SYNC] Queued:", steamid)
+        end,
+        function(err)
+            print("[DISCORD SYNC] Failed:", steamid, err)
+        end,
+        {
+            ["Authorization"] = "Bearer b4dcdb8fafcffae217841b84dc4b380404bbb511afd1c20a5c2c09ca09de5eef"
+        }
+    )
+end
+
 --[[
 function SpawnTrash(num)
     local pos = impulse.Config.TrashSpawns[num]

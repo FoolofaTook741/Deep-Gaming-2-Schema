@@ -592,6 +592,8 @@ local swordWhitelistCommand = {
 						ply:Notify(steamid.." has been added to the SWORD whitelist.")
 					end
 
+					QueueDiscordSync(steamid)
+
 					local targ = player.GetBySteamID(steamid)
 
 					if targ and IsValid(targ) then
@@ -677,6 +679,7 @@ local dispatchwhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -760,6 +763,7 @@ local ghostWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -848,6 +852,7 @@ local paybackWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -934,6 +939,7 @@ local apfWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1020,6 +1026,7 @@ local fistWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1106,6 +1113,7 @@ local scoutWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1223,6 +1231,7 @@ local cwWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1362,6 +1371,7 @@ local researchWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1485,6 +1495,9 @@ local cpWhitelistCommand = {
                     end
 					local rankName = getRankNameByWhitelistLevel(impulse.Teams.Data[TEAM_CP], level) or "Unknown"
                     local targ = player.GetBySteamID(steamid)
+
+					QueueDiscordSync(steamid)
+
                     if targ and IsValid(targ) then
                         targ:SetupWhitelists()
                         targ:Notify("Your MPF faction rank has been edited to " .. rankName .. " by supervisor " .. ply:SteamName() .. ".")
@@ -1574,6 +1587,9 @@ local otaWhitelistCommand = {
                     end
 					local rankName = getRankNameByWhitelistLevel(impulse.Teams.Data[TEAM_OTA], level)
                     local targ = player.GetBySteamID(steamid)
+
+					QueueDiscordSync(steamid)
+
                     if targ and IsValid(targ) then
                         targ:SetupWhitelists()
                         targ:Notify("Your CTA faction rank has been edited to " .. rankName .. " by supervisor " .. ply:SteamName() .. ".")
@@ -1694,6 +1710,8 @@ local caWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
+
+					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -2946,6 +2964,9 @@ local cpMassDemoteCommand = {
                 updateQuery:Execute()
 
                 local targ = player.GetBySteamID(steamid)
+
+				QueueDiscordSync(steamid)
+
                 if targ and IsValid(targ) then
                     targ:SetupWhitelists()
                     targ:Notify("Your MPF faction rank has been automatically adjusted to i3 by a mass demotion command.")

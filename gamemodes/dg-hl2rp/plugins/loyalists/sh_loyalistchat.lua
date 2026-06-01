@@ -91,6 +91,8 @@ local loyalistLevelCommand = {
 						end
 					end
 
+					QueueDiscordSync(steamid)
+
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
 						if level < 10 && level != 0 then
