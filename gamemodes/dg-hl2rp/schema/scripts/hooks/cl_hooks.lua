@@ -375,15 +375,18 @@ net.Receive("ixSetHairColor", function()
         --print("[DEBUG] Color is NIL")
         return
     end
-
+--[[
     print(string.format(
-        --"[DEBUG] Payload: sid64=%s colour=R=%d G=%d B=%d A=%d",
+        "[DEBUG] Payload: sid64=%s colour=R=%d G=%d B=%d A=%d",
         sid64,
         color.r or -1,
         color.g or -1,
         color.b or -1,
         color.a or -1
     ))
+
+--]]
+
 
     local timerName = "ixSetHairColor_apply_" .. sid64
     timer.Remove(timerName)
