@@ -762,7 +762,7 @@ impulse.Voice.Register("metrocop", "SOCIOCIDE", "Sociocide.", "npc/metropolice/v
 impulse.Voice.Register("metrocop", "SOCIOSTABLE", "We are socio-stable at this location.", "npc/metropolice/vo/wearesociostablethislocation.wav")
 impulse.Voice.Register("metrocop", "SPEAR", "Spear.", "npc/combine_soldier/vo/spear.wav")
 impulse.Voice.Register("metrocop", "STAB", "Stab.", "npc/combine_soldier/vo/stab.wav")
-impulse.Voice.Register("metrocop", "STANDING BY", "Standing by.", "npc/combine_soldier/vo/standingby.wav")
+impulse.Voice.Register("metrocop", "STANDING BY", "Standing by.", "npc/combine_soldier/vo/standingby].wav")
 impulse.Voice.Register("metrocop", "STAR", "Star.", "npc/combine_soldier/vo/star.wav")
 impulse.Voice.Register("metrocop", "STATIONBLOCK", "Stationblock.", "npc/metropolice/vo/stationblock.wav")
 impulse.Voice.Register("metrocop", "STAY ALERT", "Stay alert.", "npc/combine_soldier/vo/stayalert.wav")

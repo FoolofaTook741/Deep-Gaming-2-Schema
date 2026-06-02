@@ -11,7 +11,7 @@ local randomSounds = {
 	"npc/overwatch/radiovoice/investigateandreport.wav",
 	"npc/overwatch/radiovoice/leadersreportratios.wav",
 	"npc/overwatch/radiovoice/officerclosingonsuspect.wav",
-	"npc/overwatch/radiovoice/politistabilizationmarginal.wav",
+	"npc/overwatch/radiovoice/politistablizationmarginal.wav",
 	"npc/overwatch/radiovoice/prepareforfinalsentencing.wav",
 	"npc/overwatch/radiovoice/preparetoreceiveverdict.wav",
 	"npc/overwatch/radiovoice/recalibratesocioscan.wav",
