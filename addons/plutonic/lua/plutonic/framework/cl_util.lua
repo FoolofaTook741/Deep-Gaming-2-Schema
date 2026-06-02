@@ -200,7 +200,7 @@ concommand.Add("plutonic_benchmark_print", Benchmark)
 local flipFloppa = 0
 Plutonic.Sounds = {
     ["Plutonic.Sprint"] = {"weapons/movement/weapon_movement_sprint1.wav", "weapons/movement/weapon_movement_sprint2.wav", "weapons/movement/weapon_movement_sprint3.wav", "weapons/movement/weapon_movement_sprint4.wav", "weapons/movement/weapon_movement_sprint5.wav", "weapons/movement/weapon_movement_sprint6.wav", "weapons/movement/weapon_movement_sprint7.wav", "weapons/movement/weapon_movement_sprint8.wav", "weapons/movement/weapon_movement_sprint9.wav"},
-    ["Plutonic.Walk"] = {"weapons/movement/weapon_movement_walk1.wav", "weapons/movement/weapon_movement_walk2.wav", "weapons/movement/weapon_movement_walk3.wav", "weapons/movement/weapon_movement_walk4.wav", "weapons/movement/weapon_movement_walk5.wav", "weapons/movement/weapon_movement_walk6.wav", "weapons/movement/weapon_movement_walk7.wav", "weapons/movement/weapon_movement_walk8.wav", "weapons/movement/weapon_movement_walk9.wav"}
+    ["Plutonic.Walk"] = {"weapons/movement/weapon_movement_walk1.wav", "weapons/movement/weapon_movement_walk2.wav", "weapons/movement/weapon_movement_walk3.wav", "weapons/movement/weapon_movement_walk4.wav", "weapons/movement/weapon_movement_walk5.wav", "weapons/movement/weapon_movement_walk6.wav", "weapons/movement/weapon_movement_walk8.wav", "weapons/movement/weapon_movement_walk9.wav"}
 }
 
 Plutonic.Hooks.Add(
