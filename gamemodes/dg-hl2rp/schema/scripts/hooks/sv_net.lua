@@ -483,8 +483,8 @@ net.Receive("impulseHL2RPRankBecome", function(len, ply)
 		
 		if ply:Team() == TEAM_CP and ply:GetTeamClass() != CLASS_DISPATCH and ply:GetTeamClass() != CLASS_SWORD then
 			ply:SetSubMaterial(2, nil)
-			print(div)
-			print(rank)
+			--print(div)
+			--print(rank)
 			ply:SetSubMaterial(2, impulse.SubmatsConfig[ply:Team()][div][rank])
 		end
 	end

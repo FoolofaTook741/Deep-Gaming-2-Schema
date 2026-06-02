@@ -34,7 +34,7 @@ if game.GetMap() == "rp_nightfall_c20_vdeep_v2" then
 						end
 					end
 					timer.Create("ozgatecooldown", 30, 1, function() timer.Remove("ozgatecooldown") end)
-					print(buttons)
+					--print(buttons)
 					ply:Notify("You have opened the outlands gate.")
 				end
 			else
@@ -69,7 +69,7 @@ if game.GetMap() == "rp_nightfall_c20_vdeep_v2" then
 						end
 					end
 					timer.Create("ozbasecooldown", 30, 1, function() timer.Remove("ozbasecooldown") end)
-					print(buttons)
+					--print(buttons)
 					ply:Notify("You have opened the outlands base door.")
 				end
 			else
