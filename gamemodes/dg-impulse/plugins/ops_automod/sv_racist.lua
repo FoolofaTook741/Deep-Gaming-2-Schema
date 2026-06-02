@@ -31,8 +31,16 @@ local slurs = {
     "UCz7lYPf2xyB8IG6Tve7hbzw",
     "RfVHapVJ_vg",
     "PQ2-nRbZVdk",
-    "aLkHm0xkspQ"
-}
+    "aLkHm0xkspQ",
+    "rape",
+    "r@pe",
+    "rap3",
+    "r@p3",
+    "molest",
+    "m0lest",
+    "mol3st",
+    "m0l3st",
+    }
 
 local replacements = {
     ["¡"] = "i",
