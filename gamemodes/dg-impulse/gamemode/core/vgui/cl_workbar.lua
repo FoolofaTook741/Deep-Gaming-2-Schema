@@ -53,6 +53,7 @@ end
 local bgCol = impulse.Config.MainColour
 local outlineCol = Color(50, 50, 50, 255)
 local bodyCol = Color(30, 30, 30, 100)
+local cancelTextCol = Color(210, 210, 210, 150)
 function PANEL:Paint(w, h)
 	impulse.blur(self, 10, 20, 255)
 	surface.SetDrawColor(bodyCol)
@@ -65,6 +66,10 @@ function PANEL:Paint(w, h)
 	surface.DrawOutlinedRect(0, 0, w, h)
 
 	draw.SimpleText(self.Text, "Impulse-Elements20-Shadow", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    if not self.NoCancelOnSpace then
+        draw.SimpleText("[SPACE] Cancel","Impulse-Elements16",w - 12,h / 2,cancelTextCol,TEXT_ALIGN_RIGHT,TEXT_ALIGN_CENTER)
+    end
 end
 
 vgui.Register("impulseWorkbar", PANEL, "DPanel")
