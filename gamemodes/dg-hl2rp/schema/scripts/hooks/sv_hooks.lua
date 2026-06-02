@@ -224,7 +224,7 @@ function SCHEMA:PlayerDisconnected(ply)
 end
 
 function SCHEMA:CanPlayerChangeTeam(ply, newTeam)
-	print(newTeam)
+	--print(newTeam)
 
 	local data = ply.impulseData
 	local curTime = os.time()
