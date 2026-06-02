@@ -171,7 +171,7 @@ TEAM_OTA = impulse.Teams.Define({
 	blockNameChange = true,
     customCheck = function(ply, teamID)
         local hasOTA = ply:HasTeamWhitelist("TEAM_OTA", 1)
-        local cpRank = ply:HasTeamWhitelist("TEAM_CP", 3)
+        local cpRank = ply:HasTeamWhitelist("TEAM_CP", 1)
 
         if hasOTA or cpRank then
             return true
