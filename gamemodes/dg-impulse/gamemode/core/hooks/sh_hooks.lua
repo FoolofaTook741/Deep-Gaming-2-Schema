@@ -37,27 +37,45 @@ end
 
 function GM:Move(ply, mvData)
 	-- alt walk thing based on nutscripts
-	local broken = ply:HasBrokenLegs()
-	local arrested = ply:IsArrested()
-	if ply:GetMoveType() == MOVETYPE_WALK and ((broken and not arrested) or mvData:KeyDown(IN_WALK)) then		
-		local speed = ply:GetWalkSpeed()
-		local forwardRatio = 0
-		local sideRatio = 0
-		local ratio = impulse.Config.SlowWalkRatio
+    if ply:GetMoveType() ~= MOVETYPE_WALK then
+        return
+    end
 
-		if (mvData:KeyDown(IN_FORWARD)) then
-			forwardRatio = ratio
-		elseif (mvData:KeyDown(IN_BACK)) then
-			forwardRatio = -ratio
-		end
+    local isWalking = mvData:KeyDown(IN_WALK)
+    local broken = false
+    local arrested = false
 
-		if (mvData:KeyDown(IN_MOVELEFT)) then
-			sideRatio = -ratio
-		elseif (mvData:KeyDown(IN_MOVERIGHT)) then
-			sideRatio = ratio
-		end
+    if not isWalking then
+        broken = ply:HasBrokenLegs()
 
-		mvData:SetForwardSpeed(forwardRatio * speed)
-		mvData:SetSideSpeed(sideRatio * speed)
-	end
+        if not broken then
+            return
+        end
+
+        arrested = ply:IsArrested()
+
+        if arrested then
+            return
+        end
+    end
+
+    local speed = ply:GetWalkSpeed()
+    local forwardRatio = 0
+    local sideRatio = 0
+    local ratio = impulse.Config.SlowWalkRatio
+
+    if mvData:KeyDown(IN_FORWARD) then
+        forwardRatio = ratio
+    elseif mvData:KeyDown(IN_BACK) then
+        forwardRatio = -ratio
+    end
+
+    if mvData:KeyDown(IN_MOVELEFT) then
+        sideRatio = -ratio
+    elseif mvData:KeyDown(IN_MOVERIGHT) then
+        sideRatio = ratio
+    end
+
+    mvData:SetForwardSpeed(forwardRatio * speed)
+    mvData:SetSideSpeed(sideRatio * speed)
 end

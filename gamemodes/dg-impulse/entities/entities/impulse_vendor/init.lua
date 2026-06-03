@@ -75,6 +75,9 @@ function ENT:SpawnFunction(ply, trace, class)
 end
 
 function ENT:Use(activator, caller)
+    if not self.Vendor then
+        return
+    end
     if (activator.nextVendorUse or 0) > CurTime() then return end
     activator.nextVendorUse = CurTime() + 1
 
@@ -107,6 +110,13 @@ end
 
 function ENT:Think()
     if self.Vendor and self.Vendor.Think then
-        return self.Vendor.Think(self)
+        local result = self.Vendor.Think(self)
+
+        if result == true then
+            return true
+        end
     end
+
+    self:NextThink(CurTime() + 1)
+    return true
 end
