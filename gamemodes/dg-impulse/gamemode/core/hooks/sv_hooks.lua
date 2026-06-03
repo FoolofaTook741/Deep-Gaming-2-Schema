@@ -1657,10 +1657,10 @@ function GM:PlayerShouldTakeDamage(ply, attacker)
 
 	if attacker and IsValid(attacker) and attacker:IsPlayer() and attacker != Entity(0) and attacker != ply then
 		if (ply.NextStorage or 0) < CurTime() then
-			ply.NextStorage = CurTime() + 300
+			ply.NextStorage = CurTime() + 120
 		end
 
-		attacker.NextStorage = CurTime() + 300
+		attacker.NextStorage = CurTime() + 120
 	end
 
 	return true
