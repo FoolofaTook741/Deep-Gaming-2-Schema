@@ -13,47 +13,53 @@ if SERVER then
         [TEAM_CA]      = true,
         [TEAM_STALKER] = true,
     }
+
     local civTeams = {
         [TEAM_CITIZEN] = true,
         [TEAM_CWU]     = true,
         [TEAM_VORT]    = true,
     }
 
+	local turrets = {}
+
+	function ENT:RefreshPlayerRelationship(plr)
+		local owner = self:GetOwner()
+		local ownerTeam
+
+		if !IsValid(owner) then 
+			ownerTeam = TEAM_CP
+		else 
+			ownerTeam = owner:Team()
+		end
+
+		local plyTeam = plr:Team()
+		local disp = D_HT
+
+		-- this is yucky but seems too fragile to refactor
+		if guardTeams[ownerTeam] then
+			if guardTeams[plyTeam] and plr.IsRogue then
+				disp = D_HT
+					
+			elseif guardTeams[plyTeam] and not plr.IsRogue then
+				disp = D_LI
+			end
+		elseif civTeams[ownerTeam] then
+			if civTeams[plyTeam] then
+				disp = D_LI
+			elseif plyTeam == TEAM_CP and plr.IsRogue == true then
+				disp = D_LI
+			end
+		end
+
+		self.turret:AddEntityRelationship(plr, disp, 100)
+	end
+
     function ENT:RefreshRelationships()
 		if not IsValid(self.turret) then return end
-		local owner = self:GetOwner()
-		if not IsValid(owner) then return end
-
-		local id = self:EntIndex()
-		local ownerTeam = owner:Team()
-
-		--print(string.format("[Turret %d] RefreshRelationships called (owner team=%d)", id, ownerTeam))
-
 		self.turret:SetEnemy(nil)
 
-		for _, ply in ipairs(player.GetAll()) do
-			local plyTeam = ply:Team()
-			local disp = D_HT
-			--print(ply.IsRogue)
-
-			if guardTeams[ownerTeam] then
-				if guardTeams[plyTeam] and ply.IsRogue then
-					disp = D_HT
-					
-				elseif guardTeams[plyTeam] and not ply.IsRogue then
-					disp = D_LI
-				end
-			elseif civTeams[ownerTeam] then
-				if civTeams[plyTeam] then
-					disp = D_LI
-				elseif plyTeam == TEAM_CP and ply.IsRogue == true then
-					disp = D_LI
-				end
-			end
-
-			local dispName = (disp == D_LI and "D_LI") or (disp == D_HT and "D_HT") or tostring(disp)
-			--print(string.format("[Turret %d] Setting relationship for player %s (team %d) -> %s", id, ply:Nick(), plyTeam, dispName))
-			self.turret:AddEntityRelationship(ply, disp, 100)
+		for _, ply in player.Iterator() do
+			self:RefreshPlayerRelationship(ply)
 		end
 	end
 
@@ -72,24 +78,17 @@ if SERVER then
 		self.turret:Spawn()
 		self.turret:Activate()
 		self.turret:SetOwner(self:GetOwner())
-		self.NextFreezeTime = 0
-		self.turret:SetMaxHealth(200)
-		self.turret:SetHealth(200)
-		self._takeDamageHook = "TurretTakeDamage_"..self:EntIndex()
-		hook.Add("EntityTakeDamage", self._takeDamageHook, function(target, dmginfo)
-			if target ~= self.turret then return end
-			local hp = target:Health() - dmginfo:GetDamage()
-			target:SetHealth(hp)
-			if hp <= 0 then
-				target:Remove()
-			end
-			dmginfo:SetDamage(0)
-		end)
+
+		self.turret.hp = 200
+		self.turretId = table.insert(turrets, self)
+
 		timer.Simple(0, function()
-			if IsValid(self) then
-				self:RefreshRelationships()
-			end
+			if !IsValid(self) then return end -- swapped to nil-guard, nesting was an eyesore
+
+			self:RefreshRelationships()
 		end)
+
+		-- also yucky but ??
 		timer.Simple(1, function()
 			if IsValid (self.turret) then
 				self.turret:EmitSound("light.wav", 100, 100)
@@ -113,48 +112,58 @@ if SERVER then
 				FlashBase:Activate()
 			end
 		end)
-        local id = self:EntIndex()
-        
-
-        hook.Add("PlayerInitialSpawnLoaded",  "TurretRel_Init_"..id,      function() if IsValid(self) then self:RefreshRelationships() end end)
-        hook.Add("PlayerDisconnected","TurretRel_Discon_"..id,  function() if IsValid(self) then self:RefreshRelationships() end end)
-        hook.Add("OnRogueDeclare",      "TurretRel_Rogue_"..id,   function() if IsValid(self) then self:RefreshRelationships() end end)
-		hook.Add("PlayerChangedTeam", "TurretRel_Team_"..id, function(ply, oldTeam, newTeam)
-			if not IsValid(self) then return end
-			if ply == self:GetOwner() then
-				self:Remove()
-			else
-				timer.Simple(0,function() self:RefreshRelationships() end)
-			end
-		end)
     end
 
     function ENT:OnRemove()
-        local id = self:EntIndex()
-        hook.Remove("PlayerInitialSpawnLoaded",  "TurretRel_Init_"..id)
-        hook.Remove("PlayerDisconnected","TurretRel_Discon_"..id)
-        hook.Remove("PlayerChangedTeam", "TurretRel_Team_"..id)
-        hook.Remove("OnRogueDeclare",      "TurretRel_Rogue_"..id)
-        timer.Remove("TurretRel_Timer_"..id)
-        if IsValid(self.turret) then 
+		table.remove(turrets, self.turretId)
+
+        if IsValid(self.turret) then
 			self.turret:Remove() 
 		end
     end
-	
-	function ENT:Think()
-		if not IsValid(self.turret) then return end
-		if CurTime() >= self.NextFreezeTime then
-			self.NextFreezeTime = CurTime() + 1
 
-			local fx = EffectData()
-			fx:SetStart( self.turret:GetPos() )
-			fx:SetOrigin( self.turret:GetPos() )
-			fx:SetMagnitude( 0 )
-			fx:SetEntity( self.turret )
-			util.Effect( "phys_freeze", fx )
-		end
+	hook.Add("EntityTakeDamage", "dispatchTurretHurt", function(targ, dmginfo)
+		if targ:GetClass() == "npc_turret_floor" && targ.hp then 
+			local hp = targ.hp - dmginfo:GetDamage()
 
-		self:NextThink( CurTime() )
-		return true
-	end
+			if hp <= 0 and not targ.destroyed then 
+				targ.destroyed = true 
+				targ:Fire("SelfDestruct")
+			end 
+
+			targ.hp = hp
+
+			dmginfo:SetDamage(0)
+		end 
+	end)
+
+	local function updatePlr(p)
+		for i, v in ipairs(turrets) do
+			if not IsValid(v) then 
+				table.remove(turrets, i)
+			end
+
+			v:RefreshPlayerRelationship(p) 
+		end 
+	end 
+
+	hook.Add("PlayerInitialSpawnLoaded", "TurretRel_Init", updatePlr)
+    hook.Add("PlayerDisconnected", "TurretRel_Discon", updatePlr)
+    hook.Add("OnRogueDeclare", "TurretRel_Rogue", updatePlr)
+	hook.Add("PlayerChangedTeam", "TurretRel_Team", function(plr)
+		for i, v in ipairs(turrets) do
+			if not IsValid(v) then 
+				table.remove(turrets, i)
+				return 
+			end
+
+			if v:GetOwner() == plr then 
+				v:Remove()
+				return 
+			end 
+
+			-- thanks, glua!
+			timer.Simple(0, function() v:RefreshPlayerRelationship(plr) end)
+		end 
+	end)
 end
