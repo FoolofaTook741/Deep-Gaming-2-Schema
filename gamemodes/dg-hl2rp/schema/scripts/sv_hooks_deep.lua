@@ -1559,6 +1559,10 @@ hook.Add("PlayerInitialSpawn", "retardfix", function(ply)
     end)
 end)
 
+hook.Add("PlayerInitialSpawn", "InitVoiceLines", function(ply)
+    ply.VoiceLines = true
+end)
+
 hook.Add("PlayerSpawn", "deathtimer", function(ply)
     local normalcol = Color(255, 255, 255, 255)
 

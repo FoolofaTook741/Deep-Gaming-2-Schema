@@ -734,6 +734,15 @@ impulse.RegisterChatCommand("/unshackle", {
     end
 })
 
+impulse.RegisterChatCommand("/vl", {
+	description = "Toggles your text chat voice lines. (DEFAULT IS ON)",
+    requiresArg = false,
+    onRun = function(ply)
+        ply.VoiceLines = not ply.VoiceLines
+        ply:Notify("Text chat voice lines are now " .. (ply.VoiceLines and "enabled" or "disabled") .. ".")
+    end
+})
+
 impulse.RegisterChatCommand("/checkbodygroups", {
     description = "Prints your current bodygroups to chat.",
     onRun = function(ply, args, rawText)
