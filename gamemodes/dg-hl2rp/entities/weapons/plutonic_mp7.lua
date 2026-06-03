@@ -29,7 +29,7 @@ SWEP.CSMuzzleFlashes = false
 SWEP.BlowbackPos = Vector(0, 0, 0)
 SWEP.BlowbackAngle = Angle(0, 0, 0)
 
-SWEP.ReloadSound = "weapons/projectmmod_smg1/smg1_reload.wav"
+SWEP.ReloadSound = "weapons/projectmmod_smg1/smg1_reload.ogg"
 SWEP.EmptySound = Sound("Weapon_Pistol.Empty")
 
 sound.Add({
@@ -38,7 +38,7 @@ sound.Add({
 	volume = 1.0,
 	level = SNDLVL_GUNFIRE,
 	pitch = {95, 105},
-	sound = {"weapons/projectmmod_smg1/fire1.wav"}
+	sound = {"weapons/projectmmod_smg1/fire1.ogg"}
 })
 
 SWEP.Primary.Sound = Sound("CUST.Weapon_MP7.Single")
