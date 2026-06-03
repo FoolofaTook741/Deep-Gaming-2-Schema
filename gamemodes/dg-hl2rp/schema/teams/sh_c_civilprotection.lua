@@ -406,13 +406,13 @@ TEAM_CP = impulse.Teams.Define({
             onBecome = makeOnBecome("i1"),
         },
         {
-            name = "OfC",
-            description = "OfC",
+            name = "RL",
+            description = "RL",
             doorGroup = {1, 2, 3, 6, 7},
             xp = 0,
             whitelistLevel = 2,
             whitelistFailMessage = "You must be promoted to use this rank.",
-            onBecome = makeOnBecome("OfC", {
+            onBecome = makeOnBecome("RL", {
 		        bgOverride = SHOULDERPAD_BG,
 		    }),
         },
