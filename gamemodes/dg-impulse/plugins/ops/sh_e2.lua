@@ -2,9 +2,10 @@ if not E2Lib then
 	return
 end
 
-
-	util.AddNetworkString("opsE2Viewer")
-	util.AddNetworkString("opsE2ViewerRemove")
+	if SERVER then
+		util.AddNetworkString("opsE2Viewer")
+		util.AddNetworkString("opsE2ViewerRemove")
+	end
 
 	local function CleanString(str, fallback)
 		str = tostring(str or fallback or "")
