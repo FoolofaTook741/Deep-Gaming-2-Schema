@@ -2,9 +2,12 @@ local slurs = {
     "nigger",
     "nigga",
     "faggot",
+    "faggots",
     "nogga",
     "nogger",
 --   fag removed because automod fuckups
+    "fag",
+    "fags",
     "f@g",
     "f@ggot",
     "fagg0t",
@@ -42,115 +45,75 @@ local slurs = {
     "m0l3st",
     }
 
-local replacements = {
-    ["¡"] = "i",
-    ["é"] = "e",
-    ["è"] = "e",
-    ["ê"] = "e",
-    ["ë"] = "e",
-    ["ç"] = "c",
-    ["ñ"] = "n",
-    ["ø"] = "o",
-    ["ð"] = "d",
-    ["å"] = "a",
-    ["æ"] = "ae",
-    ["ē"] = "e",
-    ["č"] = "c",
-    ["ŭ"] = "u",
-    ["ï"] = "i",
-    ["Ï"] = "i",
-    ["Ñ"] = "n",
-    ["ó"] = "o",
-    ["Ó"] = "o",
-    ["ò"] = "o",
-    ["Ò"] = "o",
-    ["ô"] = "o",
-    ["Ô"] = "o",
-    ["ö"] = "o",
-    ["ո"] = "n",
-    ["о"] = "o",
-    ["ο"] = "o",
-    ["օ"] = "o",
-    ["е"] = "e",
-    ["ԁ"] = "d",
-    ["һ"] = "h"
-}
+local function buildEvasionPattern(slur)
+    local chars = {}
+    for i = 1, #slur do
+        chars[i] = slur:sub(i, i):gsub("[%(%)%.%%%+%-%*%?%[%^%$]", "%%%1") -- escape magic chars
+    end
+    return table.concat(chars, "[%s%p]*")
+end
+
+local function containsSlur(str, slur)
+    --pad string to simplify boundary detection at start/end
+    local padded = " " .. str .. " "
+    
+    --Normal word - must be surrounded by non-alpha characters
+    local boundary = "%f[%a]" .. slur .. "%f[%A]"
+    if padded:match(boundary) then return true end
+
+    --Spaced/separated evasion
+    --only matches if characters are actually separated (has separators between them)
+    if #slur > 1 then
+        local evasionPattern = "%A" .. buildEvasionPattern(slur) .. "%A"
+        local spaced = padded:match(evasionPattern)
+        if spaced and spaced:find("[%s%p]") then --must actually have separators
+            return true
+        end
+    end
+
+    return false
+end
+
+local function checkText(str)
+    str = str:lower()
+    
+    if replacements then
+        for mat, rep in pairs(replacements) do
+            str = str:Replace(mat, rep)
+        end
+    end
+
+    local risk = 0
+    local matchedIndex = nil
+
+    for code, slur in ipairs(slurs) do
+        if containsSlur(str, slur) then
+            risk = risk + 8
+            matchedIndex = code
+        end
+    end
+
+    return risk, matchedIndex
+end
+
+local function handleViolation(ply, text, risk, slurIndex)
+    ply.OPS_AM_HasBeenWarned = true
+    ply:Notify("Your message was blocked for containing a blacklisted word.")
+end
 
 function impulse.Ops.AutoMod.FilterMessage(ply, text)
-	local risk = 0
-    local i
-    local str = text:lower():Replace(" ","") -- remove whitespace to prevent bypass by doing "F A G G O T"
-    for mat, rep in pairs(replacements) do
-        str = str:Replace(mat,rep)
-    end
-    for code, slur in ipairs(slurs) do
-        local _,ptn = str:gsub(slur,slur) 
-        if ptn > 0 then
-            --ptn = {ptn} -- #ptn
-            risk = risk + (8*ptn)
-            i = code
-        end
-    end
+    local risk, slurIndex = checkText(text)
     if risk > 0 then
-        if risk == 8 then
-            if (ply.OPS_AM_HasBeenWarned or false) then
-                impulse.Ops.AutoMod.Ban(
-					ply,
-					"Blacklisted Words",
-					tostring(risk),
-					ply:NameID() .. " says " .. text,
-					tostring(10080*(risk/8))
-				)
-                return true
-            else
-                ply.OPS_AM_HasBeenWarned = true
-                ply:Notify("Hello! It appears you have tried to say something that is not tolerated on our services, please refrain from using derogatory words within our server. An automatic punishment has been added to your record.")
-                if GExtension then GExtension:Warn(ply:SteamID64(), "AutoMod | Blacklisted Words | Word: " .. slurs[i],0) end
-                return true
-            end
-        end
-        impulse.Ops.AutoMod.Ban(ply,"Blacklisted Words",tostring(risk),ply:NameID() .. " says " .. text,tostring(10080*(risk/8)))
+        handleViolation(ply, text, risk, slurIndex)
         return true
     end
 end
 
-function PLUGIN:PlayerSay(ply,text)
-    if text:sub(1, 7) == "/report" then return end -- allows people to say it in F3
-    local risk = 0
-    local i
-    local str = text .. "" -- dont store reference
-    str = str:lower() -- How the FUCK did I forget this!??!?!?
-    str = str:Replace(" ","") -- remove whitespace to prevent bypass by doing "F A G G O T"
-    for mat, rep in pairs(replacements) do
-        str = str:Replace(mat,rep)
-    end
-    for code, slur in ipairs(slurs) do
-        local _,ptn = str:gsub(slur,slur) 
-        if str:find(slur) then
-            --ptn = {ptn} -- #ptn
-            risk = risk + (8*ptn)
-            i = code
-        end
-    end
+function PLUGIN:PlayerSay(ply, text)
+    if text:sub(1, 7) == "/report" then return end
+    local risk, slurIndex = checkText(text)
     if risk > 0 then
-        if risk == 8 then
-            if (ply.OPS_AM_HasBeenWarned or false) then
-                impulse.Ops.AutoMod.Ban(
-					ply,
-					"Blacklisted Words",
-					tostring(risk),
-					ply:NameID() .. " says " .. text,
-					tostring(10080*(risk/8))
-				)
-                return ""
-            else
-                ply.OPS_AM_HasBeenWarned = true
-                ply:Notify("Hello! It appears you have tried to say something that is not tolerated on our services, please refrain from using derogatory words within our server. An automatic punishment has been added to your record.")
-                if GExtension then GExtension:Warn(ply:SteamID64(), "AutoMod | Blacklisted Words | Word: " .. slurs[i],0) end
-                return ""
-            end
-        end
-        impulse.Ops.AutoMod.Ban(ply,"Blacklisted Words",tostring(risk),ply:NameID() .. " says " .. text,tostring(10080*(risk/8)))
+        handleViolation(ply, text, risk, slurIndex)
         return ""
     end
 end
