@@ -1,4 +1,3 @@
-if SERVER then
     local e2BlacklistCmd = {
         description = "Blacklist a player from using E2 (minutes). 0 = permanent.",
         requiresArg = true,
@@ -90,4 +89,3 @@ if SERVER then
         end
     }
     impulse.RegisterChatCommand("/e2unblacklist", e2UnBlacklistCmd)
-end
