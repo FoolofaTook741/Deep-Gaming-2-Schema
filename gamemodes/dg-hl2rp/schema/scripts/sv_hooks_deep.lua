@@ -334,7 +334,7 @@ end)
 timer.Create("RefreshCPBalances", 1800, 0, function()
     for _, v in ipairs(player.GetAll()) do
         if v:Team() == TEAM_CP and v:IsCPCommand() then
-            v.AwardBalance = math.Clamp((v.AwardBalance or 0) + 45, 0, 240)
+            v.AwardBalance = math.Clamp((v.AwardBalance or 0) + 75, 0, 240)
             v:SendCombineMessage("AWARD CREDITS UPDATED. NEW BALANCE: " .. v.AwardBalance .. ". BEGIN DISTRIBUTION TO ENLISTED UNITS.")
             net.Start("deepupdateawardcredits")
             net.WriteUInt(v.AwardBalance, 16)
