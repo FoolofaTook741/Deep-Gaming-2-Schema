@@ -129,20 +129,29 @@ end)
 local _sendingLuaError = false
 
 local function SendLuaErrorToDiscord(err, stack)
+    local hostname = GetConVar("hostname"):GetString()
+    local isDev = hostname ~= "Deep Gaming 2 | Half Life 2 Roleplay"
+
+    -- Do not log dev server errors to Discord
+    if isDev then
+        return
+    end
+
     local embeds = {
         {
             title = "Lua Error Detected",
             description = "A LUA error has occurred on the server.",
             color = 16711680,
             fields = {
-                { name = "Error Message:", value = "```" .. err .. "```" },
+                { name = "Error Message:", value = "```" .. tostring(err) .. "```" },
                 { name = "Timestamp:", value = os.date("%Y-%m-%d %H:%M:%S") },
-                { name = "Server:", value = (GetConVar("hostname"):GetString() == "Deep Gaming 2 | Half Life 2 Roleplay | discord.gg/deepgaming") and "Main" or "Dev" }
+                { name = "Server:", value = "Main" }
             }
         }
     }
 
     local ok, payload = pcall(util.TableToJSON, { embeds = embeds })
+
     if not ok then
         print("[ReportLuaErrorsToDiscord] Failed to serialize payload: " .. tostring(payload))
         print("[ReportLuaErrorsToDiscord] Raw stack dump:")
@@ -153,10 +162,17 @@ local function SendLuaErrorToDiscord(err, stack)
     reqwest({
         url     = DG_LUA,
         method  = "POST",
-        headers = { ["Content-Type"] = "application/json", ["User-Agent"] = "Pinnacle Gaming" },
+        headers = {
+            ["Content-Type"] = "application/json",
+            ["User-Agent"] = "Pinnacle Gaming"
+        },
         body    = payload,
-        success = function(code, body) print(("[LuaErrorWebhook] %d %s"):format(code, body)) end,
-        failed  = function(errMsg) print("[LuaErrorWebhook] Request failed: " .. tostring(errMsg)) end,
+        success = function(code, body)
+            print(("[LuaErrorWebhook] %d %s"):format(code, body))
+        end,
+        failed  = function(errMsg)
+            print("[LuaErrorWebhook] Request failed: " .. tostring(errMsg))
+        end,
     })
 end
 
