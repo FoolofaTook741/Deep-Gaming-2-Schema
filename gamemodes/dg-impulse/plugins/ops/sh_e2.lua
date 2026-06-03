@@ -2,7 +2,7 @@ if not E2Lib then
 	return
 end
 
-if SERVER then
+
 	util.AddNetworkString("opsE2Viewer")
 	util.AddNetworkString("opsE2ViewerRemove")
 
@@ -120,4 +120,3 @@ if SERVER then
 	}
 
 	impulse.RegisterChatCommand("/e2viewer", e2ViewerCommand)
-end
