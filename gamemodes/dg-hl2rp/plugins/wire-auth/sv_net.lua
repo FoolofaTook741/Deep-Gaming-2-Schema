@@ -45,6 +45,7 @@ if SERVER then
     local SUBMIT_COOLDOWN = 10
     local MAX_PENDING     = 20
     local PENDING_TIMEOUT = 1200
+    local MAX_E2_PER_PLAYER = 2
 
     if file.Exists(impulse.WireE2.memberBlacklistFile, "DATA") then
         impulse.WireE2.memberBlacklisted = util.JSONToTable(file.Read(impulse.WireE2.memberBlacklistFile, "DATA")) or {}
@@ -67,6 +68,28 @@ if SERVER then
         end
 
         return true
+    end
+
+    local function CountPlayerE2s(ply, ignoreEnt)
+        if not IsValid(ply) then return 0 end
+
+        local count = 0
+
+        for _, ent in ipairs(ents.FindByClass("gmod_wire_expression2")) do
+            if IsValid(ent) and ent ~= ignoreEnt then
+                local owner = ent.player
+
+                if not IsValid(owner) and ent.GetPlayer then
+                    owner = ent:GetPlayer()
+                end
+
+                if owner == ply then
+                    count = count + 1
+                end
+            end
+        end
+
+        return count
     end
 
     function impulse.WireE2.MemberBlacklistSet(steamID32, minutes, reason, adminName)
@@ -210,7 +233,39 @@ if SERVER then
                     return
                 end
             end
-                        
+
+            if IsValid(ply) then
+                local activeE2s = CountPlayerE2s(ply, self)
+
+                if activeE2s >= MAX_E2_PER_PLAYER then
+                    ply:SendChatClassMessage(231,"You already have the maximum allowed E2 chips placed. Limit: " .. MAX_E2_PER_PLAYER, ply)
+
+                    if IsValid(self) then
+                        self:Remove()
+                    end
+
+                    impulse.debugPrint("[WireE2] Blocked " .. plyName .. " from spawning more than " .. MAX_E2_PER_PLAYER .. " E2s")
+                    return
+                end
+            end
+
+            local hash = util.SHA256(code)
+            self._WireE2Hash = hash
+
+			if blacklisted[hash] then
+				local info = blacklisted[hash]
+				local reason = (type(info) == "table" and info.reason) or "Blacklisted by an administrator."
+				if IsValid(ply) then
+					ply:SendChatClassMessage(231,
+						"[WireE2] This E2 is blacklisted and cannot be used.\nReason: "..tostring(reason),
+						ply
+					)
+				end
+				if IsValid(self) then self:Remove() end
+				impulse.debugPrint("[WireE2] Blocked blacklisted submission "..hash.." from "..plyName)
+				return
+			end
+                                    
 			if ply:IsGameMaster() then 
 				return origSetup(self, code, includes, restore, forcecompile, filepath) 
 			end
@@ -236,23 +291,7 @@ if SERVER then
             end
             lastSubmit[steamID] = now
 
-            local hash = util.SHA256(code)
-            self._WireE2Hash = hash
             impulse.debugPrint("[WireE2] New submission by "..plyName.." → "..hash)
-			
-			if blacklisted[hash] then
-				local info = blacklisted[hash]
-				local reason = (type(info) == "table" and info.reason) or "Blacklisted by an administrator."
-				if IsValid(ply) then
-					ply:SendChatClassMessage(231,
-						"[WireE2] This E2 is blacklisted and cannot be used.\nReason: "..tostring(reason),
-						ply
-					)
-				end
-				if IsValid(self) then self:Remove() end
-				impulse.debugPrint("[WireE2] Blocked blacklisted submission "..hash.." from "..plyName)
-				return
-			end
 
             if pending[hash] then
                 if IsValid(ply) then
@@ -477,49 +516,71 @@ if SERVER then
     end)
 
     net.Receive("wire_e2_revoke", function(_, admin)
-        if not admin:IsAdmin() then return end
-    
+        if not IsValid(admin) or not admin:IsAdmin() then return end
+
         local e2 = net.ReadEntity()
-        local plyOwner = net.ReadEntity()
-    
-        if not IsValid(e2) or e2:GetClass() ~= "gmod_wire_expression2" then return end
-        if not IsValid(plyOwner) then return end
-    
-        local hash = e2._WireE2Hash
-        if not hash then
-            admin:SendChatClassMessage(231, "[WireE2] Error: that chip has no stored hash!", admin)
+
+        if not IsValid(e2) or e2:GetClass() ~= "gmod_wire_expression2" then
+            admin:SendChatClassMessage(231, "Invalid E2 selected.", admin)
             return
         end
-    
-        if IsAuthorized(hash) then
+
+        local plyOwner = e2.player
+
+        if not IsValid(plyOwner) and e2.GetPlayer then
+            plyOwner = e2:GetPlayer()
+        end
+
+        if not IsValid(plyOwner) and e2.CPPIGetOwner then
+            plyOwner = e2:CPPIGetOwner()
+        end
+
+        local hash = e2._WireE2Hash
+
+        if not hash then
+            admin:SendChatClassMessage(231, "Error: that chip has no stored hash!", admin)
+            return
+        end
+
+        hash = tostring(hash):gsub("[%s%c]", ""):lower()
+
+        if authorized[hash] then
             authorized[hash] = nil
             saveAuth()
-			blacklisted[hash] = {
-				by = admin:SteamName(),
-				reason = "Revoked/Blacklisted by admin",
-				time = os.time()
-			}
-			saveBlacklist()
-            print(("[WireE2] %s revoked approval for %s"):format(admin:Nick(), hash))
-			
         end
-    
+
+        blacklisted[hash] = {
+            by = admin:SteamName(),
+            reason = "Revoked/Blacklisted by admin",
+            time = os.time()
+        }
+
+        saveBlacklist()
+
+        local removed = 0
+
         for _, ent in ipairs(ents.FindByClass("gmod_wire_expression2")) do
-            if ent._WireE2Hash == hash and ent.player == plyOwner then
+            if IsValid(ent) and tostring(ent._WireE2Hash or ""):lower() == hash then
                 ent:Remove()
+                removed = removed + 1
             end
         end
-    
-        admin:SendChatClassMessage(231,
-          ("[WireE2] Revoked & removed E2 %s for %s")
-            :format(hash, plyOwner:Nick()),
-          admin
+
+        local ownerName = IsValid(plyOwner) and plyOwner:Nick() or "unknown owner"
+
+        admin:SendChatClassMessage(
+            231,
+            ("Revoked, blacklisted, and removed E2 %s for %s. Removed chips: %d")
+                :format(hash, ownerName, removed),
+            admin
         )
-    
-        net.Start("wire_e2_user_denied")
-        net.WriteString(admin:Nick())
-        net.WriteString("Your E2 ("..hash..") has been revoked by an administrator.")
-        net.Send(plyOwner)
+
+        if IsValid(plyOwner) then
+            net.Start("wire_e2_user_denied")
+                net.WriteString(admin:Nick())
+                net.WriteString("Your E2 (" .. hash .. ") has been revoked by an administrator.")
+            net.Send(plyOwner)
+        end
 
         LogE2ApprovalToDiscord(hash, admin, "Blacklisted")
     end)

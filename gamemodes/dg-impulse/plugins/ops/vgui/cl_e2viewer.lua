@@ -1,7 +1,7 @@
 local PANEL = {}
 
 function PANEL:Init()
-	self:SetSize(605, 470)
+	self:SetSize(705, 470)
 	self:Center()
 	self:SetTitle("ops E2 Viewer")
 	self:MakePopup()
@@ -11,94 +11,76 @@ function PANEL:SetupE2S(e2s)
 	self.list = vgui.Create("DListView", self)
 	self.list:Dock(FILL)
 	self.list:SetMultiSelect(false)
-	self.list:AddColumn("Owner")
-	self.list:AddColumn("Name")
-	self.list:AddColumn("CPU Time")
+
+	self.list:AddColumn("Owner"):SetFixedWidth(210)
+	self.list:AddColumn("SteamID"):SetFixedWidth(130)
+	self.list:AddColumn("Name"):SetFixedWidth(260)
+	self.list:AddColumn("CPU Time"):SetFixedWidth(90)
 
 	self.list.lines = {}
 
 	local panel = self
 
-	for v,k in pairs(e2s) do
-    	local owner = k.ent:CPPIGetOwner()
+	for _, data in ipairs(e2s) do
+		local cpuTime = tonumber(data.perf or 0) * 1000000
 
-    	if not owner then
-    		return
-    	end
+		if cpuTime < 0.01 then
+			cpuTime = 0
+		end
 
-    	local cpuTime = k.perf * 1000000
-    	if cpuTime < 0.01 then
-    		cpuTime = 0
-    	end
+		local line = self.list:AddLine(
+			data.owner or "unknown",
+			data.steamid or "unknown",
+			data.name or "unknown",
+			string.format("%.3f", cpuTime)
+		)
 
-    	local x = self.list:AddLine(owner:Nick().." ("..owner:SteamName()..")", k.name, cpuTime)
-    	x.Owner = owner
-    	x.Ent = k.ent
+		line.Ent = data.ent
+		line.E2OwnerName = data.owner or "unknown"
+		line.E2SteamID = data.steamid or "unknown"
 
-    	table.insert(self.list.lines, x)
+		table.insert(self.list.lines, line)
 
-		function x:OnSelect()
-			local row = x
+		function line:OnSelect()
+			local row = self
 			local m = DermaMenu()
 
 			m:AddOption("Copy Owner SteamID", function()
-				if not IsValid(row) then
-					return
-				end
+				if not IsValid(row) then return end
 
-				SetClipboardText(row.Owner:SteamID())
+				SetClipboardText(row.E2SteamID or "unknown")
 				LocalPlayer():Notify("Copied SteamID.")
 			end)
 
 			m:AddOption("Delete E2", function()
-				if not IsValid(row) then
+				if not IsValid(row) then return end
+				if not IsValid(row.Ent) then
+					LocalPlayer():Notify("That E2 no longer exists.")
 					return
 				end
 
 				net.Start("opsE2ViewerRemove")
-				net.WriteEntity(row.Ent)
+					net.WriteEntity(row.Ent)
 				net.SendToServer()
 
 				panel:Remove()
 			end):SetIcon("icon16/delete.png")
 
-
 			m:AddOption("Blacklist E2", function()
-				if not IsValid(row) then
+				if not IsValid(row) then return end
+				if not IsValid(row.Ent) then
+					LocalPlayer():Notify("That E2 no longer exists.")
 					return
 				end
 
 				net.Start("wire_e2_revoke")
-				net.WriteEntity(row.Ent)
-				net.WriteEntity(row.Owner)
+					net.WriteEntity(row.Ent)
 				net.SendToServer()
 
 				panel:Remove()
 			end):SetIcon("icon16/cancel.png")
 
 			m:Open()
-		end
-
-		
-	end
-
-	function self.list:Think()
-		for v,k in pairs(self.lines) do
-			if not IsValid(k) or not IsValid(k.Ent) then
-				return
-			end
-
-	    	local data = k.Ent:GetOverlayData()
-	    	if not data then
-	    		return
-	    	end
-
-	    	local cpuTime = data.timebench * 1000000
-	    	if cpuTime < 0.01 then
-	    		cpuTime = 0
-	    	end
-
-			k:SetColumnText(3, cpuTime)
 		end
 	end
 end
