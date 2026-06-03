@@ -1,4 +1,5 @@
 -- For timers, we must detour instantly, as there is no way to get timers created before the detour was created.
+-- rubat please timer.GetList
 
 GProfiler.Timers = GProfiler.Timers or {}
 GProfiler.Timers.Simple = GProfiler.Timers.Simple or {}
@@ -6,9 +7,9 @@ GProfiler.Timers.Create = GProfiler.Timers.Create or {}
 GProfiler.Timers.IsDetoured = GProfiler.Timers.IsDetoured or false
 GProfiler.Timers.OldSimpleTimer = GProfiler.Timers.OldSimpleTimer or timer.Simple
 GProfiler.Timers.OldCreateTimer = GProfiler.Timers.OldCreateTimer or timer.Create
+GProfiler.ActiveTimers = GProfiler.ActiveTimers or { Simple = {}, Create = {} }
 
--- Chunked net messages to avoid net message overflow
-local chunkSizeLimit = 65535 -- 187765611982077572556877
+local chunkSizeLimit = 65535
 
 function GProfiler.Timers:StartProfiler(ply)
 	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) then return end
@@ -84,7 +85,7 @@ function GProfiler.Timers.CollectTimerData(type, name, delay, func, funcTime)
 	if not GProfiler.Timers.IsDetoured then return end
 
 	if not GProfiler.Timers[type][name] then
-		local dbgInfo = debug.getinfo(func)
+		local dbgInfo = debug.getinfo(func, "S")
 		GProfiler.Timers[type][name] = {
 			Count = 0,
 			TotalTime = 0,
@@ -113,15 +114,18 @@ end
 timer.Simple = function(delay, func, ...)
 	if not assertType(delay, isnumber, 1, "number") or not assertType(func, isfunction, 2, "function") then return end
 
+	local Index = delay != 0 and table.insert(GProfiler.ActiveTimers.Simple, {NextRun = SysTime() + delay, Source = debug.getinfo(2)})
+
 	local args = {...}
 	GProfiler.Timers.OldSimpleTimer(delay, function()
 		local start = SysTime()
 		func(unpack(args))
 		GProfiler.Timers.CollectTimerData("Simple", func, delay, func, SysTime() - start)
+		if Index then table.remove(GProfiler.ActiveTimers.Simple, Index) end
 	end)
 end
 
-timer.Create = function(name, delay, reps, func, ...)
+timer.Create = function(name, delay, reps, func)
 	if not (
 		assertType(name, isstring, 1, "string") and
 		assertType(delay, isnumber, 2, "number") and
@@ -131,14 +135,45 @@ timer.Create = function(name, delay, reps, func, ...)
 
 	name = tostring(name)
 
-	local args = {...}
+	for k, v in ipairs(GProfiler.ActiveTimers.Create) do
+		if v.Name == name then
+			table.remove(GProfiler.ActiveTimers.Create, k)
+			break
+		end
+	end
+	table.insert(GProfiler.ActiveTimers.Create, { Name = name, Reps = reps, Source = debug.getinfo(2) })
+
 	GProfiler.Timers.OldCreateTimer(name, delay, reps, function()
 		local start = SysTime()
-		func(unpack(args))
+		func()
 		local endtime = SysTime() - start
 		GProfiler.Timers.CollectTimerData("Create", name, delay, func, endtime)
+		if timer.RepsLeft(name) == 0 then
+			for i, data in ipairs(GProfiler.ActiveTimers.Create) do
+				if data.Name == name then
+					table.remove(GProfiler.ActiveTimers.Create, i)
+					break
+				end
+			end
+		end
 	end)
 end
+
+timer.Create("GProfiler_ClearTimerList", 2, 0, function() -- because apparently table.remove does NOT want to work sometimes?? fixme
+	for i = #GProfiler.ActiveTimers.Create, 1, -1 do
+		local data = GProfiler.ActiveTimers.Create[i]
+		if not timer.Exists(data.Name) then
+			table.remove(GProfiler.ActiveTimers.Create, i)
+		end
+	end
+
+	for i = #GProfiler.ActiveTimers.Simple, 1, -1 do
+		local data = GProfiler.ActiveTimers.Simple[i]
+		if SysTime() >= data.NextRun then
+			table.remove(GProfiler.ActiveTimers.Simple, i)
+		end
+	end
+end)
 
 if SERVER then
 	util.AddNetworkString("GProfiler_Timers_ToggleServerProfile")

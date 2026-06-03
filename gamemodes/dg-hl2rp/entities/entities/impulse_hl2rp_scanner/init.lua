@@ -75,15 +75,18 @@ function ENT:setPilot(client)
 end
 
 function ENT:createFlashSprite()
-    if (IsValid(self.spotlight)) then return end
+    if IsValid(self.flashSprite) then return end
 
     local SCANNER_ATTACHMENT_LIGHT = "light"
 
     self.flashSprite = ents.Create("env_sprite")
+    if not IsValid(self.flashSprite) then return end
+
     self.flashSprite:SetAttachment(
         self,
         self:LookupAttachment(SCANNER_ATTACHMENT_LIGHT)
     )
+
     self.flashSprite:SetKeyValue("model", "sprites/blueflare1.vmt")
     self.flashSprite:SetKeyValue("scale", 1.4)
     self.flashSprite:SetKeyValue("rendermode", 3)
@@ -91,6 +94,8 @@ function ENT:createFlashSprite()
     self.flashSprite:Spawn()
     self.flashSprite:Activate()
     self.flashSprite:SetColor(Color(255, 255, 255, 0))
+
+    self:DeleteOnRemove(self.flashSprite)
 end
 
 function ENT:enableSpotlight()
@@ -410,7 +415,16 @@ function ENT:OnTakeDamage(dmgInfo)
 end
 
 function ENT:OnRemove()
+    timer.Remove("ScannerFlash" .. self:EntIndex())
+
     self:disableSpotlight()
     self:removeDamageSmoke()
+
+    if IsValid(self.flashSprite) then
+        self.flashSprite:Remove()
+    end
+
+    self.flashSprite = nil
+
     self:ejectPilot()
 end

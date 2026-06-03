@@ -45,6 +45,4 @@ incFile("gprofiler/cl_menu.lua")
 incFile("gprofiler/sh_access.lua")
 incFolder("gprofiler/profilers")
 
--- 76561198207757278
-
 hook.Run("GProfiler.Loaded")

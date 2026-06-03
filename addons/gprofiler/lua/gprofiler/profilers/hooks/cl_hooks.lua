@@ -125,32 +125,47 @@ function GProfiler.Hooks.DoTab(Content)
 	local leftFraction = .7
 	local rightFraction = .3
 
-	local LeftHeader, LeftHeaderText = GProfiler.Menu.CreateHeader(SectionHeader, GProfiler.Language.GetPhrase("profiler_results"), 0, 0, SectionHeader:GetWide() * leftFraction - 5, SectionHeader:GetTall())
-	local RightHeader, RightHeaderText = GProfiler.Menu.CreateHeader(SectionHeader, GProfiler.Language.GetPhrase("Hook Function"), LeftHeader:GetWide() + 10, 0, SectionHeader:GetWide() * rightFraction - 5, LeftHeader:GetTall())
+	local ResultsHeader, ResultsHeaderText = GProfiler.Menu.CreateHeader(SectionHeader, GProfiler.Language.GetPhrase("profiler_results"), 0, 0, SectionHeader:GetWide() * leftFraction - 5, SectionHeader:GetTall())
+	local RightHeader, RightHeaderText = GProfiler.Menu.CreateHeader(SectionHeader, GProfiler.Language.GetPhrase("Hook Function"), ResultsHeader:GetWide() + 10, 0, SectionHeader:GetWide() * rightFraction - 5, ResultsHeader:GetTall())
 
-	local LeftContent = vgui.Create("DPanel", Content)
-	LeftContent:SetSize(LeftHeader:GetWide(), Content:GetTall() - SectionHeader:GetTall() - Header:GetTall())
-	LeftContent:SetPos(0, SectionHeader:GetTall() + Header:GetTall())
-	LeftContent.Paint = nil
+	local Results = vgui.Create("DPanel", Content)
+	Results:SetSize(ResultsHeader:GetWide(), (Content:GetTall() / 1.5) - SectionHeader:GetTall() - Header:GetTall())
+	Results:SetPos(0, SectionHeader:GetTall() + Header:GetTall())
+	Results.Paint = nil
+
+	local List = vgui.Create("DPanel", Content)
+	List:SetSize(ResultsHeader:GetWide() - TabPadding * 2, Content:GetTall() - Results:GetTall() - SectionHeader:GetTall() - Header:GetTall() - TabPadding)
+	List:SetPos(TabPadding, Results:GetTall() + SectionHeader:GetTall() + Header:GetTall())
+	List.Paint = nil
+
+	local ListHeader, ListHeaderText = GProfiler.Menu.CreateHeader(List, GProfiler.Language.GetPhrase("hook_list"), 0, 0, List:GetWide(), ResultsHeader:GetTall(), true)
+
+	local ListSearchLabel, ListSearch = GProfiler.Menu.CreateLabeledInput(ListHeader, "Search:", ListHeader:GetWide() - 150 - TabPadding, 5, 150, ListHeader:GetTall() - 15)
+	ListSearchLabel:SetX(ListHeader:GetWide() - ListSearchLabel:GetWide() - ListSearch:GetWide() - 10)
+	ListSearch:SetX(ListHeader:GetWide() - ListSearch:GetWide() - 5)
+
+	local ResultsFilterLabel, ResultsFilter = GProfiler.Menu.CreateLabeledInput(ResultsHeader, "Filter Source:", ResultsHeader:GetWide() - 150 - TabPadding, 5, 150, ResultsHeader:GetTall() - 15)
+	ResultsFilterLabel:SetX(ResultsHeader:GetWide() - ResultsFilterLabel:GetWide() - ResultsFilter:GetWide() - 15)
+	ResultsFilter:SetX(ResultsHeader:GetWide() - ResultsFilter:GetWide() - TabPadding)
 
 	local RightContent = vgui.Create("DPanel", Content)
 	RightContent:SetSize(RightHeader:GetWide(), Content:GetTall() - SectionHeader:GetTall() - Header:GetTall())
-	RightContent:SetPos(LeftContent:GetWide() + 10, SectionHeader:GetTall() + Header:GetTall())
+	RightContent:SetPos(Results:GetWide() + 10, SectionHeader:GetTall() + Header:GetTall())
 	RightContent.Paint = nil
 
-	local HookProfiler = vgui.Create("DListView", LeftContent)
-	HookProfiler:SetSize(LeftContent:GetWide() - TabPadding * 2, (LeftContent:GetTall() - TabPadding * 2) / 2 - 10)
+	local HookProfiler = vgui.Create("DListView", Results)
+	HookProfiler:SetSize(Results:GetWide() - TabPadding * 2, Results:GetTall() - TabPadding * 2)
 	HookProfiler:SetPos(TabPadding, TabPadding)
 	HookProfiler:SetMultiSelect(false)
 	HookProfiler:AddColumn(GProfiler.Language.GetPhrase("name"))
 	HookProfiler:AddColumn(GProfiler.Language.GetPhrase("receiver"))
-	HookProfiler:AddColumn(GProfiler.Language.GetPhrase("file"))
+	HookProfiler:AddColumn(GProfiler.Language.GetPhrase("source"))
 	HookProfiler:AddColumn(GProfiler.Language.GetPhrase("total_time"))
 	HookProfiler:AddColumn(GProfiler.Language.GetPhrase("times_called"))
 
-	local HookList = vgui.Create("DListView", LeftContent)
-	HookList:SetSize(HookProfiler:GetWide(), HookProfiler:GetTall())
-	HookList:SetPos(TabPadding, HookProfiler:GetTall() + TabPadding * 2)
+	local HookList = vgui.Create("DListView", List)
+	HookList:SetSize(List:GetWide(), List:GetTall() - ListHeader:GetTall() - 10)
+	HookList:SetPos(0, ListHeader:GetTall() + 10)
 	HookList:SetMultiSelect(false)
 	HookList:AddColumn(GProfiler.Language.GetPhrase("name"))
 	HookList:AddColumn(GProfiler.Language.GetPhrase("receivers"))
@@ -174,11 +189,12 @@ function GProfiler.Hooks.DoTab(Content)
 	local LastSelected = ""
 	for k, v in pairs(GProfiler.Hooks.ProfileData) do
 		if v.c == 0 then continue end
-		local Line = HookProfiler:AddLine(v.h, v.r, v.Source, v.t, v.c)
+		local Line = HookProfiler:AddLine(v.h, v.r, v.FullSource, v.t, v.c)
 		Line.OnRightClick = function()
 			local menu = DermaMenu()
 			menu:AddOption(GProfiler.CopyLang("name"), function() SetClipboardText(v.h) end):SetIcon("icon16/page_copy.png")
 			menu:AddOption(GProfiler.CopyLang("receiver"), function() SetClipboardText(v.r) end):SetIcon("icon16/page_copy.png")
+			menu:AddOption(GProfiler.CopyLang("source"), function() SetClipboardText(v.FullSource) end):SetIcon("icon16/page_copy.png")
 			menu:AddOption(GProfiler.CopyLang("total_time"), function() SetClipboardText(v.t) end):SetIcon("icon16/page_copy.png")
 			menu:AddOption(GProfiler.CopyLang("times_called"), function() SetClipboardText(v.c) end):SetIcon("icon16/page_copy.png")
 			menu:AddOption(GProfiler.Language.GetPhrase("remove"), function()
@@ -234,6 +250,48 @@ function GProfiler.Hooks.DoTab(Content)
 
 		UpdateLists()
 	end)
+
+	ListSearch.OnTextChanged = function()
+		local filterText = ListSearch:GetText():lower()
+		GProfiler.Hooks.ListSearchText = filterText
+		for k, v in ipairs(HookList.Lines) do
+			local source = v:GetColumnText(1):lower()
+			if string.find(source, filterText, 1, true) then
+				v:SetVisible(true)
+			else
+				v:SetVisible(false)
+			end
+		end
+		HookList:DataLayout()
+		HookList:InvalidateLayout()
+	end
+
+	ResultsFilter.OnTextChanged = function()
+		local filterText = ResultsFilter:GetText():lower()
+		GProfiler.Hooks.ResultsFilterText = filterText
+		for k, v in ipairs(HookProfiler.Lines) do
+			local source = v:GetColumnText(3):lower()
+			if string.find(source, filterText, 1, true) then
+				v:SetVisible(true)
+			else
+				v:SetVisible(false)
+			end
+		end
+		HookProfiler:DataLayout()
+		HookProfiler:InvalidateLayout()
+	end
+
+	timer.Simple(0, function()
+		if GProfiler.Hooks.ListSearchText then
+			ListSearch:SetText(GProfiler.Hooks.ListSearchText)
+			ListSearch:OnTextChanged()
+		end
+
+		if GProfiler.Hooks.ResultsFilterText then
+			ResultsFilter:SetText(GProfiler.Hooks.ResultsFilterText)
+			ResultsFilter:OnTextChanged()
+		end
+	end)
 end
 
 GProfiler.Menu.RegisterTab("Hooks", "icon16/bricks.png", 1, GProfiler.Hooks.DoTab, function()
@@ -266,6 +324,8 @@ net.Receive("GProfiler_Hooks_SendData", function()
 			Source = net.ReadString(),
 			Lines = {net.ReadUInt(16), net.ReadUInt(16)}
 		}
+		local data = data[hookName]
+		data.FullSource = string.format("%s (%d - %d)", data.Source, data.Lines[1], data.Lines[2])
 	end
 	GProfiler.Hooks.ProfileData = data
 	GProfiler.Hooks.ReceivingData = false

@@ -1,7 +1,8 @@
 GProfiler.Functions = GProfiler.Functions or {}
-GProfiler.Functions.IsDetoured = GProfiler.Functions.IsDetoured or false
-GProfiler.Functions.ProfileData = GProfiler.Functions.ProfileData or {}
-GProfiler.Functions.Focus = GProfiler.Functions.Focus or false
+local FunctionsProfiler = GProfiler.Functions
+FunctionsProfiler.IsDetoured = FunctionsProfiler.IsDetoured or false
+FunctionsProfiler.ProfileData = FunctionsProfiler.ProfileData or {}
+FunctionsProfiler.Focus = FunctionsProfiler.Focus or false
 
 local SysTime = SysTime
 local GetInfo = debug.getinfo
@@ -11,15 +12,14 @@ local tostring = tostring
 local math = math
 local collectgarbage = collectgarbage
 
--- Chunked net messages to avoid net message overflow
-local chunkSizeLimit = 90000 -- 187765611982077572556877
+local chunkSizeLimit = 90000
 
 local recurse = {}
 local startTimes = {}
 local startGarbage = {}
 local IgnoreCache = {}
 
-local function garbage()
+local function garbage() -- need to experiment more, which is more accurate? branch differences?
 	-- return bit.lshift(gcinfo(), 10) + collectgarbage("\xFF")
 	return collectgarbage("count") * 1024
 end
@@ -27,7 +27,7 @@ end
 -- Hacky solution for functions from the same location but have different signatures
 local function CombineDuplicates()
 	local combined = {}
-	for k, v in pairs(GProfiler.Functions.ProfileData) do
+	for k, v in pairs(FunctionsProfiler.ProfileData) do
 		local lines = string.Split(v.lines, " - ")
 		local realName = ""
 		if string.StartWith(v.name, "0x") and string.find(v.name, "(", 1, true) then
@@ -49,7 +49,7 @@ local function CombineDuplicates()
 		end
 	end
 
-	GProfiler.Functions.ProfileData = combined
+	FunctionsProfiler.ProfileData = combined
 end
 
 local function handleFunction(event)
@@ -72,20 +72,20 @@ local function handleReturn(event)
 
 	local garbage = garbage() - (startGarbage[event.func] or 0)
 
-	if GProfiler.Functions.Focus then
-		if not GProfiler.Functions.Focus[tostring(func)] then return end
+	if FunctionsProfiler.Focus then
+		if not FunctionsProfiler.Focus[tostring(func)] then return end
 	end
 
 	local runTime = time - startTimes[func]
 
-	local funcTable = GProfiler.Functions.ProfileData[func]
+	local funcTable = FunctionsProfiler.ProfileData[func]
 	if not funcTable then
 		local fstr = tostring(func)
 		fstr = Replace(fstr, "function: ", "")
-		GProfiler.Functions.ProfileData[func] = {
+		FunctionsProfiler.ProfileData[func] = {
 			name = event.name and string.format("%s (%s)", fstr, event.name) or fstr,
 			source = event.short_src,
-			-- FIXME: It is probably cheaper to send the numbers as UInts, I'll experiment sometime
+			-- FIXME: It is probably cheaper to send the numbers as uints, I'll experiment sometime
 			lines = event.linedefined .. " - " .. event.lastlinedefined,
 			calls = 0,
 			time = 0,
@@ -93,7 +93,7 @@ local function handleReturn(event)
 			focus = tostring(func),
 			garbage = 0
 		}
-		funcTable = GProfiler.Functions.ProfileData[func]
+		funcTable = FunctionsProfiler.ProfileData[func]
 	end
 
 	funcTable.time = funcTable.time + runTime
@@ -106,7 +106,7 @@ local function handleReturn(event)
 end
 
 local function onEvent(event)
-	local info = GetInfo(3)
+	local info = GetInfo(3, "fSn")
 	if not info then return end
 
 	if event == "call" or event == "tail call" then
@@ -119,12 +119,12 @@ local function onEvent(event)
 end
 
 function GProfiler.Functions:StartProfiler(ply)
-	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) or GProfiler.Functions.IsDetoured then return end
+	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) or FunctionsProfiler.IsDetoured then return end
 
 	GProfiler.Log((SERVER and "Server" or "Client") .. " function profiler started!", 2)
-	GProfiler.Functions.ProfileData = {}
-	GProfiler.Functions.IsDetoured = true
-	GProfiler.Functions.ProfileStarted = SysTime()
+	FunctionsProfiler.ProfileData = {}
+	FunctionsProfiler.IsDetoured = true
+	FunctionsProfiler.ProfileStarted = SysTime()
 
 	recurse = {}
 	startTimes = {}
@@ -133,21 +133,21 @@ function GProfiler.Functions:StartProfiler(ply)
 end
 
 function GProfiler.Functions:RestoreFunctions(ply)
-	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) or not GProfiler.Functions.IsDetoured then return end
+	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) or not FunctionsProfiler.IsDetoured then return end
 
 	GProfiler.Log((SERVER and "Server" or "Client") .. " function profile stopped, sending data!", 2)
-	GProfiler.Functions.IsDetoured = false
-	GProfiler.Functions.ProfileStarted = nil
+	FunctionsProfiler.IsDetoured = false
+	FunctionsProfiler.ProfileStarted = nil
 
 	debug.sethook()
 	CombineDuplicates()
 
 	if CLIENT then return end
 
-	local Count = table.Count(GProfiler.Functions.ProfileData)
-	if GProfiler.ExpressAvailable() and Count > GProfiler.Config.ExpressMinimumResults-1 and Count > 0 then
+	local Count = table.Count(FunctionsProfiler.ProfileData)
+	if GProfiler.ExpressAvailable() and Count > (GProfiler.Config.ExpressMinimumResults or 25) - 1 and Count > 0 then
 		local Data = {}
-		for k, v in pairs(GProfiler.Functions.ProfileData) do
+		for k, v in pairs(FunctionsProfiler.ProfileData) do
 			Data[tostring(k)] = {
 				name = v.name, source = v.source,
 				lines = v.lines, calls = v.calls,
@@ -161,7 +161,7 @@ function GProfiler.Functions:RestoreFunctions(ply)
 		local chunks = {}
 		local chunkCount = 1
 		local currentChunkSize = 0
-		for k, v in pairs(GProfiler.Functions.ProfileData) do
+		for k, v in pairs(FunctionsProfiler.ProfileData) do
 			local curChunkSize = 134 + (v.name and string.len(v.name) or 7) + string.len(v.source) + string.len(v.lines) + string.len(v.focus)
 			local chunkSize = currentChunkSize + curChunkSize
 			if chunkSize > chunkSizeLimit then
@@ -190,7 +190,7 @@ function GProfiler.Functions:RestoreFunctions(ply)
 			net.Start("GProfiler_Functions_SendData")
 			net.WriteBool(i == 1)
 			net.WriteBool(i == table.Count(chunks))
-			net.WriteUInt(table.Count(chunks[i]), 32)
+			net.WriteUInt(#chunks[i], 32)
 			for k, v1 in ipairs(chunks[i]) do
 				net.WriteString(v1.name or "Unknown")
 				net.WriteString(v1.source)
@@ -223,12 +223,12 @@ if SERVER then
 			local hasFocus = net.ReadBool()
 			if hasFocus then
 				local count = net.ReadUInt(5)
-				GProfiler.Functions.Focus = {}
+				FunctionsProfiler.Focus = {}
 				for i = 1, count do
-					GProfiler.Functions.Focus[net.ReadString()] = true
+					FunctionsProfiler.Focus[net.ReadString()] = true
 				end
 			else
-				GProfiler.Functions.Focus = false
+				FunctionsProfiler.Focus = false
 			end
 
 			GProfiler.Functions:StartProfiler(ply)

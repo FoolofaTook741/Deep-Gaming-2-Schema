@@ -12,7 +12,6 @@ if CLIENT then
 	local surface = surface
 
 	local function PaintColumn(s, w, h)
-		if k == columnCount then return end
 		surface.SetDrawColor(BorderColor.r, BorderColor.g, BorderColor.b, BorderColor.a)
 		surface.DrawRect(w - 2, 0, 2, h)
 	end
@@ -111,7 +110,8 @@ if CLIENT then
 		draw.RoundedBox(4, 0, 0, w, h, MenuColors.HeaderSeparator)
 	end
 
-	function GProfiler.Menu.CreateHeader(parent, text, x, y, w, h)
+	function GProfiler.Menu.CreateHeader(parent, text, x, y, w, h, noPadding)
+		local TabPadding = noPadding and 0 or TabPadding
 		local header = vgui.Create("DPanel", parent)
 		header:SetSize(w, h)
 		header:SetPos(x, y)
@@ -139,6 +139,38 @@ if CLIENT then
 		if s:IsHovered() then
 			draw.RoundedBox(4, 1, 1, w - 2, h - 2, MenuColors.ButtonHover)
 		end
+	end
+
+	function GProfiler.Menu.CreateLabeledInput(parent, labelText, x, y, w, h, textInset)
+		textInset = textInset or 0
+		local lbl = vgui.Create("DLabel", parent)
+		lbl:SetFont("GProfiler.Menu.SectionHeader")
+		lbl:SetText(labelText)
+		lbl:SizeToContents()
+		lbl:SetTextColor(MenuColors.White)
+		lbl:SetPos(x, y + 3)
+
+		local input = vgui.Create("DTextEntry", parent)
+		input:SetFont("GProfiler.Menu.SectionHeader")
+		input:SetText("")
+		input:SetSize(w, h)
+		input:SetPos(x + lbl:GetWide() + 5, y)
+		input:SetTextColor(MenuColors.White)
+		function input:Paint(w, h)
+			draw.RoundedBox(4, 0, 0, w, h, MenuColors.RealmSelectorOutline)
+			draw.RoundedBox(4, 1, 1, w - 2, h - 2, MenuColors.RealmSelectorBackground)
+			local x = draw.SimpleText(self:GetText(), "GProfiler.Menu.FocusEntry", textInset + 5, h / 2, MenuColors.White, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+			if self:IsEditing() and (x < w - 15) and (SysTime() % 1 > 0.5) then
+				local caretPos = self:GetCaretPos()
+				local text = self:GetText()
+				surface.SetFont("GProfiler.Menu.FocusEntry")
+				local textWidth = surface.GetTextSize(text)
+				local textWidthBeforeCaret = surface.GetTextSize(string.sub(text, 1, caretPos))
+				draw.RoundedBox(0, textInset + textWidthBeforeCaret + 5, 1, 2, h - 2, MenuColors.White)
+			end
+		end
+
+		return lbl, input
 	end
 
 	function GProfiler.Menu.CreateRealmSelector(parent, profiler, x, y, onSelect)
@@ -236,9 +268,7 @@ if CLIENT then
 else
 	util.AddNetworkString("GProfiler_RequestFunctionSource")
 
-	-- Chunked net messages to avoid net message overflow
-	local chunkSizeLimit = 65535 -- 187765611982077572556877
-
+	local chunkSizeLimit = 65535
 	net.Receive("GProfiler_RequestFunctionSource", function(l, ply)
 		if not GProfiler.Access.HasAccess(ply) then return end
 
@@ -289,14 +319,14 @@ else
 		local lines = {}
 		for i = start, endd do table.insert(lines, f:ReadLine() or "") end
 
+		f:Close()
+
 		return lines
 	end
 end
 
--- Shared util functions
-
 function GProfiler.GetFunctionLocation(func)
-	local info = debug.getinfo(func)
+	local info = debug.getinfo(func, "S")
 	if info.short_src == "[C]" then return "C" end
 	return info.short_src .. ":" .. info.linedefined
 end

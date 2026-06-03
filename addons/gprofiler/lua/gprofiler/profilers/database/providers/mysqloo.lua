@@ -178,30 +178,4 @@ end
 
 GProfiler.Database.Providers.Register(MySQLOOProvider)
 
--- if GProfilerDebug and !TestMysqloo and MySQLOOProvider:IsAvailable() then
--- 	TestMysqloo = true
--- 	timer.Simple(2, function()
--- 		local db = mysqloo.connect("192.168.1.169", "root", "", "darkrp_test", 3306)
--- 		db.onConnected = function()
--- 			GProfiler.Log("MySQLOO test connection established", 2)
--- 			timer.Create("GProfiler_MySQLOO_Test", 20, 0, function()
--- 				print("Starting MySQLOO test query...")
--- 				local query = db:query("select sleep(10)")
--- 				query.onSuccess = function() print("success?") end
--- 				query.onError = function(q, err)
--- 					GProfiler.Log("MySQLOO test query error: " .. err, 1)
--- 				end
--- 				query:start()
--- 			end)
--- 		end
--- 		db.onConnectionFailed = function(db, err)
--- 			GProfiler.Log("MySQLOO test connection failed: " .. err, 1)
--- 		end
--- 		db:connect()
--- 		hook.Add("ShutDown", "testshut", function()
--- 			db:disconnect()
--- 		end)
--- 	end)
--- end
-
 return MySQLOOProvider

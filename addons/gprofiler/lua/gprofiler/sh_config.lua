@@ -1,9 +1,7 @@
--- 1.9.0 | 0f672076-397f-4275-b8ae-e7ba217b8339 | 73ab7acfa62a511b3d6b55486b59ab0e3cb40d7c0419171ff5936fb4 | 76561198207757255
+GProfiler.Version = "1.10.0"
 
-GProfiler.Version = "1.9.0"
-GProfiler.Config.VersionCheck = true -- Should we check for updates on gmodstore?
-
--- Available languages: english, french, german, dutch, russian, italian
+-- Available languages: english, french, german, dutch, russian, italian, turkish
+-- Some languages may only have partial support.
 GProfiler.Config.Language = "english"
 
 -- Enable/Disable Log Types
@@ -14,7 +12,7 @@ GProfiler.Config.LOG_ERROR = true
 GProfiler.Config.LOG_LOAD = false
 
 GProfiler.Config.AllowedSteamIDs = { -- SteamIDs that can access GProfiler
-	["76561198207757255"] = true
+	["76561198XXXXXXXXX"] = true
 }
 
 --[[
@@ -72,25 +70,4 @@ if CLIENT then
 		Console = 'gprofiler', -- False to disable
 		Closekey = KEY_F4 -- False to disable
 	}
-else
-	local URL = "https://fastdl.zarpgaming.com/callum/gprofiler/version.txt"
-	if GProfiler.Config.VersionCheck then
-		hook.Add("PlayerInitialSpawn", "GProfiler_VersionCheck", function()
-			http.Fetch(URL, function(body, _, __, code)
-				if code == 200 and body ~= GProfiler.Version then
-					GProfiler.Log(string.format("You are running an outdated version of GProfiler! (Current: %s, Latest: %s)", GProfiler.Version, body), 3)
-				end
-			end)
-			hook.Remove("PlayerInitialSpawn", "GProfiler_VersionCheck")
-		end)
-	end
 end
-
-
--- 2.0 Planned Changes:
--- Rewrite some core stuff to reduce code duplication
--- Complete menu redesign?
--- - Use RNDX?
--- New Profilers?
--- - File I/O
--- - HTTP?

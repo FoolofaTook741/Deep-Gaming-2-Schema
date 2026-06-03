@@ -1,25 +1,27 @@
 GProfiler.Hooks = GProfiler.Hooks or {}
-GProfiler.Hooks.IsDetoured = GProfiler.Hooks.IsDetoured or false
-GProfiler.Hooks.ProfileData = GProfiler.Hooks.ProfileData or {}
-GProfiler.Hooks.RestoreHookTable = GProfiler.Hooks.RestoreHookTable or {}
+
+local HooksProfiler = GProfiler.Hooks
+HooksProfiler.IsDetoured = HooksProfiler.IsDetoured or false
+HooksProfiler.ProfileData = HooksProfiler.ProfileData or {}
+HooksProfiler.RestoreHookTable = HooksProfiler.RestoreHookTable or {}
 
 local SysTime = SysTime
 local unpack = unpack
 local debug = debug
 
 function GProfiler.Hooks:StartProfiler(ply)
-	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) or GProfiler.Hooks.IsDetoured then return end
+	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) or HooksProfiler.IsDetoured then return end
 
 	GProfiler.Log((SERVER and "Server" or "Client") .. " hook profiler started!", 2)
-	GProfiler.Hooks.ProfileData = {}
-	GProfiler.Hooks.IsDetoured = true
-	GProfiler.Hooks.ProfileStarted = SysTime()
-	GProfiler.Hooks.AddHook = GProfiler.Hooks.AddHook or hook.Add
+	HooksProfiler.ProfileData = {}
+	HooksProfiler.IsDetoured = true
+	HooksProfiler.ProfileStarted = SysTime()
+	HooksProfiler.AddHook = HooksProfiler.AddHook or hook.Add
 
 	local function profileHook(hookName, receiverName, receiverFunc, ...)
-		if type(receiverName) ~= "string" or type(receiverFunc) ~= "function" then return end
+		if not isstring(receiverName) or not isfunction(receiverFunc) then return end
 		local dataIdent = string.format("%s_%s", hookName, receiverName)
-		GProfiler.Hooks.ProfileData[dataIdent] = {
+		HooksProfiler.ProfileData[dataIdent] = {
 			h = hookName,
 			r = receiverName,
 			c = 0,
@@ -28,24 +30,25 @@ function GProfiler.Hooks:StartProfiler(ply)
 			extra = {...}
 		}
 
-		local hookTbl = GProfiler.Hooks.ProfileData[dataIdent]
+		local hookTbl = HooksProfiler.ProfileData[dataIdent]
 
 		local Source = debug.getinfo(receiverFunc, "S")
 		if Source and Source.short_src and Source.linedefined and Source.lastlinedefined then
 			hookTbl.Source = Source.short_src
 			hookTbl.Lines = { Source.linedefined, Source.lastlinedefined }
+			hookTbl.FullSource = string.format("%s (%d - %d)", Source.short_src, Source.linedefined, Source.lastlinedefined)
 		end
 
-		GProfiler.Hooks.AddHook(hookName, receiverName, function(...)
+		HooksProfiler.AddHook(hookName, receiverName, function(...)
 			local startTime = SysTime()
-			local result = { receiverFunc(...) }
+			local a, b, c, d, e, f = receiverFunc(...)
 			local endTime = SysTime()
 			local deltaTime = endTime - startTime
 
 			hookTbl.c = hookTbl.c + 1
 			hookTbl.t = hookTbl.t + deltaTime
 
-			return unpack(result)
+			return a, b, c, d, e, f
 		end, ...)
 	end
 
@@ -60,24 +63,20 @@ function GProfiler.Hooks:StartProfiler(ply)
 	end
 end
 
-hook.Add("testhook", "testreceiver", function() end)
-timer.Create("testhook", .1, 0, function() hook.Run("testhook") end)
-
 function GProfiler.Hooks:RestoreHooks(ply)
-	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) or not GProfiler.Hooks.IsDetoured then return end
+	if not GProfiler.Access.HasAccess(ply or LocalPlayer()) or not HooksProfiler.IsDetoured then return end
 
 	GProfiler.Log((SERVER and "Server" or "Client") .. " hook profile stopped, sending data!", 2)
-	GProfiler.Hooks.IsDetoured = false
-	GProfiler.Hooks.ProfileStarted = nil
+	HooksProfiler.IsDetoured = false
+	HooksProfiler.ProfileStarted = nil
 
-	hook.Add = GProfiler.Hooks.AddHook
+	hook.Add = HooksProfiler.AddHook
 
 	for hookName, hookReceivers in pairs(hook.GetTable()) do
 		for receiverName, receiverFunc in pairs(hookReceivers) do
 			if type(receiverName) ~= "string" or type(receiverFunc) ~= "function" then continue end
-			local data = GProfiler.Hooks.ProfileData[string.format("%s_%s", hookName, receiverName)]
+			local data = HooksProfiler.ProfileData[string.format("%s_%s", hookName, receiverName)]
 			if data then
-				-- 36e28b0189c43e68a03e0d502ae38f466e68be55e9c7ffde39904e4373fc9a75
 				hook.Add(hookName, receiverName, data.f, unpack(data.extra or {}))
 			end
 		end
@@ -85,16 +84,16 @@ function GProfiler.Hooks:RestoreHooks(ply)
 
 	if CLIENT then return end
 
-	for k, v in pairs(GProfiler.Hooks.ProfileData) do
+	for k, v in pairs(HooksProfiler.ProfileData) do
 		if v.c == 0 then
-			GProfiler.Hooks.ProfileData[k] = nil
+			HooksProfiler.ProfileData[k] = nil
 		end
 	end
 
-	local Count = table.Count(GProfiler.Hooks.ProfileData)
+	local Count = table.Count(HooksProfiler.ProfileData)
 	if GProfiler.ExpressAvailable() and Count > GProfiler.Config.ExpressMinimumResults-1 and Count > 0 then
 		local Data = {}
-		for k, v in pairs(GProfiler.Hooks.ProfileData) do
+		for k, v in pairs(HooksProfiler.ProfileData) do
 			Data[k] = v
 			v.f = nil
 		end
@@ -104,9 +103,9 @@ function GProfiler.Hooks:RestoreHooks(ply)
 		net.Start("GProfiler_Hooks_SendData")
 		net.WriteUInt(Count, 20)
 		local i = 0
-		for k, v in pairs(GProfiler.Hooks.ProfileData) do
+		for k, v in pairs(HooksProfiler.ProfileData) do
 			i = i + 1
-			if i >= 1048574 then break end
+			if i >= 1048574 then ErrorNoHalt("GProfiler Hooks: More than 1048574 results found, some will be excluded!\n") break end
 			net.WriteString(v.r)
 			net.WriteString(v.h)
 			net.WriteUInt(tonumber(v.c) or 0, 32)
