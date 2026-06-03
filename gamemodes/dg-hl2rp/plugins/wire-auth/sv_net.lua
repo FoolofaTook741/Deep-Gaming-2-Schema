@@ -26,7 +26,7 @@ if SERVER then
             }
         }}
     
-        ReqwestLog( embeds, DG_E2 )
+        --ReqwestLog( embeds, DG_E2 )
     end
 
     local reviewURL       = "https://hl2rp.deepgaming2.com/whitelists/e2.php"
