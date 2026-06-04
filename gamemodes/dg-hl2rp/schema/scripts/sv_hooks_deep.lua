@@ -2033,9 +2033,10 @@ hook.Add("EntityTakeDamage", "DG_MergedDamage", function(target, dmginfo)
                     local sid = target:SteamID()
                     timer.Create(sid .. "metrocopzomstun", 1, 1, function()
                         if not IsValid(target) or not target:Alive() then return end
-                        target:SetRunSpeed(runspeeds[target:Team()])
-                        target:SetWalkSpeed(runspeeds[target:Team()] / 2)
-                    end)            
+                        local speed = runspeeds[target:Team()] or impulse.Config.JogSpeed
+                        target:SetRunSpeed(speed)
+                        target:SetWalkSpeed(speed / 2)
+                    end)         
                 end
             end
         end
