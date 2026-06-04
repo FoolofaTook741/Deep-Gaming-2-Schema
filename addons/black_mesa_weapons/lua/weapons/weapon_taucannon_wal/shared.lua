@@ -148,7 +148,7 @@ local function DoRicochet(attacker, hitpos, hitnormal, normal, damage)
 	attacker.RicochetBullet = true
 	if RicoBounces <= 1 and attacker:IsValid() then
 		RicoBounces = RicoBounces + 1
-		attacker:FireBullets({Src=hitpos, Dir=  hitnormal + normal * 2.5, Spread=Vector(0, 0, 0), Num=1, Damage=damage, Force=1, TracerName = "gauss_rico", Callback=RicoCallback, HullSize=nil, IgnoreEntity=team.GetPlayers(attacker:Team()), Distance=nil})
+		attacker:FireBullets({Src=hitpos, Dir=hitnormal + normal * 2.5, Spread=Vector(0, 0, 0), Num=1, Damage=damage, Force=1, TracerName = "gauss_rico", Callback=RicoCallback, HullSize=nil, IgnoreEntity=attacker, Distance=nil})
 	end
 	attacker.RicochetBullet = nil
 end
@@ -186,7 +186,7 @@ function SWEP:PrimaryAttack()
 	self:SetChargePower(self:GetChargePower() + self.HeatFactor)--0.023
 
 	local owoner = self:GetOwOner()
-	owoner:FireBullets({Src=owoner:GetShootPos(), Dir=owoner:GetAimVector(), Spread=Vector(0, 0, 0), Num=self.Primary.NumShots, Damage=self.Primary.Damage, Force=self.Primary.KnockbackScale, TracerName =self.TracerName, Callback=self.BulletCallback, HullSize=self.Primary.HullSize, IgnoreEntity=team.GetPlayers(owoner:Team()), Distance=self.Primary.MaxDistance})
+	owoner:FireBullets({Src=owoner:GetShootPos(), Dir=owoner:GetAimVector(), Spread=Vector(0, 0, 0), Num=self.Primary.NumShots, Damage=self.Primary.Damage, Force=self.Primary.KnockbackScale, TracerName=self.TracerName, Callback=self.BulletCallback, HullSize=self.Primary.HullSize, IgnoreEntity=owoner, Distance=self.Primary.MaxDistance})
 
 	if not self.SecondaryFireFrame then
 		owoner:SetVelocity((-75 * BMSWEP.GaussPushScale or 1) * self.SpinSpeed/5 * owoner:GetAimVector())
@@ -292,7 +292,7 @@ function SWEP:Think()
 		self:SetCharging(false)
 
 		local owoner = self:GetOwOner()
-		owoner:FireBullets({Src=owoner:GetShootPos(), Dir=owoner:GetAimVector(), Spread=Vector(0, 0, 0), Num=self.Primary.NumShots, Damage=taudmg, Force=self.Primary.KnockbackScale, TracerName=self.TracerName, Callback=self.BulletCallback, HullSize=self.Primary.HullSize, IgnoreEntity=team.GetPlayers(owoner:Team()), Distance=self.Primary.MaxDistance})
+		owoner:FireBullets({Src=owoner:GetShootPos(), Dir=owoner:GetAimVector(), Spread=Vector(0, 0, 0), Num=self.Primary.NumShots, Damage=taudmg, Force=self.Primary.KnockbackScale, TracerName=self.TracerName, Callback=self.BulletCallback, HullSize=self.Primary.HullSize, IgnoreEntity=owoner, Distance=self.Primary.MaxDistance})
 		self:GetOwOner():ViewPunch(12 * self.SpinSpeed * Angle(math.Rand(-0.1, -0.1), math.Rand(-0.1, 0.1), 0))
 		self:SetPower(0)
 		if not self.SecondaryFireFrame then
