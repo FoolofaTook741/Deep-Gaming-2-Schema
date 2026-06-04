@@ -109,6 +109,7 @@ local function SetFLIR(ent)
 end
 
 function FLIR.start()
+	return
 	if FLIR.enabled then return else FLIR.enabled = true end
 
 	for _, v in ipairs(ents.GetAll()) do
@@ -178,7 +179,7 @@ function FLIR.start()
 end
 
 function FLIR.stop()
-	if FLIR.enabled then FLIR.enabled = false else return end
+	FLIR.enabled = false
 
 	render.SetLightingMode(0)
 
@@ -196,19 +197,19 @@ function FLIR.stop()
 end
 
 function FLIR.toggle()
-	if not FLIR.enabled then FLIR.start() else FLIR.stop() end
+	--if not FLIR.enabled then FLIR.start() else FLIR.stop() end
 end
 
 concommand.Add("flir_toggle", function()
-	FLIR.toggle()
+	--FLIR.toggle()
 end)
 
 function FLIR.enable(enabled)
-	if enabled then FLIR.start() else FLIR.stop() end
+	--if enabled then FLIR.start() else FLIR.stop() end
 end
 
 net.Receive("FLIR.enable", function()
-	local enabled = net.ReadBool()
-	FLIR.enable(enabled)
+	--local enabled = net.ReadBool()
+	--FLIR.enable(enabled)
 end)
 
