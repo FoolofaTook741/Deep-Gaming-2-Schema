@@ -458,9 +458,11 @@ ENT.Menus['Commerce'] = {
             net.SendToServer()
         end),]]--
         CVButton("COMMERICAL SUPPLY ORDER", -290, -50, 600, 52, CVCOLOR_BLUE, function(self)
-            self:EmitSound("combine_tech/civic_station/station_menu_select.mp3")
-            vgui.Create("ImpulseCWUBulkOrder")
-        end),
+		    self:EmitSound("combine_tech/civic_station/station_menu_select.mp3")
+		    timer.Simple(0, function()
+		        vgui.Create("ImpulseCWUBulkOrder")
+		    end)
+		end),
         CVButton("RETURN", -190, 190, 380, 52, CVCOLOR_RED, function(self)
             self:OpenMenu("Main")
         end)
