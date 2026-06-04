@@ -614,8 +614,9 @@ function SCHEMA:PlayerRagdollSpawned(ragdoll, ply, attacker)
     local damageInfo = playerDamageInfo[ply:UserID()]
     local inflictorClass = damageInfo and damageInfo.inflictor or nil
 
-	if attacker:GetActiveWeapon():GetClass() == "plutonic_goldengun" or attacker:GetActiveWeapon():GetClass() == "plutonic_goldenak47" or attacker:GetActiveWeapon():GetClass() == "plutonic_goldendeagle" then
-		local ent = ragdoll
+	local activeWep = attacker:GetActiveWeapon()
+		if IsValid(activeWep) and (activeWep:GetClass() == "plutonic_goldengun" or activeWep:GetClass() == "plutonic_goldenak47" or activeWep:GetClass() == "plutonic_goldendeagle") then
+		    local ent = ragdoll
 
 		if ( ent.StatueInfo == nil ) then
 
