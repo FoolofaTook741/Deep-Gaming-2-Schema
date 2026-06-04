@@ -109,7 +109,7 @@ local function SetFLIR(ent)
 end
 
 function FLIR.start()
-	return
+	if true then return end
 	if FLIR.enabled then return else FLIR.enabled = true end
 
 	for _, v in ipairs(ents.GetAll()) do
