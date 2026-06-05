@@ -109,73 +109,7 @@ local function SetFLIR(ent)
 end
 
 function FLIR.start()
-	if true then return end
-	if FLIR.enabled then return else FLIR.enabled = true end
-
-	for _, v in ipairs(ents.GetAll()) do
-		SetFLIR(v)
-	end
-
-	hook.Add("PreRender", "wire_flir", function()
-		render.SetLightingMode(2)
-		FLIR.hide = true
-	end)
-
-	hook.Add("PostDraw2DSkyBox", "wire_flir", function() --overrides 2d skybox to be gray, as it normally becomes white or black
-		DrawColorModify(FLIR.skycol)
-	end)
-
-	hook.Add("PostDrawOpaqueRenderables", "wire_flir", function(_, _, sky)
-		if sky then return end
-
-		DrawColorModify(FLIR.mapcol)
-
-		render.MaterialOverride(FLIR.mat)
-		render.SuppressEngineLighting(true)
-		render.SetColorModulation(FLIR.gain, FLIR.gain, FLIR.gain)  			--this works?? I could not for the life of me make it work in renderoverride. Well.
-																				--It's a much better solution than the stencil I spent hours on...
-		for ent, valid in pairs(FLIR.RenderStack) do
-			if valid and ent:IsValid() and not ent:GetNoDraw() then
-				FLIR.hide = false
-				ent:DrawModel()
-				FLIR.hide = true
-			else
-				RemoveFLIR(ent)
-			end
-		end
-
-		render.SuppressEngineLighting(false)
-		render.MaterialOverride(FLIR.transmat)
-
-	end)
-
-	hook.Add("PostDrawTranslucentRenderables", "wire_flir", function()
-	render.SuppressEngineLighting(false)
-
-	render.MaterialOverride(nil)
-	end)
-
-	hook.Add("RenderScreenspaceEffects", "wire_flir", function()
-		--post-processing
-		DrawColorModify(FLIR.desat)
-		DrawBloom(0.5,1.0,2,2,2,1, 1, 1, 1)
-		DrawBokehDOF(1, 0.1, 0.1)
-
-		render.SetLightingMode(0)
-		--reset lighting so the menus are intelligble (try 1)
-	end)
-
-	hook.Add("OnEntityCreated", "wire_flir", function(ent)
-		if FLIR.enabled then
-			SetFLIR(ent)
-		end
-	end)
-
-	hook.Add("CreateClientsideRagdoll", "wire_flir", function(_, rag)
-		if FLIR.enabled then
-			SetFLIR(rag)
-		end
-	end)
+	return
 end
 
 function FLIR.stop()
