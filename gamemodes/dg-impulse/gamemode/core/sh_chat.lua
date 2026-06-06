@@ -877,42 +877,21 @@ local groupCheckCommand = {
             return
         end
 
-        local query = mysql:Select("impulse_players")
-        query:Select("rpname")
-        query:Select("rpgrouprank")
-        query:Select("rpgroup")
-        query:Where("steamid", steamid)
-        query:Callback(function(result)
-            if not result or #result == 0 then
-                ply:Notify("No player found with that SteamID.")
-                return
-            end
+        local targ = player.GetBySteamID(steamid)
+        if not IsValid(targ) then
+            ply:Notify("Player is not online.")
+            return
+        end
 
-            local row = result[1]
-            local rank = row.rpgrouprank
-            local groupID = tonumber(row.rpgroup)
-            local rpname = row.rpname or steamid
+        local groupName = targ:GetSyncVar(SYNC_GROUP_NAME, nil)
+        local groupRank = targ:GetSyncVar(SYNC_GROUP_RANK, nil)
 
-            if not groupID or groupID == 0 then
-                ply:Notify("That player is not in a group.")
-                return
-            end
+        if not groupName or groupName == "" then
+            ply:Notify(targ:Name() .. " is not in a group.")
+            return
+        end
 
-            local groupQuery = mysql:Select("impulse_rpgroups")
-            groupQuery:Select("Name")
-            groupQuery:Where("id", groupID)
-            groupQuery:Callback(function(groupResult)
-                if not groupResult or #groupResult == 0 then
-                    ply:Notify("Could not find group with ID " .. groupID .. ".")
-                    return
-                end
-
-                local groupName = groupResult[1].Name
-                ply:SendChatClassMessage(13, rpname .. " is a " .. rank .. " of group " .. groupName .. ".", ply)
-            end)
-            groupQuery:Execute()
-        end)
-        query:Execute()
+        ply:SendChatClassMessage(13, targ:Name() .. " is a " .. (groupRank or "Member") .. " of group " .. groupName .. ".", ply)
     end
 }
 impulse.RegisterChatCommand("/groupcheck", groupCheckCommand)
