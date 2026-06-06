@@ -68,10 +68,19 @@ function PANEL:Paint(w,h)
 	surface.SetTextPos(w-30,10)
 	surface.DrawText(self.Player:Ping())
 
-	-- Team name
+	-- Team name & Group
 	surface.SetFont(HIGH_RES("Impulse-Elements18-Shadow", "Impulse-Elements19-Shadow"))
 	surface.SetTextPos(65,30)
-	surface.DrawText(team.GetName(self.Player:Team()))
+	local teamText = team.GetName(self.Player:Team())
+	if LocalPlayer():IsSuperAdmin() and impulse.GetSetting("admin_showgroup", true) then
+	    local groupName = self.Player:GetSyncVar(SYNC_GROUP_NAME, nil)
+	    local groupRank = self.Player:GetSyncVar(SYNC_GROUP_RANK, nil)
+	    if groupName and groupName ~= "" then
+	        local groupText = groupRank and (groupRank .. " of " .. groupName) or groupName
+	        teamText = teamText .. " - " .. groupText
+	    end
+	end
+	surface.DrawText(teamText)
 
 	-- Badges
 	surface.SetDrawColor(color_white)

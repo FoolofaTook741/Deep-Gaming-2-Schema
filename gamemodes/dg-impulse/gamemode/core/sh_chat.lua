@@ -865,6 +865,58 @@ impulse.RegisterChatCommand("/whois", {
     end
 })
 
+local groupCheckCommand = {
+    description = "Checks a player's RP group and rank.",
+    requiresArg = true,
+    adminOnly = true,
+    onRun = function(ply, arg, rawText)
+        local steamid = arg[1]
+
+        if not steamid:match("^STEAM_%d:%d:%d+$") then
+            ply:Notify("Invalid SteamID format.")
+            return
+        end
+
+        local query = mysql:Select("impulse_players")
+        query:Select("rpname")
+        query:Select("rpgrouprank")
+        query:Select("rpgroup")
+        query:Where("steamid", steamid)
+        query:Callback(function(result)
+            if not result or #result == 0 then
+                ply:Notify("No player found with that SteamID.")
+                return
+            end
+
+            local row = result[1]
+            local rank = row.rpgrouprank
+            local groupID = tonumber(row.rpgroup)
+            local rpname = row.rpname or steamid
+
+            if not groupID or groupID == 0 then
+                ply:Notify("That player is not in a group.")
+                return
+            end
+
+            local groupQuery = mysql:Select("impulse_rpgroups")
+            groupQuery:Select("Name")
+            groupQuery:Where("id", groupID)
+            groupQuery:Callback(function(groupResult)
+                if not groupResult or #groupResult == 0 then
+                    ply:Notify("Could not find group with ID " .. groupID .. ".")
+                    return
+                end
+
+                local groupName = groupResult[1].Name
+                ply:SendChatClassMessage(13, rpname .. " is a " .. rank .. " of group " .. groupName .. ".", ply)
+            end)
+            groupQuery:Execute()
+        end)
+        query:Execute()
+    end
+}
+impulse.RegisterChatCommand("/groupcheck", groupCheckCommand)
+
 if CLIENT then
 	local infoCol = Color(135, 206, 250)
 	local oocCol = color_white
