@@ -1801,12 +1801,19 @@ local setArmorCommand = {
 	onRun = function(ply, arg, rawText)
 		local steamid = arg[1]
 		local amount = tonumber(arg[2])
+
+		if not steamid:match("^STEAM_%d:%d:%d+$") then
+            return ply:Notify("Invalid SteamID format.")
+        end
+
 		local targ = player.GetBySteamID(steamid)
 		if not amount then return end
 		if amount < 0 then
 			return ply:Notify("Must be equal to or over 0.")
 		end
 		targ:SetArmor(amount)
+		ply:Notify(targ:Name() .. " armor set to " .. tostring(amount) .. ".")
+		return 
 	end
 }
 
