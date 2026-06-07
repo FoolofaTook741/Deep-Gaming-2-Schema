@@ -18,6 +18,12 @@ TEAM_CREMATOR = impulse.Teams.Define({
     iconCamPos = Vector(9.1690540313721, 106.36103057861, 79.770774841309),
     iconLookAt = Vector(0, 0, 83.438395415473),
     doorGroup = {1, 2, 3, 7},
+    customCheck = function(ply, teamID)
+        if team.NumPlayers(TEAM_CREMATOR) >= 3 then
+            ply:Notify("Cremator is full.")
+            return false
+        end
+    end,
 })
 
 hook.Add("PlayerFootstep", "CrematorFootsteps", function(ply, pos, foot, soundName)
