@@ -18,22 +18,30 @@ local CREMATOR_PAY    = 50   --credit paytout
 
 local activeZones = {}
 local cachedBounds = nil
+local cachedExclBounds = nil
 
 local function BuildBoundsCache()
     cachedBounds = {}
+    cachedExclBounds = {}
     local zoneNames = impulse.Config.XenContaminationZones
-    if not zoneNames or not impulse.Config.Zones then return end
+    local exclNames = impulse.Config.XenContaminationExclusionZones
+    if not impulse.Config.Zones then return end
 
-    for _, zoneName in ipairs(zoneNames) do
-        for _, zone in pairs(impulse.Config.Zones) do
-            if zone.name == zoneName then
-                local p1, p2 = zone.pos1, zone.pos2
-                table.insert(cachedBounds, {
-                    minX = math.min(p1.x, p2.x), maxX = math.max(p1.x, p2.x),
-                    minY = math.min(p1.y, p2.y), maxY = math.max(p1.y, p2.y),
-                    minZ = math.min(p1.z, p2.z), maxZ = math.max(p1.z, p2.z),
-                })
-                break
+    for _, zone in pairs(impulse.Config.Zones) do
+        local p1, p2 = zone.pos1, zone.pos2
+        local b = {
+            minX = math.min(p1.x, p2.x), maxX = math.max(p1.x, p2.x),
+            minY = math.min(p1.y, p2.y), maxY = math.max(p1.y, p2.y),
+            minZ = math.min(p1.z, p2.z), maxZ = math.max(p1.z, p2.z),
+        }
+        if zoneNames then
+            for _, name in ipairs(zoneNames) do
+                if zone.name == name then table.insert(cachedBounds, b) break end
+            end
+        end
+        if exclNames then
+            for _, name in ipairs(exclNames) do
+                if zone.name == name then table.insert(cachedExclBounds, b) break end
             end
         end
     end
@@ -45,6 +53,13 @@ local function IsInContaminationZone(pos)
         if pos.x >= b.minX and pos.x <= b.maxX and
            pos.y >= b.minY and pos.y <= b.maxY and
            pos.z >= b.minZ and pos.z <= b.maxZ then
+            for _, e in ipairs(cachedExclBounds) do
+                if pos.x >= e.minX and pos.x <= e.maxX and
+                   pos.y >= e.minY and pos.y <= e.maxY and
+                   pos.z >= e.minZ and pos.z <= e.maxZ then
+                    return false
+                end
+            end
             return true
         end
     end

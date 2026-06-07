@@ -101,6 +101,11 @@ impulse.Config.XenContaminationZones = {
 }
 
 
+impulse.Config.XenContaminationExclusionZones = {
+    "Restricted Zone 1", --gas zones do not spawn in rebel base
+}
+
+
 impulse.Config.Zone404Name = "Sewer System Entrance"
 impulse.Config.BulkCrateSpawn = Vector(1214.0338134766, -447.62561035156, 728.03125)
 
@@ -148,7 +153,8 @@ impulse.Config.Zones = {
 	{name = "Service Tunnel", pos1 = Vector(-2912.6662597656, 1828.7585449219, 1565.0599365234), pos2 = Vector(-4775.8969726563, 5785.9853515625, 709.90277099609)},
 	{name = "Outlands Gate", pos1 = Vector(3301.8918457031, 3759.3684082031, 2063.6762695313), pos2 = Vector(6667.146484375, 1809.2868652344, 651.23217773438)},
 	{name = "Stabilization Jurisdiction 1", pos1 = Vector(8159.3422851563, 4457.005859375, 1993.0834960938), pos2 = Vector(11300.934570313, 2021.3001708984, 570.93127441406)},
-	{name = "Outlands Zone 1", pos1 = Vector(15919.627929688, 3975.365234375, 3438.2287597656), pos2 = Vector(5085.7646484375, -6715.798828125, 558.51892089844)}
+	{name = "Outlands Zone 1", pos1 = Vector(15919.627929688, 3975.365234375, 3438.2287597656), pos2 = Vector(5085.7646484375, -6715.798828125, 558.51892089844)},
+	{name = "Restricted Zone 1", pos1 = Vector(2857.3654785156, 3435.3049316406, 870.25640869141), pos2 = Vector(1520.3758544922, 4353.267578125, 273.14712524414)}, --Rebel Base
 }
 
 impulse.Config.ScannerSpawnPos = Vector(689.75146484375, 149.54406738281, 1216.0462646484)
