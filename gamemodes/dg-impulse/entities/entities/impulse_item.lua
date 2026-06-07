@@ -90,7 +90,7 @@ if SERVER then
 				end			
 			elseif activator:CanHoldItem(self.Item.UniqueID) then
 
-				if activator:IsCP() and not activator:GetTeamRank() then
+				if activator:IsCP() and not activator:GetTeamRank() and activator:Team() ~= TEAM_CREMATOR then
 					activator:Notify("You cannot interact with items unless you have a rank.")
 					return
 				end
