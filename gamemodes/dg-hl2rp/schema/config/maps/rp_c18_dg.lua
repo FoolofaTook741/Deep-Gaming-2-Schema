@@ -94,6 +94,13 @@ impulse.Config.vortPortalSpawnPos = {
     Vector(10890.565429688, -3875.7531738281, 656.15490722656)
 }
 
+impulse.Config.XenContaminationZones = {
+    "Sewer System Zone 1",
+    "Sewer System Zone 2",
+    "Sewer System Zone 3",
+}
+
+
 impulse.Config.Zone404Name = "Sewer System Entrance"
 impulse.Config.BulkCrateSpawn = Vector(1214.0338134766, -447.62561035156, 728.03125)
 
