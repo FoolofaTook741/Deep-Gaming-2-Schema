@@ -858,8 +858,7 @@ impulse.RegisterChatCommand("/whois", {
                     break
                 end
             end
-			ply:SendChatClassMessage(13, "RP Name: " .. (data.rpname or "N/A") .. " | Steam Name: " .. steamName, ply)
-			ply:SendChatClassMessage(13, "SteamID: " .. (data.steamid or "N/A"), ply)
+			ply:ConCommand("say /ac ID: " .. id .. " | RP Name: " .. (data.rpname or "N/A") .. " | Steam Name: " .. steamName .. " | SteamID: " .. (data.steamid or "N/A"))
         end)
         query:Execute()
     end
@@ -891,7 +890,7 @@ local groupCheckCommand = {
             return
         end
 
-        ply:SendChatClassMessage(13, targ:Name() .. " is a " .. (groupRank or "Member") .. " of group " .. groupName .. ".", ply)
+        ply:ConCommand("say /ac " .. targ:Name() .. " is a " .. (groupRank or "Member") .. " of group " .. groupName .. ".")
     end
 }
 impulse.RegisterChatCommand("/groupcheck", groupCheckCommand)
