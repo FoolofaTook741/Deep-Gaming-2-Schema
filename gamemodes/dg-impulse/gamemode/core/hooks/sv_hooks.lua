@@ -207,9 +207,9 @@ function GM:PlayerSpawn(ply)
 		--ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
 		if ply.HasDied then
 			if ply:IsCollaborator() then
-				ply:SetHunger(100) --vip+ always spawns with 75 hunger
+				ply:SetHunger(75) --vip+ always respawns with 75 hunger
 			else
-				ply:SetHunger(60) -- gives them 50 hunger if they died
+				ply:SetHunger(50)
 			end
 		end
 	end
