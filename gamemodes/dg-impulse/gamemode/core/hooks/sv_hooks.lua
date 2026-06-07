@@ -209,7 +209,7 @@ function GM:PlayerSpawn(ply)
 			if ply:IsCollaborator() then
 				ply:SetHunger(100) --vip+ always spawns with 75 hunger
 			else
-				ply:SetHunger(75) -- gives them 50 hunger if they died
+				ply:SetHunger(60) -- gives them 50 hunger if they died
 			end
 		end
 	end
