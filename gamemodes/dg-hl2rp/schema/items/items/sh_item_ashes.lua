@@ -8,7 +8,7 @@ ITEM.Model = Model("models/mosi/fnv/props/junk/hide.mdl")
 iconFOV = 10.283667621777
 iconCamPos = Vector(13.753582000732, 112.77937316895, 79.770774841309)
 ITEM.NoCenter = true
-ITEM.Weight = 2
+ITEM.Weight = .1
 ITEM.ItemColour = Color(20, 20, 20, 255)
 
 ITEM.Droppable = true
