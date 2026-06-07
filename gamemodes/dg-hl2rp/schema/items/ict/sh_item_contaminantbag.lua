@@ -21,7 +21,7 @@ ITEM.DropOnDeathIfRestricted = false
 ITEM.CraftIfRestricted = false
 
 ITEM.UseName = "Bag"
-ITEM.UseWorkBarTime = 10
+ITEM.UseWorkBarTime = 8
 ITEM.UseWorkBarName = "Bagging..."
 ITEM.UseWorkBarFreeze = true
 ITEM.UseWorkBarSound = "physics/body/body_medium_impact_soft3.wav" 
@@ -32,8 +32,19 @@ function ITEM:OnUse(ply, target)
         return false
     end
 
-	local targetClass = target:GetClass()
-    if targetClass == "deep_spore" then
+    local targetClass = target:GetClass()
+
+    if targetClass == "prop_physics" and target.IsXenProp then
+        if ply:CanHoldItem("item_fullbag_spore") then
+            ply:Notify("You have bagged the xen growth.")
+            target:Remove()
+            ply:GiveInventoryItem("item_fullbag_spore")
+            return true
+        else
+            ply:Notify("You do not have space to hold this item.")
+            return false
+        end
+    elseif targetClass == "deep_spore" then
         if target.phase <= 1 then
             if ply:CanHoldItem("item_fullbag_spore") then
                 ply:Notify("You have bagged the spore.")
@@ -66,6 +77,9 @@ function ITEM:OnUse(ply, target)
     else
         if ply:CanHoldItem("item_fullbag") then
             ply:Notify("You have bagged the contaminant.")
+            if target.IsInXenZone then
+                target.XenBagged = true
+            end
             target:Remove()
             ply:GiveInventoryItem("item_fullbag")
             return true
@@ -77,7 +91,8 @@ function ITEM:OnUse(ply, target)
 end
 
 function ITEM:ShouldTraceUse(ply, ent)
-	return ent:GetClass() == "prop_ragdoll" or ent:GetClass() == "deep_spore" or ent:GetClass() == "deep_barnaclespawner"
+    print("[EmptyBag] Trace hit: " .. ent:GetClass() .. " EntIndex: " .. ent:EntIndex() .. " IsXenProp: " .. tostring(ent.IsXenProp))
+    return ent:GetClass() == "prop_ragdoll" or ent:GetClass() == "deep_spore" or ent:GetClass() == "deep_barnaclespawner" or (ent:GetClass() == "prop_physics" and ent:GetNWBool("IsXenProp"))
 end
 
 impulse.RegisterItem(ITEM)
