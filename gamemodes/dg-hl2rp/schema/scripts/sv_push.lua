@@ -22,6 +22,7 @@ hook.Add("KeyPress", "PushMechanic", function(ply, key)
         	local dir = ply:GetAimVector()
         	local t = ply:GetEyeTrace().Entity
             if (t and t:IsPlayer()) and (ply:GetPos():Distance( t:GetPos() ) <= 100) then
+                if t:IsPlayer() and t:Team() == TEAM_CREMATOR then return end
                 t:SetVelocity(Vector(dir.x, dir.y, 0) * 270)
                 t:EmitSound("weapons/crossbow/hitbod"..math.random(1, 2)..".wav")
                 ply.NextPush = CurTime() + (3 * ply.NextPushIncrement)
