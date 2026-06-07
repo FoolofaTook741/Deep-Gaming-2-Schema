@@ -537,7 +537,7 @@ VENDOR.Sell = {
 			else return false
 			end
 		end
-	},
+	}, --[[
 	["wep_gausspistol"] = {
 		Desc = "Collaborator (VIP+)",
 		Restricted = true,
@@ -548,7 +548,7 @@ VENDOR.Sell = {
 			else return false
 			end
 		end
-	},
+	}, ]]--
 	["item_enhancedvial"] = {
 		Desc = "Ordinal+",
 		Restricted = true,
