@@ -63,6 +63,8 @@ function meta:SetTeam(teamID, forced)
 			self:SetPos(table.Random(impulse.Config.ZombieSpawnLocations))
 		elseif teamID == TEAM_STALKER then
 			self:SetPos(table.Random(impulse.Config.StalkerSpawnLocations))
+		elseif teamID == TEAM_CREMATOR then
+    		self:SetPos(table.Random(impulse.Config.CrematorSpawnLocations))
 		end
 	end	
 
