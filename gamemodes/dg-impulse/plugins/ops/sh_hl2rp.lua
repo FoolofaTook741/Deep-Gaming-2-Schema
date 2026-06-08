@@ -188,6 +188,7 @@ local ctaBanCommand = {
 				update:Execute()
 			end)
 			query:Execute()
+            ply:Notify("You have banned "..name.." from the CTA faction for "..howLong..".")
         end
     end
 }
@@ -292,6 +293,7 @@ local mpfBanCommand = {
             end)
 
             query:Execute()
+            ply:Notify("You have banned "..name.." from the MPF faction for "..howLong..".")
         end
     end
 }
