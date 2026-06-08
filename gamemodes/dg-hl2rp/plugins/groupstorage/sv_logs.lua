@@ -46,11 +46,35 @@ function LogWithdrawal(groupName, ply, amount, description)
 		player      = ply:Nick() .. " (" .. ply:SteamID() .. ")"
 	})
 end
+
 function GetLogs(groupName, limit, descFilter)
-    local grp      = impulse.Group.Groups[groupName]
-    local data     = (grp and grp.Data) or {}
-    local logs     = data.logs or {}
-    return logs
+    limit = limit or 100
+
+    local grp = impulse.Group.Groups[groupName]
+    if not grp then return {} end
+
+    grp.Data = grp.Data or {}
+    grp.Data.logs = grp.Data.logs or {}
+
+    pruneOldLogs(grp.Data.logs)
+
+    local out = {}
+
+    for _, log in ipairs(grp.Data.logs) do
+        if #out >= limit then break end
+
+        if not descFilter or tostring(log.description or ""):find(descFilter, 1, true) then
+            out[#out + 1] = {
+                time = tonumber(log.time) or os.time(),
+                type = tostring(log.type or ""),
+                amount = tonumber(log.amount) or 0,
+                description = string.sub(tostring(log.description or ""), 1, 160),
+                player = string.sub(tostring(log.player or ""), 1, 80)
+            }
+        end
+    end
+
+    return out
 end
 
 function ClearLogs(groupName)
