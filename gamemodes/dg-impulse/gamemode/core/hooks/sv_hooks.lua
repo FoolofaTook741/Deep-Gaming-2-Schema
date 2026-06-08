@@ -553,11 +553,13 @@ function GM:PostSetupPlayer(ply)
 	for v,k in pairs(impulse.Config.Achievements) do
 		ply:AchievementCheck(v)
 	end
-	if ply:IsCollaborator() then
-        ply:SetLocalSyncVar(SYNC_HUNGER, 100)
-    else
-        ply:SetLocalSyncVar(SYNC_HUNGER, 70)
-    end
+	timer.Simple(3, function()
+		if ply:IsCollaborator() then
+	        ply:SetLocalSyncVar(SYNC_HUNGER, 100)
+	    else
+	        ply:SetLocalSyncVar(SYNC_HUNGER, 70)
+	    end
+	end)
 	--ply:GiveQuest(QUEST_PRIME_DIRECTIVE)
 end
 
