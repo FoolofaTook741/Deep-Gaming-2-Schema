@@ -66,14 +66,22 @@ end
 
 function meta:CanHoldItemGroupStorage(itemclass, amount)
     local itemid = impulse.Inventory.ClassToNetID(itemclass)
-    local item    = impulse.Inventory.Items[itemid] or {}
-    local w       = (tonumber(item.Weight) or 0) * (amount or 1)
 
-    local gid   = self:GetGroupID()
-    local data  = impulse.Inventory.Group.Data[gid] or {}
-    local curW  = data.Weight or 0
-    local maxW  = self:MaxGroupInventoryWeight()
-	
+    if not itemid or not impulse.Inventory.Items[itemid] then
+        print("[GroupStorage] CanHold failed for invalid/deleted item:", tostring(itemclass))
+        return false
+    end
+
+    local item = impulse.Inventory.Items[itemid]
+    local w = (tonumber(item.Weight) or 0) * (amount or 1)
+
+    local gid = self:GetGroupID()
+    if not gid then return false end
+
+    local data = impulse.Inventory.Group.Data[gid] or {}
+    local curW = data.Weight or 0
+    local maxW = self:MaxGroupInventoryWeight()
+
     return curW + w <= maxW
 end
 
@@ -82,6 +90,10 @@ function meta:GiveInventoryItemGroup(itemclass, storetype, restricted, isLoaded,
      storetype = storetype or 1
      restricted = restricted or false
      local itemid = impulse.Inventory.ClassToNetID(itemclass)
+     if not itemid or not impulse.Inventory.Items[itemid] then
+        print("[GroupStorage] Tried to give invalid/deleted item:", tostring(itemclass))
+        return
+    end
      local weight = impulse.Inventory.Items[itemid].Weight or 0
      local ownerid = (storetype == 3 and (self:GetGroupID() or self.impulseID)) or self.impulseID
  
@@ -143,8 +155,20 @@ function meta:TakeInventoryItemGroup(invid, storetype, moving)
         return nil
     end
     local itemid = impulse.Inventory.ClassToNetID(item.class)
-    local weight = (impulse.Inventory.Items[itemid].Weight or 0) * amount
     local dbOwner = (storetype == 3 and (self:GetGroupID() or self.impulseID)) or self.impulseID
+    if not itemid or not impulse.Inventory.Items[itemid] then
+        print("[GroupStorage] Removing invalid/deleted item from memory:", tostring(item.class))
+
+        targetInventory[ownerid][storetype][invid] = nil
+
+        if not moving then
+            impulse.Inventory.DBRemoveItem(dbOwner, item.class, storetype, 1)
+        end
+
+        return nil
+    end
+    local weight = (impulse.Inventory.Items[itemid].Weight or 0) * amount
+    
     if not moving then
         impulse.Inventory.DBRemoveItem(dbOwner, item.class, storetype, 1)
     end
@@ -193,6 +217,19 @@ function meta:MoveInventoryItemGroup(invid, from, to)
         return
     end
 
+    local safeID = tonumber(entry.id) or tonumber(impulse.Inventory.ClassToNetID(entry.class))
+
+    if not safeID or not impulse.Inventory.Items[safeID] then
+        print("[GroupStorage] Cannot move invalid/deleted item:",
+            "slot=" .. tostring(invid),
+            "class=" .. tostring(entry.class),
+            "id=" .. tostring(entry.id)
+        )
+        return
+    end
+
+    entry.id = safeID
+
     srcTbl[invid] = nil
 
     if from == 1 then
@@ -235,7 +272,7 @@ function meta:MoveInventoryItemGroup(invid, from, to)
         end
     end
 
-    local w = tonumber(impulse.Inventory.Items[entry.id].Weight) or 0
+    local w = tonumber(impulse.Inventory.Items[safeID].Weight) or 0
     local groupName = self:GetSyncVar(SYNC_GROUP_NAME, nil)
     if to == 1 then
         self.InventoryWeight = self.InventoryWeight + w
@@ -253,7 +290,7 @@ function meta:MoveInventoryItemGroup(invid, from, to)
 	net.WriteUInt(newinvid, 16)
 	net.WriteUInt(from,      4)
 	net.WriteUInt(to,        4)
-	net.WriteUInt(entry.id,  16)
+	net.WriteUInt(safeID, 16)
     net.Send(targets)
 
     self:calcGroupStorageWeight()
@@ -305,6 +342,19 @@ function meta:MoveInventoryItemGroupMass(itemclass, from, to, amount)
         local entry = srcTbl[oldSlot]
         if not entry then continue end
 
+        local safeID = tonumber(entry.id) or tonumber(impulse.Inventory.ClassToNetID(entry.class))
+
+        if not safeID or not impulse.Inventory.Items[safeID] then
+            print("[GroupStorage] Skipping invalid/deleted mass-move item:",
+                "slot=" .. tostring(oldSlot),
+                "class=" .. tostring(entry.class),
+                "id=" .. tostring(entry.id)
+            )
+            continue
+        end
+
+        entry.id = safeID
+
         if from == 1 then
             impulse.Inventory.DBRemoveItem(self.impulseID, entry.class, 1, 1)
             impulse.Inventory.GroupDBAddItem(groupid, entry.class, 3)
@@ -323,7 +373,7 @@ function meta:MoveInventoryItemGroupMass(itemclass, from, to, amount)
             end
         end
 
-        local w = tonumber(impulse.Inventory.Items[entry.id].Weight) or 0
+        local w = tonumber(impulse.Inventory.Items[safeID].Weight) or 0
         if to == 1 then
             self.InventoryWeight = self.InventoryWeight + w
         elseif to == 3 then
@@ -495,6 +545,16 @@ function impulse.Group.LoadInventory(groupKey, onLoaded)
         if type(result) == "table" and #result > 0 then
             for _, record in ipairs(result) do
                 local netID = impulse.Inventory.ClassToNetID(record.uniqueid)
+
+                if not netID or not impulse.Inventory.Items[netID] then
+                    print("[GroupStorage] Skipping invalid/deleted item:",
+                        "groupid=" .. tostring(groupKey),
+                        "dbid=" .. tostring(record.id),
+                        "uniqueid=" .. tostring(record.uniqueid)
+                    )
+
+                    continue
+                end
                 local itemMeta = impulse.Inventory.Items[netID] or {}
                 local w = tonumber(itemMeta.Weight) or 0
 

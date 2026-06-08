@@ -181,7 +181,7 @@ net.Receive("deepGroupLogsRequest", function(len, ply)
     local groupName = ply:GetSyncVar(SYNC_GROUP_NAME, nil)
     if not groupName then return end
 
-    local logs = GetLogs(groupName)
+    local logs = GetLogs(groupName, 100)
 
     net.Start("deepGroupLogsSend")
     net.WriteTable(logs)
@@ -346,32 +346,72 @@ net.Receive("impulseGroupATMWithdraw", function(len, ply)
 end)
 
 function SyncGroupStorageForGroup(groupid, ply, delete)
+    if not IsValid(ply) then return end
+
+    groupid = tonumber(groupid)
+    delete = delete == true
+
     local groupItems = {}
-	net.Start("deepGroupStorageSync")
-	net.WriteBool(delete)
-	if not delete then
-	
-		if impulse.Inventory.Group.Data[groupid] and impulse.Inventory.Group.Data[groupid][3] then
-			groupItems = impulse.Inventory.Group.Data[groupid][3]
-		end
 
-        if impulse.Inventory.Group.Data[groupid] then
-            impulse.Inventory.Group.Data[groupid].Weight = nil
-            ply:calcGroupStorageWeight()
+    if not delete then
+        if impulse.Inventory.Group
+        and impulse.Inventory.Group.Data
+        and impulse.Inventory.Group.Data[groupid]
+        and impulse.Inventory.Group.Data[groupid][3] then
+            groupItems = impulse.Inventory.Group.Data[groupid][3]
         end
-		
-		local cnt = 0
-		for _ in pairs(groupItems) do cnt = cnt + 1 end
 
-		net.WriteUInt(cnt, 16)
-		for slot, entry in pairs(groupItems) do
-			net.WriteUInt( slot, 16 )
-			net.WriteUInt( entry.id, 16 )
-			net.WriteBool( entry.restricted )
-			net.WriteBool( entry.equipped )
-		end
-	end
-	net.Send(ply)
+        if impulse.Inventory.Group
+        and impulse.Inventory.Group.Data
+        and impulse.Inventory.Group.Data[groupid] then
+            impulse.Inventory.Group.Data[groupid].Weight = nil
+
+            if ply.calcGroupStorageWeight then
+                ply:calcGroupStorageWeight()
+            end
+        end
+    end
+
+    net.Start("deepGroupStorageSync")
+    net.WriteBool(delete)
+
+    if not delete then
+        local safeItems = {}
+
+        for slot, entry in pairs(groupItems) do
+            local safeSlot = tonumber(slot)
+            local safeID = entry and (tonumber(entry.id) or tonumber(impulse.Inventory.ClassToNetID(entry.class)))
+
+            if safeSlot and safeID and impulse.Inventory.Items[safeID] then
+                entry.id = safeID
+
+                safeItems[#safeItems + 1] = {
+                    slot = safeSlot,
+                    id = safeID,
+                    restricted = entry.restricted == true,
+                    equipped = entry.equipped == true
+                }
+            else
+                print("[GroupStorage] Skipping invalid sync item:",
+                    "groupid=" .. tostring(groupid),
+                    "slot=" .. tostring(slot),
+                    "class=" .. tostring(entry and entry.class),
+                    "id=" .. tostring(entry and entry.id)
+                )
+            end
+        end
+
+        net.WriteUInt(#safeItems, 16)
+
+        for _, entry in ipairs(safeItems) do
+            net.WriteUInt(entry.slot, 16)
+            net.WriteUInt(entry.id, 16)
+            net.WriteBool(entry.restricted)
+            net.WriteBool(entry.equipped)
+        end
+    end
+
+    net.Send(ply)
 end
 
 
