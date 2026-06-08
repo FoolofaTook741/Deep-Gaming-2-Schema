@@ -20,7 +20,7 @@ function ENT:Think()
     for _, ply in ipairs(player.GetAll()) do
         if not ply:Alive() then continue end
         if ply.GasSafe then continue end
-        if ply:Team() == TEAM_CREMATOR or ply:GetTeamClass() == CLASS_ICT then continue end  --cremators & ict are immune to gas
+        if ply:Team() == TEAM_CREMATOR or ply:GetTeamClass() == CLASS_ICT or ply:Team() == TEAM_ZOMBIE then continue end  --cremators, zombies and ict are immune to gas
         if pos:Distance(ply:GetPos()) > GAS_RADIUS then continue end
 
         ply:TakeDamage(GAS_DAMAGE, self, self)
