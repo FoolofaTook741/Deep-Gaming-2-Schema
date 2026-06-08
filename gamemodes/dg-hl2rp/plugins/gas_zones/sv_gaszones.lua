@@ -14,7 +14,7 @@ local XEN_PROP_RADIUS = 80
 local BURN_TICKS      = 10   --ticks of sustained fire needed to incinerate
 local BURN_RATE       = 1    --seconds between burn ticks
 local BURN_RESET      = 2    --how long it takes to reset health of fire stops
-local CREMATOR_PAY    = 50   --credit paytout
+local CREMATOR_PAY    = 25   --credit paytout
 
 local activeZones = {}
 local cachedBounds = nil
