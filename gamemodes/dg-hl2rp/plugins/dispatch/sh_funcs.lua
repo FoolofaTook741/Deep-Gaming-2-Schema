@@ -262,6 +262,7 @@ function impulse.Dispatch.SetupCityCode(code)
         end
 
         timer.Simple(2, function()  
+            timer.Remove("ajbuzzer1")
             if code == 2 then
                 for k, v in pairs(player.GetAll()) do
                     v:SendLua([[surface.PlaySound("ambient/cmb_alarm.mp3")]])
