@@ -12,6 +12,7 @@ if SERVER then
         [TEAM_OTA]     = true,
         [TEAM_CA]      = true,
         [TEAM_STALKER] = true,
+        [TEAM_CREMATOR] = true,
     }
 
     local civTeams = {
