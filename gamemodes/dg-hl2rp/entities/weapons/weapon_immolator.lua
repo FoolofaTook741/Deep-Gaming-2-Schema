@@ -6,6 +6,9 @@ end
 
 if CLIENT then
     net.Receive("ImmolatorFlame", function()
+        local lp = LocalPlayer()
+        if not IsValid(lp) then return end
+
         local startPos = net.ReadVector()
         local endPos = net.ReadVector()
         local ownerIndex = net.ReadUInt(8)
