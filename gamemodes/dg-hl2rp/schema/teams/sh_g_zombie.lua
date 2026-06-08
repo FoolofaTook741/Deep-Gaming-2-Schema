@@ -254,12 +254,14 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
             ply:SetWalkSpeed(120)
             ply:SetJumpPower( 200 )
         end        
-        if (newTeam == TEAM_CITIZEN or newTeam == TEAM_CWU) and ply:IsCharacterFemale() then
-            ply:SetHealth(impulse.Config.DefaultFemaleHealth)
-            ply:SetMaxHealth(impulse.Config.DefaultFemaleHealth)
-        else
-            ply:SetHealth(impulse.Config.DefaultMaleHealth)
-            ply:SetMaxHealth(impulse.Config.DefaultMaleHealth)
+        if newTeam ~= TEAM_CREMATOR then
+            if (newTeam == TEAM_CITIZEN or newTeam == TEAM_CWU) and ply:IsCharacterFemale() then
+                ply:SetHealth(impulse.Config.DefaultFemaleHealth)
+                ply:SetMaxHealth(impulse.Config.DefaultFemaleHealth)
+            else
+                ply:SetHealth(impulse.Config.DefaultMaleHealth)
+                ply:SetMaxHealth(impulse.Config.DefaultMaleHealth)
+            end
         end
         ply:SetArmor(0)
         ply.RegularZombie = false
