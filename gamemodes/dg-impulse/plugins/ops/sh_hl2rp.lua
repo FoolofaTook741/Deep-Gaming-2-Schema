@@ -21,6 +21,7 @@ local combineBanCommand = {
         time = tonumber(time)
         time = time * 60 -- Convert minutes to seconds
         time = math.Clamp(time, 0, 31536000) -- Clamp between 0 and 12 months (in seconds)
+        local howLong = string.NiceTime(time)
 
         if plyTarget and plyTarget.impulseData then
             local curT = os.time()
@@ -33,7 +34,7 @@ local combineBanCommand = {
                 plyTarget:SetTeam(impulse.Config.DefaultTeam)
             end
 
-            local howLong = string.NiceTime(time)
+            
 
             ply:Notify("You have combine banned "..plyTarget:Nick().." for "..howLong..".")
             plyTarget:Notify("You have been banned from the combine faction for "..howLong.." by "..ply:Nick()..".")
@@ -77,6 +78,9 @@ local combineBanCommand = {
 				local update = mysql:Update("impulse_players")
 				update:Update("data", newData)
 				update:Where("steamid", name)
+                update:Callback(function(result)
+                    ply:Notify("You have combine banned "..name.." for "..howLong..".")
+                end)
 				update:Execute()
 			end)
 			query:Execute()
@@ -130,6 +134,7 @@ local ctaBanCommand = {
         time = tonumber(time)
         time = time * 60 -- Convert minutes to seconds
         time = math.Clamp(time, 0, 31536000) -- Clamp between 0 and 12 months (in seconds)
+        local howLong = string.NiceTime(time)
 
         if plyTarget and plyTarget.impulseData then
             local curT = os.time()
@@ -141,8 +146,7 @@ local ctaBanCommand = {
             if plyTarget:IsCP() then
                 plyTarget:SetTeam(impulse.Config.DefaultTeam)
             end
-
-            local howLong = string.NiceTime(time)
+            
 
             ply:Notify("You have banned "..plyTarget:Nick().." from the CTA faction for "..howLong..".")
             plyTarget:Notify("You have been banned from the CTA faction for "..howLong.." by "..ply:Nick()..".")
@@ -185,10 +189,13 @@ local ctaBanCommand = {
 				local update = mysql:Update("impulse_players")
 				update:Update("data", newData)
 				update:Where("steamid", name)
-				update:Execute()
+                update:Callback(function()
+                    ply:Notify("You have banned "..name.." from the CTA faction for "..howLong..".")
+                end)
+                update:Execute()
 			end)
 			query:Execute()
-            ply:Notify("You have banned "..name.." from the CTA faction for "..howLong..".")
+            
         end
     end
 }
@@ -243,6 +250,7 @@ local mpfBanCommand = {
         time = tonumber(time)
         time = time * 60
         time = math.Clamp(time, 0, 31536000)
+        local howLong = string.NiceTime(time)
 
         if plyTarget and plyTarget.impulseData then
             local endT = os.time() + time
@@ -254,7 +262,6 @@ local mpfBanCommand = {
                 plyTarget:SetTeam(impulse.Config.DefaultTeam)
             end
 
-            local howLong = string.NiceTime(time)
 
             ply:Notify("You have banned " .. plyTarget:Nick() .. " from the MPF faction for " .. howLong .. ".")
             plyTarget:Notify("You have been banned from the MPF faction for " .. howLong .. " by " .. ply:Nick() .. ".")
@@ -289,11 +296,15 @@ local mpfBanCommand = {
                 local update = mysql:Update("impulse_players")
                 update:Update("data", util.TableToJSON(data))
                 update:Where("steamid", name)
+                update:Callback(function()
+                    ply:Notify("You have banned "..name.." from the MPF faction for "..howLong..".")
+                end)
                 update:Execute()
+                
             end)
 
             query:Execute()
-            ply:Notify("You have banned "..name.." from the MPF faction for "..howLong..".")
+            
         end
     end
 }
