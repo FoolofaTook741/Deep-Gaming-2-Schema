@@ -555,7 +555,7 @@ function SCHEMA:PlayerShouldGetHungry(ply)
 	if ply:GetMoveType() == MOVETYPE_NOCLIP then
         return false
     end
-	return ply.Team(ply) != TEAM_OTA and ply.Team(ply) != TEAM_ZOMBIE and ply.Team(ply) != TEAM_STALKER
+	return ply.Team(ply) ~= TEAM_OTA and ply.Team(ply) ~= TEAM_ZOMBIE and ply.Team(ply) ~= TEAM_STALKER and ply.team(ply) ~= TEAM_CREMATOR
 end
 
 function SCHEMA:PlayerRagdollPreSpawn(rag, dier, killer)
