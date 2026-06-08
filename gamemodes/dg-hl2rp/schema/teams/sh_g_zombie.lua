@@ -250,8 +250,10 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
         timer.Remove(sid .. "zombiemoans")
         ply:AllowFlashlight(true)
         ply:SetNoTarget(false) 
-        ply:SetWalkSpeed(120)
-        ply:SetJumpPower( 200 )
+        if newTeam ~= TEAM_CREMATOR then
+            ply:SetWalkSpeed(120)
+            ply:SetJumpPower( 200 )
+        end        
         if (newTeam == TEAM_CITIZEN or newTeam == TEAM_CWU) and ply:IsCharacterFemale() then
             ply:SetHealth(impulse.Config.DefaultFemaleHealth)
             ply:SetMaxHealth(impulse.Config.DefaultFemaleHealth)
@@ -272,6 +274,18 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
     end
     if buff > 0 and newTeam == TEAM_ZOMBIE then
         ply:Notify("Your health has been increased by " .. buff .. " due to the presence of " .. GetSporeCount() .. " spores.")
+    end
+end)
+
+hook.Add("OnPlayerChangedTeam", "zombieSpeedFix", function(ply, oldTeam, newTeam)
+    if newTeam == TEAM_ZOMBIE then return end --zombie hook handles its own speed
+    if oldTeam == TEAM_ZOMBIE then
+        timer.Simple(0.1, function()
+            if IsValid(ply) and ply:Team() ~= TEAM_ZOMBIE and ply:Team() ~= TEAM_CREMATOR then
+                ply:SetRunSpeed(impulse.Config.JogSpeed)
+                ply:SetWalkSpeed(impulse.Config.WalkSpeed)
+            end
+        end)
     end
 end)
 
