@@ -9,7 +9,7 @@ TEAM_CREMATOR = impulse.Teams.Define({
     Health = 450,
     runSpeed = 60,
     percentLimit = false,
-    limit = 3,
+    limit = 5,
     xp = 0,
     donatorOnly = false,
     collaboratorOnly = true,
@@ -19,7 +19,7 @@ TEAM_CREMATOR = impulse.Teams.Define({
     iconLookAt = Vector(0, 0, 83.438395415473),
     doorGroup = {1, 2, 7},
     customCheck = function(ply, teamID)
-        if team.NumPlayers(TEAM_CREMATOR) >= 3 then
+        if team.NumPlayers(TEAM_CREMATOR) >= 5 then
             ply:Notify("Cremator is full.")
             return false
         end
