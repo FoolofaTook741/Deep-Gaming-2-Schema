@@ -94,7 +94,7 @@ if SERVER then
 			        return activator:Notify("You can only pick up ashes.")
 			    end
 
-				if activator:IsCP() and not activator:GetTeamRank() then
+				if activator:IsCP() and not activator:GetTeamRank() and activator:Team() ~= TEAM_CREMATOR then
 					activator:Notify("You cannot interact with items unless you have a rank.")
 					return
 				end
