@@ -23,13 +23,13 @@ function ITEM:CanEquip(ply)
 end
 
 function ITEM:OnEquip(ply)
-    ply:AddVoiceFX("Public Address System") -- i dunno if this is the right ID but gg
-    ply:Notify("Microphone enabled.")
+    --ply:AddVoiceFX("Public Address System") -- i dunno if this is the right ID but gg
+    --ply:Notify("Microphone enabled.")
 end
 
 function ITEM:UnEquip(ply)
-	ply:RemoveVoiceFX("Public Address System")
-    ply:Notify("Microphone Disabled.")
+	--ply:RemoveVoiceFX("Public Address System")
+    --ply:Notify("Microphone Disabled.")
 end
 
 

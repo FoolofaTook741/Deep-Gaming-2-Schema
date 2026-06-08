@@ -23,13 +23,13 @@ function ITEM:CanEquip(ply)
 end
 
 function ITEM:OnEquip(ply)
-    ply:AddVoiceFX("Masked")
-    ply:Notify("Vocoder engaged.")
+    --ply:AddVoiceFX("Masked")
+    --ply:Notify("Vocoder engaged.")
 end
 
 function ITEM:UnEquip(ply)
-	ply:RemoveVoiceFX("Masked")
-    ply:Notify("Vocoder removed.")
+	--ply:RemoveVoiceFX("Masked")
+    --ply:Notify("Vocoder removed.")
 end
 
 
