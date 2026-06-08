@@ -14,7 +14,7 @@ SWEP.AdminOnly = false
 SWEP.HoldType = "shotgun"
 
 SWEP.WorldModel = Model("models/weapons/suppressor/w_suppressor.mdl")
-SWEP.ViewModel = Model("models/weapons/c_suppressor.mdl")
+SWEP.ViewModel = Model("models/weapons/suppressor/c_suppressor.mdl")
 SWEP.ViewModelFOV = 68
 
 SWEP.Slot = 2
