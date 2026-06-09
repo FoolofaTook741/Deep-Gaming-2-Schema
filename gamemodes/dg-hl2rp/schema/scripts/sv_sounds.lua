@@ -239,7 +239,7 @@ function SCHEMA:PlayerHurt(victim)
 			end
 		elseif victim:Team() == TEAM_STALKER then
 			victim:EmitBudgetSound(table.Random(stalkerpainsounds))
-		elseif victim:Team() != TEAM_VORT then
+		elseif victim:Team() ~= TEAM_VORT and victim:Team() ~= TEAM_CREMATOR then
 			local painSounds = table.Random(normalPain)
 
 			if victim:IsFemale() then
