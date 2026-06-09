@@ -24,7 +24,7 @@ util.AddNetworkString("deepViewBodyCam")
 util.AddNetworkString("impulseHL2RPTerminalTypeRequest")
 util.AddNetworkString("ImpulseHL2RPPurchaseDistPermit")
 util.AddNetworkString("impulseBulkOrder")
-util.AddNetworkString("impulseFabricatorPurchase")
+--util.AddNetworkString("impulseFabricatorPurchase")
 util.AddNetworkString("impulseSquadLeaderAssignment")
 util.AddNetworkString("impulseSquadAssignment")
 util.AddNetworkString("impulseHL2RPOVWDispatchRadio")
@@ -164,7 +164,7 @@ net.Receive("impulseSquadLeaderAssignment", function(len, ply)
 		ply:SetBodygroup(7,2)
 	end
 end)
-
+--[[
 net.Receive("impulseFabricatorPurchase", function(len, ply)
     local class = net.ReadString()
 	local niceName = net.ReadString()
@@ -185,7 +185,7 @@ net.Receive("impulseFabricatorPurchase", function(len, ply)
 		ply:Notify("You have received a "..niceName.." upgrade from the fabricator.")
 		ply:GiveInventoryItem(class)
 	end)
-end)
+end--]]
 
 local CWU_Items = {
     food_apple = { cost = 10 },

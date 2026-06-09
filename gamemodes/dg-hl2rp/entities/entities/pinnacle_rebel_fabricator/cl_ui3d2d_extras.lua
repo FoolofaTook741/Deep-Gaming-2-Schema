@@ -13,7 +13,7 @@
 
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
---]]
+
 if not ui3d2d then return end
 do
     --3d2d VGUI Drawing
@@ -108,3 +108,4 @@ do
         ui3d2d.endDraw()
     end
 end
+--]]

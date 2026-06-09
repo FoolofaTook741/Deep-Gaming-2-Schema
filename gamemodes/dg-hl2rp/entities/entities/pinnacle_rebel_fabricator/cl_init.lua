@@ -1,4 +1,5 @@
-include("shared.lua")
+--[[
+'include("shared.lua")
 AddCSLuaFile("imgui.lua")
 AddCSLuaFile("cl_ui3d2d.lua")
 AddCSLuaFile("cl_ui3d2d_extras.lua")
@@ -303,7 +304,6 @@ end
         self.MainPanel.Entity = self
     end
 
-]]
 
 
 function ENT:OldDraw()
@@ -342,3 +342,4 @@ function ENT:OldDraw()
         imgui.End3D2D()
 	end
 end
+--]]

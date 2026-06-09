@@ -104,11 +104,13 @@ function PANEL:Init(fabricator)
 
         purchaseBtn.DoClick = function()
             surface.PlaySound("ui/hls_ui_scroll_click.wav")
+            --[[
             net.Start("impulseFabricatorPurchase")
                 net.WriteString(data.purchaseItem)
                 net.WriteString(data.name)
                 net.WriteInt(data.Cost, 16)
             net.SendToServer()
+            --]]
 
             self:Remove()
         end

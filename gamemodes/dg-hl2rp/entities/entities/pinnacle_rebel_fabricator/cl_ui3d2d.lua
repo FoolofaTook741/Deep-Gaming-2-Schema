@@ -13,7 +13,7 @@
 
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
---]]
+
 ui3d2d = ui3d2d or {}
 do
     --Input handling
@@ -154,3 +154,4 @@ do
 end
 
 hook.Run("ui3d2d.fullyLoaded")
+--]]

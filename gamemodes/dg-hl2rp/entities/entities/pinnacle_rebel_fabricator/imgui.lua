@@ -1,3 +1,4 @@
+--[[
 local imgui = {}
 
 imgui.skin = {
@@ -475,3 +476,4 @@ function imgui.xTextButton(text, font, x, y, w, h, borderWidth, color, hoverClr,
 end
 
 return imgui
+--]]

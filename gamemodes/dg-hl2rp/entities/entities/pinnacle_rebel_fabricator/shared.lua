@@ -1,3 +1,4 @@
+--[[
 ENT.Base			= "base_anim"
 ENT.Type			= "anim"
 ENT.PrintName		= "Fabricator"
@@ -10,3 +11,4 @@ ENT.AdminOnly = true
 
 ENT.HUDName = " "
 ENT.HUDDesc = " "
+--]]

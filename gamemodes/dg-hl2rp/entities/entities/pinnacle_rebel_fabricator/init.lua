@@ -1,3 +1,4 @@
+--[[
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("imgui.lua")
@@ -107,3 +108,4 @@ function ENT:Think()
 
 	return true -- Apply NextThink call
 end
+--]]
