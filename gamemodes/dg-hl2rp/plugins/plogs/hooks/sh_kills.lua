@@ -52,6 +52,18 @@ local HITGROUP_NAMES = {
 plogs.AddHook('EntityTakeDamage', function(ent, dmginfo)
     if not ent:IsPlayer() then return end
 
+    local attacker = dmginfo:GetAttacker()
+    if IsValid(attacker) then
+        local class = attacker:GetClass()
+        if class == "entityflame" or class == "weapon_immolator" then return end
+    end
+
+    local inflictor = dmginfo:GetInflictor()
+    if IsValid(inflictor) then
+        local class = inflictor:GetClass()
+        if class == "entityflame" or class == "weapon_immolator" then return end
+    end
+
     local copy = {
         ['Name'] = ent:Name(),
         ['SteamID'] = ent:SteamID(),
