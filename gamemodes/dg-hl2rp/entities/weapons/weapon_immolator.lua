@@ -482,7 +482,7 @@ function SWEP:lase( par, stat, from, to, noise )
                 dmginfo:SetInflictor( self )
 
                 if v:IsPlayer() and v:Team() == TEAM_ZOMBIE then
-                    dmginfo:SetDamage( 5 )
+                    dmginfo:SetDamage( 4 )
                 else
                     dmginfo:SetDamage( 1 )
                 end
