@@ -736,7 +736,7 @@ impulse.Config.ManhackTime = 160
 
 impulse.Config.MaxSquadsCP = 15
 impulse.Config.MaxSquadsOTA = 20
-impulse.Config.MaxSquadSizeCP = 4
+impulse.Config.MaxSquadSizeCP = 5
 impulse.Config.MaxSquadSizeOTA = 5
 impulse.Config.SquadExpiryTime = 1000
 
