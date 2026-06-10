@@ -3,7 +3,7 @@ impulse.DefineSetting("bootskip", {name="Skip Bootup Sequence", category="HUD", 
 impulse.DefineSetting("dispbootskip", {name="Dispatch Skip Bootup Sequence", category="HUD", type="tickbox", default=false})
 --impulse.DefineSetting("showquests", {name="Show Quest Display", category="HUD", type="tickbox", default=true})
 
-impulse.DefineSetting("firstperson_fov", {name="Viewmodel FOV", category="View", type="slider", default=0, minValue=0, maxValue=24})
+impulse.DefineSetting("firstperson_fov", {name="Viewmodel FOV", category="View", type="slider", default=0, minValue=0, maxValue=60})
 
 impulse.DefineSetting("lightmap_redownloading", {name="Lightmap Redownloading", category="Performance", type="tickbox", default=false})
 
