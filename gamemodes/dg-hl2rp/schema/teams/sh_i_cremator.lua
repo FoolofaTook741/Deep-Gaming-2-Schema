@@ -97,6 +97,7 @@ hook.Add("OnPlayerChangedTeam", "CrematorSetup", function( ply, oldTeam, newTeam
         ply:SetJumpPower(120)
         ply:SetWalkSpeed(50)
         ply:SetSlowWalkSpeed(35)
+        ply:SetViewOffset(Vector(0, 0, 80))
         --ply:Give("weapon_immolator_beta_alt")
         ply:GiveInventoryItem("wep_immolator", 1, true)
         ply:Give("impulse_hands")
@@ -105,10 +106,15 @@ hook.Add("OnPlayerChangedTeam", "CrematorSetup", function( ply, oldTeam, newTeam
 		--net.Send(ply)
 		--hook.Run("PlayerSetCombineRank", ply, rank, division)
     else
-        ply:SetJumpPower(160)
-        if ply._crematorSprintSound then
-            ply._crematorSprintSound:Stop()
-            ply._crematorSprintSound = nil
+    if oldTeam == TEAM_CREMATOR then
+            ply:SetViewOffset(Vector(0, 0, 64))
+            if ply._crematorSprintSound then
+                ply._crematorSprintSound:Stop()
+                ply._crematorSprintSound = nil
+            end
+        end
+        if newTeam ~= TEAM_ZOMBIE then
+            ply:SetJumpPower(160)
         end
     end
 end)
