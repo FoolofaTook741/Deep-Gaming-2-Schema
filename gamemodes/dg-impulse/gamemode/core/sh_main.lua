@@ -82,7 +82,7 @@ function meta:IsDonator()
 end
 
 function meta:IsCollaborator()
-    return self:IsUserGroup("collaborator") or self:IsSuperAdmin()
+    return self:IsUserGroup("collaborator") or self:IsSuperAdmin() or self:IsUserGroup("admincollaborator") or self:IsUserGroup("leadadmincollaborator") or self:IsUserGroup("gamemastercollaborator") or self:IsUserGroup("seniorgamemastercollaborator")
 end
 
 function meta:IsE2()
@@ -94,7 +94,9 @@ local adminGroups = {
     ["leadadmin"] = true,
     ["leaddeveloper"] = true,
     ["developer"] = true,
-    ["communitymanager"] = true
+    ["admincollaborator"] = true,
+    ["leadadmincollaborator"] = true,
+    ["communitymanager"] = true,
 }
 
 function meta:IsAdmin()
@@ -113,7 +115,8 @@ local leadAdminGroups = {
     ["leadadmin"] = true,
     ["leaddeveloper"] = true,
     ["developer"] = true,
-    ["communitymanager"] = true
+    ["communitymanager"] = true,
+    ["leadadmincollaborator"] = true
 }
 
 function meta:IsLeadAdmin()
@@ -129,11 +132,11 @@ function meta:IsLeadAdmin()
 end
 
 function meta:IsGameMaster()
-    if self.IsSuperAdmin(self) or self:IsLeadAdmin() or self:IsAdmin() then
+    if self.IsSuperAdmin(self) or self:IsLeadAdmin() or self:IsAdmin() or self:IsSeniorGameMaster() then
         return true
     end
 
-    if self:GetUserGroup() == "gamemaster" or self:GetUserGroup() == "seniorgamemaster" then 
+    if self:GetUserGroup() == "gamemaster" or self:GetUserGroup() == "gamemastercollaborator" then 
         return true
     end
 
@@ -145,7 +148,7 @@ function meta:IsSeniorGameMaster()
         return true
     end
 
-    if self:GetUserGroup() == "seniorgamemaster" then 
+    if self:GetUserGroup() == "seniorgamemaster" or self:GetUserGroup() == "seniorgamemastercollaborator" then 
         return true
     end
 
