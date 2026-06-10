@@ -18,7 +18,7 @@ ITEM.CraftIfRestricted = false
 
 ITEM.Illegal = true
 ITEM.Equipable = true
-ITEM.EquipGroup = "grenade"
+ITEM.EquipGroup = "grenade1"
 ITEM.CanStack = true
 ITEM.EquipTime = 1
 ITEM.UnEquipTime = 1
