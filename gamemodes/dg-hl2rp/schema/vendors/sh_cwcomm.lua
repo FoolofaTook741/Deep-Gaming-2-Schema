@@ -99,7 +99,163 @@ VENDOR.Sell = {
 		Cost = 10,
 		BuyMax = 20,
 		TempCooldown = 300
-	}
+	},
+	["item_homerefinerypermit"] = {
+		Desc = "Minister Permits",
+		Cost = 90,
+		BuyMax = 1,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_constructionpermit"] = {
+		Desc = "Minister Permits",
+		Cost = 15,
+		BuyMax = 4,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_metalpermit"] = {
+		Desc = "Minister Permits",
+		Cost = 20,
+		BuyMax = 4,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_outdoorspermit"] = {
+		Desc = "Minister Permits",
+		Cost = 15,
+		BuyMax = 4,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+    ["item_workbenchpermit"] = {
+		Desc = "Minister Permits",
+		Cost = 45,
+		BuyMax = 4,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_miningpermit"] = {
+		Desc = "Minister Permits",
+		Cost = 90,
+		BuyMax = 1,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_lumberjackpermit"] = {
+		Desc = "Minister Permits",
+		Cost = 90,
+		BuyMax = 1,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_cleaverpermit"] = {
+		Desc = "Minister Permits",
+		Cost = 90,
+		BuyMax = 1,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_alcoholpermit"] = {
+		Desc = "Minister Permits",
+		Cost = 20,
+		BuyMax = 2,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["item_generatorpermit"] = {
+		Desc = "Minister Permits",
+		Cost = 40,
+		BuyMax = 3,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["toolbox_axe"] = {
+		Desc = "Minister Permits",
+		Cost = 30,
+		BuyMax = 1,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["toolbox_pickaxe"] = {
+		Desc = "Minister Permits",
+		Cost = 30,
+		BuyMax = 1,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
+	["book_german"] = {
+		Desc = "Minister Permits",
+		Cost = 3000,
+		BuyMax = 1,
+		TempCooldown = 3600,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_MINISTER && ply:GetTeamClass() == CLASS_COMMERCE then
+				return true
+			else return false
+			end
+		end
+	},
 }
 
 VENDOR.Buy = {
