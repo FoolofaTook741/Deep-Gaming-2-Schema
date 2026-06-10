@@ -91,12 +91,12 @@ function SWEP:ProjectileFire()
 		local range = 160 ^ 2
 
     	for v=1, #searchPlayers do
-        	local k = searchPlayers[v]
-
-        	if k:GetPos():DistToSqr(pos) < range then
-        		k:Ignite(math.random(2, 5))
-        	end
-    	end
+		    local k = searchPlayers[v]
+		    if k:Team() == TEAM_CREMATOR then continue end
+		    if k:GetPos():DistToSqr(pos) < range then
+		        k:Ignite(math.random(2, 5))
+		    end
+		end
 	end)
 end
 

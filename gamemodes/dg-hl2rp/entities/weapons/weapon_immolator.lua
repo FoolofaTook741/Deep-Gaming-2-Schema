@@ -474,6 +474,7 @@ function SWEP:lase( par, stat, from, to, noise )
 
         for k, v in pairs( ents.FindInSphere( entItem2:GetPos(), self.burnradius * 0.75 ) ) do
             if IsValid( v ) and v != self.Owner and v:Health() > 0 then
+                if v:IsPlayer() and v:Team() == TEAM_CREMATOR then continue end
                 v:Ignite( 2.5, 20 )
                 dmginfo:SetDamageForce( self.Owner:GetAimVector() )
                 dmginfo:SetDamageType( 16777224 )
