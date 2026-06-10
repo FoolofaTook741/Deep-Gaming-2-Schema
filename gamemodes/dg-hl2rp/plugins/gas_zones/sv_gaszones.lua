@@ -206,7 +206,7 @@ local function SpawnContaminationZone(pos)
     charple.LinkedContamZone = contamZone
     charple.LinkedXenProps   = xenProps
 
-    timer.Simple(6, function()
+    timer.Simple(4, function()
         if IsValid(charple) then
             local phys = charple:GetPhysicsObject()
             if IsValid(phys) then
@@ -219,6 +219,7 @@ local function SpawnContaminationZone(pos)
         for _, prop in ipairs(xenProps) do
             if IsValid(prop) then
                 prop:SetMoveType(MOVETYPE_NONE)
+                prop:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
             end
         end
     end)
@@ -255,7 +256,7 @@ hook.Add("EntityRemoved", "XenContam_EntityRemoved", function(ent)
             if IsValid(prop) then
                 prop:SetNWBool("IsXenProp", true)
                 prop.IsXenProp = true
-                prop:SetSolid(SOLID_VPHYSICS)
+                --prop:SetSolid(SOLID_VPHYSICS)
                 timer.Simple(120, function()
                     if IsValid(prop) then prop:Remove() end
                 end)
