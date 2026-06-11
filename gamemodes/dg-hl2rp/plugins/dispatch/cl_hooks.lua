@@ -77,7 +77,7 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
 				if not k:IsCP() then continue end
 				if k == lp then continue end
 				if not k:Alive() then continue end
-				if k:GetSyncVar(SYNC_SQUAD_ID, -1) == squadId && perfOutline then continue end
+				if squadId != 0 and k:Team() == lp:Team() and k:GetSyncVar(SYNC_SQUAD_ID, -1) == squadId and perfOutline then continue end				
 				if k.IsRogue or k:GetModel() == "models/wn7new/metropolice_rebel_c24/male_01.mdl" then continue end
 				if k:GetMoveType() == MOVETYPE_NOCLIP then
 					continue
