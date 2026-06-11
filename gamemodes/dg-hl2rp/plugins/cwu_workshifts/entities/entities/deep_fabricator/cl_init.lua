@@ -15,3 +15,4 @@ function ENT:Draw()
     --AddWorldTip( self:EntIndex(), "BATHTUB TIME!", 0.5, self:GetPos(), self  ) -- Add an example tip.
 end
  
+ --]]
