@@ -1,3 +1,4 @@
+--[[
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
  
@@ -11,3 +12,4 @@ ENT.Spawnable = true
 
 ENT.HUDName = "Fabricator"
 ENT.HUDDesc = "Uses electricity and resin to improve weaponry."
+--]]

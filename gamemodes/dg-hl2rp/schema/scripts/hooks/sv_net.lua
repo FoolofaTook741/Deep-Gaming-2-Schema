@@ -33,6 +33,31 @@ util.AddNetworkString("impulse_dispatch_dossier_load")
 util.AddNetworkString("impulse_dispatch_dossier_data")
 util.AddNetworkString("impulseHL2RPDisbandSquad")
 
+local RankNPCs = {
+    [TEAM_CP] = "impulse_hl2rp_cp_npc",
+    [TEAM_OTA] = "impulse_hl2rp_ota_npc",
+    [TEAM_CA] = "rankset",
+	[TEAM_CWU] = "rankset"
+}
+
+local function NearRankSet(ply)
+    local npcClass = RankNPCs[ply:Team()]
+
+    if not npcClass then
+        return true
+    end
+
+    local plyPos = ply:GetPos()
+
+    for _, ent in ipairs(ents.FindByClass(npcClass)) do
+        if IsValid(ent) and ent:GetPos():DistToSqr(plyPos) <= (150 * 150) then
+            return true
+        end
+    end
+
+    return false
+end
+
 net.Receive("impulseHL2RPDisbandSquad", function()
 	v = net.ReadUInt(8)
 	for a,b in pairs(team.GetPlayers(TEAM_CP)) do
@@ -370,14 +395,26 @@ net.Receive("impulseHL2RPTerminalLeave", function(len, ply)
 end)
 
 net.Receive("impulseHL2RPRankBecome", function(len, ply)
+	if not IsValid(ply) or not ply:Alive() then return end
+
+	if not NearRankSet(ply) then
+        return ply:Notify("You need to be near the rank NPC to do this.")
+    end
+
 	local division = net.ReadUInt(8)
 	local rank = net.ReadUInt(8)
 	local div = division
     local team = ""
 	local td = impulse.Teams.Data[ply:Team()]
-	local rd = td.ranks[rank]
+	
     local ranktwo = -1
 	local success = false
+
+	if not td or not td.ranks or not td.ranks[rank] then
+		return ply:Notify("Invalid rank.")
+	end
+
+	local rd = td.ranks[rank]
 	
 	if rd.whitelistLevel then
 		ranktwo = rd.whitelistLevel
