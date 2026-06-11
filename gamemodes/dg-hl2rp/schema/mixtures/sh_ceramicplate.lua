@@ -1,3 +1,5 @@
+--[[
+
 local MIX = {}
 
 MIX.Class = "ceramicplate"
@@ -12,3 +14,5 @@ MIX.Input = {
 }
 
 impulse.RegisterMixture(MIX)
+
+]]--
