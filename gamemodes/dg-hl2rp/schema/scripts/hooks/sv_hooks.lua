@@ -804,24 +804,3 @@ hook.Add("OnPlayerChangedTeam", "FPP_UpdateFaction", function(ply, oldTeam, newT
         end
     end
 end)
-
-hook.Add("PostEntityTakeDamage", "Impulse.SyncHealth", function(ent, dmginfo, took)
-    if not ent:IsPlayer() then return end
-    ent:SetSyncVar(SYNC_HEALTH, ent:Health(), true)
-end)
-
-hook.Add("PlayerSpawn", "Impulse.SyncHealth", function(ply)
-    ply:SetSyncVar(SYNC_HEALTH, ply:Health(), true)
-end)
-
-timer.Create("Impulse.SyncHealthTimer", 0.5, 0, function()
-    for _, ply in ipairs(player.GetAll()) do
-        if IsValid(ply) and ply:Alive() then
-            local h = ply:Health()
-            if ply.__lastSyncedHealth ~= h then
-                ply.__lastSyncedHealth = h
-                ply:SetSyncVar(SYNC_HEALTH, h, true)
-            end
-        end
-    end
-end)

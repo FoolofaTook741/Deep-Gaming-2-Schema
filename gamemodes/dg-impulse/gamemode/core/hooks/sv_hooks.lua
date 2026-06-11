@@ -340,7 +340,6 @@ function impulse.SetupPlayer(ply, dbData)
 
 	ply:SetSyncVar(SYNC_RPNAME, dbData.rpname, true)
 	ply:SetSyncVar(SYNC_XP, dbData.xp, true)
-	ply:SetSyncVar(SYNC_HEALTH, 100, true)
 	local lang = dbData.languages or 0
 	local sc = dbData.sterilizedcredits or 0
 	ply.language = lang
