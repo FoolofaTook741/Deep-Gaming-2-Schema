@@ -283,7 +283,8 @@ end)
 timer.Create("Deep_IncumberanceCheck", 1.5, 0, function()
     for _, v in ipairs(player.GetAll()) do
         local invw = v.InventoryWeight or 0
-        if invw > 25 and v.HasBackpack == false and v:Alive() and v:Team() ~= TEAM_ZOMBIE then
+        local maxWeight = v:IsCollaborator() and impulse.Config.InventoryMaxWeightCOLLABORATOR or impulse.Config.InventoryMaxWeight
+        if invw > maxWeight and not v.HasBackpack and v:Alive() and v:Team() ~= TEAM_ZOMBIE then
             v:TakeDamage(5)
             v:Notify("You are carrying too much!")
         end
