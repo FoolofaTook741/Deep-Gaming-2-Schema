@@ -92,11 +92,18 @@ util.AddNetworkString("CWUCooler_Purchase")
 net.Receive("CWUCooler_SetSlot", function(len, ply)
     local ent    = net.ReadEntity()
     local slot   = net.ReadUInt(4)
-    local class  = net.ReadString()
     local invKey = net.ReadUInt(16)
 
-    if not IsValid(ent) or not ent:IsOwner(ply) then return end
     if slot < 1 or slot > 9 then return end
+
+    if not IsValid(ent) or ent:GetClass() ~= "impulse_cwucooler" or not ent:IsOwner(ply) then
+        return
+    end
+    
+    if ply:GetPos():DistToSqr(ent:GetPos()) > (150 * 150) then
+        ply:Notify("You are too far away from the cooler.")
+        return
+    end
 
     local invData = ply:GetInventory(1)
     if not invData then
@@ -109,7 +116,8 @@ net.Receive("CWUCooler_SetSlot", function(len, ply)
         ply:Notify("Item not found in your inventory.")
         return
     end
-
+    
+    local class = entry.class
     local itemData = GetItemData(class)
     if not itemData then
         ply:Notify("Invalid item data.")
@@ -142,8 +150,16 @@ net.Receive("CWUCooler_SetPrice", function(len, ply)
     local slot  = net.ReadUInt(4)
     local price = net.ReadUInt(16)
 
-    if not IsValid(ent) or not ent:IsOwner(ply) then return end
     if slot < 1 or slot > 9 then return end
+
+    if not IsValid(ent) or ent:GetClass() ~= "impulse_cwucooler" or not ent:IsOwner(ply) then
+        return
+    end
+    
+    if ply:GetPos():DistToSqr(ent:GetPos()) > (150 * 150) then
+        ply:Notify("You are too far away from the cooler.")
+        return
+    end
 
     ent:SetNWInt("Slot_" .. slot .. "_Price", math.Clamp(price, 0, 65535))
 end)
@@ -152,7 +168,14 @@ net.Receive("CWUCooler_SetDiscount", function(len, ply)
     local ent      = net.ReadEntity()
     local discount = net.ReadUInt(7)
 
-    if not IsValid(ent) or not ent:IsOwner(ply) then return end
+    if not IsValid(ent) or ent:GetClass() ~= "impulse_cwucooler" or not ent:IsOwner(ply) then
+        return
+    end
+    
+    if ply:GetPos():DistToSqr(ent:GetPos()) > (150 * 150) then
+        ply:Notify("You are too far away from the cooler.")
+        return
+    end
 
     ent:SetNWInt("CombineDiscount", math.Clamp(discount, 0, 100))
     ply:Notify("Combine discount set to " .. discount .. "%.")
@@ -162,8 +185,16 @@ net.Receive("CWUCooler_ClearSlot", function(len, ply)
     local ent  = net.ReadEntity()
     local slot = net.ReadUInt(4)
 
-    if not IsValid(ent) or not ent:IsOwner(ply) then return end
     if slot < 1 or slot > 9 then return end
+    
+    if not IsValid(ent) or ent:GetClass() ~= "impulse_cwucooler" or not ent:IsOwner(ply) then
+        return
+    end
+    
+    if ply:GetPos():DistToSqr(ent:GetPos()) > (150 * 150) then
+        ply:Notify("You are too far away from the cooler.")
+        return
+    end
 
     local existing = ent:GetNWString("Slot_" .. slot .. "_Item", "")
     if existing ~= "" then
@@ -178,8 +209,16 @@ net.Receive("CWUCooler_Purchase", function(len, ply)
     local ent  = net.ReadEntity()
     local slot = net.ReadUInt(4)
 
-    if not IsValid(ent) then return end
     if slot < 1 or slot > 9 then return end
+
+    if not IsValid(ent) or ent:GetClass() ~= "impulse_cwucooler" then
+        return
+    end
+    
+    if ply:GetPos():DistToSqr(ent:GetPos()) > (150 * 150) then
+        ply:Notify("You are too far away from the cooler.")
+        return
+    end
 
     local class = ent:GetNWString("Slot_" .. slot .. "_Item", "")
     if class == "" then
