@@ -8,7 +8,6 @@ if CLIENT then
     net.Receive("ImmolatorFlame", function()
         local lp = LocalPlayer()
         if not IsValid(lp) then return end
-
         local startPos = net.ReadVector()
         local endPos = net.ReadVector()
         local ownerIndex = net.ReadUInt(8)
@@ -227,7 +226,12 @@ end
 local function ShouldIgnite( ent )
     if not IsValid( ent ) then return false end
     local cls = ent:GetClass()
-    if IGNITE_CLASSES[cls] then return true end
+    if IGNITE_CLASSES[cls] then
+        if cls == "impulse_item" and ent.Item and ent.Item.UniqueID == "item_ashes" then
+            return false
+        end
+        return true
+    end
     if cls == "prop_physics" and IsWooden( ent ) then return true end
     return false
 end
