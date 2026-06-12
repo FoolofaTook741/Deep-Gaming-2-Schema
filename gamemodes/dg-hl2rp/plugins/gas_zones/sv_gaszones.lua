@@ -14,7 +14,8 @@ local XEN_PROP_RADIUS = 80
 local BURN_TICKS      = 10   --ticks of sustained fire needed to incinerate
 local BURN_RATE       = 1    --seconds between burn ticks
 local BURN_RESET      = 2    --how long it takes to reset health of fire stops
-local CREMATOR_PAY    = 25   --credit paytout
+local CREMATOR_PAY_CHARPLE = 50 --gas zone pay
+local CREMATOR_PAY_BODY    = 25 --all other ragdoll pay
 
 local activeZones = {}
 local cachedBounds = nil
@@ -95,7 +96,7 @@ local function TraceGround(pos)
     })
 end
 
-local function SpawnAshes(pos, cleaner)
+local function SpawnAshes(pos, cleaner, pay)
     local tr = TraceGround(pos)
     local spawnPos = tr.Hit and tr.HitPos or pos
 
@@ -104,8 +105,8 @@ local function SpawnAshes(pos, cleaner)
     end)
 
     if IsValid(cleaner) then
-        cleaner:GiveMoney(CREMATOR_PAY)
-        cleaner:Notify("The remains have been incinerated. +" .. CREMATOR_PAY .. "c")
+        cleaner:GiveMoney(pay or CREMATOR_PAY_BODY)
+        cleaner:Notify("The remains have been incinerated. +" .. (pay or CREMATOR_PAY_BODY) .. "c")
     end
 end
 
@@ -149,7 +150,7 @@ local function CleanupContamination(charple, xenProps, contamZone, cleaner)
 
     if IsValid(cleaner) and cleaner:Team() == TEAM_CREMATOR then
         local ashPos = IsValid(charple) and charple:GetPos() or cleaner:GetPos()
-        SpawnAshes(ashPos, cleaner)
+        SpawnAshes(ashPos, cleaner, CREMATOR_PAY_CHARPLE)
         local tr = TraceGround(ashPos)
         if tr.Hit then
             util.Decal("Scorch", tr.HitPos + Vector(0, 0, 1), tr.HitPos - Vector(0, 0, 1))
@@ -292,6 +293,6 @@ hook.Add("CrematorIgnited", "XenContam_BurnRegularBody", function(owner, ent)
         local pos = ent:GetPos()
         ent.XenBagged = true
         ent:Remove()
-        SpawnAshes(pos, owner)
+        SpawnAshes(pos, owner, CREMATOR_PAY_BODY)
     end
 end)
