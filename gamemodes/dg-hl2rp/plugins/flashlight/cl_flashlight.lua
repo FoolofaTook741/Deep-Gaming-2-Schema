@@ -169,7 +169,7 @@ local FlashlightCitizen = {
                 target.DynamicFlashlight:SetFOV( 100 )
                 target.DynamicFlashlight:SetBrightness( 0.75 )
 
-                if target:Team() == TEAM_OTA then
+                if target:Team() == TEAM_OTA or target:Team() == TEAM_CREMATOR then
                     LocalPlayer():EmitSound( "ez2/nvg/nvg_on.wav", SNDLVL_NORM)
                 elseif target:Team() == TEAM_CP then
                     LocalPlayer():EmitSound( "ez2/nvg/ez1_nvg.wav", SNDLVL_NORM)
