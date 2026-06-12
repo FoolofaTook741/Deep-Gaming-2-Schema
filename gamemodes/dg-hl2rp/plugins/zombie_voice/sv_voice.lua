@@ -1,5 +1,5 @@
 function PLUGIN:PlayerCanHearPlayersVoice(listener, talker)
-	if talker:Team() == TEAM_ZOMBIE then return false end
+	if talker:Team() == TEAM_ZOMBIE or talker:Team() == TEAM_CREMATOR then return false end
 end
 
 function PLUGIN:PlayerSay(ply,say)
