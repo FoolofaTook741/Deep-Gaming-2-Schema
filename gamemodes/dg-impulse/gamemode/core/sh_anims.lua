@@ -6,6 +6,8 @@
 -- check out NS at https://github.com/rebel1324/NutScript/
 
 impulse.Anim = impulse.Anim or {}
+
+--[[
 impulse.Anim.citizen_male = {
 	normal = {
 		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE_ANGRY_SMG1},
@@ -136,6 +138,9 @@ impulse.Anim.citizen_female = {
 	glide = ACT_GLIDE,
 	vehicle = impulse.Anim.citizen_male.vehicle
 }
+
+
+]]--
 
 impulse.Anim.metrocop = {
 	normal = {
