@@ -207,6 +207,8 @@ impulse.Anim.metrocop = {
 	}
 }
 
+--[[
+
 impulse.Anim.overwatch = {
 	normal = {
 		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE},
@@ -273,6 +275,8 @@ impulse.Anim.overwatch = {
 		["prop_vehicle_prisoner_pod"] = {"idle_unarmed", Vector(-4, -0.5, 0)}
 	}
 }
+
+]]--
 
 impulse.Anim.vort = {
 	normal = {

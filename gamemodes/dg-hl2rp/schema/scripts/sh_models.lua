@@ -111,6 +111,8 @@ hook.Add("LoadAnimationClasses", "impulseHL2RPAnimClasses", function()
 		impulse.Anim.SetModelClass("models/willardnetworks/conscripts/female_0" .. i .. ".mdl", "citizen_female")
 	end
 
+	--[[
+
 	--CTA Anims
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl", "overwatch")
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl", "overwatch")
@@ -124,6 +126,9 @@ hook.Add("LoadAnimationClasses", "impulseHL2RPAnimClasses", function()
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_mace/dg_combine_mace.mdl", "overwatch") 
 	impulse.Anim.SetModelClass("models/DG_models/DG_combinepack/DG_ranger/dg_combine_ranger.mdl", "overwatch")
 
+	]]--
+
+	
 	--MPF Anims
 	for i = 1, 9 do
 		impulse.Anim.SetModelClass("models/wn7new/metropolice/male_0" .. i .. ".mdl", "metrocop")

@@ -1,11 +1,11 @@
 tagtable = {"ECHO", "MACE", "RANGER", "FIST", "SWEEPER", "NOMAD", "PAYBACK"}
 
-local MDL_GRUNT   = "models/DG_models/DG_combinepack/DG_grunt/combine_grunt.mdl"
-local MDL_SOLDIER = "models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier.mdl"
-local MDL_ORDINAL = "models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal.mdl"
-local MDL_ELITE   = "models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier.mdl"
-local MDL_APF     = "models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor.mdl"
-local MDL_ETL     = "models/DG_models/DG_combinepack/DG_etl/dg_etl.mdl"
+local MDL_GRUNT   = "models/DG_models/DG_combinepack/DG_grunt/combine_grunt_pm.mdl"
+local MDL_SOLDIER = "models/DG_models/DG_combinepack/DG_soldier/dg_combine_soldier_pm.mdl"
+local MDL_ORDINAL = "models/DG_models/DG_combinepack/DG_ordinal/dg_combine_ordinal_pm.mdl"
+local MDL_ELITE   = "models/DG_models/DG_combinepack/DG_elite/dg_elite_soldier_pm.mdl"
+local MDL_APF     = "models/DG_models/DG_combinepack/DG_APF/dg_combine_suppresor_pm.mdl"
+local MDL_ETL     = "models/DG_models/DG_combinepack/DG_etl/dg_etl_pm.mdl"
 local MDL_CHARGER = "models/dg_models/dg_combinepack/dg_charger/syn_combine_heavy.mdl"
 
 local BG_RESET_3 = {{0,0},{1,0},{2,0}}
