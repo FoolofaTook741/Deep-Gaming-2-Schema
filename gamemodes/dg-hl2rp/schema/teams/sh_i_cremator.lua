@@ -100,6 +100,7 @@ hook.Add("OnPlayerChangedTeam", "CrematorSetup", function( ply, oldTeam, newTeam
         ply:SetViewOffset(Vector(0, 0, 80))
         --ply:Give("weapon_immolator_beta_alt")
         ply:GiveInventoryItem("wep_immolator", 1, true)
+        ply:GiveInventoryItem("util_nvgs", 1, true)
         ply:Give("impulse_hands")
         ply:SetRPName("CW:CRM-"..math.random(1000,9999))
         --net.Start("impulseHL2RPCombineOverlayBoot")
