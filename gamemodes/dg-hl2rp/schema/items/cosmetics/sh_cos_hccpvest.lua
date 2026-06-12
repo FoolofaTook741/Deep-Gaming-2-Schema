@@ -2,7 +2,7 @@ local ITEM = {}
 
 ITEM.UniqueID = "cos_cpvest4"
 ITEM.Name = "Tier IV Ballistic Vest"
-ITEM.Desc =  "High Command grade vest. This vest offers an additional 20% protection on the body."
+ITEM.Desc =  "High Command grade vest. This vest offers an additional 30% protection on the body."
 ITEM.Category = "Clothing"
 ITEM.Model = Model("models/props_junk/cardboard_box002a.mdl")
 ITEM.FOV = 150

@@ -344,21 +344,24 @@ end
 function SCHEMA:ScalePlayerDamage(ply, hitgroup, dmginfo)
 	if ply:Team() == TEAM_CP then
 		if ply.HasCPVest1 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
-			dmginfo:ScaleDamage(0.95)
-		elseif ply.HasCPVest2 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
 			dmginfo:ScaleDamage(0.90)
-		elseif ply.HasCPVest3 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
-			dmginfo:ScaleDamage(0.85)
-		elseif ply.HasCPVest4 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
+		elseif ply.HasCPVest2 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
 			dmginfo:ScaleDamage(0.80)
+		elseif ply.HasCPVest3 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
+			dmginfo:ScaleDamage(0.75)
+		elseif ply.HasCPVest4 == true and (hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM) then
+			dmginfo:ScaleDamage(0.70)
 		end
 		if hitgroup == HITGROUP_HEAD then
 			if ply.HasReinforcedCPMask == true and ply.HasCPMask == true then
 				if ply:GetTeamRank() >= RANK_DCO then
-					dmginfo:ScaleDamage(0.80)
+					dmginfo:ScaleDamage(0.70)
+					ply:EmitSound("player/bhit_helmet-1.wav")
+				elseif ply:GetTeamRank() >= RANK_SQL and ply:GetTeamClass() == CLASS_SWORD then
+					dmginfo:ScaleDamage(0.75)
 					ply:EmitSound("player/bhit_helmet-1.wav")
 				else
-					dmginfo:ScaleDamage(0.90)
+					dmginfo:ScaleDamage(0.80)
 					ply:EmitSound("player/bhit_helmet-1.wav")
 				end
 			end
