@@ -24,7 +24,7 @@ ITEM.IsVest = true
 function ITEM:CanEquip(ply)
 	if ply:GetModel():find("conscripts") then return not ply.HasHelmet3 end
 	if ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU then
-		if (ply.IsARebel or ply:GetBodygroup(2) == 26 or (ply:GetBodygroup(2) >= 7 and ply:GetBodygroup(2) <= 12)) and ply.HasHelmet3 ~= true then
+		if (ply.IsARebel or ply:GetBodygroup(2) == 26 or ply:GetBodygroup(2) == 25 or (ply:GetBodygroup(2) >= 7 and ply:GetBodygroup(2) <= 12)) and ply.HasHelmet3 ~= true then
 			return true
 		end
 	end
