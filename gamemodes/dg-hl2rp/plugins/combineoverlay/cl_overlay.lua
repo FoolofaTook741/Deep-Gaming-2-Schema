@@ -680,52 +680,57 @@ local medCol = Color(255, 228, 0)
 local armCol = Color(255, 0, 0)
 local nextArmFlash = 0
 local function DrawAuxData(offset)
-    local zone = LocalPlayer():GetZoneName()
+    local lp = LocalPlayer()
     local scrW = ScrW()
-    local pos = LocalPlayer():GetPos()
+    local pos = lp:GetPos()
+    local zone = lp:GetZoneName()
     local grid = math.Round(pos.x / 100).."/"..math.Round(pos.y / 100)
-    local hp = LocalPlayer():Health()
-    local armour = LocalPlayer():Armor()
+    local hp = lp:Health()
+    local armour = lp:Armor()
     local cityCode = impulse.Dispatch.GetCityCode()
     local cityCodeData = impulse.Dispatch.CityCodes[cityCode]
+    local lpTeam = lp:Team()
+    local lpClass = lp:GetTeamClass()
     local add = 0
     local sps = false
     local spores = GetSporeCount() or 0
+
+    local teamColor
+    if lpTeam == TEAM_OTA then
+        teamColor = Color(255,10,10)
+    elseif lpTeam == TEAM_CP then
+        teamColor = Color(10,10,255)
+    elseif lpTeam == TEAM_CWU and lpClass == CLASS_ICT then
+        teamColor = Color(255, 255, 10)
+    elseif lpTeam == TEAM_CREMATOR then
+        teamColor = Color(139, 69, 0, 255)
+    else
+        teamColor = Color(10,255,10)
+    end
+
+    local NVGColor = Color(0, 119, 255)
+    local NVGPosition = 90
+    if lpTeam == TEAM_OTA then
+        NVGColor = red
+        NVGPosition = 70
+    elseif lpTeam == TEAM_CREMATOR then
+        NVGColor = Color(255, 140, 0)
+        NVGPosition = 70
+    end
 
     draw.SimpleText("AUX DATA ::>", "BudgetLabel", scrW - 8, 24 + offset, nil, TEXT_ALIGN_RIGHT)
     draw.SimpleText("BIOSIGNAL: ON ::>", "BudgetLabel", scrW - 8, 38 + offset, nil, TEXT_ALIGN_RIGHT)
     draw.SimpleText("BIOSIGNAL ZONE: "..zone.." ::>", "BudgetLabel", scrW - 8, 52 + offset, nil, TEXT_ALIGN_RIGHT)
     draw.SimpleText("BIOSIGNAL GRID: "..grid.." ::>", "BudgetLabel", scrW - 8, 66 + offset, nil, TEXT_ALIGN_RIGHT)
 
-    local width = ScrW() * 0.58
-    local w2 = width
-    
-    if LocalPlayer():Team() == TEAM_OTA then
-        teamColor = Color(255,10,10)
-    elseif LocalPlayer():Team() == TEAM_CP then
-        teamColor = Color(10,10,255)
-    elseif LocalPlayer():Team() == TEAM_CWU and LocalPlayer():GetTeamClass() == CLASS_ICT then
-        teamColor = Color(255, 255, 10)
-    else
-        teamColor = Color(10,255,10)
-    end
-
-    if LocalPlayer():Team() == TEAM_OTA then
-        NVGColor = red
-        NVGPosition = 70
-    end
-
-    local NVGColor = Color( 0, 119, 255)
-    local NVGPosition = 90
-
-
-    if LocalPlayer():Team() == TEAM_OTA or (LocalPlayer():Armor() > 0) then
-        if LocalPlayer():Team() == TEAM_OTA then
-            sps = true
-        end
+    if lpTeam == TEAM_OTA then
+        sps = true
         draw.SimpleText("SUIT PROTECTION SYSTEM CHARGE: "..armour.." ::>", "BudgetLabel", scrW - 8, 80 + offset, nil, TEXT_ALIGN_RIGHT)
         add = add + 14
-    elseif LocalPlayer():Team() == TEAM_CWU and LocalPlayer():GetTeamClass() == CLASS_ICT then
+    elseif armour > 0 then
+        draw.SimpleText("SUIT PROTECTION SYSTEM CHARGE: "..armour.." ::>", "BudgetLabel", scrW - 8, 80 + offset, nil, TEXT_ALIGN_RIGHT)
+        add = add + 14
+    elseif lpTeam == TEAM_CWU and lpClass == CLASS_ICT then
         draw.SimpleText("SPORE REPORT AMT: "..spores.." ::>", "BudgetLabel", scrW - 8, 80 + offset, nil, TEXT_ALIGN_RIGHT)
         add = add + 14
     end
@@ -733,136 +738,87 @@ local function DrawAuxData(offset)
     draw.SimpleText("POLITI-STABILIZATION INDEX: "..cityCodeData[1].." ::>", "BudgetLabel", scrW - 8, 80 + add, cityCodeData[2], TEXT_ALIGN_RIGHT)
 
     add = add + 28
-    local colindexes = {Color(0, 255, 0), Color(100, 255, 0), Color(255, 255, 0), Color(255, 100, 0), Color(255, 0, 0)}
-    local sociocolor
-    if socioscore == 0 then
-        sociocolor = 1
-    else
-        sociocolor = math.ceil(socioscore/20)
-    end
+    local colindexes = {Color(0,255,0), Color(100,255,0), Color(255,255,0), Color(255,100,0), Color(255,0,0)}
+    local sociocolor = socioscore == 0 and 1 or math.ceil(socioscore/20)
 
-    if impulse.Dispatch.GetCityCode() == CODE_LOST then
+    if cityCode == CODE_LOST then
         draw.SimpleText("SECTOR LOST - EVACUATION IMMINENT ::>", "BudgetLabel", scrW - 8, 80 + add, Color(50,0,0), TEXT_ALIGN_RIGHT)
-    elseif impulse.Dispatch.GetCityCode() == CODE_AJ then
+    elseif cityCode == CODE_AJ then
         draw.SimpleText("SOCIETAL COLLAPSE IMMINENT ::>", "BudgetLabel", scrW - 8, 80 + add, Color(139,0,0), TEXT_ALIGN_RIGHT)
-    elseif impulse.Dispatch.GetCityCode() == CODE_FRACTURED or impulse.Dispatch.GetCityCode() == CODE_JW then
+    elseif cityCode == CODE_FRACTURED or cityCode == CODE_JW then
         draw.SimpleText("SOCIAL FRACTURE IMMINENT ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255,0,0), TEXT_ALIGN_RIGHT)
     else
         draw.SimpleText("SOCIAL FRACTURE LIKELIHOOD: "..socioscore.."% ::>", "BudgetLabel", scrW - 8, 80 + add, colindexes[sociocolor], TEXT_ALIGN_RIGHT)
     end
 
-    if impulse.Dispatch.GetCityCode() != CODE_CIVIL then
+    if cityCode != CODE_CIVIL then
         add = add + 28
-		local elapsed = math.floor(CurTime() - fracturedstarttime)
-		local hours   = math.floor(elapsed / 3600)
-		local minutes = math.floor((elapsed % 3600) / 60)
-		local seconds = elapsed % 60
-		draw.SimpleText("TIME SINCE LAST CODE CHANGE: " .. string.format("%02d:%02d:%02d", hours, minutes, seconds) .. " AGO ::>", "BudgetLabel", scrW - 8, 80 + add, color_white, TEXT_ALIGN_RIGHT)    end
-    if LocalPlayer():Team() ~= TEAM_CWU then      
+        local elapsed = math.floor(CurTime() - fracturedstarttime)
+        local hours   = math.floor(elapsed / 3600)
+        local minutes = math.floor((elapsed % 3600) / 60)
+        local seconds = elapsed % 60
+        draw.SimpleText("TIME SINCE LAST CODE CHANGE: " .. string.format("%02d:%02d:%02d", hours, minutes, seconds) .. " AGO ::>", "BudgetLabel", scrW - 8, 80 + add, color_white, TEXT_ALIGN_RIGHT)
+    end
+
+    if lpTeam ~= TEAM_CWU then
         add = add + 28
-
-        draw.SimpleText("M.P.F. LOSSES [15m]: "..cpdeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(200, 200, 255), TEXT_ALIGN_RIGHT)
-        
+        draw.SimpleText("M.P.F. LOSSES [15m]: "..cpdeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(200,200,255), TEXT_ALIGN_RIGHT)
         add = add + 14
-
-        draw.SimpleText("C.T.A. LOSSES [15m]: "..otadeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(160, 160, 160), TEXT_ALIGN_RIGHT)
-
+        draw.SimpleText("C.T.A. LOSSES [15m]: "..otadeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(160,160,160), TEXT_ALIGN_RIGHT)
         add = add + 14
-
-        draw.SimpleText("O.C.A. LOSSES [15m]: "..ocadeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(150, 0, 0), TEXT_ALIGN_RIGHT)
-
+        draw.SimpleText("O.C.A. LOSSES [15m]: "..ocadeaths.." ::>", "BudgetLabel", scrW - 8, 80 + add, Color(150,0,0), TEXT_ALIGN_RIGHT)
         add = add + 28
     end
 
-    if (LocalPlayer():Team() == TEAM_CA and LocalPlayer():GetTeamClass() == CLASS_BASE) or LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_OTA and LocalPlayer():GetTeamClass() == CLASS_NOMAD) then
-        draw.SimpleText("O.C.A.A.B. TREASURY: C" .. funds .. " ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
-
+    if (lpTeam == TEAM_CA and lpClass == CLASS_BASE) or lp:IsCPCommand() or (lpTeam == TEAM_OTA and lpClass == CLASS_NOMAD) then
+        draw.SimpleText("O.C.A.A.B. TREASURY: C" .. funds .. " ::>", "BudgetLabel", scrW - 8, 80 + add, color_white, TEXT_ALIGN_RIGHT)
         add = add + 14
-
-        draw.SimpleText("CURRENT C.W. TAX RATE: " .. cwtaxrate .. "% ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
-        
+        draw.SimpleText("CURRENT C.W. TAX RATE: " .. cwtaxrate .. "% ::>", "BudgetLabel", scrW - 8, 80 + add, color_white, TEXT_ALIGN_RIGHT)
         add = add + 14
-
-        draw.SimpleText("CURRENT CIVILIAN TAX RATE: " .. civtaxrate .. "% ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
-
+        draw.SimpleText("CURRENT CIVILIAN TAX RATE: " .. civtaxrate .. "% ::>", "BudgetLabel", scrW - 8, 80 + add, color_white, TEXT_ALIGN_RIGHT)
         add = add + 14
     end
+
     add = add + 28
 
-    if LocalPlayer():IsCPCommand() and LocalPlayer():Team() == TEAM_CP and awardcredits != 0 then
-        draw.SimpleText("AWARD CREDITS: " ..awardcredits .. " ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
-
+    if lp:IsCPCommand() and lpTeam == TEAM_CP and awardcredits != 0 then
+        draw.SimpleText("AWARD CREDITS: " ..awardcredits .. " ::>", "BudgetLabel", scrW - 8, 80 + add, color_white, TEXT_ALIGN_RIGHT)
         add = add + 28
     end
 
-    if LocalPlayer():Team() == TEAM_CP and LocalPlayer():GetTeamClass() == CLASS_GHOST then
-        draw.SimpleText("CHANNELS TAPPED: " .. commschannel1 .. " & " .. commschannel2 .. " ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
-
+    if lpTeam == TEAM_CP and lpClass == CLASS_GHOST then
+        draw.SimpleText("CHANNELS TAPPED: " .. commschannel1 .. " & " .. commschannel2 .. " ::>", "BudgetLabel", scrW - 8, 80 + add, color_white, TEXT_ALIGN_RIGHT)
         add = add + 28
     end
 
     local radd = add + 14
---[[
-    if lockdown == true then
-        draw.SimpleText("<:: CITY LOCKDOWN: ACTIVE", "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(0, 255, 0), TEXT_ALIGN_LEFT)
-    else
-        draw.SimpleText("<:: CITY LOCKDOWN: INACTIVE", "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 0, 0), TEXT_ALIGN_LEFT)
-    end
 
-    radd = radd - 14
---]]
     if rations == true then
-        draw.SimpleText("<:: CIVIC RATIONS: ACTIVE", "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(0, 255, 0), TEXT_ALIGN_LEFT)
+        draw.SimpleText("<:: CIVIC RATIONS: ACTIVE", "BudgetLabel", 8, 80 + radd, Color(0,255,0), TEXT_ALIGN_LEFT)
     else
-        draw.SimpleText("<:: CIVIC RATIONS: SUSPENDED", "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 0, 0), TEXT_ALIGN_LEFT)
+        draw.SimpleText("<:: CIVIC RATIONS: SUSPENDED", "BudgetLabel", 8, 80 + radd, Color(255,0,0), TEXT_ALIGN_LEFT)
     end
 
     radd = radd - 14
 
     if separation == true then
-        draw.SimpleText("<:: CITY SEPARATION: ACTIVE", "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(0, 255, 0), TEXT_ALIGN_LEFT)
+        draw.SimpleText("<:: CITY SEPARATION: ACTIVE", "BudgetLabel", 8, 80 + radd, Color(0,255,0), TEXT_ALIGN_LEFT)
     else
-        draw.SimpleText("<:: CITY SEPARATION: INACTIVE", "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 0, 0), TEXT_ALIGN_LEFT)
+        draw.SimpleText("<:: CITY SEPARATION: INACTIVE", "BudgetLabel", 8, 80 + radd, Color(255,0,0), TEXT_ALIGN_LEFT)
     end
 
     radd = radd + 72
 
-    --[[add = add + 14
-
-    if impulse.Rations == true then
-        draw.SimpleText("CIVIC RATIONS: ACTIVE ::>", "BudgetLabel", scrW - 8, 80 + add, Color(0, 255, 0), TEXT_ALIGN_RIGHT)
-    else
-        draw.SimpleText("CIVIC RATIONS: SUSPENDED ::>", "BudgetLabel", scrW - 8, 80 + add, Color(255, 0, 0), TEXT_ALIGN_RIGHT)
-    end]]
-
     if game.GetMap() == "rp_city17_futuristic_cloudy" then
-        draw.SimpleText("<:: DISTRICT STATUS", "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(200, 200, 200), TEXT_ALIGN_LEFT)
+        local districtColors = {OPEN = Color(0,255,0), OPENING = Color(255,255,0), CLOSING = Color(255,255,0)}
+        draw.SimpleText("<:: DISTRICT STATUS", "BudgetLabel", 8, 80 + radd, Color(200,200,200), TEXT_ALIGN_LEFT)
         radd = radd + 14
-        if d2 == "OPEN" then
-            draw.SimpleText("[: DISTRICT 2: " .. d2, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(0, 255, 0), TEXT_ALIGN_LEFT)
-        elseif d2 == "OPENING" or d2 == "CLOSING" then
-            draw.SimpleText("[: DISTRICT 2: " .. d2, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 255, 0), TEXT_ALIGN_LEFT)
-        else
-            draw.SimpleText("[: DISTRICT 2: " .. d2, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 0, 0), TEXT_ALIGN_LEFT)
+        for _, data in ipairs({{d2,"DISTRICT 2"},{d3,"DISTRICT 3"},{d4,"DISTRICT 4"}}) do
+            local col = districtColors[data[1]] or Color(255,0,0)
+            draw.SimpleText("[: "..data[2]..": "..data[1], "BudgetLabel", 8, 80 + radd, col, TEXT_ALIGN_LEFT)
+            radd = radd + 14
         end
-        radd = radd + 14
-        if d3 == "OPEN" then
-            draw.SimpleText("[: DISTRICT 3: " .. d3, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(0, 255, 0), TEXT_ALIGN_LEFT)
-        elseif d3 == "OPENING" or d3 == "CLOSING" then
-            draw.SimpleText("[: DISTRICT 3: " .. d3, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 255, 0), TEXT_ALIGN_LEFT)
-        else
-            draw.SimpleText("[: DISTRICT 3: " .. d3, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 0, 0), TEXT_ALIGN_LEFT)
-        end
-        radd = radd + 14
-        if d4 == "OPEN" then
-            draw.SimpleText("[: DISTRICT 4: " .. d4, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(0, 255, 0), TEXT_ALIGN_LEFT)
-        elseif d4 == "OPENING" or d4 == "CLOSING" then
-            draw.SimpleText("[: DISTRICT 4: " .. d4, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 255, 0), TEXT_ALIGN_LEFT)
-        else
-            draw.SimpleText("[: DISTRICT 4: " .. d4, "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(255, 0, 0), TEXT_ALIGN_LEFT)
-        end
-        radd = radd + 14
-        draw.SimpleText("[: DISTRICT 7: OPEN", "BudgetLabel", scrW - (scrW - 8), 80 + radd, Color(0, 255, 0), TEXT_ALIGN_LEFT)
+        draw.SimpleText("[: DISTRICT 7: OPEN", "BudgetLabel", 8, 80 + radd, Color(0,255,0), TEXT_ALIGN_LEFT)
     end
 
     if hp <= 70 then
@@ -877,12 +833,10 @@ local function DrawAuxData(offset)
             end
         end
         add = add + 19
-
         if CurTime() > nextArmFlash then
             draw.SimpleText("ATTENTION: SPS SYSTEM FAILING, RETURN TO RECHARGE POINT.", "BudgetLabel", scrW - 8, 80 + add + offset, armCol, TEXT_ALIGN_RIGHT)
         end
     end
-
 end
 
 local function DrawCombineMessages(offset)
@@ -1024,12 +978,13 @@ local otaWallsRange =  820 ^ 2
 local function DrawCombineHUD()
     local lp = LocalPlayer()
     local offset = 0
+    local isCremator = lp:Team() == TEAM_CREMATOR
 
-    if not lp:IsICT() and not lp:IsCP() then
+    if not lp:IsICT() and not lp:IsCP() and not isCremator then
         return
     end
 
-    if lp:GetTeamClass() == 0 then
+    if not isCremator and lp:GetTeamClass() == 0 then
         return
     end
 
@@ -1087,7 +1042,7 @@ local function DrawCombineHUD()
         sqData = DrawCombineSquad()
     end
 
-    if lp:Team() == TEAM_OTA or lp:Team() == TEAM_CP or (lp:Team() == TEAM_CWU and lp:GetTeamClass() == CLASS_ICT) then
+    if lp:Team() == TEAM_OTA or lp:Team() == TEAM_CP or (lp:Team() == TEAM_CWU and lp:GetTeamClass() == CLASS_ICT) or lp:Team() == TEAM_CREMATOR then
         local pos = lp:GetPos()
 
         DrawCombineCompass(sqData)

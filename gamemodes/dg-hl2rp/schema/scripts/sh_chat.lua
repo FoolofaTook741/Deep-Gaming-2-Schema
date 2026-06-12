@@ -337,9 +337,9 @@ local radioTeamCommand = {
 				return
 			end
 
-			if ply:Team() == TEAM_CWU then
+			if ply:Team() == TEAM_CWU or ply:Team() == TEAM_CREMATOR then
 				for k,v in pairs(player.GetAll()) do
-					if (v:IsCP() and v:IsCPCommand()) or v:Team() == TEAM_CWU or (v:GetPos():Distance(ply:GetPos()) < 100 and v != ply) or v:Team() == TEAM_CA or v.SnooperMode == true then
+					if (v:IsCP() and v:IsCPCommand()) or v:Team() == TEAM_CWU or (v:GetPos():Distance(ply:GetPos()) < 100 and v != ply) or v:Team() == TEAM_CA or v.SnooperMode == true or v:Team() == TEAM_CREMATOR then
 						v:SendChatClassMessage(72, rawText, ply)
 					end
 				end

@@ -125,6 +125,18 @@ local FlashlightCitizen = {
 	[ "$pp_colour_mulb" ] = 0
 }
 
+local FlashlightCremator = {
+    [ "$pp_colour_addr" ] = 0.12,
+    [ "$pp_colour_addg" ] = 0.05,
+    [ "$pp_colour_addb" ] = 0.0,
+    [ "$pp_colour_brightness" ] = 0,
+    [ "$pp_colour_contrast" ] = 1,
+    [ "$pp_colour_colour" ] = 0.70,
+    [ "$pp_colour_mulr" ] = 0,
+    [ "$pp_colour_mulg" ] = 0,
+    [ "$pp_colour_mulb" ] = 0
+}
+
     hook.Add( "RenderScreenspaceEffects", "color_modify_example", function()
         local target = LocalPlayer()
         local isTP = impulse.GetSetting("view_thirdperson")
@@ -144,6 +156,8 @@ local FlashlightCitizen = {
                 DrawColorModify( FlashlightCP )
             elseif target:Team() == TEAM_CWU then
                 DrawColorModify( FlashlightCW )
+            elseif target:Team() == TEAM_CREMATOR then
+                DrawColorModify( FlashlightCremator )
             else
                 DrawColorModify(FlashlightCitizen)
             end
