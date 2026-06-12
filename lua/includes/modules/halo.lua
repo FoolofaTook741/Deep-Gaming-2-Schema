@@ -1,3 +1,10 @@
+STENCIL_ALWAYS       = STENCIL_ALWAYS       or 8
+STENCIL_EQUAL        = STENCIL_EQUAL        or 3
+STENCIL_NOTEQUAL     = STENCIL_NOTEQUAL     or 6
+STENCIL_KEEP         = STENCIL_KEEP         or 1
+STENCIL_REPLACE      = STENCIL_REPLACE      or 3
+STUDIO_RENDER        = STUDIO_RENDER        or 1
+STUDIO_SKIP_DECALS   = STUDIO_SKIP_DECALS   or 2
 
 module( "halo", package.seeall )
 
