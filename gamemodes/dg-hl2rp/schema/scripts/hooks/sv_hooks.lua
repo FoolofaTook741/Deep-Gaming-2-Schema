@@ -807,3 +807,294 @@ hook.Add("OnPlayerChangedTeam", "FPP_UpdateFaction", function(ply, oldTeam, newT
         end
     end
 end)
+
+local SPAWN_TEAMS  = { [TEAM_CP] = true, [TEAM_OTA] = true }
+local FALLBACK_LOC = { [TEAM_CP] = "Nexus", [TEAM_OTA] = "Nexus" }
+
+local TEAM_LOCATIONS = {
+    [TEAM_CP]  = { "Nexus", "FOB", "OZ" },
+    [TEAM_OTA] = { "Nexus", "OZ" },
+}
+
+local DRILL_SCAN_RADIUS = 2500
+local FOB_SCAN_RADIUS   = 200
+
+local DRILL_CLASSES = {
+    impulse_hl2rp_ammobox = true,
+    impulse_hardpointbox  = true,
+}
+
+local VALID_CHOICES = { Nexus = true, FOB = true, OZ = true }
+
+local function ScanFromPositions(positions, radius, classes, extraClass)
+    if not positions then return false end
+
+    local posList = isvector(positions) and { positions } or positions
+
+    for _, scanPos in ipairs(posList) do
+        for _, ent in ipairs(ents.FindInSphere(scanPos, radius)) do
+            if classes[ent:GetClass()] and ent.Drilling == true then
+                return true
+            end
+        end
+        if extraClass then
+            for _, ent in ipairs(ents.FindByClass(extraClass)) do
+                if ent:GetPos():DistToSqr(scanPos) < radius ^ 2 and ent.Drilling == true then
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
+end
+
+local function IsNexusBeingDrilled(scanPos)
+    return ScanFromPositions(scanPos, DRILL_SCAN_RADIUS, DRILL_CLASSES)
+end
+
+local function IsOZBeingDrilled(scanPos)
+    return ScanFromPositions(scanPos, DRILL_SCAN_RADIUS, DRILL_CLASSES)
+end
+
+local function IsFOBBeingDrilled(scanPos)
+    if not scanPos then return false end
+    local posList = isvector(scanPos) and { scanPos } or scanPos
+    for _, pos in ipairs(posList) do
+        for _, ent in ipairs(ents.FindByClass("deep_mpfcache")) do
+            if ent:GetPos():DistToSqr(pos) < FOB_SCAN_RADIUS ^ 2 and ent.Drilling == true then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function CanUseOZ(ply, team)
+    if team == TEAM_OTA then return true end
+    if ply:HasTeamWhitelist("CP_EliteProtectionUnit", 1) then return true end
+    if impulse.Dispatch and impulse.Dispatch.GetCityCode() >= CODE_JW then return true end
+    return false
+end
+
+local function GetSpawnVectors(team, locationName)
+    local cfg = (team == TEAM_CP) and impulse.Config.CPSpawnLocations or impulse.Config.OTASpawnLocations
+    if not cfg then return nil end
+    local group = cfg[locationName]
+    if not group or #group == 0 then return nil end
+    return group[math.random(1, #group)]
+end
+
+local function DoSpawn(ply, team, locationName)
+    local validLocs = TEAM_LOCATIONS[team]
+    if not validLocs then return false end
+    local found = false
+    for _, v in ipairs(validLocs) do
+        if v == locationName then found = true break end
+    end
+    if not found then return false end
+
+    local nexusScan = impulse.Config.NexusDrillScanPos
+    local fobScan   = impulse.Config.FOBDrillScanPos
+    local ozScan    = impulse.Config.OZDrillScanPos
+
+    if locationName == "OZ" and not CanUseOZ(ply, team) then
+        locationName = FALLBACK_LOC[team]
+    end
+
+    if locationName == "Nexus" and IsNexusBeingDrilled(nexusScan) then
+        if team == TEAM_CP then
+            if not IsFOBBeingDrilled(fobScan) then
+                locationName = "FOB"
+            elseif not IsOZBeingDrilled(ozScan) and CanUseOZ(ply, team) then
+                locationName = "OZ"
+            else
+                locationName = "Nexus"
+            end
+        else
+            if not IsOZBeingDrilled(ozScan) then
+                locationName = "OZ"
+            else
+                locationName = "Nexus"
+            end
+        end
+    elseif locationName == "FOB" and IsFOBBeingDrilled(fobScan) then
+        if not IsNexusBeingDrilled(nexusScan) then
+            locationName = "Nexus"
+        elseif not IsOZBeingDrilled(ozScan) and CanUseOZ(ply, team) then
+            locationName = "OZ"
+        else
+            locationName = "Nexus"
+        end
+    elseif locationName == "OZ" and IsOZBeingDrilled(ozScan) then
+        if not IsNexusBeingDrilled(nexusScan) then
+            locationName = "Nexus"
+        elseif team == TEAM_CP and not IsFOBBeingDrilled(fobScan) then
+            locationName = "FOB"
+        else
+            locationName = "Nexus"
+        end
+    end
+
+    local pos = GetSpawnVectors(team, locationName)
+    if not pos then
+        local oldCfg = (team == TEAM_CP) and impulse.Config.CPSpawnLocations or impulse.Config.OTASpawnLocations
+        if type(oldCfg) == "table" and oldCfg[1] then
+            pos = table.Random(oldCfg)
+        end
+    end
+
+    if pos then ply:SetPos(pos) end
+    return true
+end
+
+local function LogExploit(ply, reason, extra)
+    local fields = {
+        { name = "Name:",    value = ply:SteamName() },
+        { name = "SteamID:", value = ply:SteamID()   },
+        { name = "IP:",      value = ply:IPAddress()  },
+    }
+    if extra then table.insert(fields, extra) end
+    local embeds = {{
+        title       = "Possible net message exploiter: MPF/CTA Spawn Selector",
+        description = reason,
+        url         = "https://discord.com/channels/1149540724648456252/1149544586876817468",
+        color       = 5763719,
+        fields      = fields,
+    }}
+    ServerLog("Net Message Exploit Logged (SpawnSelector/" .. reason .. "): " .. ply:IPAddress() .. " " .. ply:SteamName())
+    ReqwestLog(embeds, DG_NME)
+end
+
+function DeepSpawn_OpenSelector(ply, team)
+    if not IsValid(ply) then return end
+    if not SPAWN_TEAMS[team] then return end
+
+    local nexusScan = impulse.Config.NexusDrillScanPos
+    local fobScan   = impulse.Config.FOBDrillScanPos
+    local ozScan    = impulse.Config.OZDrillScanPos
+
+    local ozAvail  = CanUseOZ(ply, team)
+    local nexusOK  = not IsNexusBeingDrilled(nexusScan)
+    local fobOK    = not IsFOBBeingDrilled(fobScan)
+    local ozOK     = not IsOZBeingDrilled(ozScan)
+    local cityCode = impulse.Dispatch and impulse.Dispatch.GetCityCode() or 0
+
+    if team == TEAM_CP and not nexusOK and not fobOK and not ozOK then
+        nexusOK = true
+    end
+    if team == TEAM_OTA and not nexusOK and not ozOK then
+        nexusOK = true
+    end
+
+    net.Start("DeepSpawnSelectorOpen")
+        net.WriteUInt(team, 8)
+        net.WriteBool(ozAvail)
+        net.WriteBool(nexusOK)
+        net.WriteBool(fobOK)
+        net.WriteBool(ozOK)
+        net.WriteUInt(cityCode, 8)
+    net.Send(ply)
+end
+
+net.Receive("DeepSpawnSelectorRequest", function(len, ply)
+    if not IsValid(ply) then return end
+
+    if (ply.lastTeamTry or 0) > CurTime() then return end
+
+    local teamID = net.ReadUInt(8)
+
+    if not SPAWN_TEAMS[teamID] then
+        LogExploit(ply, "InvalidTeamRequest", { name = "Team:", value = tostring(teamID) })
+        return
+    end
+
+    if not ply:CanBecomeTeam(teamID, true) then return end
+
+    local data = ply:GetData()
+    data.quiz  = data.quiz or {}
+
+    for k, v in pairs(data.quiz) do
+        if type(v) ~= "table" then
+            data.quiz = {}
+            ply:SaveData()
+            break
+        end
+    end
+
+    local wlteam = teamID == TEAM_CP and "TEAM_CP" or "TEAM_OTA"
+
+    if impulse.Teams.Data[teamID].quiz and impulse.Teams.Data[teamID].quiz.enabled then
+        if ply:GetTeamWhitelist(wlteam) == 0 and (not data.quiz[teamID] or not data.quiz[teamID].passed) then
+            local waitTime = impulse.Config.QuizWaitTime * 60
+            if data.quiz[teamID] and data.quiz[teamID].lastAttempt and
+               (data.quiz[teamID].lastAttempt + waitTime > os.time()) then
+                local remaining = math.ceil((data.quiz[teamID].lastAttempt + waitTime) - os.time())
+                ply:Notify("Wait " .. string.NiceTime(remaining) .. " before attempting to retry the quiz.")
+                return
+            end
+            ply.pendingSpawnTeam = teamID
+            ply.quizzing = true
+            net.Start("dgQuizOpen")
+            net.WriteUInt(teamID, 8)
+            net.Send(ply)
+            return
+        end
+    end
+
+    DeepSpawn_OpenSelector(ply, teamID)
+end)
+
+net.Receive("DeepSpawnTeamChange", function(len, ply)
+    if not IsValid(ply) then return end
+
+    if (ply.lastTeamTry or 0) > CurTime() then
+        LogExploit(ply, "RateLimit")
+        return
+    end
+
+    local teamID = net.ReadUInt(8)
+    if not SPAWN_TEAMS[teamID] then
+        LogExploit(ply, "InvalidTeam", { name = "Team:", value = tostring(teamID) })
+        return
+    end
+
+    local choice = net.ReadString()
+    if not VALID_CHOICES[choice] then
+        LogExploit(ply, "InvalidChoice", { name = "Sent:", value = tostring(choice) })
+        return
+    end
+
+    if choice == "FOB" and teamID ~= TEAM_CP then
+        LogExploit(ply, "InvalidChoiceForTeam", { name = "Sent:", value = choice })
+        return
+    end
+
+    local adminForced = ply.adminForcedTeam == teamID
+    ply.adminForcedTeam = nil
+
+    if not adminForced then
+        if not ply:CanBecomeTeam(teamID, true) then return end
+
+        local data   = ply:GetData()
+        data.quiz    = data.quiz or {}
+        local wlteam = teamID == TEAM_CP and "TEAM_CP" or "TEAM_OTA"
+        if impulse.Teams.Data[teamID].quiz and impulse.Teams.Data[teamID].quiz.enabled then
+            if ply:GetTeamWhitelist(wlteam) == 0 and (not data.quiz[teamID] or not data.quiz[teamID].passed) then
+                LogExploit(ply, "QuizNotPassed", { name = "Team:", value = tostring(teamID) })
+                return
+            end
+        end
+    end
+
+    if choice == "OZ" and not CanUseOZ(ply, teamID) then
+        choice = FALLBACK_LOC[teamID]
+    end
+
+    ply.lastTeamTry = CurTime() + 1
+    ply:SetTeam(teamID)
+    ply.lastTeamChange = CurTime()
+    ply:Notify("You have changed your team to " .. team.GetName(teamID) .. ".")
+    ply:EmitSound("items/ammo_pickup.wav")
+    DoSpawn(ply, teamID, choice)
+end)

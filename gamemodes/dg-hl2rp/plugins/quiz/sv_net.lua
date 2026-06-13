@@ -129,10 +129,16 @@ if SERVER then
 				end
 
 				if ply:CanBecomeTeam(teamID, true) then
-					ply:SetTeam(teamID)
-					ply:Notify("You have changed your team to "..team.GetName(teamID)..".")
+				    if ply.pendingSpawnTeam and ply.pendingSpawnTeam == teamID and DeepSpawn_OpenSelector then
+				        ply.pendingSpawnTeam = nil
+				        DeepSpawn_OpenSelector(ply, teamID)
+				    else
+				        ply:SetTeam(teamID)
+				        ply:Notify("You have changed your team to "..team.GetName(teamID)..".")
+				    end
 				else
-					ply:Notify("You passed the quiz, however "..team.GetName(teamID).." cannot be joined right now. Rejoin the team when it is available to play again.")
+				    ply.pendingSpawnTeam = nil
+				    ply:Notify("You passed the quiz, however "..team.GetName(teamID).." cannot be joined right now. Rejoin the team when it is available to play again.")
 				end
 			end
 		else

@@ -87,7 +87,7 @@ local setTeamCommand = {
     adminOnly = false,
 	gamemasterOnly = true,
     onRun = function(ply, arg, rawText)
-		if !ply:IsSeniorGameMaster() and !ply:IsAdmin() then
+		if not ply:IsSeniorGameMaster() and not ply:IsAdmin() then
 			ply:Notify("You cannot use this command.")
 			return
 		end 
@@ -111,14 +111,21 @@ local setTeamCommand = {
 		end
 
 		if plyTarget then
-			if teamID and impulse.Teams.Data[teamID] then
-				local teamName = team.GetName(teamID)
-				plyTarget:SetTeam(teamID)
-				plyTarget:Notify("Your team has been set to "..teamName.." by a game moderator.")
-				ply:Notify(plyTarget:Name().." has been set to "..teamName..".")
-			else
-				ply:Notify("Invalid team ID. They are in F4 menu order!")
-			end
+		    if teamID and impulse.Teams.Data[teamID] then
+		        local teamName = team.GetName(teamID)
+		        if teamID == TEAM_CP or teamID == TEAM_OTA then
+		            plyTarget.adminForcedTeam = teamID
+		            DeepSpawn_OpenSelector(plyTarget, teamID)
+		            plyTarget:Notify("Your team has been set to "..teamName.." by a game moderator. Please select a spawn location.")
+		            ply:Notify(plyTarget:Name().." has been prompted to select a spawn location for "..teamName..".")
+		        else
+		            plyTarget:SetTeam(teamID)
+		            plyTarget:Notify("Your team has been set to "..teamName.." by a game moderator.")
+		            ply:Notify(plyTarget:Name().." has been set to "..teamName..".")
+		        end
+		    else
+		        ply:Notify("Invalid team ID. They are in F4 menu order!")
+		    end
 		else
 			return ply:Notify("Could not find player: "..tostring(name))
 		end

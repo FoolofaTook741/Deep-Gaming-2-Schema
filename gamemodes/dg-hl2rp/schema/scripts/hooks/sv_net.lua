@@ -32,6 +32,10 @@ util.AddNetworkString("impulse_dispatch_dossier_save")
 util.AddNetworkString("impulse_dispatch_dossier_load")
 util.AddNetworkString("impulse_dispatch_dossier_data")
 util.AddNetworkString("impulseHL2RPDisbandSquad")
+util.AddNetworkString("DeepSpawnSelectorOpen")
+util.AddNetworkString("DeepSpawnSelectorClose")
+util.AddNetworkString("DeepSpawnTeamChange")
+util.AddNetworkString("DeepSpawnSelectorRequest")
 
 local RankNPCs = {
     [TEAM_CP] = "impulse_hl2rp_cp_npc",

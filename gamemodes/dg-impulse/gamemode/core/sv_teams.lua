@@ -52,9 +52,19 @@ function meta:SetTeam(teamID, forced)
 		elseif teamID == TEAM_CWU then
 			self:SetPos(table.Random(impulse.Config.CWUSpawnLocations))
 		elseif teamID == TEAM_CP then
-			self:SetPos(table.Random(impulse.Config.CPSpawnLocations))
+		    local cfg = impulse.Config.CPSpawnLocations
+		    if cfg and cfg.Nexus then
+		        self:SetPos(cfg.Nexus[math.random(1, #cfg.Nexus)])
+		    elseif cfg then
+		        self:SetPos(table.Random(cfg))
+		    end
 		elseif teamID == TEAM_OTA then
-			self:SetPos(table.Random(impulse.Config.OTASpawnLocations))
+		    local cfg = impulse.Config.OTASpawnLocations
+		    if cfg and cfg.Nexus then
+		        self:SetPos(cfg.Nexus[math.random(1, #cfg.Nexus)])
+		    elseif cfg then
+		        self:SetPos(table.Random(cfg))
+		    end
 		elseif teamID == TEAM_CA then
 			self:SetPos(table.Random(impulse.Config.CASpawnLocations))
 		elseif teamID == TEAM_VORT then

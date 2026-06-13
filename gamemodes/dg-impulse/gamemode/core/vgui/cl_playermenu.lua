@@ -298,11 +298,14 @@ function PANEL:Teams()
 		end
 
 		function teamCard:OnMousePressed()
-			net.Start("impulseTeamChange")
-			net.WriteUInt(self.team, 8)
-			net.SendToServer()
-
-			realSelf:Remove()
+		    if DeepSpawn_RequestSelector(self.team) then
+		        realSelf:Remove()
+		    else
+		        net.Start("impulseTeamChange")
+		        net.WriteUInt(self.team, 8)
+		        net.SendToServer()
+		        realSelf:Remove()
+		    end
 		end
 	end
 end

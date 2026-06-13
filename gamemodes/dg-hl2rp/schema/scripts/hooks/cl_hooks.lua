@@ -514,3 +514,360 @@ hook.Add("OnPlayerChangedTeam", "VortessenceClearESP", function(ply, oldTeam, ne
     if oldTeam ~= TEAM_VORT then return end
     VORTESSENCE_EXPIRE = nil
 end)
+
+surface.CreateFont("DeepSpawnTitle", {
+    font      = "Roboto",
+    size      = 28,
+    weight    = 700,
+    antialias = true,
+})
+surface.CreateFont("DeepSpawnSub", {
+    font      = "Roboto",
+    size      = 15,
+    weight    = 400,
+    antialias = true,
+})
+surface.CreateFont("DeepSpawnBtn", {
+    font      = "Roboto",
+    size      = 17,
+    weight    = 600,
+    antialias = true,
+})
+surface.CreateFont("DeepSpawnDesc", {
+    font      = "Roboto",
+    size      = 13,
+    weight    = 400,
+    antialias = true,
+})
+surface.CreateFont("DeepSpawnClose", {
+    font      = "Roboto",
+    size      = 18,
+    weight    = 700,
+    antialias = true,
+})
+
+local COL_BG        = Color(12,  12,  14,  240)
+local COL_PANEL     = Color(20,  22,  26,  255)
+local COL_BORDER    = Color(45,  50,  60,  255)
+local COL_ACCENT    = Color(65, 105, 200, 255)
+local COL_WHITE     = Color(230, 230, 230, 255)
+local COL_MUTED     = Color(130, 130, 140, 255)
+local COL_DISABLED  = Color(60,  60,  65,  255)
+local COL_HOVER     = Color(30,  35,  45,  255)
+local COL_BTN       = Color(22,  26,  34,  255)
+local COL_BTN_HOVER = Color(38,  45,  62,  255)
+local COL_ATTACK    = Color(180, 40,  40,  255)
+local COL_LOCKED    = Color(80,  80,  85,  255)
+local COL_CLOSE     = Color(160, 40,  40,  255)
+local COL_CLOSE_H   = Color(200, 60,  60,  255)
+
+local CARD_W   = 280
+local CARD_H   = 360
+local CARD_GAP = 24
+local IMG_H    = 160
+
+local function WordWrap(text, font, maxW)
+    surface.SetFont(font)
+    local words = string.Explode(" ", text)
+    local lines = {}
+    local line  = ""
+    for _, word in ipairs(words) do
+        local test = line == "" and word or (line .. " " .. word)
+        local w    = surface.GetTextSize(test)
+        if w > maxW and line ~= "" then
+            table.insert(lines, line)
+            line = word
+        else
+            line = test
+        end
+    end
+    if line ~= "" then table.insert(lines, line) end
+    return lines
+end
+
+local LOCATION_DATA = {
+    Nexus = {
+        label  = "NEXUS",
+        desc   = "Central command and processing. Standard reporting location for on-duty units.",
+    },
+    FOB = {
+        label  = "FOB",
+        desc   = "Forward Operating Base. Tactical staging point for field operations.",
+        cpOnly = true,
+    },
+    OZ = {
+        label  = "OZ",
+        desc   = "Elite Protection Unit staging area. Restricted to authorised personnel.",
+    },
+}
+
+local function GetLocationImage(locationName)
+    local key  = locationName .. "SpawnPicture"
+    local path = impulse.Config and impulse.Config[key]
+    if path and path ~= "" then
+        return Material(path, "noclamp smooth")
+    end
+    return nil
+end
+
+local spawnPanel    = nil
+local pendingTeamID = nil
+
+local function CloseSpawnUI()
+    if IsValid(spawnPanel) then
+        spawnPanel:Remove()
+        spawnPanel = nil
+    end
+    pendingTeamID = nil
+end
+
+local function SendChoice(choice)
+    if not pendingTeamID then return end
+    net.Start("DeepSpawnTeamChange")
+        net.WriteUInt(pendingTeamID, 8)
+        net.WriteString(choice)
+    net.SendToServer()
+    CloseSpawnUI()
+end
+
+local function BuildCard(parent, locationName, data, enabled, attackedMsg, ox, oy)
+    local card = vgui.Create("DPanel", parent)
+    card:SetPos(ox, oy)
+    card:SetSize(CARD_W, CARD_H)
+    card.hovering = false
+
+    card.Paint = function(self, w, h)
+        local borderCol = enabled and (self.hovering and COL_ACCENT or COL_BORDER) or COL_DISABLED
+        local bgCol     = enabled and (self.hovering and COL_HOVER or COL_PANEL) or COL_PANEL
+        draw.RoundedBox(6, 0, 0, w, h, bgCol)
+        surface.SetDrawColor(borderCol)
+        surface.DrawOutlinedRect(0, 0, w, h, 1)
+        if enabled then
+            draw.RoundedBoxEx(6, 0, 0, w, 3, COL_ACCENT, true, true, false, false)
+        end
+    end
+
+    card.OnMouseEntered = function(self) self.hovering = enabled end
+    card.OnMouseExited  = function(self) self.hovering = false   end
+
+    local imgPanel = vgui.Create("DPanel", card)
+    imgPanel:SetPos(0, 0)
+    imgPanel:SetSize(CARD_W, IMG_H)
+    local mat = GetLocationImage(locationName)
+    imgPanel.Paint = function(self, w, h)
+        draw.RoundedBoxEx(6, 0, 0, w, h, Color(18, 20, 24), true, true, false, false)
+        if mat then
+            surface.SetDrawColor(255, 255, 255, enabled and 255 or 80)
+            surface.SetMaterial(mat)
+            surface.DrawTexturedRect(0, 0, w, h)
+        else
+            draw.SimpleText(data.label, "DeepSpawnTitle", w/2, h/2,
+                enabled and COL_MUTED or COL_DISABLED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+        if not enabled then
+            draw.RoundedBoxEx(6, 0, 0, w, h, Color(0, 0, 0, 140), true, true, false, false)
+        end
+    end
+
+    local labelY = IMG_H + 10
+    local lbl = vgui.Create("DLabel", card)
+    lbl:SetPos(12, labelY)
+    lbl:SetSize(CARD_W - 24, 24)
+    lbl:SetFont("DeepSpawnBtn")
+    lbl:SetText(data.label)
+    lbl:SetTextColor(enabled and COL_WHITE or COL_MUTED)
+
+    local msgY = labelY + 26
+    if attackedMsg then
+        local msg = vgui.Create("DLabel", card)
+        msg:SetPos(12, msgY)
+        msg:SetSize(CARD_W - 24, 16)
+        msg:SetFont("DeepSpawnDesc")
+        msg:SetText(attackedMsg)
+        msg:SetTextColor(COL_ATTACK)
+        msgY = msgY + 18
+    end
+
+    local descPanel = vgui.Create("DPanel", card)
+    descPanel:SetPos(12, msgY)
+    descPanel:SetSize(CARD_W - 24, CARD_H - msgY - 44)
+    descPanel.Paint = function() end
+
+    local lines = WordWrap(data.desc, "DeepSpawnDesc", CARD_W - 24)
+    local dy = 0
+    for _, line in ipairs(lines) do
+        local dl = vgui.Create("DLabel", descPanel)
+        dl:SetPos(0, dy)
+        dl:SetSize(CARD_W - 24, 18)
+        dl:SetFont("DeepSpawnDesc")
+        dl:SetText(line)
+        dl:SetTextColor(enabled and COL_MUTED or COL_DISABLED)
+        dy = dy + 18
+    end
+
+    local btn = vgui.Create("DButton", card)
+    btn:SetPos(12, CARD_H - 38)
+    btn:SetSize(CARD_W - 24, 30)
+    btn:SetText("")
+
+    btn.Paint = function(self, w, h)
+        local bg = enabled and (self:IsHovered() and COL_BTN_HOVER or COL_BTN) or COL_DISABLED
+        local tc = enabled and COL_WHITE or COL_LOCKED
+        draw.RoundedBox(4, 0, 0, w, h, bg)
+        if enabled then
+            surface.SetDrawColor(self:IsHovered() and COL_ACCENT or COL_BORDER)
+            surface.DrawOutlinedRect(0, 0, w, h, 1)
+        end
+        draw.SimpleText(
+            enabled and ("DEPLOY TO " .. data.label) or "UNAVAILABLE",
+            "DeepSpawnBtn", w/2, h/2, tc, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    if enabled then
+        btn.DoClick = function()
+            surface.PlaySound("buttons/button15.wav")
+            SendChoice(locationName)
+        end
+    else
+        btn:SetEnabled(false)
+    end
+
+    return card
+end
+
+local function OpenSpawnUI(team, ozAvail, nexusOK, fobOK, ozOK, cityCode)
+    CloseSpawnUI()
+    pendingTeamID = team
+
+    local locations = {}
+    if team == TEAM_CP then
+        locations = { "Nexus", "FOB", "OZ" }
+    elseif team == TEAM_OTA then
+        locations = { "Nexus", "OZ" }
+    else
+        return
+    end
+
+    if team == TEAM_CP and not nexusOK and not fobOK and not ozOK then
+        nexusOK = true
+    end
+    if team == TEAM_OTA and not nexusOK and not ozOK then
+        nexusOK = true
+    end
+
+    local numCards = #locations
+    local totalW   = numCards * CARD_W + (numCards - 1) * CARD_GAP
+    local panelW   = totalW + 80
+    local panelH   = CARD_H + 150
+
+    local frame = vgui.Create("DFrame")
+    frame:SetSize(panelW, panelH)
+    frame:Center()
+    frame:SetTitle("")
+    frame:SetDraggable(false)
+    frame:ShowCloseButton(false)
+    frame:MakePopup()
+    spawnPanel = frame
+
+    frame.Paint = function(self, w, h)
+        draw.RoundedBox(8, 0, 0, w, h, COL_BG)
+        surface.SetDrawColor(COL_BORDER)
+        surface.DrawOutlinedRect(0, 0, w, h, 1)
+        draw.RoundedBoxEx(8, 0, 0, w, 3, COL_ACCENT, true, true, false, false)
+    end
+
+    local closeBtn = vgui.Create("DButton", frame)
+    closeBtn:SetPos(panelW - 36, 10)
+    closeBtn:SetSize(26, 26)
+    closeBtn:SetText("")
+    closeBtn.Paint = function(self, w, h)
+        local bg = self:IsHovered() and COL_CLOSE_H or COL_CLOSE
+        draw.RoundedBox(4, 0, 0, w, h, bg)
+        draw.SimpleText("✕", "DeepSpawnClose", w/2, h/2, COL_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+    closeBtn.DoClick = function()
+        surface.PlaySound("buttons/button6.wav")
+        CloseSpawnUI()
+    end
+
+    local title = vgui.Create("DLabel", frame)
+    title:SetPos(0, 18)
+    title:SetSize(panelW - 44, 30)
+    title:SetFont("DeepSpawnTitle")
+    title:SetText("SELECT DEPLOYMENT LOCATION")
+    title:SetTextColor(COL_WHITE)
+    title:SetContentAlignment(5)
+
+    local teamName = team == TEAM_CP and "Metro Police Force" or "Combine Transhuman Arm"
+    local sub = vgui.Create("DLabel", frame)
+    sub:SetPos(0, 50)
+    sub:SetSize(panelW, 18)
+    sub:SetFont("DeepSpawnSub")
+    sub:SetText(teamName)
+    sub:SetTextColor(COL_MUTED)
+    sub:SetContentAlignment(5)
+
+    local startX = (panelW - totalW) / 2
+    local cardY  = 78
+
+    for i, locName in ipairs(locations) do
+        local data = LOCATION_DATA[locName]
+        if not data then continue end
+
+        local locOK     = true
+        local attackMsg = nil
+
+        if locName == "Nexus" then
+            locOK = nexusOK
+            if not locOK then attackMsg = "Location under attack" end
+        elseif locName == "FOB" then
+            locOK = fobOK
+            if not locOK then attackMsg = "Location under attack" end
+        elseif locName == "OZ" then
+            locOK = ozOK and ozAvail
+            if not ozOK then
+                attackMsg = "Location under attack"
+            elseif not ozAvail then
+                attackMsg = "Restricted access"
+            end
+        end
+
+        local ox = startX + (i - 1) * (CARD_W + CARD_GAP)
+        BuildCard(frame, locName, data, locOK, attackMsg, ox, cardY)
+    end
+
+    local footer = vgui.Create("DLabel", frame)
+    footer:SetPos(0, panelH - 28)
+    footer:SetSize(panelW, 20)
+    footer:SetFont("DeepSpawnDesc")
+    footer:SetText("Press ✕ to cancel and stay on your current team.")
+    footer:SetTextColor(COL_MUTED)
+    footer:SetContentAlignment(5)
+end
+
+net.Receive("DeepSpawnSelectorOpen", function()
+    local team     = net.ReadUInt(8)
+    local ozAvail  = net.ReadBool()
+    local nexusOK  = net.ReadBool()
+    local fobOK    = net.ReadBool()
+    local ozOK     = net.ReadBool()
+    local cityCode = net.ReadUInt(8)
+
+    timer.Simple(0.1, function()
+        OpenSpawnUI(team, ozAvail, nexusOK, fobOK, ozOK, cityCode)
+    end)
+end)
+
+net.Receive("DeepSpawnSelectorClose", function()
+    CloseSpawnUI()
+end)
+
+function DeepSpawn_RequestSelector(teamID)
+    if teamID == TEAM_CP or teamID == TEAM_OTA then
+        net.Start("DeepSpawnSelectorRequest")
+            net.WriteUInt(teamID, 8)
+        net.SendToServer()
+        return true
+    end
+    return false
+end
