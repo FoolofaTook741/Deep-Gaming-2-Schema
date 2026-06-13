@@ -124,7 +124,8 @@ if SERVER then
 				ply:SaveData()
 				ply:Notify("You have passed the quiz. You will not need to retake it again.")
 				if teamID == TEAM_OTA then
-					impulse.Teams.SetWhitelist(ply:SteamID(), "TEAM_OTA", RANK_CGR)
+					impulse.Teams.SetWhitelist(steamid, "TEAM_OTA", RANK_CGR)
+					QueueDiscordSync(steamid)
 				end
 
 				if ply:CanBecomeTeam(teamID, true) then
