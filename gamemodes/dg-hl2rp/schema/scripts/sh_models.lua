@@ -101,6 +101,7 @@ impulse.Anim.hunter = {
 
 hook.Add("LoadAnimationClasses", "impulseHL2RPAnimClasses", function()
 
+	--[[
 	--Citizen Anims
 	for i = 1, 10 do
 		impulse.Anim.SetModelClass((i != 10 and "models/wnpm_citizens/male_0" .. i or "models/wnpm_citizens/male_10") .. ".mdl", "player")
@@ -109,7 +110,7 @@ hook.Add("LoadAnimationClasses", "impulseHL2RPAnimClasses", function()
 	for i = 1, 6 do
 		impulse.Anim.SetModelClass("models/wnpm_citizens/female_0" .. i .. ".mdl", "player")
 		impulse.Anim.SetModelClass("models/willardnetworks/conscripts/female_0" .. i .. ".mdl", "citizen_female")
-	end
+	end ]]--
 
 	--[[
 
