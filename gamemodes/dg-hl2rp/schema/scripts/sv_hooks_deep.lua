@@ -2288,3 +2288,12 @@ hook.Add("Tick", "MineDetector", function()
         end
     end
 end)
+
+hook.Add("CuffsCanHandcuff", "impulseHL2RPCuffRestrictions", function(owner, target)
+    if target:Team() == TEAM_CREMATOR then
+        return false
+    end
+    if target:Team() == TEAM_OTA and target:GetTeamRank() ~= RANK_OWG then
+        return false
+    end
+end)

@@ -44,15 +44,16 @@ end
 -- @realm shared
 -- @entity target The target who would be arrested
 function meta:CanArrest(arrested)
-	if not self:IsCP() then
-		return false
-	end
-
-	if arrested:IsCP() then
-		return false
-	end
-
-	return true
+    if not self:IsCP() then
+        return false
+    end
+    if arrested:IsCP() then
+        return false
+    end
+    if arrested:Team() == TEAM_CREMATOR then
+        return false
+    end
+    return true
 end
 
 --- Returns if a player is arrested
