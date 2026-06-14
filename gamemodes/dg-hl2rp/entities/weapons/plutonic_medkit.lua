@@ -63,6 +63,12 @@ SWEP.Primary.ClipSize = SWEP.MaxUses
 SWEP.Primary.DefaultClip = SWEP.MaxUses
 function SWEP:Initialize()
     self:SetHoldType(self.HoldType)
+    self.VMCrouch = 0
+    self.VMIronsights = 0
+    self.VMSprint = 0
+    self.VMBlocked = 0
+    self.VMBobCycle = 0
+    self.VMVel = 0
     if SERVER then
         self:SetClip1(self.MaxUses)
     end
@@ -79,8 +85,11 @@ function SWEP:PrimaryAttack()
 
     if self:Clip1() <= 0 then
         self.Owner:Notify("This medkit is empty!")
-		self:Remove()
-		self.Owner:GiveInventoryItem("item_emptymedkit")
+        self.Owner:GiveInventoryItem("item_emptymedkit")
+        self.Owner:ConCommand("lastinv")
+        timer.Simple(0, function()
+            if IsValid(self) then self:Remove() end
+        end)
         return
     end
 
