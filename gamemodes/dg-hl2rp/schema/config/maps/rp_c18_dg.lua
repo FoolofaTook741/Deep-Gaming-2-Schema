@@ -166,7 +166,7 @@ impulse.Config.IntroScenes = {
 	    fovFrom = 40,
 	    fovSpeed = 0.2,
 	    time = 13,
-	    text = "Welcome to Pinnacle Gaming: Half-Life 2 Roleplay.",
+	    text = "Welcome to Deep Gaming Half-Life 2 Roleplay.",
 	    static = true,
 	    fadeIn = true,
 	}
