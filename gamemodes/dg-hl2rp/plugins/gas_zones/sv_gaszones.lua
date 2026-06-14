@@ -193,7 +193,6 @@ local function SpawnContaminationZone(pos)
         prop:Spawn()
         prop:SetNWBool("IsXenProp", true)
         prop.IsXenProp = true
-        print("[XenContam] Spawned xen prop: " .. tostring(prop) .. " IsXenProp: " .. tostring(prop.IsXenProp))
         table.insert(xenProps, prop)
     end
 
