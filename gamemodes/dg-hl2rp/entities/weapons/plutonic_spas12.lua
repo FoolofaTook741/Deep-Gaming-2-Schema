@@ -106,7 +106,7 @@ function SWEP:InsertShell()
     self:QueueIdle()
     self:SetReloadTime(CurTime() + self:GetReloadDuration())
 
-    self:EmitSound("weapons/projectmmod_shotgun/shotgun_reload" .. math.random(1,6) .. ".ogg")
+    self:EmitSound("weapons/projectmmod_shotgun/shotgun_reload" .. math.random(1,6) .. ".ogg", 75, math.random(95, 105))
 end
 
 function SWEP:FinishReload()
