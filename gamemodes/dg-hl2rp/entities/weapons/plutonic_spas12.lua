@@ -24,16 +24,20 @@ SWEP.MuzzleEffect = "muzzleflash_ak74"
 SWEP.BlowbackPos = Vector(0, 0, 0)
 SWEP.BlowbackAngle = Angle(0, 0, 0)
 
-SWEP.ReloadShellSound = "weapons/projectmmod_shotgun/shotgun_reload" .. math.random(1,4) .. ".wav"
+SWEP.ReloadShellSound = "weapons/projectmmod_shotgun/shotgun_reload" .. math.random(1,6) .. ".ogg"
 SWEP.EmptySound = Sound("Weapon_Shotun.Empty")
 
 sound.Add({
-	name = "CUST.SPAS12.Single",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	level = SNDLVL_GUNFIRE,
-	pitch = {95, 105},
-	sound = {"weapons/spas12nomech-1.wav"}
+    name = "CUST.SPAS12.Single",
+    channel = CHAN_WEAPON,
+    volume = 1.0,
+    level = SNDLVL_GUNFIRE,
+    pitch = {95, 105},
+    sound = {
+        "weapons/projectmmod_shotgun/shotgun_fire1.ogg",
+        "weapons/projectmmod_shotgun/shotgun_fire2.ogg",
+        "weapons/projectmmod_shotgun/shotgun_fire3.ogg"
+    }
 })
 
 SWEP.Primary.Sound = Sound("CUST.SPAS12.Single")
@@ -94,6 +98,25 @@ SWEP.DrawTime = 0
 SWEP.HasLoweredActivity = false
 
 SWEP.Shotgun = true
+
+function SWEP:InsertShell()
+    self:SetClip1(self:Clip1() + 1)
+    self:GetOwner():RemoveAmmo(1, self:GetPrimaryAmmoType())
+    self:PlayAnim(ACT_VM_RELOAD)
+    self:QueueIdle()
+    self:SetReloadTime(CurTime() + self:GetReloadDuration())
+
+    self:EmitSound("weapons/projectmmod_shotgun/shotgun_reload" .. math.random(1,6) .. ".ogg")
+end
+
+function SWEP:FinishReload()
+    self:SetReloading(false)
+    self:PlayAnim(ACT_SHOTGUN_RELOAD_FINISH)
+    self:SetReloadTime(CurTime() + self:GetReloadDuration())
+    self:QueueIdle()
+    
+    self:EmitSound("weapons/projectmmod_shotgun/shotgun_cocking.ogg")
+end
 
 function SWEP:CustomShootEffects()
 	self.VTime = CurTime() + 0.1
