@@ -91,7 +91,6 @@ function ITEM:OnUse(ply, target)
 end
 
 function ITEM:ShouldTraceUse(ply, ent)
-    print("[EmptyBag] Trace hit: " .. ent:GetClass() .. " EntIndex: " .. ent:EntIndex() .. " IsXenProp: " .. tostring(ent.IsXenProp))
     return ent:GetClass() == "prop_ragdoll" or ent:GetClass() == "deep_spore" or ent:GetClass() == "deep_barnaclespawner" or (ent:GetClass() == "prop_physics" and ent:GetNWBool("IsXenProp"))
 end
 
