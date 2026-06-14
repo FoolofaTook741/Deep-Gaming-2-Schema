@@ -39,7 +39,7 @@ Plutonic.Framework.FireBullets = function(self, bullet, SuppressHostEvents)
                     Damage = base_damage / 1.6,
                     AmmoType = "Pistol"
                 }
-                self:FireBullets(bullet, SuppressHostEvents)
+                self:FireBullets(newbullet)
             end
         end
 
