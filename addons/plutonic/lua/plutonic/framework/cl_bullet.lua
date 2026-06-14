@@ -12,5 +12,5 @@ Plutonic.Framework.FireBullets = function(self, bullet, SuppressHostEvents)
 		end
 	end
 
-	self:GetOwner():FireBullets(bullet, SuppressHostEvents)
+	self:FireBullets(bullet, SuppressHostEvents)
 end
