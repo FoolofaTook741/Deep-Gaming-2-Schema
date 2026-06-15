@@ -112,7 +112,7 @@ TEAM_CP = impulse.Teams.Define({
     blockNameChange = true,
     runSpeed = 225,
 
-   quiz = {
+quiz = {
 		enabled = true,
 		handbook = "https://docs.google.com/document/d/1ELXJhWy782W8SqdiqwuZ4iciNbwZT36apBG2_ne1EOQ/edit?usp=sharing",
 		{
@@ -128,10 +128,10 @@ TEAM_CP = impulse.Teams.Define({
 			id = 2,
 			question = "You notice a citizen continuously verbally harassing a particular loyalist. What type of violation is it and how do you proceed?",
 			answers = {
-				{"415, Arrest", true},
-				{"10-103m, Re-Education", false},
-				{"10-103m, Arrest", false},
-				{"51b & 99, Arrest", false},
+				{"415, arrest", true},
+				{"10-103m, re-Education", false},
+				{"10-103m, arrest", false},
+				{"51b & 99, arrest", false},
 				{"None of the above", false}
 			}
 		},
@@ -139,27 +139,27 @@ TEAM_CP = impulse.Teams.Define({
 			id = 3,
 			question = "Are the Metropolice Force mandated to use a Voice Changer?",
 			answers = {
-				{"Yes.", true},
+				{"Yes.", false},
 				{"No.", false},
-				{"Recommended", false}
+				{"Recommended", true}
 			}
 		},
 		{
 			id = 4,
-			question = "Rebels have manifested the city in Marginal, CTL issues you a direct order to push and contain but an RL ordered you to regroup with other MPF at a location, which do you obey?",
+			question = "Rebels have created chaos in the city, and the code is MARGINAL. A CTL issues you a direct order to push and contain the situation, but a RL orders you to regroup with other MPF, who do you obey?",
 			answers = {
 				{"Listen to the CTL and proceed with his orders.", false},
 				{"Listen to the RL and regroup.", true},
-				{"Stay in the Nexus until the conflict is resolved.", false}
+				{"Stay in the nexus until the conflict is resolved.", false}
 			}
 		},
 		{
 			id = 5,
-			question = "Decode this message : PT-1 UTL 505 Suspect, BOL for the NC, 10-51 10-19.",
+			question = "Decode this message: PT-1 UTL Suspect, BOL for the NC. PT-1 10-19.",
 			answers = {
-				{"Patrol Taskforce 1 Unable to Locate resisting suspect, broadcast on local for the suspect. Need transport to Nexus.", false},
-				{"Patrol Team 1 Unable to localize resistance member, brief observation list for the suspect, Patrolling for suspect after resupplying.", false},
-				{"Protection Team 1 Unable To Locate Evading Arrest Suspect, Be on lookout for the noncitizen, concluding patrol returning to nexus. ", true}
+				{"Patrol Taskforce 1 is unable to locate resisting suspect, broadcast on local surveillance for the suspect. Need transport to nexus.", false},
+				{"Patrol Team 1 is unable to localize resistance member, put them suspect on the observation list, PT-1 will be patrolling for suspect after resupplying.", false},
+				{"Protection Team 1 is unable to locate the suspect, be on lookout for the non-citizen, PT-1 is returning to nexus. ", true}
 			}
 		},
 		{
@@ -175,18 +175,18 @@ TEAM_CP = impulse.Teams.Define({
 			id = 7,
 			question = "After going on-duty and gearing up, what is the first thing you should do?",
 			answers = {
-				{"Radio in 10-8 and interlock into a PT. ", true},
-				{"Ask MPF to report in city status before exiting to patrol.", false},
-				{"Move to Plaza and report in what you see until you find a group to fall in", false}
+				{"Radio in 10-8, and interlock into a PT. ", true},
+				{"Ask MPF to report in the current city status before exiting to patrol.", false},
+				{"Move to plaza and report in what you see until you find a group to fall in", false}
 			}
 		},
 		{
 			id = 8,
-			question = "A Civic Member of the Popualce is acting very suspicious in a gathering, how do you react?",
+			question = "A civic member of the populus is acting very suspicious in a gathering, how do you react?",
 			answers = {
 				{"Radio in to keep close watch on him.", false},
-				{"Beat up and detain the civic.", false},
-				{"Search the civic and question him.", true},
+				{"Beat up and detain the civilian.", false},
+				{"Search the citizen and question him.", true},
 				{"None of the above.", false}
 			}
 		},
@@ -195,14 +195,14 @@ TEAM_CP = impulse.Teams.Define({
 			question = "Should you leave the nexus without your mask and vocoder?",
 			answers = {
 				{"No", true},
-				{"You can take it off if there is a small amont of citizens", false},
+				{"You can take it off if there is a small amount of citizens", false},
 				{"Yes", false},
 				{"None of the above.", false}
 			}
 		},
 		{
 			id = 10,
-			question = "There is BOL on a citizen while also an incursion happening what do you prioritize?",
+			question = "There is a BOL on a citizen and you suspect he's nearby, but there's an incursion is happening at the same time. What do you prioritize?",
 			answers = {
 				{"BOL if there close", false},
 				{"Incursion ", true},
@@ -215,8 +215,9 @@ TEAM_CP = impulse.Teams.Define({
 			question = "What rank should you prioritize orders from?",
 			answers = {
 				{"Rank Leader", false},
-				{"Squad Leader", true},
+				{"Squad Leader", false},
 				{"i1.", false},
+								{"Both have the same amount of authority", true},
 				{"Acting Rank Leader", false}
 			}
 		},
@@ -224,9 +225,9 @@ TEAM_CP = impulse.Teams.Define({
 			id = 12,
 			question = "What is the policy for citizens committing level 1 crimes on city code stable?",
 			answers = {
-				{"Re-Education -> Arrest", false},
-				{"Warning -> Arrest", false},
-				{"Warning -> Re-Education -> Arrest", true},
+				{"Re-Education/Arrest", false},
+				{"Warning/Arrest", false},
+				{"Warning/Re-Education/Arrest", true},
 				{"Arrest", false}
 			}
 		},
@@ -234,15 +235,15 @@ TEAM_CP = impulse.Teams.Define({
 			id = 13,
 			question = "Do CTA have any authority over MPF personnel?",
 			answers = {
-				{"Yes", true},
+				{"Yes", false},
 				{"No", false},
-				{"CTA Supervisors only", false},
+				{"CTA Supervisors only", true},
 				{"CTA Supervisors only in the absence of any equal or higher rank MPF Supervisors", true}
 			}
 		},
 		{
 			id = 14,
-			question = "A citizen is calling you names such as idiot after you have arrested them what do you do?",
+			question = "A citizen is calling you names, such as "idiot" after you have arrested them, what do you do?",
 			answers = {
 				{"Ask a supervisor to increase their sentence", true},
 				{"Do nothing", false},
@@ -255,17 +256,17 @@ TEAM_CP = impulse.Teams.Define({
 			question = "What do you do if there is no PT to interlock into?",
 			answers = {
 				{"Wait for a PT team to become available", false},
-				{"Go patrol with someone and make a makeshift PT.", true},
+				{"Create a makeshift PT and patrol with whoever is available", true},
 				{"Patrol by yourself", false},
 				{"None of the above", false}
 			}
 		},
 		{
 			id = 16,
-			question = "There is an i5 in nexus who is untrained what do you do?",
+			question = "There is an untrained i4 in the nexus, what do you do?",
 			answers = {
 				{"Train them yourself.", false},
-				{"Fine the appropriate rank to train them i1+", true},
+				{"Find the appropriate rank to train them (i1+)", true},
 				{"Do nothing", false}
 			}
 		},
