@@ -67,39 +67,32 @@ local lastChest = -1
 hook.Add("PostPlayerDraw", "impulseCosmeticDraw", function(k)
 	if not k:Alive() then return end
 
+	local faceCos = k:GetSyncVar(SYNC_COS_FACE)
+	local hatCos = k:GetSyncVar(SYNC_COS_HEAD)
+	local chestCos = k:GetSyncVar(SYNC_COS_CHEST)
+
+	if not faceCos and not hatCos and not chestCos and not k.Cosmetics then return end
+
 	if k.Cosmetics then
+		local isFemale = k:IsFemale()
+		local t = k:IsPlayer() and k:Team() or LocalPlayer():Team()
+
 		for a,b in pairs(k.Cosmetics) do
 			if not IsValid(b) then continue end
-			local bone
-			local attach
-			local matrix
 			local pos
 			local ang
 
 			if b.drawdata.attachment then
 				local lk = k:LookupAttachment(b.drawdata.attachment)
-
-				if lk == "0" then
-					return
-				end
-
+				if lk == "0" then return end
 				local attach = k:GetAttachment(lk)
-				
 				pos = attach.Pos
 				ang = attach.Ang
 			else
-				bone = k:LookupBone(b.bone)
-
-				if not bone then
-					return
-				end
-				
-				matrix = k:GetBoneMatrix(bone)
-
-				if not matrix then
-					return
-				end
-
+				local bone = k:LookupBone(b.bone)
+				if not bone then return end
+				local matrix = k:GetBoneMatrix(bone)
+				if not matrix then return end
 				pos = matrix:GetTranslation()
 				ang = matrix:GetAngles()
 			end
@@ -107,14 +100,7 @@ hook.Add("PostPlayerDraw", "impulseCosmeticDraw", function(k)
 			local f = ang:Forward()
 			local u = ang:Up()
 			local r = ang:Right()
-			local isFemale = k:IsFemale()
 			local teamCustom = b.drawdata.teamCustomPos
-
-			local t = LocalPlayer():Team()
-
-			if k:IsPlayer() then
-				t = k:Team()
-			end
 
 			if teamCustom and teamCustom[t] then
 				pos = pos + (r * teamCustom[t].x) + (f * teamCustom[t].y) + (u * teamCustom[t].z)
@@ -137,7 +123,7 @@ hook.Add("PostPlayerDraw", "impulseCosmeticDraw", function(k)
 			end
 
 			b:SetRenderAngles(ang)
-			
+
 			if b.drawdata.renderSetting then
 				if impulse.GetSetting(b.drawdata.renderSetting) then
 					b:DrawModel()
@@ -148,16 +134,12 @@ hook.Add("PostPlayerDraw", "impulseCosmeticDraw", function(k)
 		end
 	end
 
-	local faceCos = k:GetSyncVar(SYNC_COS_FACE) -- uses bone 6 face
-	local hatCos = k:GetSyncVar(SYNC_COS_HEAD) -- uses bone 6 face
-	local chestCos = k:GetSyncVar(SYNC_COS_CHEST) -- uses bone 1 spine
-
 	if faceCos then
 		if faceCos != (k.lastFace or -1) then
 			MakeCosmetic(k, faceCos, "ValveBiped.Bip01_Head1", impulse.Cosmetics[faceCos], 1)
 			k.lastFace = faceCos
-		end  
-	elseif k.Cosmetics and k.Cosmetics[1] and IsValid(k.Cosmetics[1]) then -- cosmetic removed
+		end
+	elseif k.Cosmetics and k.Cosmetics[1] and IsValid(k.Cosmetics[1]) then
 		RemoveCosmetic(k, k.Cosmetics[1], 1)
 		k.lastFace = -1
 	end
@@ -166,8 +148,8 @@ hook.Add("PostPlayerDraw", "impulseCosmeticDraw", function(k)
 		if hatCos != (k.lastHat or -1) then
 			MakeCosmetic(k, hatCos, "ValveBiped.Bip01_Head1", impulse.Cosmetics[hatCos], 2)
 			k.lastHat = hatCos
-		end  
-	elseif k.Cosmetics and k.Cosmetics[2] and IsValid(k.Cosmetics[2]) then -- cosmetic removed
+		end
+	elseif k.Cosmetics and k.Cosmetics[2] and IsValid(k.Cosmetics[2]) then
 		RemoveCosmetic(k, k.Cosmetics[2], 2)
 		k.lastHat = -1
 	end
@@ -175,9 +157,9 @@ hook.Add("PostPlayerDraw", "impulseCosmeticDraw", function(k)
 	if chestCos then
 		if chestCos != (k.lastChest or -1) then
 			MakeCosmetic(k, chestCos, "ValveBiped.Bip01_Spine2", impulse.Cosmetics[chestCos], 3)
-			k.lastChest = hatCos
-		end  
-	elseif k.Cosmetics and k.Cosmetics[3] and IsValid(k.Cosmetics[3]) then -- cosmetic removed
+			k.lastChest = chestCos -- bug fix: was hatCos
+		end
+	elseif k.Cosmetics and k.Cosmetics[3] and IsValid(k.Cosmetics[3]) then
 		RemoveCosmetic(k, k.Cosmetics[3], 3)
 		k.lastChest = -1
 	end
