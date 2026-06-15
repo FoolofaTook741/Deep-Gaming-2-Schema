@@ -1,10 +1,6 @@
 local isValid = IsValid
 local mathAbs = math.abs
 
-hook.Add("PlayerConnect", "DBG_PConnect", print, "[impulse] PlayerConnect")
-hook.Add("PlayerAuthed", "DBG_PAuthed", print, "[impulse] PlayerAuthed")
-hook.Add("PlayerInitialSpawn","DBG_PIS", print, "[impulse] PlayerInitialSpawn")
-
 function GM:PlayerInitialSpawn(ply)
 	print("[impulse] Initial Spawn Hook for: " .. ply:Nick() .. " (" .. ply:SteamID() .. ")")
 	local isNew = true
@@ -317,7 +313,9 @@ end
 function GM:PlayerLoadout(ply)
 	ply:SetRunSpeed(impulse.Config.JogSpeed)
 	ply:SetWalkSpeed(impulse.Config.WalkSpeed)
-
+    if ply:Team() == TEAM_ZOMBIE then
+        return true
+    end
 	return true
 end
 
@@ -627,28 +625,28 @@ function GM:PlayerSay(ply, text, teamChat, newChat)
 		end
 
 	elseif ply:Alive() then
-		text = hook.Run("ProcessICChatMessage", ply, text) or text
-		text = hook.Run("ChatClassMessageSend", 1, text, ply) or text
+	    text = hook.Run("ProcessICChatMessage", ply, text) or text
+	    text = hook.Run("ChatClassMessageSend", 1, text, ply) or text
 
-		for v,k in pairs(player.GetAll()) do
-			if (ply:GetPos() - k:GetPos()):LengthSqr() <= TALK_DIST_SQR then
-				k:SendChatClassMessage(1, text, ply)
-			end
-		end
+	    local plyPos = ply:GetPos()
+	    local isNearBug = ply:IsNearAudioBug()
+	    local isNearJammer = isNearBug and ply:IsNearSignalJammer()
 
-		if ply:IsNearAudioBug() then
-			for k,v in pairs(player.GetAll()) do
-				if v:Team() == TEAM_CP and v:GetTeamClass() == CLASS_GHOST then
-					if ply:IsNearSignalJammer() == false then
-						v:SendChatClassMessage(74, text, ply)
-					else
-						v:SendChatClassMessage(74, " *SIGNAL JAMMED*", ply)
-					end
-				end
-			end
-		end
+	    for v, k in pairs(player.GetAll()) do
+	        if (plyPos - k:GetPos()):LengthSqr() <= TALK_DIST_SQR then
+	            k:SendChatClassMessage(1, text, ply)
+	        end
 
-		hook.Run("PostChatClassMessageSend", 1, text, ply)
+	        if isNearBug and k:Team() == TEAM_CP and k:GetTeamClass() == CLASS_GHOST then
+	            if not isNearJammer then
+	                k:SendChatClassMessage(74, text, ply)
+	            else
+	                k:SendChatClassMessage(74, " *SIGNAL JAMMED*", ply)
+	            end
+	        end
+	    end
+
+	    hook.Run("PostChatClassMessageSend", 1, text, ply)
 	end
 
 	return ""
