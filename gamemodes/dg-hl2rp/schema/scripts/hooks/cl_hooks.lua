@@ -309,6 +309,7 @@ hook.Add("RenderScreenspaceEffects", "PGHL2RP-Filter", function()
     DrawColorModify(tab)
 end)
 
+local DEFAULT_COLOR_VEC = Vector(1, 1, 1)
 
 matproxy.Add({
     name = "HairColor",
@@ -316,8 +317,16 @@ matproxy.Add({
         self.ResultTo = values.resultvar
     end,
     bind = function(self, mat, ent)
-        mat:SetVector(self.ResultTo, (ent.GetHairColor and ent:GetHairColor():ToVector()) or Vector(1, 1, 1))
-   end
+        if not ent.GetHairColor then
+            mat:SetVector(self.ResultTo, DEFAULT_COLOR_VEC)
+            return
+        end
+        if not ent._hairColorVec then
+            local color = ent:GetHairColor()
+            ent._hairColorVec = color and color:ToVector() or DEFAULT_COLOR_VEC
+        end
+        mat:SetVector(self.ResultTo, ent._hairColorVec)
+    end
 })
 
 matproxy.Add({
@@ -326,8 +335,16 @@ matproxy.Add({
         self.ResultTo = values.resultvar
     end,
     bind = function(self, mat, ent)
-        mat:SetVector(self.ResultTo, (ent.GetPantsColor and ent:GetPantsColor():ToVector()) or Vector(1, 1, 1))
-   end
+        if not ent.GetPantsColor then
+            mat:SetVector(self.ResultTo, DEFAULT_COLOR_VEC)
+            return
+        end
+        if not ent._pantsColorVec then
+            local color = ent:GetPantsColor()
+            ent._pantsColorVec = color and color:ToVector() or DEFAULT_COLOR_VEC
+        end
+        mat:SetVector(self.ResultTo, ent._pantsColorVec)
+    end
 })
 
 matproxy.Add({
@@ -336,8 +353,16 @@ matproxy.Add({
         self.ResultTo = values.resultvar
     end,
     bind = function(self, mat, ent)
-        mat:SetVector(self.ResultTo, (ent.GetTorsoColor and ent:GetTorsoColor():ToVector()) or Vector(1, 1, 1))
-   end
+        if not ent.GetTorsoColor then
+            mat:SetVector(self.ResultTo, DEFAULT_COLOR_VEC)
+            return
+        end
+        if not ent._torsoColorVec then
+            local color = ent:GetTorsoColor()
+            ent._torsoColorVec = color and color:ToVector() or DEFAULT_COLOR_VEC
+        end
+        mat:SetVector(self.ResultTo, ent._torsoColorVec)
+    end
 })
 
 matproxy.Add({
@@ -346,8 +371,16 @@ matproxy.Add({
         self.ResultTo = values.resultvar
     end,
     bind = function(self, mat, ent)
-        mat:SetVector(self.ResultTo, (ent.GetShirtColor and ent:GetShirtColor():ToVector()) or Vector(1, 1, 1))
-   end
+        if not ent.GetShirtColor then
+            mat:SetVector(self.ResultTo, DEFAULT_COLOR_VEC)
+            return
+        end
+        if not ent._shirtColorVec then
+            local color = ent:GetShirtColor()
+            ent._shirtColorVec = color and color:ToVector() or DEFAULT_COLOR_VEC
+        end
+        mat:SetVector(self.ResultTo, ent._shirtColorVec)
+    end
 })
 
 matproxy.Add({
@@ -356,8 +389,16 @@ matproxy.Add({
         self.ResultTo = values.resultvar
     end,
     bind = function(self, mat, ent)
-        mat:SetVector(self.ResultTo, (ent.GetHeadGearColor and ent:GetHeadGearColor():ToVector()) or Vector(1, 1, 1))
-   end
+        if not ent.GetHeadGearColor then
+            mat:SetVector(self.ResultTo, DEFAULT_COLOR_VEC)
+            return
+        end
+        if not ent._headGearColorVec then
+            local color = ent:GetHeadGearColor()
+            ent._headGearColorVec = color and color:ToVector() or DEFAULT_COLOR_VEC
+        end
+        mat:SetVector(self.ResultTo, ent._headGearColorVec)
+    end
 })
 
 net.Receive("ixSetHairColor", function()
@@ -375,78 +416,56 @@ net.Receive("ixSetHairColor", function()
         --print("[DEBUG] Color is NIL")
         return
     end
---[[
-    print(string.format(
-        "[DEBUG] Payload: sid64=%s colour=R=%d G=%d B=%d A=%d",
-        sid64,
-        color.r or -1,
-        color.g or -1,
-        color.b or -1,
-        color.a or -1
-    ))
-
---]]
-
-
     local timerName = "ixSetHairColor_apply_" .. sid64
     timer.Remove(timerName)
 
-    local tries = 0
     timer.Create(timerName, 0.1, 80, function()
-        tries = tries + 1
-
         local ent = player.GetBySteamID64(sid64)
         if IsValid(ent) then
-            --print("[DEBUG] Resolved player after tries=", tries, "->", ent:Nick())
             ent:SetHairColor(color)
+            ent._hairColorVec = nil
             timer.Remove(timerName)
-        elseif tries % 10 == 0 then
-            --print("[DEBUG] Waiting for player entity sid64=", sid64, "tries=", tries)
         end
     end)
 end)
 
 net.Receive("ixSetPantsColor", function()
     local ent = net.ReadEntity()
-    if ( !IsValid(ent) ) then return end
-
+    if not IsValid(ent) then return end
     local color = net.ReadColor(true)
-
-    if ( IsValid(ent) ) then
+    if IsValid(ent) then
         ent:SetPantsColor(color)
+        ent._pantsColorVec = nil
     end
 end)
 
 net.Receive("ixSetTorsoColor", function()
     local ent = net.ReadEntity()
-    if ( !IsValid(ent) ) then return end
-
+    if not IsValid(ent) then return end
     local color = net.ReadColor(true)
-
-    if ( IsValid(ent) ) then
+    if IsValid(ent) then
         ent:SetTorsoColor(color)
+        ent._torsoColorVec = nil
     end
 end)
 
 net.Receive("ixSetShirtColor", function()
     local ent = net.ReadEntity()
-    if ( !IsValid(ent) ) then return end
-
+    if not IsValid(ent) then return end
     local color = net.ReadColor(true)
-
-    if ( IsValid(ent) ) then
+    if IsValid(ent) then
         ent:SetShirtColor(color)
+        ent._shirtColorVec = nil
     end
 end)
 
 net.Receive("ixSetHeadGearColor", function()
     local ent = net.ReadEntity()
-    if ( !IsValid(ent) ) then return end
-
+    if not IsValid(ent) then return end
     local color = net.ReadColor(true)
-
-    if ( IsValid(ent) ) then
+    if IsValid(ent) then
         ent:SetHeadGearColor(color)
+        ent._headGearColorVec = nil
     end
 end)
 
@@ -500,12 +519,17 @@ net.Receive("impulse.SyncColours", function()
     local headGearColour = net.ReadColor()
     local pantsColour = net.ReadColor()
 
-    if ( IsValid(target) ) then
+    if IsValid(target) then
         target:SetHairColor(hairColour)
         target:SetTorsoColor(torsoColour)
         target:SetShirtColor(shirtColour)
         target:SetHeadGearColor(headGearColour)
         target:SetPantsColor(pantsColour)
+        target._hairColorVec = nil
+        target._torsoColorVec = nil
+        target._shirtColorVec = nil
+        target._headGearColorVec = nil
+        target._pantsColorVec = nil
     end
 end)
 
