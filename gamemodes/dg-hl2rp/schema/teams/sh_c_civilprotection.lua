@@ -243,7 +243,7 @@ quiz = {
 		},
 		{
 			id = 14,
-			question = "A citizen is calling you names, such as "idiot" after you have arrested them, what do you do?",
+			question = "A citizen is calling you names, such as 'idiot' after you have arrested them, what do you do?",
 			answers = {
 				{"Ask a supervisor to increase their sentence", true},
 				{"Do nothing", false},
