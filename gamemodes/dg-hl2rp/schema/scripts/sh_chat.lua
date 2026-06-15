@@ -154,47 +154,47 @@ local rebelRadioCommand = {
 	requiresArg = true,
 	requiresAlive = true,
 	onRun = function(ply, arg, rawText)
-		local frequency = ply.Frequency
-		if not ply.HasRadio and not ply.IsRogue then
-			ply:Notify("You must have a radio or rebel suit to use this.")
-			return
-		elseif ply.Frequency < 1 or ply.Frequency > 10 then
-			ply:Notify("You are not on a valid frequency.")
-			return
-		elseif not ply.Frequency then
-			ply:Notify("You are not on a valid frequency.")
-			return
-		else
-			rawText = hook.Run("ChatClassMessageSend", 8, rawText, ply) or rawText
-			for v,k in pairs(player.GetAll()) do
-				if (!k:IsCP() and !k.IsRogue) and k.HasRadio then
-		   			if k.Frequency == frequency then
-						k:SendChatClassMessage(200 + frequency, rawText, ply)
-		   			end
-				elseif (COMMSTAP == frequency or COMMSTAP_2 == frequency) and ply:IsNearSignalJammer() != true then
-					if k:Team() == TEAM_CP and k:GetTeamClass() == CLASS_GHOST then
-						k:SendChatClassMessage(200 + frequency, rawText, ply)
-					end
-				elseif k:GetPos():Distance(ply:GetPos()) < 100 and k != ply then
-					k:SendChatClassMessage(200 + frequency, rawText, ply)
-				elseif k.SnooperMode == true then
-					k:SendChatClassMessage(200 + frequency, rawText, ply)
-				end
-				ply:EmitBudgetSound("ambient/levels/prison/radio_random2.wav")
-			end
-			if ply:IsNearAudioBug() and COMMSTAP != frequency and COMMSTAP_2 != frequency then
-				for k,v in pairs(player.GetAll()) do
-					if v:Team() == TEAM_CP and v:GetTeamClass() == CLASS_GHOST then
-						if ply:IsNearSignalJammer() == false then
-							v:SendChatClassMessage(74, rawText, ply)
-						else
-							rawText = "*SIGNAL JAMMED*"
-							v:SendChatClassMessage(74, rawText, ply)
-						end
-					end
-				end
-			end
-		end
+	    local frequency = ply.Frequency
+	    if not ply.HasRadio and not ply.IsRogue then
+	        ply:Notify("You must have a radio or rebel suit to use this.")
+	        return
+	    elseif not ply.Frequency or ply.Frequency < 1 or ply.Frequency > 10 then
+	        ply:Notify("You are not on a valid frequency.")
+	        return
+	    else
+	        rawText = hook.Run("ChatClassMessageSend", 8, rawText, ply) or rawText
+
+	        local isNearBug = ply:IsNearAudioBug()
+	        local isNearJammer = ply:IsNearSignalJammer()
+	        local plyPos = ply:GetPos()
+	        local isTapped = COMMSTAP == frequency or COMMSTAP_2 == frequency
+
+	        for v, k in pairs(player.GetAll()) do
+	            if not k:IsCP() and not k.IsRogue and k.HasRadio and k.Frequency == frequency then
+	                k:SendChatClassMessage(200 + frequency, rawText, ply)
+	            elseif isTapped and not isNearJammer then
+	                if k:Team() == TEAM_CP and k:GetTeamClass() == CLASS_GHOST then
+	                    k:SendChatClassMessage(200 + frequency, rawText, ply)
+	                end
+	            elseif k ~= ply and plyPos:DistToSqr(k:GetPos()) < 100 ^ 2 then
+	                k:SendChatClassMessage(200 + frequency, rawText, ply)
+	            elseif k.SnooperMode == true then
+	                k:SendChatClassMessage(200 + frequency, rawText, ply)
+	            end
+
+	            if isNearBug and not isTapped then
+	                if k:Team() == TEAM_CP and k:GetTeamClass() == CLASS_GHOST then
+	                    if not isNearJammer then
+	                        k:SendChatClassMessage(74, rawText, ply)
+	                    else
+	                        k:SendChatClassMessage(74, "*SIGNAL JAMMED*", ply)
+	                    end
+	                end
+	            end
+	        end
+
+	        ply:EmitBudgetSound("ambient/levels/prison/radio_random2.wav")
+	    end
 	end
 }
 
