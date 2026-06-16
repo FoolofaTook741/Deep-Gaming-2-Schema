@@ -107,6 +107,18 @@ VENDOR.Sell = {
 			end
 		end
 	},
+	["item_pistolammocrate"] = {
+		Desc = "Admin Branch - 4/2 minutes",
+		Cost = 100,
+		BuyMax = 2,
+		TempCooldown = 120,
+		CanBuy = function(ply)
+			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+				return true
+			else return false
+			end
+		end
+	},
 	["item_broadcastkey"] = {
 		Desc = "A key for the broadcast terminal, do not lose this.",
 		Cost = 0,
