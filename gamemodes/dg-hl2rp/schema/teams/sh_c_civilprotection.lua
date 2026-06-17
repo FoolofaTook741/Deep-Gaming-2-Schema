@@ -409,7 +409,7 @@ quiz = {
         {
             name = "RL",
             description = "RL",
-            doorGroup = {1, 2, 3, 6, 7},
+            doorGroup = {1, 2, 3, 4, 6, 7},
             xp = 0,
             whitelistLevel = 2,
             whitelistFailMessage = "You must be promoted to use this rank.",
