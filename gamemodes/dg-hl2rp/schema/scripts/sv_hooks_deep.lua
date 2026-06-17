@@ -684,9 +684,11 @@ net.Receive("DeepFundingOperation", function(len,ply)
             net.WriteInt(OCAAB_CUR_FUNDS, 16)
             net.Broadcast()
             OCAAB_HEALTHVIALS_UPGRADE = true
+            SetGlobalBool("OCAAB_HEALTHVIALS_UPGRADE", true)
             local id = "hp"
             timer.Create(id .. "OCAHealthUpgrade", 900, 1, function()
                 OCAAB_HEALTHVIALS_UPGRADE = false
+                SetGlobalBool("OCAAB_HEALTHVIALS_UPGRADE", false)
             end)
             for k, v in pairs(player.GetAll()) do
                 if v:IsCP() then
@@ -711,8 +713,10 @@ net.Receive("DeepFundingOperation", function(len,ply)
             net.WriteInt(OCAAB_CUR_FUNDS, 16)
             net.Broadcast()
             OCAAB_INCENDIARY_UPGRADE = true
+            SetGlobalBool("OCAAB_INCENDIARY_UPGRADE", true)
             timer.Create(id .. "OCAIncendiaryUpgrade", 600, 1, function()
                 OCAAB_INCENDIARY_UPGRADE = false
+                SetGlobalBool("OCAAB_INCENDIARY_UPGRADE", false)
             end)
             for k, v in pairs(player.GetAll()) do
                 if v:IsCP() then
