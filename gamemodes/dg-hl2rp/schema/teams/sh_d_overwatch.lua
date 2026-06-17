@@ -586,6 +586,7 @@ TEAM_OTA = impulse.Teams.Define({
 			description = "eow",
 			xp = 0,
 			whitelistLevel = 3,
+            doorGroup = {1, 2, 3, 4, 6, 7},
 			onBecome = function(ply, rank)
 				ApplyOTARank(ply, "ECS")
 			end
@@ -595,6 +596,7 @@ TEAM_OTA = impulse.Teams.Define({
 			description = "captain",
 			xp = 0,
 			whitelistLevel = 4,
+            doorGroup = {1, 2, 3, 4, 6, 7},
 			onBecome = function(ply, rank)
 				ApplyOTARank(ply, "CCP")
 			end
