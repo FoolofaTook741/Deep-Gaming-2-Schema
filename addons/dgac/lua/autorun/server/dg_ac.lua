@@ -31,31 +31,61 @@ local function RequestLeyScreenshot(ply, reason)
 end
 
 net.Receive("ac.detect", function(len, ply)
-	RequestLeyScreenshot(ply, "[PG AC]: Incident #200")
+    local detections = net.ReadTable()
+    local details = {}
+
+    if istable(detections) then
+        for i, detection in ipairs(detections) do
+            if i > 3 then break end
+
+            local id = tonumber(detection._id) or 0
+            local detectionType = tostring(detection._type or "Unknown")
+                :gsub("[%c\r\n]", " ")
+                :sub(1, 100)
+
+            details[#details + 1] =
+                string.format("#%d: %s", id, detectionType)
+        end
+    end
+
+    local summary = #details > 0
+        and table.concat(details, " | ")
+        or "Malformed/empty detection"
+
+    local reason = "[DG AC]: Incident #200 | " .. summary
+
+    print(string.format(
+        "[DG AC] %s (%s): %s",
+        ply:Nick(),
+        ply:SteamID(),
+        summary
+    ))
+
+    RequestLeyScreenshot(ply, reason)
 end)
 
 net.Receive("DarkRP_AdminWeapons", function(len, ply)
-	RequestLeyScreenshot(ply, "[PG AC]: Incident #299")
+	RequestLeyScreenshot(ply, "[DG AC]: Incident #299")
 end)
 
 net.Receive("StackGhost", function(len, ply)
-	RequestLeyScreenshot(ply, "[PG AC]: Incident #300")
+	RequestLeyScreenshot(ply, "[DG AC]: Incident #300")
 end)
 
 net.Receive("Sandbox_ArmDupe", function(len, ply)	
-	RequestLeyScreenshot(ply, "[PG AC]: Incident #301")
+	RequestLeyScreenshot(ply, "[DG AC]: Incident #301")
 end)
 
 net.Receive("Ulib_Message", function(len, ply)
-	RequestLeyScreenshot(ply, "[PG AC]: Incident #302")
+	RequestLeyScreenshot(ply, "[DG AC]: Incident #302")
 end)
 
 net.Receive("_Detect", function(len,ply)
 	local a = net.ReadString()
 	if a == "external" then
-		RequestLeyScreenshot(ply, "[PG AC]: Incident #400")
+		RequestLeyScreenshot(ply, "[DG AC]: Incident #400")
 	elseif a == '' then
-		RequestLeyScreenshot(ply, "[PG AC]: Incident #401")
+		RequestLeyScreenshot(ply, "[DG AC]: Incident #401")
 	end
 end)
 
@@ -74,7 +104,7 @@ end ]]--
     for pl, num  in pairs(netplys) do
         if num > 250 then
         	print("DETECTED -- NET MESSAGE SPAM -- "..pl:Name().." ("..pl:SteamID()..")")
-            pl:Kick("[PG AC]: You have been banned from this server!") -- Kick message for NET message spam
+            pl:Kick("[DG AC]: You have been banned from this server!") -- Kick message for NET message spam
             
             for _, admin in ipairs(player.GetHumans()) do
                 if admin:IsAdmin() then

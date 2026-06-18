@@ -200,7 +200,7 @@ scan(function()
 				local fname = tostring(k)
 				local libwl = lib_whitelist[lib]
 				if not (libwl and libwl[string.lower(fname)]) then
-					print("[PG AC DEBUG] Detected Lib change:", lib, fname)
+					print("[DG AC DEBUG] Detected Lib change:", lib, fname)
 					detect(1, "Lib changes")
 					break
 				end
