@@ -94,6 +94,23 @@ net.Receive("deepupdatedoorprice", function()
     doorPrice = net.ReadUInt(6)
 end)
 
+net.Receive("deepupdatedecree", function()
+    local id = net.ReadUInt(3)
+    local boole = net.ReadBool()
+
+    if id == 1 then
+        DG_RATIONS = boole
+
+        if IsValid(PDA_MENU) and IsValid(PDA_MENU.rationsExtend) then
+            PDA_MENU.rationsExtend:SetVisible(not boole)
+        end
+    elseif id == 2 then
+        DG_CITYLOCKDOWN = boole
+    elseif id == 3 then
+        DG_SEPERATION = boole
+    end
+end)
+
 net.Receive("DeepUnitMakeup", function()
     unions = net.ReadUInt(5)
     helixs = net.ReadUInt(5)
@@ -764,15 +781,18 @@ end
     if (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_ORD) or (LocalPlayer():Team() == TEAM_CP and rank >= RANK_DVL) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_CA) then
         self.rations = vgui.Create("DButton", self.utilPnl)
         self.rations:SetFont("DebugFixed")
-        self.rations:SetText("TOGGLE RATIONS")
+        self.rations:SetText("")
+        self.rations:SetTall(26)
         self.rations:Dock(TOP)
 
         function self.rations:Paint(w, h)
+            local label = DG_RATIONS == false and "ENABLE RATIONS" or "DISABLE RATIONS"
+
             surface.SetDrawColor(8, 16, 28, 220)
             surface.DrawRect(0, 0, w, h)
             surface.SetDrawColor(COMBINE_ACCENT)
             surface.DrawOutlinedRect(0, 0, w, h)
-            draw.SimpleText("TOGGLE RATIONS", "DebugFixed", w / 2, h / 2, COMBINE_TEXT, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(label, "DebugFixed", w / 2, h / 2, COMBINE_TEXT, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
         function self.rations:DoClick()
@@ -780,13 +800,41 @@ end
                 timer.Create("rationcooldown", 90, 0, function()
                     timer.Remove("rationcooldown")
                 end)
-                net.Start("DeepGamingSendDecree")
-                net.WriteUInt(1, 8)
-                net.SendToServer()
+
+                if DG_RATIONS == false then
+                    net.Start("DeepRationsEndEarly")
+                    net.SendToServer()
+                else
+                    net.Start("DeepGamingSendDecree")
+                    net.WriteUInt(1, 8)
+                    net.SendToServer()
+                end
+
                 surface.PlaySound("ambient/cmb_alarm.mp3")
             else
                 LocalPlayer():Notify("Please wait " .. math.floor(timer.TimeLeft("rationcooldown")) .. " seconds before using this button.")
             end
+            pdaSound()
+        end
+
+        self.rationsExtend = vgui.Create("DButton", self.utilPnl)
+        self.rationsExtend:SetFont("DebugFixed")
+        self.rationsExtend:SetText("")
+        self.rationsExtend:SetTall(26)
+        self.rationsExtend:Dock(TOP)
+        self.rationsExtend:SetVisible(DG_RATIONS == false)
+
+        function self.rationsExtend:Paint(w, h)
+            surface.SetDrawColor(8, 16, 28, 220)
+            surface.DrawRect(0, 0, w, h)
+            surface.SetDrawColor(COMBINE_ACCENT_SOFT)
+            surface.DrawOutlinedRect(0, 0, w, h)
+            draw.SimpleText("EXTEND SUSPENSION +10 MINUTES", "DebugFixed", w / 2, h / 2, COMBINE_TEXT, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        function self.rationsExtend:DoClick()
+            net.Start("DeepRationsExtend")
+            net.SendToServer()
             pdaSound()
         end
     end

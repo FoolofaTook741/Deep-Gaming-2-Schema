@@ -23,14 +23,10 @@ local turnid = 0
 local funds = 0
 
 local segregation = false
-local lockdown = false
 local civtaxrate = 0
 local cwtaxrate = 0
 local commschannel1 = 0
 local commschannel2 = 1
-local lockdown = false
-local separation = false
-local rations = true
 local fracturedstarttime = 0
 
 local awardcredits = 0
@@ -87,18 +83,6 @@ net.Receive("deepupdatetaxrate_overlay", function()
     end
 end)
 
-net.Receive("deepupdatedecree", function() 
-    local id = net.ReadUInt(3)
-    local boole = net.ReadBool()
-    if id == 1 then 
-        rations = boole
-    elseif id == 2 then
-        lockdown = boole
-    else
-        separation = boole
-    end
-end)
-
 net.Receive("DeepSociostabilityScore", function(len, ply)
     socioscore = net.ReadUInt(8)
 end)
@@ -129,7 +113,7 @@ net.Receive("updatepolicy", function(len,ply)
     local policy = net.ReadUInt(8)
     local status = net.ReadBool()
     if policy == 2 then
-        lockdown = status
+        DG_CITYLOCKDOWN = status
     elseif policy != 2 then
         segregation = status
     end
@@ -137,17 +121,9 @@ end)
 
 function UpdatePolicy(policy, status)
     if policy == "segregation" then
-        if status == true then
-            segregation = true
-        else
-            segregation = false
-        end
+        segregation = status == true
     else
-        if status == true then
-            lockdown = true
-        else
-            lockdown = false
-        end
+        DG_CITYLOCKDOWN = status == true
     end
 end
 
@@ -793,7 +769,7 @@ local function DrawAuxData(offset)
 
     local radd = add + 14
 
-    if rations == true then
+    if DG_RATIONS == true then
         draw.SimpleText("<:: CIVIC RATIONS: ACTIVE", "BudgetLabel", 8, 80 + radd, Color(0,255,0), TEXT_ALIGN_LEFT)
     else
         draw.SimpleText("<:: CIVIC RATIONS: SUSPENDED", "BudgetLabel", 8, 80 + radd, Color(255,0,0), TEXT_ALIGN_LEFT)
@@ -801,7 +777,7 @@ local function DrawAuxData(offset)
 
     radd = radd - 14
 
-    if separation == true then
+    if DG_SEPERATION == true then
         draw.SimpleText("<:: CITY SEPARATION: ACTIVE", "BudgetLabel", 8, 80 + radd, Color(0,255,0), TEXT_ALIGN_LEFT)
     else
         draw.SimpleText("<:: CITY SEPARATION: INACTIVE", "BudgetLabel", 8, 80 + radd, Color(255,0,0), TEXT_ALIGN_LEFT)

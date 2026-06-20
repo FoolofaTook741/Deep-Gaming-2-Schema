@@ -31,6 +31,9 @@ util.AddNetworkString("deepupdateawardcredits")
 util.AddNetworkString("cuffsDoSearch")
 util.AddNetworkString("DeepSetRent")
 util.AddNetworkString("deepupdatedoorprice")
+util.AddNetworkString("DeepRationsExtend")
+util.AddNetworkString("DeepRationsEndEarly")
+util.AddNetworkString("DeepRationsTimerUpdate")
 
 print("2")
 
@@ -1285,6 +1288,144 @@ net.Receive("DeepTerminalBlacklist", function(len, ply)
 
 end)
 
+local RATIONS_DEFAULT_DURATION = 1800 -- 30 minutes
+
+local function StartRationsSuspendTimer()
+    timer.Create("RationsSuspendTimer", RATIONS_DEFAULT_DURATION, 1, function()
+        if DG_RATIONS == false then
+            DG_RATIONS = true
+            for k,v in pairs(ents.FindByClass("impulse_hl2rp_rationmachine")) do
+                v.rationsactive = DG_RATIONS
+            end
+
+            for k, v in pairs(player.GetAll()) do
+                v:SendChatClassMessage(70, "Civic Rations are no longer suspended, thank you for your cooperation.", v)
+            end
+
+            net.Start("deepupdatedecree")
+            net.WriteUInt(1, 3)
+            net.WriteBool(true)
+            net.Broadcast()
+
+            net.Start("DeepRationsTimerUpdate")
+            net.WriteBool(false)
+            net.WriteInt(0, 32)
+            net.Broadcast()
+
+            local embeds = {{
+                title = "Ration Suspension Expired",
+                description = "The ration suspension timer ran out and was automatically lifted.",
+                url = "https://discord.com/channels/1149540724648456252/1186351119232925808",
+                color = 2067276,
+                fields = {
+                    {
+                        name = "Supervisor:",
+                        value = "Automatic (timer expiry)"
+                    },
+                }
+            }}
+
+            ReqwestLog(embeds, DG_CAL)
+        end
+    end)
+end
+
+local nextRationsExtend = 0
+
+net.Receive("DeepRationsExtend", function(len, ply)
+    if not ply:IsCPCommand() then return end
+    if not timer.Exists("RationsSuspendTimer") then return end
+
+    if CurTime() < nextRationsExtend then
+        ply:Notify("Please wait " .. math.ceil(nextRationsExtend - CurTime()) .. " seconds before extending again.")
+        return
+    end
+
+    nextRationsExtend = CurTime() + 300
+
+    local remaining = timer.TimeLeft("RationsSuspendTimer")
+    timer.Remove("RationsSuspendTimer")
+    timer.Create("RationsSuspendTimer", remaining + 600, 1, function()
+        if DG_RATIONS == false then
+            DG_RATIONS = true
+            for k,v in pairs(ents.FindByClass("impulse_hl2rp_rationmachine")) do
+                v.rationsactive = DG_RATIONS
+            end
+            net.Start("deepupdatedecree")
+            net.WriteUInt(1, 3)
+            net.WriteBool(true)
+            net.Broadcast()
+            net.Start("DeepRationsTimerUpdate")
+            net.WriteBool(false)
+            net.WriteInt(0, 32)
+            net.Broadcast()
+        end
+    end)
+
+    net.Start("DeepRationsTimerUpdate")
+    net.WriteBool(true)
+    net.WriteInt(math.ceil(timer.TimeLeft("RationsSuspendTimer")), 32)
+    net.Broadcast()
+
+    ply:Notify("Ration suspension extended by 10 minutes.")
+
+    local embeds = {{
+        title = "Ration Suspension Extended",
+        description = "A user has extended the ration suspension by 10 minutes.",
+        url = "https://discord.com/channels/1149540724648456252/1186351119232925808",
+        color = 15548997,
+        fields = {
+            {
+                name = "Supervisor:",
+                value = ply:Name()
+            },
+        }
+    }}
+
+    ReqwestLog(embeds, DG_CAL)
+end)
+
+net.Receive("DeepRationsEndEarly", function(len, ply)
+    if not ply:IsCPCommand() then return end
+    if DG_RATIONS ~= false then return end
+
+    timer.Remove("RationsSuspendTimer")
+    DG_RATIONS = true
+
+    for k,v in pairs(ents.FindByClass("impulse_hl2rp_rationmachine")) do
+        v.rationsactive = DG_RATIONS
+    end
+
+    for k, v in pairs(player.GetAll()) do
+        v:SendChatClassMessage(70, "Civic Rations are no longer suspended, thank you for your cooperation.", ply)
+    end
+
+    net.Start("deepupdatedecree")
+    net.WriteUInt(1, 3)
+    net.WriteBool(true)
+    net.Broadcast()
+
+    net.Start("DeepRationsTimerUpdate")
+    net.WriteBool(false)
+    net.WriteInt(0, 32)
+    net.Broadcast()
+
+    local embeds = {{
+        title = "Ration Suspension Lifted Early",
+        description = "A user has manually ended the ration suspension before the timer expired.",
+        url = "https://discord.com/channels/1149540724648456252/1186351119232925808",
+        color = 2067276,
+        fields = {
+            {
+                name = "Supervisor:",
+                value = ply:Name()
+            },
+        }
+    }}
+
+    ReqwestLog(embeds, DG_CAL)
+end)
+
 net.Receive("DeepGamingSendDecree", function(len, ply)
     if not ply:IsCPCommand() then
         for k,v in pairs(player.GetAll()) do
@@ -1302,7 +1443,8 @@ net.Receive("DeepGamingSendDecree", function(len, ply)
         if decreeid == 1 then
             if DG_RATIONS == false then
                 decree = "Civic Rations are no longer suspended, thank you for your cooperation."
-        	    decreeactive = true
+                decreeactive = true
+                timer.Remove("RationsSuspendTimer")
                 local embeds = {{
                     title = "Ration Suspension Lifted",
                     description = "A user has given an order.",
@@ -1320,6 +1462,12 @@ net.Receive("DeepGamingSendDecree", function(len, ply)
             else
                 decree = "Civic Rations are now suspended. This policy will remain active until sociostability is restored."
                 decreeactive = false
+                StartRationsSuspendTimer()
+
+                net.Start("DeepRationsTimerUpdate")
+                net.WriteBool(true)
+                net.WriteInt(RATIONS_DEFAULT_DURATION, 32)
+                net.Broadcast()
                 local embeds = {{
                     title = "Rations Suspended",
                     description = "A user has given an order.",
@@ -1341,7 +1489,7 @@ net.Receive("DeepGamingSendDecree", function(len, ply)
             end
         elseif decreeid == 2 then
 			if not ply:IsSuperAdmin() then return end
-            if DG_CITYLOCKDOWN == false and !timer.Exists("CityLockdownTimer") then
+            if DG_CITYLOCKDOWN == false and not timer.Exists("CityLockdownTimer") then
                 decreeactive = true
                 decree = "City lockdown is now in effect. All members of the civic populace are to return home until the threat is contained. Workforce personnel are permitted to quickly migrate to their place of work. Cooperate with your protectors and your safety is assured."
                 timer.Create("CityLockdownTimer", 1200, 1, function() timer.Remove("CityLockdownTimer") end)
@@ -1562,6 +1710,34 @@ end)
 
 hook.Add("PlayerInitialSpawn", "InitVoiceLines", function(ply)
     ply.VoiceLines = true
+end)
+
+hook.Add("PlayerInitialSpawn", "DeepSyncDecreeState", function(ply)
+    timer.Simple(1, function()
+        if not IsValid(ply) then return end
+
+        net.Start("deepupdatedecree")
+        net.WriteUInt(1, 3)
+        net.WriteBool(DG_RATIONS)
+        net.Send(ply)
+
+        net.Start("deepupdatedecree")
+        net.WriteUInt(2, 3)
+        net.WriteBool(DG_CITYLOCKDOWN)
+        net.Send(ply)
+
+        net.Start("deepupdatedecree")
+        net.WriteUInt(3, 3)
+        net.WriteBool(DG_SEPERATION)
+        net.Send(ply)
+
+        if not DG_RATIONS and timer.Exists("RationsSuspendTimer") then
+            net.Start("DeepRationsTimerUpdate")
+            net.WriteBool(true)
+            net.WriteInt(math.ceil(timer.TimeLeft("RationsSuspendTimer")), 32)
+            net.Send(ply)
+        end
+    end)
 end)
 
 hook.Add("PlayerSpawn", "deathtimer", function(ply)

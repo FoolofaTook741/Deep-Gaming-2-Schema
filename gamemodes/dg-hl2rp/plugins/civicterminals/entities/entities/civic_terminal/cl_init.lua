@@ -1,11 +1,5 @@
 include("shared.lua")
 
-local rations
-local rationsCode
-local lockdownCode
-local socioStatus
- -- Load this
-
 local Glow = Material("null")
 local GradientDown = Material("null")
 local ShieldTex = Material("null")
@@ -53,18 +47,6 @@ end
 
 ENT.Menus = {}
 
-net.Receive("deepupdatedecree", function() 
-	local id = net.ReadUInt(3)
-	local boole = net.ReadBool()
-	if id == 1 then 
-		rations = boole
-	elseif id == 2 then
-		lockdownCode = boole
-	else
-		separation = boole
-	end
-end)
-
 ENT.Menus[""] = {
 	buttons = {
 		CVButton("ENTER TERMINAL", -190, 50, 380, 52, CVCOLOR_BLUE, function(self)
@@ -81,25 +63,25 @@ ENT.Menus[""] = {
 		surface.DrawLine(-525, 300, 500, 300)
 
         local color_text
-        local rationsCode = "UNKNOWN"
-        if rations == true then 
-            color_text = Color(0,255,0)
-            rationsCode = "INACTIVE"
-        else
-            color_text = Color(255,0,0)
-            rationsCode = "ACTIVE"
-        end
-        draw.DrawText("RATION SUSPENSION STATUS :: " .. rationsCode, font64, -450, -200, color_text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	    local rationsCode = "UNKNOWN"
+	    if DG_RATIONS == true then 
+	        color_text = Color(0,255,0)
+	        rationsCode = "INACTIVE"
+	    else
+	        color_text = Color(255,0,0)
+	        rationsCode = "ACTIVE"
+	    end
+	    draw.DrawText("RATION SUSPENSION STATUS :: " .. rationsCode, font64, -450, -200, color_text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
-        local lckdt = "UNKNOWN"
-        if lockdownCode == true then 
-            color_text = Color(255,0,0)
-            lckdt = "ACTIVE"
-        else
-            color_text = Color(0,255,0)
-            lckdt = "INACTIVE"
-        end
-        draw.DrawText("LOCKDOWN :: " .. lckdt, font64, -450, -125, color_text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	    local lckdt = "UNKNOWN"
+	    if DG_CITYLOCKDOWN == true then 
+	        color_text = Color(255,0,0)
+	        lckdt = "ACTIVE"
+	    else
+	        color_text = Color(0,255,0)
+	        lckdt = "INACTIVE"
+	    end
+	    draw.DrawText("LOCKDOWN :: " .. lckdt, font64, -450, -125, color_text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	end
 }
 
