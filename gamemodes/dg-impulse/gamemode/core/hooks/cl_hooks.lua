@@ -339,13 +339,21 @@ function GM:RenderScreenspaceEffects()
 	end
 end
 
+local lastChatState = nil
+
 function GM:StartChat()
+	if lastChatState == true then return end
+	lastChatState = true
+
 	net.Start("impulseChatState")
 	net.WriteBool(true)
 	net.SendToServer()
 end
 
 function GM:FinishChat()
+	if lastChatState == false then return end
+	lastChatState = false
+
 	net.Start("impulseChatState")
 	net.WriteBool(false)
 	net.SendToServer()
