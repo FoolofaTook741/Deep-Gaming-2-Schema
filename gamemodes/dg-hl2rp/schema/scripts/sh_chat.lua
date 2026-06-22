@@ -2863,10 +2863,14 @@ end)
 
 
 	impulse.RegisterChatClass(70, function(decree, speaker)
-		impulse.customChatFont = "Impulse-ChatRadio"
-		chat.AddText(Color(150, 0, 0), "[URGENT ANNOUNCEMENT] ", "Attention Please. By order of: " .. speaker:Name() .. ", " .. decree)
-	end)
+	    impulse.customChatFont = "Impulse-ChatRadio"
 
+	    if IsValid(speaker) then
+	        chat.AddText(Color(150, 0, 0), "[URGENT ANNOUNCEMENT] ", "Attention Please. By order of: " .. speaker:Name() .. ", " .. decree)
+	    else
+	        chat.AddText(Color(150, 0, 0), "[URGENT ANNOUNCEMENT] ", decree)
+	    end
+	end)
 	impulse.RegisterChatClass(71, function(message)
 		impulse.customChatFont = "Impulse-ChatRadio"
 		chat.AddText(Color(255, 200, 0), "[AUTOMATED BROADCAST] ", message)

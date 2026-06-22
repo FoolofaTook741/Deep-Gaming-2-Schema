@@ -1299,7 +1299,7 @@ local function StartRationsSuspendTimer()
             end
 
             for k, v in pairs(player.GetAll()) do
-                v:SendChatClassMessage(70, "Civic Rations are no longer suspended, thank you for your cooperation.", v)
+                v:SendChatClassMessage(70, "Attention, disciplinary ration suspension period has concluded. Rations will be available at the next cycle.", nil)
             end
 
             net.Start("deepupdatedecree")
