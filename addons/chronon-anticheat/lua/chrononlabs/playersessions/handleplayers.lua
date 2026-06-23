@@ -23,8 +23,8 @@ function self:CreatePlayerSession (ply)
 		return 
 	end
 	
-	local playerName 		= ply:Nick () or ply:Name ()
-	local playerId	 		= ply:SteamID 	()
+	local playerName 		= ply:Nick () or ply:Name () or "Unknown"
+	local playerId	 		= ply:SteamID 	() or "Unknown"
 	local uniquePlayerId 	= ply:SteamID64 ()
 	
 	if not self.PlayerSession [uniquePlayerId] then
@@ -47,8 +47,8 @@ function self:DestroyPlayerSession (ply)
 		return 
 	end
 	
-	local playerName 		= ply:Nick () or ply:Name ()
-	local playerId	 		= ply:SteamID 	()
+	local playerName 		= ply:Nick () or ply:Name () or "Unknown"
+	local playerId	 		= ply:SteamID 	() or "Unknown"
 	local uniquePlayerId 	= ply:SteamID64 ()
 	
 	if not self.PlayerSession [uniquePlayerId] then
