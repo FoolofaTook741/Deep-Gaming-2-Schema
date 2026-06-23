@@ -251,31 +251,25 @@ function PANEL:AddCombineTab(name, panelObj)
     return sheet
 end
 
-function PANEL:SetupPDA()
-    self.sheet = vgui.Create("DColumnSheet", self)
-    self.sheet:Dock(FILL)
-    self.sheet.Navigation:SetWidth(160)
+function PANEL:BuildSquadTab()
+    if not IsValid(self.squadPnl) then
+        local lp = LocalPlayer()
+        local n = lp:Team() == TEAM_CP and "PT" or "SQUAD"
 
-    function self.sheet.Navigation:Paint(w, h)
-        surface.SetDrawColor(4, 8, 16, 240)
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(COMBINE_ACCENT_SOFT)
-        surface.DrawOutlinedRect(0, 0, w, h)
+        self.squadPnl = vgui.Create("DPanel", self.sheet)
+        self.squadPnl:Dock(FILL)
+        StyleCombinePanel(self.squadPnl, 32)
+
+        local squadSheet = self:AddCombineTab(n .. "S", self.squadPnl)
+        squadSheet.Button:SetFont("DebugFixed")
+
+        self.squadContent = vgui.Create("DPanel", self.squadPnl)
+        self.squadContent:Dock(FILL)
+        function self.squadContent:Paint() end
     end
 
-    function self.sheet.Content:Paint(w, h)
-        surface.SetDrawColor(COMBINE_BG_INNER)
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(Color(0, 0, 0, 200))
-        surface.DrawOutlinedRect(0, 0, w, h)
-    end
-
-    if IsValid(self.make) then
-        self.make:Remove()
-    end
-
-    if IsValid(self.scroll) then
-        self.scroll:Remove()
+    if IsValid(self.squadContent) then
+        self.squadContent:Clear()
     end
 
     local lp = LocalPlayer()
@@ -284,14 +278,7 @@ function PANEL:SetupPDA()
     local n = lp:Team() == TEAM_CP and "PT" or "SQUAD"
     local curSquads = 0
 
-    self.squadPnl = vgui.Create("DPanel", self.sheet)
-    self.squadPnl:Dock(FILL)
-    StyleCombinePanel(self.squadPnl, 32)
-
-    local squadSheet = self:AddCombineTab(n .. "S", self.squadPnl)
-    squadSheet.Button:SetFont("DebugFixed")
-
-    self.scroll = vgui.Create("DScrollPanel", self.squadPnl)
+    self.scroll = vgui.Create("DScrollPanel", self.squadContent)
     self.scroll:SetPos(10, 80)
     self.scroll:SetSize(340, 370)
 
@@ -532,7 +519,7 @@ function PANEL:SetupPDA()
         k:SetLabel(n .. " " .. k.squadId .. "    (" .. k.count .. "/" .. (lp:Team() == TEAM_CP and impulse.Config.MaxSquadSizeCP or impulse.Config.MaxSquadSizeOTA) .. ")")
     end
 
-    self.make = vgui.Create("DButton", self.squadPnl)
+    self.make = vgui.Create("DButton", self.squadContent)
     self.make:SetPos(10, 50)
     self.make:SetSize(340, 20)
     self.make:SetFont("DebugFixed")
@@ -555,6 +542,30 @@ function PANEL:SetupPDA()
         net.SendToServer()
         pdaSound()
     end
+end
+
+
+function PANEL:SetupPDA()
+    self.sheet = vgui.Create("DColumnSheet", self)
+    self.sheet:Dock(FILL)
+    self.sheet.Navigation:SetWidth(160)
+
+    function self.sheet.Navigation:Paint(w, h)
+        surface.SetDrawColor(4, 8, 16, 240)
+        surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(COMBINE_ACCENT_SOFT)
+        surface.DrawOutlinedRect(0, 0, w, h)
+    end
+
+    function self.sheet.Content:Paint(w, h)
+        surface.SetDrawColor(COMBINE_BG_INNER)
+        surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(Color(0, 0, 0, 200))
+        surface.DrawOutlinedRect(0, 0, w, h)
+    end
+
+    self:BuildSquadTab()
+
 
     self.utilPnl = vgui.Create("DPanel", self.sheet)
     self.utilPnl:Dock(FILL)
@@ -1056,15 +1067,15 @@ end
         taxSheet.Button.NoShowSquad = true
     end
 
-	if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
-    	self.taxPnl.CivTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
-    	self.taxPnl.CivTaxSlider:SetText("R.T.R. - CIVIC POPULACE")
-    	self.taxPnl.CivTaxSlider:SetMax(50)
-   	 	self.taxPnl.CivTaxSlider:SetDecimals(0)
-    	self.taxPnl.CivTaxSlider:SetMin(0)
-    	self.taxPnl.CivTaxSlider:Dock(TOP)
-   	 self.taxPnl.CivTaxSlider:SetValue(civTax)
-	end
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+        self.taxPnl.CivTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
+        self.taxPnl.CivTaxSlider:SetText("R.T.R. - CIVIC POPULACE")
+        self.taxPnl.CivTaxSlider:SetMax(50)
+        self.taxPnl.CivTaxSlider:SetDecimals(0)
+        self.taxPnl.CivTaxSlider:SetMin(0)
+        self.taxPnl.CivTaxSlider:Dock(TOP)
+     self.taxPnl.CivTaxSlider:SetValue(civTax)
+    end
 
 
     if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
@@ -1089,15 +1100,15 @@ end
         end
     end
 
-	if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
-    	self.taxPnl.RentSlider = vgui.Create("DNumSlider", self.taxPnl)
-    	self.taxPnl.RentSlider:SetText("RENT (PER DOOR)")
-    	self.taxPnl.RentSlider:SetMax(40)
-    	self.taxPnl.RentSlider:SetDecimals(0)
-    	self.taxPnl.RentSlider:SetMin(15)
-    	self.taxPnl.RentSlider:Dock(TOP)
-    	self.taxPnl.RentSlider:SetValue(doorPrice)
-	end
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+        self.taxPnl.RentSlider = vgui.Create("DNumSlider", self.taxPnl)
+        self.taxPnl.RentSlider:SetText("RENT (PER DOOR)")
+        self.taxPnl.RentSlider:SetMax(40)
+        self.taxPnl.RentSlider:SetDecimals(0)
+        self.taxPnl.RentSlider:SetMin(15)
+        self.taxPnl.RentSlider:Dock(TOP)
+        self.taxPnl.RentSlider:SetValue(doorPrice)
+    end
 
 
     if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
@@ -1460,15 +1471,15 @@ end
         end
     end
 
-	if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
-    	self.taxPnl.CWTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
-    	self.taxPnl.CWTaxSlider:SetText("R.T.R. - CIVIC WORKFORCE")
-    	self.taxPnl.CWTaxSlider:SetMax(50)
-    	self.taxPnl.CWTaxSlider:SetDecimals(0)
-    	self.taxPnl.CWTaxSlider:SetMin(0)
-    	self.taxPnl.CWTaxSlider:Dock(TOP)
-    	self.taxPnl.CWTaxSlider:SetValue(cwuTax)
-	end
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+        self.taxPnl.CWTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
+        self.taxPnl.CWTaxSlider:SetText("R.T.R. - CIVIC WORKFORCE")
+        self.taxPnl.CWTaxSlider:SetMax(50)
+        self.taxPnl.CWTaxSlider:SetDecimals(0)
+        self.taxPnl.CWTaxSlider:SetMin(0)
+        self.taxPnl.CWTaxSlider:Dock(TOP)
+        self.taxPnl.CWTaxSlider:SetValue(cwuTax)
+    end
 
 
     if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then

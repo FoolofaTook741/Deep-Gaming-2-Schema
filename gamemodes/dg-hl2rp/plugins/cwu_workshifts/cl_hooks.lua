@@ -6,19 +6,19 @@ end
 
 local updateWaiting = false
 function PLUGIN:OnSyncUpdate(var, targ, val)
-
-    local squadVars = {
-        [SYNC_CWU_SQUAD] = true,
-        [SYNC_CWU_SQUADLEAD] = true
+    local squadVars = squadVars or {
+        [SYNC_SQUAD_ID] = true,
+        [SYNC_SQUAD_LEADER] = true
     }
+
     if not squadVars[var] then
         return
     end
-    
-    if not IsValid(impulse.cwPanel) then
+
+    if not IsValid(PDA_MENU) then
         return
     end
-    
+
     if updateWaiting then
         return
     end
@@ -26,8 +26,9 @@ function PLUGIN:OnSyncUpdate(var, targ, val)
     updateWaiting = true
     timer.Simple(0.1, function()
         updateWaiting = false
-        if IsValid(impulse.cwPanel) then
-            impulse.cwPanel:SetUpCWPDA()
+
+        if IsValid(PDA_MENU) then
+            PDA_MENU:BuildSquadTab()
         end
     end)
 end

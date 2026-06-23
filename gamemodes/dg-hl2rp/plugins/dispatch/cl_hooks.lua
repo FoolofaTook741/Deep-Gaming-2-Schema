@@ -32,7 +32,7 @@ function PLUGIN:OnSyncUpdate(var, targ, val) -- live update for pda menu
 		updateWaiting = false
 
 		if IsValid(PDA_MENU) then
-			PDA_MENU:SetupPDA()
+			PDA_MENU:BuildSquadTab()
 		end
 	end)
 end
