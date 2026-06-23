@@ -2471,6 +2471,7 @@ hook.Add("CuffsCanHandcuff", "impulseHL2RPCuffRestrictions", function(owner, tar
     if target:Team() == TEAM_OTA and target:GetTeamRank() ~= RANK_OWG then
         return false
     end
+end)
 
 local function ClearInvSearchAsSearcher(ply)
     local targ = ply.InvSearching
