@@ -23,8 +23,8 @@ function self:CreatePlayerSession (ply)
 		return 
 	end
 	
-	local playerName 		= ply:Nick () or ply:Name () or "Unknown"
-	local playerId	 		= ply:SteamID 	() or "Unknown"
+	local playerName 		= ply:SteamName () or ply:Nick() or ply:Name () or "Unknown"
+	local playerId	 		= ply:SteamID 	()
 	local uniquePlayerId 	= ply:SteamID64 ()
 	
 	if not self.PlayerSession [uniquePlayerId] then
@@ -47,8 +47,8 @@ function self:DestroyPlayerSession (ply)
 		return 
 	end
 	
-	local playerName 		= ply:Nick () or ply:Name () or "Unknown"
-	local playerId	 		= ply:SteamID 	() or "Unknown"
+	local playerName 		= ply:SteamName () or ply:Nick() or ply:Name () or "Unknown"
+	local playerId	 		= ply:SteamID 	()
 	local uniquePlayerId 	= ply:SteamID64 ()
 	
 	if not self.PlayerSession [uniquePlayerId] then
@@ -56,6 +56,7 @@ function self:DestroyPlayerSession (ply)
 	end
 	
 	ChrononLabs ["ChrononLabs:Initializer"]:MiniLogger ("Destroyed player " .. playerName .. " (" .. playerId .. ")'s session.")
+	self.PlayerSession [uniquePlayerId] = nil
 end
 
 ChrononLabs.MakeGateAway (self, ChrononLabs, self:InternalId ())

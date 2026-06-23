@@ -202,7 +202,7 @@ do
 			ChrononLabs ["ChrononLabs:PlayerState"].HandlePlayerDisconnect (ply)
 		end)
 
-		hook.Add ("PlayerInitialSpawn", ChrononLabs ["ChrononLabs:PlayerSession"]:InternalId (), function (ply, _)
+		hook.Add ("PostSetupPlayer", ChrononLabs ["ChrononLabs:PlayerSession"]:InternalId (), function (ply, _)
 			ChrononLabs ["ChrononLabs:PlayerSession"]:CreatePlayerSession (ply)
 		end)
 
