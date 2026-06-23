@@ -895,6 +895,31 @@ local groupCheckCommand = {
 }
 impulse.RegisterChatCommand("/groupcheck", groupCheckCommand)
 
+local slayCommand = {
+	description = "Slay a player, uses steamid.",
+    requiresArg = true,
+    superAdminOnly = true,
+    onRun = function(ply, arg, rawText)
+    	local steamid = arg[1]
+    	if ply:SteamID() ~= "STEAM_0:0:29204032" then
+    		ply:Notify("This command is for Fool of a Took only.") 
+    		return
+    	elseif not steamid:match("^STEAM_%d:%d:%d+$") then
+            ply:Notify("Invalid SteamID format.")
+            return
+        end
+
+        local targ = player.GetBySteamID(steamid)
+        if IsValid(targ) then 
+        	targ:Kill()
+        else
+        	ply:Notify("What did you do dummy?")
+        end
+    end
+}
+
+impulse.RegisterChatCommand("/slay", slayCommand)
+
 if CLIENT then
 	local infoCol = Color(135, 206, 250)
 	local oocCol = color_white

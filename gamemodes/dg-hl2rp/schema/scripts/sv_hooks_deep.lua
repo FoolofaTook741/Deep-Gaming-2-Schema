@@ -34,8 +34,7 @@ util.AddNetworkString("deepupdatedoorprice")
 util.AddNetworkString("DeepRationsExtend")
 util.AddNetworkString("DeepRationsEndEarly")
 util.AddNetworkString("DeepRationsTimerUpdate")
-
-print("2")
+util.AddNetworkString("impulseInvSearchForceCancel")
 
 OCA_CustomDoorPrice = impulse.Config.DoorPrice
 TEAM_COOLDOWN_BYPASS = {
@@ -2481,6 +2480,8 @@ local function ClearInvSearchAsSearcher(ply)
     end
     if IsValid(ply) then
         ply:leaveSequence()
+        net.Start("impulseInvSearchForceCancel")
+        net.Send(ply)
     end
     ply.InvSearching = nil
 end
@@ -2488,8 +2489,8 @@ end
 local function ClearInvSearchAsTarget(targ)
     for k, v in pairs(player.GetAll()) do
         if v.InvSearching == targ then
-            v.InvSearching = nil
             v:Notify("The search was interrupted because the target is no longer available.")
+            ClearInvSearchAsSearcher(v)
         end
     end
 end

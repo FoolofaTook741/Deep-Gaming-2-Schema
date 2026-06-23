@@ -246,7 +246,8 @@ net.Receive("impulseInvDoSearch", function()
             table.insert(invCompiled, it)
         end
     end
-    impulse.MakeWorkbar(2.5, "Searching...", function()
+
+    impulseInvSearchBar = impulse.MakeWorkbar(2.5, "Searching...", function()
         if not IsValid(searchee) then return end
         LocalPlayer():Notify("This person has " .. money .. " credits on them.")
         local searchMenu = vgui.Create("impulseSearchMenu")
@@ -256,6 +257,12 @@ net.Receive("impulseInvDoSearch", function()
         net.Start("impulseInvSearchCancel")
         net.SendToServer()
     end)
+end)
+
+net.Receive("impulseInvSearchForceCancel", function()
+    if IsValid(impulseInvSearchBar) then
+        impulseInvSearchBar:Cancel()
+    end
 end)
 
 
