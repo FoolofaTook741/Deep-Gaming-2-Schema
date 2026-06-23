@@ -2472,4 +2472,34 @@ hook.Add("CuffsCanHandcuff", "impulseHL2RPCuffRestrictions", function(owner, tar
     if target:Team() == TEAM_OTA and target:GetTeamRank() ~= RANK_OWG then
         return false
     end
+
+local function ClearInvSearchAsSearcher(ply)
+    local targ = ply.InvSearching
+    if IsValid(targ) then
+        targ:Freeze(false)
+        targ:Notify("The search has been cancelled.")
+    end
+    if IsValid(ply) then
+        ply:leaveSequence()
+    end
+    ply.InvSearching = nil
+end
+
+local function ClearInvSearchAsTarget(targ)
+    for k, v in pairs(player.GetAll()) do
+        if v.InvSearching == targ then
+            v.InvSearching = nil
+            v:Notify("The search was interrupted because the target is no longer available.")
+        end
+    end
+end
+
+hook.Add("PlayerDisconnected", "impulseInvSearchCleanup", function(ply)
+    ClearInvSearchAsSearcher(ply)
+    ClearInvSearchAsTarget(ply)
+end)
+
+hook.Add("PlayerDeath", "impulseInvSearchCleanup", function(ply)
+    ClearInvSearchAsSearcher(ply)
+    ClearInvSearchAsTarget(ply)
 end)

@@ -93,6 +93,8 @@ util.AddNetworkString("Deep_AirSupport_Marker")
 util.AddNetworkString("OverheadChatBubbleMessage")
 util.AddNetworkString("impulseInvBeginEquip")
 util.AddNetworkString("impulseCancelCraft")
+util.AddNetworkString("impulseInvContainerForceClose")
+util.AddNetworkString("impulseInvSearchCancel")
 
 local AUTH_FAILURE = "Invalid argument (rejoin to continue)"
 
@@ -968,6 +970,19 @@ net.Receive("impulseInvDoUse", function(len, ply)
 	if hasItem then
 		ply:UseInventoryItem(invid)
 	end
+end)
+
+net.Receive("impulseInvSearchCancel", function(len, ply)
+    local targ = ply.InvSearching
+    if not IsValid(targ) then return end
+
+    targ:Freeze(false)
+    targ:Notify("The search has been cancelled.")
+    ply:Notify("You have stopped searching "..targ:Nick()..".")
+
+    ply:leaveSequence()
+
+    ply.InvSearching = nil
 end)
 
 net.Receive("impulseInvDoSearchConfiscate", function(len, ply)

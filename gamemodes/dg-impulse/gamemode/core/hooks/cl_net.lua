@@ -233,14 +233,11 @@ net.Receive("impulseInvDoSearch", function()
     local invSize = net.ReadUInt(16)
     local money = net.ReadUInt(16)
     local invCompiled = {}
-
     if not IsValid(searchee) then return end
-
     for i = 1, invSize do
         local itemnetid = net.ReadUInt(10)
         local invid     = net.ReadUInt(16)
 		local restricted = net.ReadBool()
-
         local item = impulse.Inventory.Items[itemnetid]
         if item then
             local it = table.Copy(item)
@@ -249,15 +246,16 @@ net.Receive("impulseInvDoSearch", function()
             table.insert(invCompiled, it)
         end
     end
-
     impulse.MakeWorkbar(2.5, "Searching...", function()
         if not IsValid(searchee) then return end
         LocalPlayer():Notify("This person has " .. money .. " credits on them.")
-
         local searchMenu = vgui.Create("impulseSearchMenu")
         searchMenu:SetInv(invCompiled)
         searchMenu:SetPlayer(searchee)
-    end, true)
+    end, true, function()
+        net.Start("impulseInvSearchCancel")
+        net.SendToServer()
+    end)
 end)
 
 
