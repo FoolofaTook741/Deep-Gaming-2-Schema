@@ -2,7 +2,7 @@ local isValid = IsValid
 local mathAbs = math.abs
 
 function GM:PlayerInitialSpawn(ply)
-	print("[impulse] Initial Spawn Hook for: " .. ply:Nick() .. " (" .. ply:SteamID() .. ")")
+	--print("[impulse] Initial Spawn Hook for: " .. ply:Nick() .. " (" .. ply:SteamID() .. ")")
 	local isNew = true
 
 	ply:SetCanZoom(false)
@@ -15,7 +15,7 @@ function GM:PlayerInitialSpawn(ply)
 			ent:Sync(ply)
 		end
 	end
-	print("[impulse] Starting database lookup for: " .. ply:Nick() .. " (" .. ply:SteamID() .. ")")
+	--print("[impulse] Starting database lookup for: " .. ply:Nick() .. " (" .. ply:SteamID() .. ")")
 	local query = mysql:Select("impulse_players")
 	query:Select("id")
 	query:Select("rpname")
@@ -43,7 +43,7 @@ function GM:PlayerInitialSpawn(ply)
 			return
 		end
 		if IsValid(ply) and type(result) == "table" and #result > 0 then -- if player exists in db
-			print("[impulse] Found data for: " .. ply:Nick() .. " (" .. ply:SteamID() .. ") - Dumping data:")
+			--print("[impulse] Found data for: " .. ply:Nick() .. " (" .. ply:SteamID() .. ") - Dumping data:")
 			isNew = false
 			impulse.SetupPlayer(ply, result[1])
 		elseif IsValid(ply) then
