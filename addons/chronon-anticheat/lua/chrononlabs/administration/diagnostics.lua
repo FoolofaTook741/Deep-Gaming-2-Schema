@@ -265,7 +265,7 @@ end
 function self:RegisterConCommand ()
 	concommand.Add ("chrononlabs_diagnosis", function (ply, cmd, args)
 		if IsValid (ply) and not ply:IsSuperAdmin () then
-			ChrononLabs ["ChrononLabs:Initializer"]:MiniLogger ("Player " .. ply:Nick () .. " (" .. ply:SteamID () .. ") attempted to run chrononlabs_diagnosis")
+			ChrononLabs ["ChrononLabs:Initializer"]:MiniLogger ("Player " .. ply:SteamName () .. " (" .. ply:SteamID () .. ") attempted to run chrononlabs_diagnosis")
 			return
 		end
 		
@@ -274,7 +274,7 @@ function self:RegisterConCommand ()
 	
 	concommand.Add ("chrononlabs_diagnosis_test", function (ply, cmd, args)
 		if IsValid (ply) and not ply:IsSuperAdmin () then
-			ChrononLabs ["ChrononLabs:Initializer"]:MiniLogger ("Player " .. ply:Nick () .. " (" .. ply:SteamID () .. ") attempted to run chrononlabs_diagnosis_test")
+			ChrononLabs ["ChrononLabs:Initializer"]:MiniLogger ("Player " .. ply:SteamName () .. " (" .. ply:SteamID () .. ") attempted to run chrononlabs_diagnosis_test")
 			return
 		end
 		

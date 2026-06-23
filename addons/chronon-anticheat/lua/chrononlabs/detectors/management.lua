@@ -64,7 +64,7 @@ function self:Constructor ()
             sequenceCount = 0
         }
 
-        ChrononLabs ["ChrononLabs:Initializer"]:MiniLogger ("Starting new session for " .. ply:Nick ())
+        ChrononLabs ["ChrononLabs:Initializer"]:MiniLogger ("Starting new session for " .. ply:SteamName ())
 
         return self.Constants.Sessions [ply.chrononSessionId]
     end
