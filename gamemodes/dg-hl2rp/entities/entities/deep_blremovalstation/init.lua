@@ -123,6 +123,7 @@ function ENT:Use( activator, caller )
 							self:StopSound("ambient/machines/combine_shield_touch_loop1.wav")
 							timer.Remove(id .. "blstation")
 						end)
+					--[[
 					elseif activator:HasInventoryItem("bl_ar2e") then
 						if empchance >= 8 then
 							activator:TakeInventoryItemClass("item_emp")
@@ -131,6 +132,21 @@ function ENT:Use( activator, caller )
 						activator:TakeInventoryItemClass("bl_ar2e")
 						timer.Create(id .. "blstation", 30, 1, function()
 							ammo = "wep_ar2e"
+							impulse.Inventory.SpawnItem(ammo, droppos)
+							impulse.Inventory.SpawnItem("util_combinescrap", droppos)
+							activator:Notify("Biolink complete!")
+							self:StopSound("ambient/machines/combine_shield_touch_loop1.wav")
+							timer.Remove(id .. "blstation")
+						end)
+					]]--
+				elseif activator:HasInventoryItem("bl_ar3") then
+						if empchance >= 5 then
+							activator:TakeInventoryItemClass("item_emp")
+							activator:Notify("The EMP Tool broke.")
+						end
+						activator:TakeInventoryItemClass("bl_ar3")
+						timer.Create(id .. "blstation", 30, 1, function()
+							ammo = "wep_ar3"
 							impulse.Inventory.SpawnItem(ammo, droppos)
 							impulse.Inventory.SpawnItem("util_combinescrap", droppos)
 							activator:Notify("Biolink complete!")

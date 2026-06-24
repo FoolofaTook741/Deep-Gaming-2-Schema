@@ -1,10 +1,10 @@
 local ITEM = {}
 
 ITEM.UniqueID = "bl_ar3"
-ITEM.Name = "Biolinked O.S.I.P.R. MK. II"
+ITEM.Name = "Biolinked O.S.I.P.R. MK. III"
 ITEM.Desc =  "The biolink can be severed if it can be shorted electrically some how."
 ITEM.Category = "Scrap"
-ITEM.Model = Model("models/weapons/w_irifle.mdl")
+ITEM.Model = Model("models/weapons/w_rifar3.mdl")
 ITEM.FOV = 46.239255014327
 ITEM.CamPos = Vector(32.664756774902, -19.484241485596, 9.1690540313721)
 ITEM.NoCenter = true
