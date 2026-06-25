@@ -184,6 +184,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 		insertQuery:Insert("steamid", plyID)
 		insertQuery:Insert("group", "user")
 		insertQuery:Insert("xp", 0)
+		insertQuery:Insert("cp_xp", 0)
 		insertQuery:Insert("money", impulse.Config.StartingMoney)
 		insertQuery:Insert("bankmoney", impulse.Config.StartingBankMoney)
 		insertQuery:Insert("model", charModel)
@@ -199,6 +200,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 					steamid = plyID,
 					group = "user",
 					xp = 0,
+					cp_xp = 0,
 					money = impulse.Config.StartingMoney,
 					bankmoney = impulse.Config.StartingBankMoney,
 					model = charModel,

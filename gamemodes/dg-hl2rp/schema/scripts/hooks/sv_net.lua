@@ -410,8 +410,16 @@ net.Receive("impulseHL2RPRankBecome", function(len, ply)
     local ranktwo = -1
 	local success = false
 
-	if not td or not td.ranks or not td.ranks[rank] then
+	if not td or not td.ranks or not td.classes then
+		return ply:Notify("Invalid team.")
+	end
+
+	if not td.ranks[rank] then
 		return ply:Notify("Invalid rank.")
+	end
+
+	if not td.classes[division] then
+		return ply:Notify("Invalid division.")
 	end
 
 	local rd = td.ranks[rank]
@@ -442,26 +450,42 @@ net.Receive("impulseHL2RPRankBecome", function(len, ply)
 		else
 			ply:Notify("You do not occupy the correct whitelist level.")
 		end
-    elseif ply:Team() == TEAM_CP then
-        team = "TEAM_CP"
-        local plyrank = ply:GetTeamWhitelist(team)
+	elseif ply:Team() == TEAM_CP then
+		team = "TEAM_CP"
+
+		local plyrank = ply:GetTeamWhitelist(team)
+
+		if rank == RANK_I4 and division != CLASS_UNION then
+			return ply:Notify("You cannot become anything other than UNION as an i4.")
+		end
+
+		local useCPXP = rd.faction_xp != nil
+		local requiredRankXP = useCPXP and rd.faction_xp or (rd.xp or 0)
+		local availableXP = useCPXP and ply:GetCPFactionXP() or ply:GetXP()
+
+		if availableXP < requiredRankXP then
+			if useCPXP then
+				return ply:Notify("You do not have enough Civil Protection Experience for this rank.")
+			else
+				return ply:Notify("You do not have enough XP for this rank.")
+			end
+		end
+
 		if plyrank >= ranktwo && ply:GetTeamClass() == division then
 			ply:SetTeamRank(rank)
 			success = true
-		elseif rank == RANK_I4 and division != CLASS_UNION then
-			ply:Notify("You cannot become anything other than UNION as an i4.")
-        elseif plyrank >= ranktwo then
-            if ply:CanBecomeTeamClass(division, true) then
+		elseif plyrank >= ranktwo then
+			if ply:CanBecomeTeamClass(division, true) then
 				ply:ClearInventory(1)
-                ply:SetTeamClass(division)
-                ply:SetTeamRank(rank)
-                success = true
-            else
-                ply:Notify("You cannot become this division or you already are this division.")
-            end
+				ply:SetTeamClass(division)
+				ply:SetTeamRank(rank)
+				success = true
+			else
+				ply:Notify("You cannot become this division or you already are this division.")
+			end
 		else
 			ply:Notify("You do not occupy the correct whitelist level.")
-        end
+		end
 	elseif ply:Team() == TEAM_CA then
         team = "TEAM_CA"
         local plyrank = ply:GetTeamWhitelist(team)

@@ -24,6 +24,11 @@ if SERVER then
 	end
 
 	function meta:GiveTimedXP()
+
+		if self:Team() == TEAM_CP then
+			self:AddCPFactionXP(impulse.Config.XPGet)
+		end
+
 		if self:IsCollaborator() then
 			self:AddXP(impulse.Config.XPGetVIPplus)
 			self:Notify("As a VIP+, you have received "..impulse.Config.XPGetVIPplus.." XP for playing.")

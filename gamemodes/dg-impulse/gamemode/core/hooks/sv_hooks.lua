@@ -23,6 +23,7 @@ function GM:PlayerInitialSpawn(ply)
 	query:Select("rpgroup")
 	query:Select("rpgrouprank")
 	query:Select("xp")
+	query:Select("cp_xp")
 	query:Select("money")
 	query:Select("bankmoney")
 	query:Select("model")
@@ -338,6 +339,7 @@ function impulse.SetupPlayer(ply, dbData)
 
 	ply:SetSyncVar(SYNC_RPNAME, dbData.rpname, true)
 	ply:SetSyncVar(SYNC_XP, dbData.xp, true)
+	ply:SetSyncVar(SYNC_CP_XP, tonumber(dbData.cp_xp) or 0, true)
 	local lang = dbData.languages or 0
 	local sc = dbData.sterilizedcredits or 0
 	ply.language = lang
