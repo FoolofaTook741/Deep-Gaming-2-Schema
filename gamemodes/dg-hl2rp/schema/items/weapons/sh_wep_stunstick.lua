@@ -1,6 +1,6 @@
 local ITEM = {}
 
-ITEM.UniqueID = "wep_stunstick"
+ITEM.UniqueID = "	"
 ITEM.Name = "Stun Baton"
 ITEM.Desc =  "An electrified baton that can be used to stun disobedient citizens."
 ITEM.Category = "Weapons"
@@ -9,7 +9,7 @@ ITEM.FOV = 25
 ITEM.Weight = 1.2
 
 ITEM.Droppable = true
-ITEM.DropOnDeath = false
+ITEM.DropOnDeath = true
 
 ITEM.ScrapClass = "scrap_stunstick"
 
