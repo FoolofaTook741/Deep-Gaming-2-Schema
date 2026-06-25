@@ -387,7 +387,7 @@ quiz = {
             name = "i3",
             description = "i3",
             xp = 500,
-            faction_xp = 180,
+            faction_xp = 90,
             onBecome = makeOnBecome("i3"),
         },
         {
