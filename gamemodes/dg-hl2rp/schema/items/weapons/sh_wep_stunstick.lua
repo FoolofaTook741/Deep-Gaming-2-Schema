@@ -1,6 +1,6 @@
 local ITEM = {}
 
-ITEM.UniqueID = "	"
+ITEM.UniqueID = "wep_stunstick"
 ITEM.Name = "Stun Baton"
 ITEM.Desc =  "An electrified baton that can be used to stun disobedient citizens."
 ITEM.Category = "Weapons"
