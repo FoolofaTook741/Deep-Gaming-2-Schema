@@ -334,6 +334,16 @@ function GetClassAmount(team, class)
     return people
 end
 
+function GetRankAmount(team, rank)
+    local people = 0
+    for k, v in ipairs(player.GetAll()) do
+        if v:Team() == team and v:GetTeamRank() == rank then
+            people = people + 1
+        end
+    end
+    return people
+end
+
 function GetRogueAmount()
     local people = 0
     for k, v in pairs(player.GetAll()) do

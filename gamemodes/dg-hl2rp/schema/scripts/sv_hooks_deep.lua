@@ -305,7 +305,6 @@ timer.Create("Deep_UnitMakeup", 10, 0, function()
             rogues = rogues + 1
         end
     end
-
     net.Start("DeepUnitMakeup")
     net.WriteUInt(GetClassAmount(TEAM_CP, CLASS_UNION), 5)
     net.WriteUInt(GetClassAmount(TEAM_CP, CLASS_HELIX), 5)
@@ -320,13 +319,20 @@ timer.Create("Deep_UnitMakeup", 10, 0, function()
     net.WriteUInt(GetClassAmount(TEAM_OTA, CLASS_APF), 5)
     net.WriteUInt(GetClassAmount(TEAM_OTA, CLASS_PAYBACK), 5)
     net.WriteUInt(rogues, 5)
+    net.WriteUInt(GetRankAmount(TEAM_CP, RANK_I4), 5)
+    net.WriteUInt(GetRankAmount(TEAM_CP, RANK_I3), 5)
+    net.WriteUInt(GetRankAmount(TEAM_CP, RANK_I2), 5)
+    net.WriteUInt(GetRankAmount(TEAM_CP, RANK_I1), 5)
+    net.WriteUInt(GetRankAmount(TEAM_CP, RANK_OFC), 5)
+    net.WriteUInt(GetRankAmount(TEAM_CP, RANK_SQL), 5)
+    net.WriteUInt(GetRankAmount(TEAM_CP, RANK_DVL), 5)
     net.Broadcast()
 
     local rf = RecipientFilter()
     for _, v in ipairs(player.GetAll()) do
         if v:IsCP() then rf:AddPlayer(v) end
     end
-
+    
     if PRIORITY_ONE_SUSPECT ~= nil then
         net.Start("deepPriorityOneSuspectsv")
         net.WriteEntity(PRIORITY_ONE_SUSPECT)
