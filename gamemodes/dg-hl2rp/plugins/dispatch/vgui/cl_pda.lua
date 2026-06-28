@@ -283,11 +283,13 @@ function PANEL:BuildSquadTab()
     self.scroll:SetSize(340, 370)
 
     local squads = {}
+    local unassigned = {}
     for _, k in pairs(team.GetPlayers(lp:Team())) do
         local sqd = k:GetSyncVar(SYNC_SQUAD_ID)
         local isLdr = k:GetSyncVar(SYNC_SQUAD_LEADER)
 
         if not sqd then
+            unassigned[#unassigned + 1] = k
             continue
         end
 
@@ -517,6 +519,38 @@ function PANEL:BuildSquadTab()
         end
 
         k:SetLabel(n .. " " .. k.squadId .. "    (" .. k.count .. "/" .. (lp:Team() == TEAM_CP and impulse.Config.MaxSquadSizeCP or impulse.Config.MaxSquadSizeOTA) .. ")")
+    end
+
+    if #unassigned > 0 then
+        local cat = vgui.Create("DCollapsibleCategory", self.scroll)
+        cat:SetLabel("UNASSIGNED (" .. #unassigned .. ")")
+        cat:Dock(TOP)
+        cat.Header:SetFont("DebugFixed")
+        cat.Header:SetTextColor(COMBINE_WARNING)
+
+        local colInv = Color(29, 50, 107, 120)
+        cat.Paint = function(selfCat)
+            selfCat:SetBGColor(colInv)
+        end
+
+        local members = vgui.Create("DPanelList", cat)
+        members:EnableHorizontal(false)
+        cat:SetContents(members)
+
+        for _, k in ipairs(unassigned) do
+            local base = vgui.Create("DPanel")
+            base:SetSkin("combine")
+            function base:Paint() end
+
+            local lbl = vgui.Create("DLabel", base)
+            lbl:SetPos(0, 0)
+            lbl:SetText("  ⏺ " .. k:Nick())
+            lbl:SetFont("DebugFixed")
+            lbl:SetTextColor(COMBINE_TEXT)
+            lbl:SizeToContents()
+
+            members:AddItem(base)
+        end
     end
 
     self.make = vgui.Create("DButton", self.squadContent)
