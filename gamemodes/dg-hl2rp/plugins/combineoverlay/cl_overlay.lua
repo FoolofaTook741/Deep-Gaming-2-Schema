@@ -419,7 +419,7 @@ local function DrawCombineSquad()
             surface.SetTextColor(squadCol)
         end
 
-        surface.DrawText("⏺ "..k:Nick().." ["..hp.."]")
+        surface.DrawText("⏺ " .. " [" .. k:GetTeamClassName() .. "] " .."("..hp..") "..k:Nick())
         yadd = yadd + 18
     end
 

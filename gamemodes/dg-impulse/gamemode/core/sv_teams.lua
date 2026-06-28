@@ -286,7 +286,7 @@ function meta:SetTeamClass(classID, skipLoadout)
 		classData.onBecome(self)
 	end
 
-	self:SetLocalSyncVar(SYNC_CLASS, classID, true)
+	self:SetSyncVar(SYNC_CLASS, classID, true)
 
 	self:SetSubMaterial(2, "") -- reset MPF Rank submat
 
