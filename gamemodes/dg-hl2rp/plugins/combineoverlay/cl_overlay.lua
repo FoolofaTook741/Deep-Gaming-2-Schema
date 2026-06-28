@@ -150,7 +150,7 @@ local CMB_OVERLAY_ICONS = {
     Material("impulse/hl2rp/overlay/move_sq"), -- move squad 5
     Material("impulse/hl2rp/overlay/combine"), -- Combine 6
     Material("impulse/hl2rp/overlay/cctv"), -- camera 7
-    Material("vgui/killicons/iw4_choppergunner") -- Helicopter 8
+    Material("icons/caution-triangle.png") -- Helicopter 8
 }
 
 
