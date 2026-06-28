@@ -107,3 +107,8 @@ if CLIENT then
 		WorldModel:DrawModel()
 	end
 end
+
+local CopyViewModelOrigin = SWEP.ViewModelFOV
+function SWEP:PostDrawViewModel(viewmodel, player)
+	self.ViewModelFOV = CopyViewModelOrigin + impulse.GetSetting("firstperson_fov")
+end
