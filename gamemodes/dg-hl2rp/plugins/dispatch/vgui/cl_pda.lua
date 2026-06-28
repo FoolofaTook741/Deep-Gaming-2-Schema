@@ -21,6 +21,18 @@ local paybacks = 0
 
 local rogues = 0
 
+local mpfRanks = {}
+
+local MPF_RANK_ORDER = {
+    {RANK_I4, "i4"},
+    {RANK_I3, "i3"},
+    {RANK_I2, "i2"},
+    {RANK_I1, "i1"},
+    {RANK_OFC, "OFC"},
+    {RANK_SQL, "SQL"},
+    {RANK_DVL, "DVL"}
+}
+
 local scs = 0
 local civTax = 0
 local cwuTax = 0
@@ -127,6 +139,9 @@ net.Receive("DeepUnitMakeup", function()
     paybacks = net.ReadUInt(5)
 
     rogues = net.ReadUInt(5)
+    for i = 1, #MPF_RANK_ORDER do
+        mpfRanks[MPF_RANK_ORDER[i][1]] = net.ReadUInt(5)
+    end
 end)
 
 local pdaSounds = {
@@ -1582,6 +1597,33 @@ end
     self.ghostcounter:SetFont("DebugFixed")
     self.ghostcounter:SetTextColor(COMBINE_TEXT)
     self.ghostcounter:Dock(TOP)
+
+    local anyRank = false
+    for i = 1, #MPF_RANK_ORDER do
+        if (mpfRanks[MPF_RANK_ORDER[i][1]] or 0) > 0 then
+            anyRank = true
+            break
+        end
+    end
+
+    if anyRank then
+        self.mpfranktitle = vgui.Create("DLabel", self.dataPnl)
+        self.mpfranktitle:SetText("METRO POLICE FORCE RANK DISTRIBUTION:")
+        self.mpfranktitle:SetFont("DebugFixed")
+        self.mpfranktitle:SetTextColor(COMBINE_MUTED)
+        self.mpfranktitle:Dock(TOP)
+
+        for i = 1, #MPF_RANK_ORDER do
+            local count = mpfRanks[MPF_RANK_ORDER[i][1]] or 0
+            if count > 0 then
+                local lbl = vgui.Create("DLabel", self.dataPnl)
+                lbl:SetText("MPF " .. MPF_RANK_ORDER[i][2] .. ": " .. count)
+                lbl:SetFont("DebugFixed")
+                lbl:SetTextColor(COMBINE_TEXT)
+                lbl:Dock(TOP)
+            end
+        end
+    end
 
     self.gapspace = vgui.Create("DLabel", self.dataPnl)
     self.gapspace:SetText("")
