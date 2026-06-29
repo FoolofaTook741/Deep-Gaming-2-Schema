@@ -134,7 +134,7 @@ if SERVER then
 		if class == "wep_axe" then
 			ply:AchievementGive("ach_axe")
 		end
-		if class == "wep_tau" then
+		if class == "taugun" then
 			ply:AchievementGive("ach_tau")
 		end
 	end)
