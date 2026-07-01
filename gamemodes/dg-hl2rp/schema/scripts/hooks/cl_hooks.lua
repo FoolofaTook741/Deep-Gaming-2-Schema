@@ -34,7 +34,7 @@ function SCHEMA:PlayerFootstep(ply, pos, foot, soundName, vol)
 			end
 
 			return true
-		elseif ply:Team() == TEAM_OTA then
+		elseif ply:Team() == TEAM_OTA and ply:GetTeamClass() ~= CLASS_PAYBACK then
 			if ply == LocalPlayer() then
 				EmitSound("npc/combine_soldier/gear"..math.random(1,6)..".wav", ply:GetPos(), -1, nil, impulse.GetSetting("misc_localfootstepvol", 65) / 100)
 			else

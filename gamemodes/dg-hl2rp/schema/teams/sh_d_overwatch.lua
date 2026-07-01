@@ -657,9 +657,123 @@ RANK_CCP = RANK_OCP
 RANK_CTL = RANK_OSL
 RANK_CSC = RANK_OSC
 
+sound.Add({
+    name = "WALLHAMMER.Step.Metal",
+    channel = CHAN_BODY,
+    volume = 0.6,
+    level = 70,
+    pitch = {95, 110},
+    sound = {
+        "combine_shared_footsteps/metal/step1_metal.wav",
+        "combine_shared_footsteps/metal/step2_metal.wav",
+        "combine_shared_footsteps/metal/step3_metal.wav",
+        "combine_shared_footsteps/metal/step4_metal.wav",
+        "combine_shared_footsteps/metal/step5_metal.wav",
+        "combine_shared_footsteps/metal/step6_metal.wav"
+    }
+})
+
+sound.Add({
+    name = "WALLHAMMER.Step.Grate",
+    channel = CHAN_BODY,
+    volume = 0.6,
+    level = 70,
+    pitch = {95, 110},
+    sound = {
+        "combine_shared_footsteps/walkway/step1_walkway.wav",
+        "combine_shared_footsteps/walkway/step2_walkway.wav",
+        "combine_shared_footsteps/walkway/step3_walkway.wav",
+        "combine_shared_footsteps/walkway/step4_walkway.wav",
+        "combine_shared_footsteps/walkway/step5_walkway.wav",
+        "combine_shared_footsteps/walkway/step6_walkway.wav"
+    }
+})
+
+sound.Add({
+    name = "WALLHAMMER.Step.Wood",
+    channel = CHAN_BODY,
+    volume = 0.6,
+    level = 70,
+    pitch = {95, 110},
+    sound = {
+        "combine_shared_footsteps/wood/step1_wood.wav",
+        "combine_shared_footsteps/wood/step2_wood.wav",
+        "combine_shared_footsteps/wood/step3_wood.wav",
+        "combine_shared_footsteps/wood/step4_wood.wav",
+        "combine_shared_footsteps/wood/step5_wood.wav",
+        "combine_shared_footsteps/wood/step6_wood.wav"
+    }
+})
+
+sound.Add({
+    name = "WALLHAMMER.Step.Concrete",
+    channel = CHAN_BODY,
+    volume = 0.6,
+    level = 70,
+    pitch = {95, 110},
+    sound = {
+        "combine_shared_footsteps/concrete/step1_concrete.wav",
+        "combine_shared_footsteps/concrete/step2_concrete.wav",
+        "combine_shared_footsteps/concrete/step3_concrete.wav",
+        "combine_shared_footsteps/concrete/step4_concrete.wav",
+        "combine_shared_footsteps/concrete/step5_concrete.wav",
+        "combine_shared_footsteps/concrete/step6_concrete.wav"
+    }
+})
+
+sound.Add({
+    name = "WALLHAMMER.Step.Dirt",
+    channel = CHAN_BODY,
+    volume = 0.6,
+    level = 70,
+    pitch = {95, 110},
+    sound = {
+        "combine_shared_footsteps/dirt/step1_dirt.wav",
+        "combine_shared_footsteps/dirt/step2_dirt.wav",
+        "combine_shared_footsteps/dirt/step3_dirt.wav",
+        "combine_shared_footsteps/dirt/step4_dirt.wav",
+        "combine_shared_footsteps/dirt/step5_dirt.wav",
+        "combine_shared_footsteps/dirt/step6_dirt.wav"
+    }
+})
+
+local matToSound = {
+    [MAT_CONCRETE] = "WALLHAMMER.Step.Concrete",
+    [MAT_PLASTIC] = "WALLHAMMER.Step.Concrete",
+    [MAT_TILE] = "WALLHAMMER.Step.Concrete",
+    [MAT_DIRT] = "WALLHAMMER.Step.Dirt",
+    [MAT_SAND] = "WALLHAMMER.Step.Dirt",
+    [MAT_FOLIAGE] = "WALLHAMMER.Step.Dirt",
+    [MAT_SLOSH] = "WALLHAMMER.Step.Dirt",
+    [MAT_WOOD] = "WALLHAMMER.Step.Wood",
+    [MAT_GRATE] = "WALLHAMMER.Step.Grate",
+    [MAT_METAL] = "WALLHAMMER.Step.Metal",
+}
+
 hook.Add("PlayerFootstep", "wallhammerfoot", function(ply, pos, foot, sound)
-	if ply:Team() == TEAM_OTA and ply:GetTeamClass() == CLASS_PAYBACK then
-		ply:EmitSound("wallhammer/steps/step_layer_clink_0" .. math.random(1, 5) .. ".wav")
-		return true
-	end
+    if ply:Team() == TEAM_OTA && ply:GetTeamClass() == CLASS_PAYBACK then
+        local tr = util.TraceLine({
+            start = ply:GetPos(),
+            endpos = ply:GetPos() - Vector(0, 0, 100),
+            filter = ply
+        })
+
+        local mat = tr.MatType
+
+        if not mat then
+            return false
+        end
+
+        local snd = matToSound[mat]
+
+        if snd then
+            ply:EmitSound(snd)
+            return
+        end
+
+        ply:EmitSound("wallhammer/steps/step_layer_clink_0" .. math.random(1,5) .. ".wav", 65, 100, 0.25)
+        ply:EmitSound("wallhammer/steps/step_layer_bass_0" .. math.random(1,5) .. ".wav", 85, 100, 0.25)
+
+        return true
+    end
 end)
