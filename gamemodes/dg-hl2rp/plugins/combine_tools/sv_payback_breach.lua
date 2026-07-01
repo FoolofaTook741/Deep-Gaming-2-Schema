@@ -1,3 +1,5 @@
+--[[
+
 util.AddNetworkString("WallhammerBreacher_Activated")
 util.AddNetworkString("WallhammerBreacher_Deactivated")
 
@@ -142,3 +144,5 @@ hook.Add("Think", "WallhammerBreacher_DoorBreakLogic", function()
 		end)
     end
 end)
+
+]]--
