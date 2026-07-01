@@ -31,6 +31,7 @@ eProtect.config["permission"] = {
     ["owner"] = true,
     ["superadmin"] = true,
     ["leadadmin"] = true,
+    ["leadadmincollaborator"] = true,
     ["developer"] = true,
     ["leaddeveloper"] = true
 }
