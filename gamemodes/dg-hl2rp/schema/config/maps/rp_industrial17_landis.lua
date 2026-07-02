@@ -1,12 +1,13 @@
 impulse.Config.MapWorkshopID = "2714660044"
 impulse.Config.MapContentWorkshopID = "1532130244"
 
-impulse.Config.MenuCamPos = Vector(1296.916748, 3623.792969, 712.342957)
-impulse.Config.MenuCamAng = Angle(28.292086, -0.722298, 0.000000)
-
+impulse.Config.MenuCamPos = Vector(2228.5354003906, 3579.0966796875, 401.70190429688)
+impulse.Config.MenuCamAng = Angle(5.5624189376831, 179.52142333984, 0)
 
 impulse.Config.SpawnPos1 = Vector(-1150.7692871094, 2095.2966308594, 1234.2391357422)
 impulse.Config.SpawnPos2 = Vector(-5159.873046875, 3580.8022460938, 16.564235687256)
+
+impulse.Config.TPCPos = Vector(-11780.508789062, 2391.7241210938, 8192.03125)
 
 impulse.Config.BroadcastDistance = 600
 
@@ -14,6 +15,7 @@ impulse.Config.Zone404Name = "Restricted Block 2"
 
 impulse.Config.RebelZone = "External Jurisdiction 1"
 
+--[[
 impulse.Config.TrashSpawns = {
 	Vector(2088.836914, 4474.916016, 331.758179),
 	Vector(916.103516, 4652.148926, 146.852844),
@@ -23,10 +25,10 @@ impulse.Config.TrashSpawns = {
 	Vector(1827.898438, 2174.824219, 136.45822),
 	Vector(3335.338379, 1559.376221, 143.442749),
 	Vector(5616.914062, 4640.706543, 333.537750)
-}
+} ]]--
 
 
-impulse.Config.BulkCrateSpawn = Vector(4603.280273, 3668.424561, 264.031250)
+impulse.Config.BulkCrateSpawn = Vector(-308.0358581543, 3066.3354492188, 136.03125)
 
 impulse.Config.BlacklistEnts = {
 	["game_text"] = true,
@@ -36,6 +38,17 @@ impulse.Config.BlacklistEnts = {
 	["trigger_weapon_strip"] = true,
 	["npc_turret_ceiling"] = true
 }
+
+impulse.Config.XenContaminationZones = {
+    "Storm System 1",
+    "Storm System 2",
+}
+
+impulse.Config.XenContaminationExclusionZones = {
+    "Restricted Zone 1", --gas zones do not spawn in rebel base
+}
+
+
 
 impulse.Config.BroadcastPos = Vector(2718.5314941406, 4057.4865722656, 3416.03125)
 
@@ -66,24 +79,65 @@ Vector(49.090950012207, 2643.7397460938, 336.03125),
 Vector(-67.49764251709, 2801.6728515625, 336.03125),
 Vector(-73.944931030273, 2937.2380371094, 336.03125)}
 
-impulse.Config.CPSpawnLocations = {Vector(1579.2746582031, 3720.591796875, -543.96875),
-Vector(1574.7598876953, 3497.9169921875, -543.96875),
-Vector(1581.7275390625, 3615.9885253906, -543.96875),
-Vector(1455.4632568359, 3618.5502929688, -543.96875),
-Vector(1457.2302246094, 3705.6950683594, -543.96875),
-Vector(1478.4892578125, 3454.8054199219, -543.96875),
-Vector(1338.8913574219, 3457.6486816406, -543.96875),
-Vector(1341.7481689453, 3598.529296875, -543.96875),
-Vector(1235.9228515625, 3600.6762695313, -543.96875)}
+impulse.Config.CPSpawnLocations = {
+    Nexus = {
+        Vector(1579.2746582031, 3720.591796875, -543.96875),
+		Vector(1574.7598876953, 3497.9169921875, -543.96875),
+		Vector(1581.7275390625, 3615.9885253906, -543.96875),
+		Vector(1455.4632568359, 3618.5502929688, -543.96875),
+		Vector(1457.2302246094, 3705.6950683594, -543.96875),
+		Vector(1478.4892578125, 3454.8054199219, -543.96875),
+		Vector(1338.8913574219, 3457.6486816406, -543.96875),
+		Vector(1341.7481689453, 3598.529296875, -543.96875),
+		Vector(1235.9228515625, 3600.6762695313, -543.96875),
+    },
+    FOB = {
+        
+    },
+    OZ = {
+        Vector(-11246.87890625, -1110.0057373047, 8192.03125),
+		Vector(-11125.334960938, -1121.0834960938, 8192.03125),
+		Vector(-10965.041992188, -1135.6927490234, 8192.03125),
+		Vector(-10822.734375, -1148.6629638672, 8192.03125),
+		Vector(-10686.622070313, -1319.96875, 8192.03125),
+		Vector(-10851.657226563, -1319.96875, 8192.03125),
+		Vector(-11008.330078125, -1313.8959960938, 8192.03125),
+		Vector(-11167.107421875, -1307.7413330078, 8192.03125),
+		Vector(-11262.248046875, -1304.0538330078, 8192.03125),
+		Vector(-10682.099609375, -1053.5335693359, 8320.03125),
+		Vector(-10947.384765625, -1247.8615722656, 8320.03125),
+		Vector(-11231.092773438, -1224.9061279297, 8320.03125),
+		Vector(-11234.98828125, -1049.7443847656, 8320.03125),
+    },
+}
 
-impulse.Config.OTASpawnLocations = {Vector(2703.37890625, 3451.8056640625, 1408.8146972656),
-Vector(3088.326171875, 4025.53515625, 528.03125),
-Vector(3274.0573730469, 3992.5393066406, 528.03125),
-Vector(2588.1059570313, 3526.0925292969, 828.03125),
-Vector(2797.3200683594, 4752.9619140625, 832.03125),
-Vector(3196.9196777344, 4191.6303710938, 832.52545166016),
-Vector(2895.1396484375, 2648.5419921875, 1408.03125),
-Vector(2667.2150878906, 2709.2526855469, 1408.03125)}
+impulse.Config.OTASpawnLocations = {
+    Nexus = {
+        Vector(2703.37890625, 3451.8056640625, 1408.8146972656),
+		Vector(3088.326171875, 4025.53515625, 528.03125),
+		Vector(3274.0573730469, 3992.5393066406, 528.03125),
+		Vector(2588.1059570313, 3526.0925292969, 828.03125),
+		Vector(2797.3200683594, 4752.9619140625, 832.03125),
+		Vector(3196.9196777344, 4191.6303710938, 832.52545166016),
+		Vector(2895.1396484375, 2648.5419921875, 1408.03125),
+		Vector(2667.2150878906, 2709.2526855469, 1408.03125),
+    },
+    OZ = {
+        Vector(-11246.87890625, -1110.0057373047, 8192.03125),
+		Vector(-11125.334960938, -1121.0834960938, 8192.03125),
+		Vector(-10965.041992188, -1135.6927490234, 8192.03125),
+		Vector(-10822.734375, -1148.6629638672, 8192.03125),
+		Vector(-10686.622070313, -1319.96875, 8192.03125),
+		Vector(-10851.657226563, -1319.96875, 8192.03125),
+		Vector(-11008.330078125, -1313.8959960938, 8192.03125),
+		Vector(-11167.107421875, -1307.7413330078, 8192.03125),
+		Vector(-11262.248046875, -1304.0538330078, 8192.03125),
+		Vector(-10682.099609375, -1053.5335693359, 8320.03125),
+		Vector(-10947.384765625, -1247.8615722656, 8320.03125),
+		Vector(-11231.092773438, -1224.9061279297, 8320.03125),
+		Vector(-11234.98828125, -1049.7443847656, 8320.03125),
+    },
+}
 
 impulse.Config.CASpawnLocations = {Vector(3000.4133300781, 3700.3698730469, 400.03125),
 Vector(2971.607421875, 3550.0654296875, 400.03125),
@@ -107,6 +161,12 @@ impulse.Config.StalkerSpawnLocations = {
 	Vector(2478.1560058594, 4517.1435546875, -303.96875),
 	Vector(3056.2993164063, 4545.8227539063, -303.96875),
 	Vector(3109.0725097656, 4199.4223632813, -303.96875),
+}
+
+impulse.Config.CrematorSpawnLocations = {
+	Vector(735.0546875, 4910.96875, -543.96875),
+	Vector(943.64617919922, 4910.96875, -543.96875),
+	Vector(1100.9852294922, 4910.96875, -543.96875),
 }
 
 impulse.Config.Zones = {
@@ -220,6 +280,14 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/canalblock.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
+	{name = "Storm System 1", pos1 = Vector(3446.4653320313, -496.43243408203, -33.204967498779), pos2 = Vector(3197.2036132813, 4874.447265625, -148.35145568848), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Storm System 1", pos1 = Vector(369.02310180664, 5075.4838867188, -51.897613525391), pos2 = Vector(3211.9951171875, 4612.8774414063, -153.24819946289), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
 	{name = "Stabilization Jurisdiction 2", pos1 = Vector(-1257.9465332031, 3708.4028320313, 281.94729614258), pos2 = Vector(-1820.3475341797, 3454.1655273438, 108.08744049072), dispatch = {
 		"npc/overwatch/radiovoice/highpriorityregion.wav",
 		"npc/overwatch/radiovoice/six.wav"
@@ -245,24 +313,20 @@ impulse.Config.Zones = {
 }
 
 impulse.Config.RemoveEnts = {
-	2373,
-	6168 -- OZ turret thing
+
 }
 
 impulse.Config.IntroScenes = {
-
 	{
-		pos = Vector(1090.4580078125, 3561.4750976563, 695.93377685547),
-		endpos = Vector(1090.4580078125, 3561.4750976563, 695.93377685547),
-		ang = Angle(26.761875152588, -0.23998960852623, 0),
-		endang = Angle(26.761875152588, -0.23998960852623, 0),
-		fovFrom = 40,
+	    pos = impulse.Config.MenuCamPos,
+	    ang = impulse.Config.MenuCamAng,
+	    fovFrom = 40,
 	    fovSpeed = 0.2,
-	    time = 8,
-	    text = "Welcome to Pinnacle Gaming Half Life 2 Roleplay.",
+	    time = 13,
+	    text = "Welcome to Deep Gaming Half-Life 2 Roleplay.",
 	    static = true,
 	    fadeIn = true,
-	},
+	}
 }
 
 impulse.Config.FishermanPos = Vector(2446.9682617188, 11134.19921875, 1036.03125)
@@ -315,10 +379,10 @@ impulse.Config.vortPortalSpawnPos = {
 
 impulse.Config.PrisonAngle = Angle(12.209716796875, -152.81684875488, 0)
 impulse.Config.PrisonCells = {
-	Vector(529.34869384766, 4713.1606445313, -543.96875),
-	Vector(524.05487060547, 4499.6577148438, -543.96875),
-	Vector(1245.9838867188, 4448.3393554688, -543.96875),
-	Vector(1235.6087646484, 4647.7338867188, -543.96875)
+	Vector(531.41168212891, 4772.1547851563, -543.96875),
+	Vector(534.13781738281, 4480.6518554688, -543.96875),
+	Vector(1226.3134765625, 4455.326171875, -543.96875),
+	Vector(1226.2458496094, 4597.5185546875, -543.96875),
 }
 
 impulse.Config.Buttons = {
@@ -554,6 +618,47 @@ impulse.Config.LoadScript = function()
 		end
 	end
 
+	local autoLockDoors = {
+	    4311,
+	    5917,
+	    4535,
+	    3960,
+	    3869,
+	    1937,
+	    8274,
+	    2484,
+	    2469,
+	    4536,
+	    4537,
+	    5045,
+	}
+
+	for v,k in pairs(autoLockDoors) do
+		local door = ents.GetMapCreatedEntity(k)
+
+		if not IsValid(door) or not door:IsDoor() then
+			continue
+		end
+		
+		door:Fire("unlock")
+		door:Fire("close")
+
+		timer.Simple(2, function()
+			if IsValid(door) then
+				door:Fire("lock")
+			end
+		end)
+	end
+
+	 local removeOnStart = {
+        6168,
+    }
+
+    for _, id in pairs(removeOnStart) do
+        local ent = ents.GetMapCreatedEntity(id)
+        if IsValid(ent) then ent:Remove() end
+    end
+
 	hook.Add("PlayerCanHearCheck", "impulseHL2RPCanHearTheatre", function(listener, speaker)
 		if speaker:GetPos():WithinAABox(Vector(2294.3627929688, 720.26623535156, 354.81311035156), Vector(3009.0051269531, 957.97796630859, 47.19352722168)) and listener:GetPos():WithinAABox(Vector(2965.8940429688, 1498.8292236328, -143.17835998535), Vector(2152.6481933594, 528.80187988281, 491.6174621582)) then
 			listener.CanHear[speaker] = true
@@ -766,3 +871,13 @@ local apcgarageCommand = {
 }
 
 impulse.RegisterChatCommand("/apcgarage", apcgarageCommand)
+
+
+--vectors where scanning is done for the combine spawning system checks for mpf cache or boxes being drilled and disables that spawn location.
+impulse.Config.NexusDrillScanPos = Vector(2021.3864746094, 1046.4724121094, 928.03125)
+impulse.Config.OZDrillScanPos    = Vector(10201.822265625, 2693.3449707031, 656.03125)
+impulse.Config.FOBDrillScanPos = Vector(4421.7036132813, 4197.33984375, 376.03125)
+
+impulse.Config.NexusSpawnPicture = "dg2/spawns/i17_nexus.png"
+impulse.Config.FOBSpawnPicture   = "dg2/spawns/i17_fob.png"
+impulse.Config.OZSpawnPicture    = "dg2/spawns/i17_oz.png"
