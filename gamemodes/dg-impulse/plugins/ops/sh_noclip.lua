@@ -19,6 +19,13 @@ hook.Add("PlayerNoClip", "opsNoclip", function(ply, state)
 				ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
 				ply:AllowFlashlight(true)
 				ply:SetNoTarget(false)
+			
+				ply.RecentlyNoclipped = true 
+
+				timer.Simple(60, function()
+					ply.RecentlyNoclipped = false
+				end)
+
 				if not ply:HasEquippedItem("cos_gp5gasmask") and not ply:HasEquippedItem("cos_conscriptarmor") then
 			        ply.FlashSafe = false
 			    end

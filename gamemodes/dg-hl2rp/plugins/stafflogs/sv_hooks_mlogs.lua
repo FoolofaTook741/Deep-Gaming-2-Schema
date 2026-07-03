@@ -11,7 +11,7 @@ end)
 local hostname = GetConVar("hostname"):GetString()
 hook.Add("PlayerContainerTake", "noclipInventory", function(ply, item, source, direction, amount)
 
-    if (ply:GetMoveType() == MOVETYPE_NOCLIP) then
+    if (ply:GetMoveType() == MOVETYPE_NOCLIP or ply.RecentlyNoclipped) then
 		local roleID = "1112861503876505601" -- Staff Manager Role
         local assistantID = "1365691096146907262" -- ASM
 		local role = "Moderator"
@@ -104,7 +104,7 @@ local LogTime = {}
 hook.Add("PlayerUse", "detectNoclipAboose", function(ply, ent)
     if not IsValid(ply) or not IsValid(ent) then return end
     if not trackedEntities[ent:GetClass()] then return end
-    if ply:GetMoveType() ~= MOVETYPE_NOCLIP then return end
+    if ply:GetMoveType() ~= MOVETYPE_NOCLIP and !ply.RecentlyNoclipped then return end
 
     local id = ent:EntIndex()
     local curTime = CurTime()
