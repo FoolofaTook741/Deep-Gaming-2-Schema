@@ -37,6 +37,14 @@ function PLUGIN:OnSyncUpdate(var, targ, val) -- live update for pda menu
 	end)
 end
 
+-- HELLO??? COLOR CACHING???? 
+local squadGreen = Color(75, 155, 45, 255)
+local ocaPurple = Color(138, 43, 226)
+local cpBlue = Color(  0, 191, 255 )
+local stalkerRed = Color(255,0,0)
+
+local teamBlue = Color(0, 131, 255, 255)
+local groupOrange = Color(255, 204, 0, 255)
 
 hook.Add("PostDrawEffects", "combineOutlines", function()
 	
@@ -52,6 +60,10 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
 	local fp = {}
 	local tp = {}
 	local gp = {}
+
+	-- What am I even looking at? This is terrible
+	-- @TODO: Redo this. There has to be a better way to get a table
+	-- Hacky, but maybe update do a timer that updates a cache? Better than doing per-frame player iteration
 	if LocalPlayer():IsCP() == true and LocalPlayer():GetModel() != "models/wn7new/metropolice_rebel_c24/male_01.mdl" and (perfOutline or teamVis or combineVis) then
     	for v,k in pairs(team.GetPlayers(lp:Team())) do
 			if k == lp then continue end
@@ -61,7 +73,7 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
     	        end
     	    if k:GetSyncVar(SYNC_SQUAD_ID, -1) == squadId then
     	        if k:GetSyncVar(SYNC_SQUAD_LEADER, false) then
-    	            squadComp[#squadComp+1] = k
+    	            squadComp[#squadComp+1] = k -- ok so.. table.insert?
     	        else
     	            squadComp[#squadComp+1] = k
     	        end
@@ -69,7 +81,7 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
     	end
 		if #squadComp > 0 then
 			--halo.Add(squadComp,Color(75, 155, 45, 255), 0, 0, 1, true, true)
-			outline.Add(squadComp, Color(75, 155, 45, 255), OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
+			outline.Add(squadComp, squadGreen, OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
 		end
 		if combineVis != false then
 			local caPlayers, cpPlayers, otaPlayers, stalkerPlayers = {}, {}, {}, {}
@@ -95,19 +107,19 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
 			end
 			if #caPlayers > 0 then
 				--halo.Add(caPlayers, Color(138, 43, 226), 0, 0, 1, true, true)
-				outline.Add(caPlayers, Color(138, 43, 226), OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
+				outline.Add(caPlayers, ocaPurple, OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
 			end
 			if #cpPlayers > 0 then
 				--halo.Add(cpPlayers, Color(  0, 191, 255 ), 0, 0, 1, true, true)
-				outline.Add(cpPlayers, Color(  0, 191, 255 ), OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
+				outline.Add(cpPlayers, cpBlue, OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
 			end
 			if #otaPlayers > 0 then
 				--halo.Add(otaPlayers, Color(255,255,255), 0, 0, 1, true, true)
-				outline.Add(otaPlayers, Color(255,255,255), OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
+				outline.Add(otaPlayers, color_white, OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1) -- didn't even use the color_white global.. this is disgraceful
 			end
 			if #stalkerPlayers > 0 then
 				--halo.Add(stalkerPlayers, Color(255,0,0), 0, 0, 1, true, true)
-				outline.Add(stalkerPlayers, Color(255,0,0), OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
+				outline.Add(stalkerPlayers, stalkerRed, OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
 			end
 		elseif teamVis != false then
 			for v,k in pairs(team.GetPlayers(lp:Team())) do
@@ -122,7 +134,7 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
 			end
 			if #tp > 0 then
 				--halo.Add(tp,Color(0, 131, 255, 255), 0, 0, 1, true, true)
-				outline.Add(tp, Color(0, 131, 255, 255), OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
+				outline.Add(tp, teamBlue, OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
 			end
 		end
 	elseif groupVis != false and LocalPlayer():IsCP() != true and (LocalPlayer():Team() != TEAM_ZOMBIE) and LocalPlayer():GetSyncVar(SYNC_GROUP_NAME, nil) and LocalPlayer():GetSyncVar(SYNC_GROUP_NAME, nil) != "" then
@@ -141,7 +153,7 @@ hook.Add("PostDrawEffects", "combineOutlines", function()
 		end
 		if #gp > 0 then
 			--halo.Add(gp,Color(255, 204, 0, 255), 0, 0, 1, true, true)
-			outline.Add(gp, Color(255, 204, 0, 255), OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
+			outline.Add(gp, groupOrange, OUTLINE_MODE_BOTH, OUTLINE_RENDERTYPE_AFTER_EF, 1)
 		end
 	end
 end)
