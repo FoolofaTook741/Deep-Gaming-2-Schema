@@ -47,7 +47,7 @@ function ENT:Use(caller, activator)
         return activator:Notify("You can't use the ammo box right now.")
     end
 
-    self:ResetSequence(self.openSequence)
+    --self:ResetSequence(self.openSequence)
     self:EmitBudgetSound("items/ammocrate_open.wav")
 
     timer.Simple(self:SequenceDuration(self.openSequence), function()
