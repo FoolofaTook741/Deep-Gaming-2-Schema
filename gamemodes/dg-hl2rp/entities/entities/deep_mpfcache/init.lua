@@ -52,7 +52,7 @@ function ENT:Use(caller, activator)
 
     timer.Simple(self:SequenceDuration(self.openSequence), function()
         if not IsValid(self) then return end
-        self:ResetSequence(0)
+        --self:ResetSequence(0)
         self:EmitBudgetSound("items/ammocrate_close.wav")
     end)
 
