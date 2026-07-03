@@ -768,7 +768,6 @@ hook.Add("PlayerFootstep", "wallhammerfoot", function(ply, pos, foot, sound)
 
         if snd then
             ply:EmitSound(snd)
-            return
         end
 
         ply:EmitSound("wallhammer/steps/step_layer_clink_0" .. math.random(1,5) .. ".wav", 65, 100, 0.25)
