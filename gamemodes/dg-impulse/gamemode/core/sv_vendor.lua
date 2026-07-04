@@ -86,11 +86,12 @@ local function HydrateVendor(raw)
     local v  = table.Copy(raw)
     v.Sell   = {}
     v.Buy    = {}
+    local vendorTeam = (raw.accessTeam and raw.accessTeam ~= -1 and raw.accessTeam) or impulse.Vendor.Conditions.PrimaryTeam(raw.accessConditions)
     local restrictTeam = (vendorTeam == TEAM_CP or vendorTeam == TEAM_OTA)
 
     for _, item in ipairs(raw.items or {}) do
         local autoDesc = (item.descOverride == nil or item.descOverride == "")
-            and impulse.Vendor.Conditions.AutoDescribe(item.conditions or {}, raw.accessTeam)
+            and impulse.Vendor.Conditions.AutoDescribe(item.conditions or {}, vendorTeam)
             or nil
 
         local entry = {
