@@ -86,7 +86,7 @@ local function HydrateVendor(raw)
     local v  = table.Copy(raw)
     v.Sell   = {}
     v.Buy    = {}
-    local restrictTeam = (raw.accessTeam == TEAM_CP or raw.accessTeam == TEAM_OTA)
+    local restrictTeam = (vendorTeam == TEAM_CP or vendorTeam == TEAM_OTA)
 
     for _, item in ipairs(raw.items or {}) do
         local autoDesc = (item.descOverride == nil or item.descOverride == "")
