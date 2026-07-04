@@ -208,39 +208,19 @@ function impulse.Vendor.Conditions.RankName(rank, teamVal)
     return tostring(rank)
 end
 
+local classNameCache = {}
 local function GetTeamClassNames(teamVal)
-    local maps = {
-        [TEAM_CP]  = {
-            [CLASS_GHOST]   = "GHOST",
-            [CLASS_GRID]    = "GRID",
-            [CLASS_HELIX]   = "HELIX",
-            [CLASS_UNION]   = "UNION",
-            [CLASS_SWORD]   = "SWORD",
-            [CLASS_RAZOR]   = "RAZOR",
-            [CLASS_PHANTOM] = "PHANTOM",
-        },
-        [TEAM_OTA] = {
-            [CLASS_APF]     = "APF",
-            [CLASS_PAYBACK] = "PAYBACK",
-            [CLASS_NOMAD]   = "NOMAD",
-            [CLASS_MACE]    = "MACE",
-            [CLASS_FIST]    = "FIST",
-            [CLASS_ECHO]    = "ECHO",
-            [CLASS_RANGER]  = "RANGER",
-        },
-        [TEAM_CWU] = {
-            [CLASS_INDUST]   = "INDUST",
-            [CLASS_COMMERCE] = "COMMERCE",
-            [CLASS_MEDIC]    = "MEDIC",
-            [CLASS_REFINERY] = "REFINERY",
-            [CLASS_ICT]      = "ICT",
-            [CLASS_RESEARCH] = "RESEARCH",
-        },
-        [TEAM_CA]  = {
-            [CLASS_BASE] = "BASE",
-        },
-    }
-    return maps[teamVal]
+    if classNameCache[teamVal] then return classNameCache[teamVal] end
+    local out = {}
+    local data = impulse.Teams and impulse.Teams.Data and impulse.Teams.Data[teamVal]
+    local classes = data and data.classes
+    if classes then
+        for i, entry in ipairs(classes) do
+            out[i] = (type(entry) == "table" and (entry.name or entry.Name)) or tostring(i)
+        end
+    end
+    classNameCache[teamVal] = out
+    return out
 end
 
 function impulse.Vendor.Conditions.ClassNameForTeam(teamVal, class)
