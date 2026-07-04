@@ -10,7 +10,7 @@ function ENT:Initialize()
     self:SetMoveType(SOLID_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
     self:SetUseType(SIMPLE_USE)
-
+    self.SpawnLocation = "OZ"
     self.Driling = false
     self.Enhanced = false
 
@@ -127,6 +127,9 @@ end
 
 
 function ENT:StartDrill(jammer, driller)
+    if self.SpawnLocation and DeepSpawn_StartLockout then
+        DeepSpawn_StartLockout(self.SpawnLocation)
+    end
     self.Drilling = true
     self:SetDrillEndTime(CurTime() + impulse.Config.AmmoDrillTime)
     self:EmitSound("vehicles/digger_grinder_loop1.wav", 75, 120)

@@ -815,65 +815,57 @@ local TEAM_LOCATIONS = {
     [TEAM_CP]  = { "Nexus", "FOB", "OZ" },
     [TEAM_OTA] = { "Nexus", "OZ" },
 }
-
-local DRILL_SCAN_RADIUS = 2500
-local FOB_SCAN_RADIUS   = 200
-
-local DRILL_CLASSES = {
-    impulse_hl2rp_ammobox = true,
-    impulse_hardpointbox  = true,
-}
+ 
+local LOCKOUT_DURATION = 900
 
 local VALID_CHOICES = { Nexus = true, FOB = true, OZ = true }
 
-local function ScanFromPositions(positions, radius, classes, extraClass)
-    if not positions then return false end
-
-    local posList = isvector(positions) and { positions } or positions
-
-    for _, scanPos in ipairs(posList) do
-        for _, ent in ipairs(ents.FindInSphere(scanPos, radius)) do
-            if classes[ent:GetClass()] and ent.Drilling == true then
-                return true
-            end
-        end
-        if extraClass then
-            for _, ent in ipairs(ents.FindByClass(extraClass)) do
-                if ent:GetPos():DistToSqr(scanPos) < radius ^ 2 and ent.Drilling == true then
-                    return true
-                end
-            end
-        end
-    end
-
-    return false
+local DRILL_ENTITY_CLASSES = {
+    impulse_hl2rp_ammobox = true,
+    impulse_hardpointbox  = true,
+    deep_mpfcache         = true,
+}
+ 
+local LOCATION_LOCKOUTS = {}
+ 
+local function IsLocationLockedOut(locationName)
+    local expiry = LOCATION_LOCKOUTS[locationName]
+    return expiry and expiry > CurTime()
 end
-
-local function IsNexusBeingDrilled(scanPos)
-    return ScanFromPositions(scanPos, DRILL_SCAN_RADIUS, DRILL_CLASSES)
-end
-
-local function IsOZBeingDrilled(scanPos)
-    return ScanFromPositions(scanPos, DRILL_SCAN_RADIUS, DRILL_CLASSES)
-end
-
-local function IsFOBBeingDrilled(scanPos)
-    if not scanPos then return false end
-    local posList = isvector(scanPos) and { scanPos } or scanPos
-    for _, pos in ipairs(posList) do
-        for _, ent in ipairs(ents.FindByClass("deep_mpfcache")) do
-            if ent:GetPos():DistToSqr(pos) < FOB_SCAN_RADIUS ^ 2 and ent.Drilling == true then
+ 
+local function IsLocationStillBeingDrilled(locationName)
+    for class in pairs(DRILL_ENTITY_CLASSES) do
+        for _, ent in ipairs(ents.FindByClass(class)) do
+            if ent.SpawnLocation == locationName and ent.Drilling == true then
                 return true
             end
         end
     end
     return false
 end
-
+ 
+local function StartLockoutTimer(locationName)
+    local timerName = "DeepSpawnLockout_" .. locationName
+    timer.Remove(timerName)
+    LOCATION_LOCKOUTS[locationName] = CurTime() + LOCKOUT_DURATION
+    timer.Create(timerName, LOCKOUT_DURATION, 1, function()
+        LOCATION_LOCKOUTS[locationName] = nil
+        if IsLocationStillBeingDrilled(locationName) then
+            StartLockoutTimer(locationName)
+        end
+    end)
+end
+ 
+function DeepSpawn_StartLockout(locationName)
+    if not locationName then return end
+    if IsLocationLockedOut(locationName) then return end
+    StartLockoutTimer(locationName)
+end
+ 
 local function CanUseOZ(ply, team)
     if team == TEAM_OTA then return true end
     if ply:HasTeamWhitelist("CP_EliteProtectionUnit", 1) then return true end
-    if impulse.Dispatch and impulse.Dispatch.GetCityCode() >= CODE_JW then return true end
+    if impulse.Dispatch.GetCityCode() >= CODE_JW then return true end
     return false
 end
 
@@ -894,42 +886,38 @@ local function DoSpawn(ply, team, locationName)
     end
     if not found then return false end
 
-    local nexusScan = impulse.Config.NexusDrillScanPos
-    local fobScan   = impulse.Config.FOBDrillScanPos
-    local ozScan    = impulse.Config.OZDrillScanPos
-
     if locationName == "OZ" and not CanUseOZ(ply, team) then
         locationName = FALLBACK_LOC[team]
     end
 
-    if locationName == "Nexus" and IsNexusBeingDrilled(nexusScan) then
+    if locationName == "Nexus" and IsLocationLockedOut("Nexus") then
         if team == TEAM_CP then
-            if not IsFOBBeingDrilled(fobScan) then
+            if not IsLocationLockedOut("FOB") then
                 locationName = "FOB"
-            elseif not IsOZBeingDrilled(ozScan) and CanUseOZ(ply, team) then
+            elseif not IsLocationLockedOut("OZ") and CanUseOZ(ply, team) then
                 locationName = "OZ"
             else
                 locationName = "Nexus"
             end
         else
-            if not IsOZBeingDrilled(ozScan) then
+            if not IsLocationLockedOut("OZ") then
                 locationName = "OZ"
             else
                 locationName = "Nexus"
             end
         end
-    elseif locationName == "FOB" and IsFOBBeingDrilled(fobScan) then
-        if not IsNexusBeingDrilled(nexusScan) then
+    elseif locationName == "FOB" and IsLocationLockedOut("FOB") then
+        if not IsLocationLockedOut("Nexus") then
             locationName = "Nexus"
-        elseif not IsOZBeingDrilled(ozScan) and CanUseOZ(ply, team) then
+        elseif not IsLocationLockedOut("OZ") and CanUseOZ(ply, team) then
             locationName = "OZ"
         else
             locationName = "Nexus"
         end
-    elseif locationName == "OZ" and IsOZBeingDrilled(ozScan) then
-        if not IsNexusBeingDrilled(nexusScan) then
+    elseif locationName == "OZ" and IsLocationLockedOut("OZ") then
+        if not IsLocationLockedOut("Nexus") then
             locationName = "Nexus"
-        elseif team == TEAM_CP and not IsFOBBeingDrilled(fobScan) then
+        elseif team == TEAM_CP and not IsLocationLockedOut("FOB") then
             locationName = "FOB"
         else
             locationName = "Nexus"
@@ -969,15 +957,11 @@ end
 function DeepSpawn_OpenSelector(ply, team)
     if not IsValid(ply) then return end
     if not SPAWN_TEAMS[team] then return end
-
-    local nexusScan = impulse.Config.NexusDrillScanPos
-    local fobScan   = impulse.Config.FOBDrillScanPos
-    local ozScan    = impulse.Config.OZDrillScanPos
-
+ 
     local ozAvail  = CanUseOZ(ply, team)
-    local nexusOK  = not IsNexusBeingDrilled(nexusScan)
-    local fobOK    = not IsFOBBeingDrilled(fobScan)
-    local ozOK     = not IsOZBeingDrilled(ozScan)
+    local nexusOK  = not IsLocationLockedOut("Nexus")
+    local fobOK    = not IsLocationLockedOut("FOB")
+    local ozOK     = not IsLocationLockedOut("OZ")
     local cityCode = impulse.Dispatch and impulse.Dispatch.GetCityCode() or 0
 
     if team == TEAM_CP and not nexusOK and not fobOK and not ozOK then

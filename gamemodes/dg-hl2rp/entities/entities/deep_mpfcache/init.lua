@@ -10,7 +10,7 @@ function ENT:Initialize()
     self:SetMoveType(SOLID_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
     self:SetUseType(SIMPLE_USE)
-
+    self.SpawnLocation = "FOB"
 
     self.cooldown = 0
 end
@@ -106,6 +106,9 @@ function ENT:Use(caller, activator)
 end
 
 function ENT:StartThermite(jam)
+    if self.SpawnLocation and DeepSpawn_StartLockout then
+        DeepSpawn_StartLockout(self.SpawnLocation)
+    end
     self.Drilling = true
     local id = self:GetCreationID()
 
