@@ -133,6 +133,20 @@ impulse.Vendor.Conditions.Types = {
     },
 }
 
+function impulse.Vendor.Conditions.PrimaryTeam(conditions)
+    if not conditions then return nil end
+    local function scan(list)
+        for _, c in ipairs(list or {}) do
+            if c.type == "team" then return c.team end
+            if c.type == "all" or c.type == "any" then
+                local t = scan(c.conditions)
+                if t then return t end
+            end
+        end
+    end
+    return scan(conditions)
+end
+
 function impulse.Vendor.Conditions.Evaluate(cond, ply)
     if not cond or not cond.type then return true end
     local def = impulse.Vendor.Conditions.Types[cond.type]
@@ -278,6 +292,10 @@ end
 
 function impulse.Vendor.Conditions.AutoDescribe(conditions, vendorTeam)
     if not conditions or #conditions == 0 then return "" end
+
+    if not vendorTeam or vendorTeam == -1 then
+        vendorTeam = impulse.Vendor.Conditions.PrimaryTeam(conditions) or vendorTeam
+    end
 
     local classNames, rankParts, otherParts = {}, {}, {}
 
