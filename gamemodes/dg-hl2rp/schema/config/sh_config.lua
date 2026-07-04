@@ -608,6 +608,12 @@ impulse.Config.Achievements = {
 		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
 		Points = 20
 	},
+	["ach_city18pt2"] = {
+		Name = "The Battle of City 18",
+		Desc = "Survived the hell that is the complacency of City 18.",
+		Icon = Material("materials/materials/achievements/city18_event achievement.png"),
+		Points = 20
+	},
 }
 
 impulse.Config.ModQuickReplies = {
