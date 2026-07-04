@@ -1665,15 +1665,6 @@ net.Receive("impulseVendorBuy", function(len, ply)
 		vendor.Vendor.OnItemPurchased(vendor, itemclass, ply)
 	end
 
-	if vendor.Vendor.ClearSameType then
-		local sameType = FindMetaTable("Player").getItemType(itemclass)
-		if sameType then
-			for _, cls in ipairs(sameType) do
-				ply:TakeInventoryItemClass(cls)
-			end
-		end
-	end
-
 	if not ply:CanHoldItem(itemclass) then
 		return ply:Notify("You don't have enough inventory space to hold this item.")
 	end
