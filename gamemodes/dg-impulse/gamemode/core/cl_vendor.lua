@@ -5,8 +5,8 @@ local function HydrateVendor(data)
     local v = table.Copy(data)
     v.Sell  = {}
     v.Buy   = {}
-    local restrictTeam = (data.accessTeam == TEAM_CP or data.accessTeam == TEAM_OTA)
     local vendorTeam = (data.accessTeam and data.accessTeam ~= -1 and data.accessTeam) or impulse.Vendor.Conditions.PrimaryTeam(data.accessConditions)
+    local restrictTeam = (vendorTeam == TEAM_CP or vendorTeam == TEAM_OTA)
     for _, item in ipairs(data.items or {}) do
         local autoDesc = (item.descOverride == nil or item.descOverride == "")
             and impulse.Vendor.Conditions.AutoDescribe(item.conditions or {}, vendorTeam)
