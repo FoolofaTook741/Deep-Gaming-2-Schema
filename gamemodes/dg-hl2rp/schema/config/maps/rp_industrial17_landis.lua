@@ -631,6 +631,7 @@ impulse.Config.LoadScript = function()
 	    4536,
 	    4537,
 	    5045,
+	    4841,
 	}
 
 	for v,k in pairs(autoLockDoors) do
@@ -652,6 +653,12 @@ impulse.Config.LoadScript = function()
 
 	 local removeOnStart = {
         6168,
+        2400,
+        2401,
+        2402,
+        2403,
+        1460,
+        1461,
     }
 
     for _, id in pairs(removeOnStart) do
@@ -871,12 +878,6 @@ local apcgarageCommand = {
 }
 
 impulse.RegisterChatCommand("/apcgarage", apcgarageCommand)
-
-
---vectors where scanning is done for the combine spawning system checks for mpf cache or boxes being drilled and disables that spawn location.
-impulse.Config.NexusDrillScanPos = Vector(2021.3864746094, 1046.4724121094, 928.03125)
-impulse.Config.OZDrillScanPos    = Vector(10201.822265625, 2693.3449707031, 656.03125)
-impulse.Config.FOBDrillScanPos = Vector(4421.7036132813, 4197.33984375, 376.03125)
 
 impulse.Config.NexusSpawnPicture = "dg2/spawns/i17_nexus.png"
 impulse.Config.FOBSpawnPicture   = "dg2/spawns/i17_fob.png"
