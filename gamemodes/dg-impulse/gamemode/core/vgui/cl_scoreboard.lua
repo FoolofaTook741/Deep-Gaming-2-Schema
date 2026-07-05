@@ -9,6 +9,18 @@ function PANEL:Init()
 	self:MakePopup()
  	self:MoveToFront()
 
+ 	function self:Paint(w, h)
+	    DFrame.Paint(self, w, h)
+	    draw.SimpleText(
+	        "PLAYERS: " .. #player.GetAll() .. " / " .. game.MaxPlayers(),
+	        "Impulse-Elements18-Shadow",
+	        w / 2, 12,
+	        color_white,
+	        TEXT_ALIGN_CENTER,
+	        TEXT_ALIGN_CENTER
+	    )
+	end
+
  	self.scrollPanel = vgui.Create("DScrollPanel", self)
 	self.scrollPanel:Dock(FILL)
 
