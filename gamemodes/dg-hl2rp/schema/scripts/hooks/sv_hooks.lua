@@ -878,6 +878,15 @@ local function GetSpawnVectors(team, locationName)
 end
 
 local function DoSpawn(ply, team, locationName)
+	if team == TEAM_CP and EV_MPF_SPAWN and EV_MPF_SPAWN ~= Vector(0,0,0) then
+        ply:SetPos(EV_MPF_SPAWN)
+        return true
+    end
+    if team == TEAM_OTA and EV_CTA_SPAWN and EV_CTA_SPAWN ~= Vector(0,0,0) then
+        ply:SetPos(EV_CTA_SPAWN)
+        return true
+    end
+
     local validLocs = TEAM_LOCATIONS[team]
     if not validLocs then return false end
     local found = false
@@ -1025,6 +1034,27 @@ net.Receive("DeepSpawnSelectorRequest", function(len, ply)
             return
         end
     end
+
+    if teamID == TEAM_CP and EV_MPF_SPAWN and EV_MPF_SPAWN ~= Vector(0,0,0) then
+	    ply.lastTeamTry = CurTime() + 1
+	    ply:SetTeam(teamID)
+	    ply.lastTeamChange = CurTime()
+	    ply:Notify("You have changed your team to " .. team.GetName(teamID) .. ".")
+	    ply:EmitSound("items/ammo_pickup.wav")
+	    ply:SetPos(EV_MPF_SPAWN)
+	    return
+	end
+	if teamID == TEAM_OTA and EV_CTA_SPAWN and EV_CTA_SPAWN ~= Vector(0,0,0) then
+	    ply.lastTeamTry = CurTime() + 1
+	    ply:SetTeam(teamID)
+	    ply.lastTeamChange = CurTime()
+	    ply:Notify("You have changed your team to " .. team.GetName(teamID) .. ".")
+	    ply:EmitSound("items/ammo_pickup.wav")
+	    ply:SetPos(EV_CTA_SPAWN)
+	    return
+	end
+
+DeepSpawn_OpenSelector(ply, teamID)
 
     DeepSpawn_OpenSelector(ply, teamID)
 end)
