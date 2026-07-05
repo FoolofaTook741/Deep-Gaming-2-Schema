@@ -493,11 +493,14 @@ net.Receive("eP:Handeler", function(len, ply)
 				id = net.ReadString()
 			end
 
+
+			--[[
 			if !id or id == "" then
 				if eProtect.config["punishMaliciousIntent"] then
 					eProtect.punish(ply, 1, slib.getLang("eprotect", eProtect.config["language"], "kick-malicious-intent"))
 				end
 			return end
+			]]--
 
 			net.Start("eP:Handeler")
 			net.WriteUInt(3, 3)

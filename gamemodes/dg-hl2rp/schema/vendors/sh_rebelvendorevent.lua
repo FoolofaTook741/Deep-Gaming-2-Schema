@@ -10,7 +10,7 @@ VENDOR.Bodygroups = "01" -- manhack
 VENDOR.Gender = "male" -- male, female, cp
 VENDOR.Talk = true
 
-VENDOR.Sell = { --[[
+VENDOR.Sell = { 
 	["att_optic"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
@@ -22,7 +22,7 @@ VENDOR.Sell = { --[[
 
 			return false
 		end
-	}, ]]--
+	},
 	["wep_357"] = {
 		Desc = "CWU/Citizen Only",
 		Restricted = true,
