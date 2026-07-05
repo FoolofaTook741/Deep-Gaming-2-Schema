@@ -115,4 +115,7 @@ function ENT:OnRemove()
     for _, light in pairs(self.EStageLights or {}) do
         if IsValid(light) then light:Remove() end
     end
+    for _, speaker in pairs(self.SpeakerEnts or {}) do
+        if IsValid(speaker) then speaker:Remove() end
+    end
 end

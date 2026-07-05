@@ -966,7 +966,7 @@ net.Receive("impulseHL2RPTheatreAction", function(len, ply)
 	    else
 	        ply:Notify("No music is currently playing.")
 	    end
-end
+	end
 end)
 
 concommand.Add("inv_count_items", function(ply, cmd, args)
