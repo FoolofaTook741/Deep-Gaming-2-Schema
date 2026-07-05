@@ -887,6 +887,88 @@ net.Receive("impulseHL2RPUseLocker", function(lem, ply)
 	end
 end)
 
+util.AddNetworkString("impulseHL2RPTheatreAction")
+
+net.Receive("impulseHL2RPTheatreAction", function(len, ply)
+    if not IsValid(ply) then return end
+    if not IsValid(ply.TheatreConsole) then
+        ply:Notify("You are not at a theatre console.")
+        return
+    end
+
+    local console = ply.TheatreConsole
+    local action = net.ReadUInt(8)
+    local data = net.ReadString()
+
+    if action == 1 then
+	    local curtain = console.ECurtain
+	    if not IsValid(curtain) then
+	        ply:Notify("No curtain found.")
+	        return
+	    end
+	    local state = curtain:GetInternalVariable("m_toggle_state")
+	    curtain:Fire("Toggle")
+
+	elseif action == 2 then
+	    for _, spot in pairs(console.ELightSpots) do
+	        if IsValid(spot) then spot:Fire("LightOn") end
+	    end
+	    for _, prop in pairs(console.ELightProps) do
+	        if IsValid(prop) then
+	            prop:SetSkin(0)
+	            prop:EmitSound("buttons/lever6.wav")
+	        end
+	    end
+	    for _, light in pairs(console.EStageLights) do
+	        if IsValid(light) then light:Fire("TurnOn") end
+	    end
+
+	elseif action == 3 then
+	    for _, spot in pairs(console.ELightSpots) do
+	        if IsValid(spot) then spot:Fire("LightOff") end
+	    end
+	    for _, prop in pairs(console.ELightProps) do
+	        if IsValid(prop) then
+	            prop:SetSkin(1)
+	            prop:EmitSound("buttons/lever7.wav")
+	        end
+	    end
+	    for _, light in pairs(console.EStageLights) do
+	        if IsValid(light) then light:Fire("TurnOff") end
+	    end
+
+   	elseif action == 4 then
+	    local song = impulse.Config.TheatreMusic[data]
+	    if not song then
+	        ply:Notify("Invalid song selection.")
+	        return
+	    end
+	    if console.CurrentSong then
+	        for _, speaker in pairs(console.SpeakerEnts) do
+	            if IsValid(speaker) then speaker:StopSound(console.CurrentSong) end
+	        end
+	    end
+	    console.CurrentSong = song
+	    for _, speaker in pairs(console.SpeakerEnts) do
+	        if IsValid(speaker) then
+	            speaker:EmitSound(song, 75, 100, 1, CHAN_STATIC)
+	        end
+	    end
+	    ply:Notify("Now playing: " .. data)
+
+	elseif action == 5 then
+	    if console.CurrentSong then
+	        for _, speaker in pairs(console.SpeakerEnts) do
+	            if IsValid(speaker) then speaker:StopSound(console.CurrentSong) end
+	        end
+	        console.CurrentSong = nil
+	        ply:Notify("Music stopped.")
+	    else
+	        ply:Notify("No music is currently playing.")
+	    end
+end
+end)
+
 concommand.Add("inv_count_items", function(ply, cmd, args)
     if IsValid(ply) and not ply:IsLeadAdmin() then
         if ply.Notify then
