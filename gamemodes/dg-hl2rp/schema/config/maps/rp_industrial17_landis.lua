@@ -334,8 +334,8 @@ impulse.Config.IntroScenes = {
 	}
 }
 
-impulse.Config.FishermanPos = Vector(2446.9682617188, 11134.19921875, 1036.03125)
-impulse.Config.FishermanAng = Angle(19.102672576904, -142.92971801758, 0)
+impulse.Config.FishermanPos = Vector(-100.51307678223, 13532.466796875, 314.41363525391)
+impulse.Config.FishermanAng = Angle(0, 0.4257270693779, 0)
 
 
 impulse.Config.JWButtonPos = Vector(3181.96875, 4005, 3449)
