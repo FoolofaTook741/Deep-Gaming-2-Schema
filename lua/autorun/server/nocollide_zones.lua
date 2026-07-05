@@ -1,49 +1,10 @@
 --prevents player collisions in spawns and on both sides of the teleporters
-local NOCOLLIDE_ZONES = {
-    --C18 DG Spawn
-    {
-        mins = Vector(4416.39453125, -2072.4858398438, 1592.1525878906),
-        maxs = Vector(2160.5895996094, -3397.1796875, 581.06512451172)
-    },
 
-
-
-
-    --[[ Spawn C77
-    {
-        mins = Vector(-5197.2314453125, -2152.765625, 1081.2270507813),
-        maxs = Vector(-1867.6784667969, -1155.8692626953, 189.2728729248)
+NOCOLLIDE_ZONES = {
+    { --add more of these manually for tp zones, if applicable
+        mins = impulse.Config.SpawnNoCollide2,
+        maxs = impulse.Config.SpawnNoCollide1
     },
-
-    --RB 1 way tp zone
-    {
-        mins = Vector(-7486.9584960938, 15174.203125, -724.07818603516),
-        maxs = Vector(-7719.953125, 14885.404296875, -921.28717041016)
-    },
-    {
-        mins = Vector(8935.267578125, 1430.4084472656, -418.28143310547),
-        maxs = Vector(8754.814453125, 1007.2616577148, -595.40618896484)
-    }, ]]-- C77
-
-    --[[
-    -- Teleporter SSE vent
-    {
-        mins = Vector(-436.67169189453, 355.49426269531, -761.66247558594),
-        maxs = Vector(-165.6190032959, 690.93347167969, -545.87170410156)
-    },
-    -- Teleporter OZ side
-    {
-        mins = Vector(2572.109375, 3502.248046875, -733.27105712891),
-        maxs = Vector(2677.5163574219, 3596.6950683594, -529.95281982422)
-    },
-    {
-        mins = Vector(-6381.82421875, -3966.03125, -10285.446289063),
-        maxs = Vector(-6035.9721679688, -3730.5651855469, -10095.234375)
-    },
-    {
-        mins = Vector(11372.18359375, 4577.4619140625, 8670.7451171875),
-        maxs = Vector(11692.609375, 4783.4057617188, 8955.5068359375)
-    }, ]]--
 }
 
 local inZone = {}
