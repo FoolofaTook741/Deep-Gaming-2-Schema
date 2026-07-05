@@ -10,7 +10,7 @@ impulse.Config.SpawnPos2 = Vector(-5159.873046875, 3580.8022460938, 16.564235687
 impulse.Config.TPCPos = Vector(-11780.508789062, 2391.7241210938, 8192.03125)
 
 impulse.Config.SpawnNoCollide1 = Vector(-4589.0844726563, 2435.9165039063, 791.65179443359)
-impulse.Config.SpawnNoCollide2 = Vector(-1616.3518066406, 3000.607421875, 411.25061035156)
+impulse.Config.SpawnNoCollide2 = Vector(-1555.7536621094, 3299.931640625, 411.25061035156)
 
 impulse.Config.BroadcastDistance = 600
 
