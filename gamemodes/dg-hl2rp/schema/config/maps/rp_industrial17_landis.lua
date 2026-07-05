@@ -318,7 +318,7 @@ impulse.Config.Zones = {
 }
 
 impulse.Config.RemoveEnts = {
-
+	
 }
 
 impulse.Config.IntroScenes = {
@@ -623,6 +623,11 @@ impulse.Config.LoadScript = function()
 		end
 	end
 
+	-- bye-bye one way sb tunnel visibility
+	local sbTunnel = Entity(2393 + game.MaxPlayers())
+	sbTunnel:SetKeyValue("FadeStartDist", 2200)
+	sbTunnel:SetKeyValue("FadeDist", 2300)
+
 	local autoLockDoors = {
 	    4311,
 	    5917,
@@ -664,7 +669,7 @@ impulse.Config.LoadScript = function()
         2403,
         1460,
         1461,
-        8273,
+		2395
     }
 
     for _, id in pairs(removeOnStart) do
