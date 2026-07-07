@@ -12,7 +12,7 @@ eProtect.config["disablehttplogging"] = false -- If a DRM is ran after eProtect 
 
 eProtect.config["ignoreDRM"] = false
 
-eProtect.config["scURL"] = "https://stromic.dev/eprotect/img.php" -- This is the URL used to handle screenshots, can be self hosted here: https://github.com/Stromic/eprotect-web
+eProtect.config["scURL"] = "https://hl2rp.deepgaming2.com/img.php" -- This is the URL used to handle screenshots, can be self hosted here: https://github.com/Stromic/eprotect-web
 
 eProtect.config["punishMaliciousIntent"] = true
 
