@@ -414,258 +414,45 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 		local readTime = 0
 
 		local dispatch = {}
+		if zone and zone.dispatch then
+		    dispatch = zone.dispatch
+		end
+		local DISPATCH_DURATION_OVERRIDES = {
+		    ["npc/overwatch/radiovoice/stabilizationjurisdiction.wav"] = 2.4,
+		    ["npc/overwatch/radiovoice/highpriorityregion.wav"] = 1.9,
+		    
+		}
+
+		local function getDispatchDuration(snd)
+		    return DISPATCH_DURATION_OVERRIDES[snd] or SoundDuration(snd)
+		end
 		
 		surface.PlaySound("npc/overwatch/radiovoice/lostbiosignalforunit.wav")
-		
+
 		timer.Simple(2, function()
-			timer.Simple(0.1, function()
-				surface.PlaySound("npc/overwatch/radiovoice/unitdownat.wav")
-			end)
-			timer.Simple(1, function()
-				if #dispatch > 1 then
-					surface.PlaySound(dispatch[1])
-					timer.Simple(1.5, function()
-						surface.PlaySound(dispatch[2])
-					end)
-				elseif zonename == "PLAZA" or zonename == "CAPITAL AVENUE" or zonename == "POLITI-CONTROL SECTION 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/controlsection.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "CITY 18 CIVILIAN INTAKE" or zonename == "CITY-2 TRAIN STATION" or zonename == "CITY-2 TRAIN STATION LOBBY" or zonename == "TRANSIT BLOCK 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/transitblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "CITY-2 TRAIN STATION LOBBY" or zonename == "CITY-2 PROCESSING CENTER" or zonename == "TRANSIT BLOCK 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/transitblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "CITY-2 TRAIN STATION ENTRANCE" or zonename == "TRANSIT BLOCK 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/transitblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "NEXUS GROUND FLOOR" or zonename == "HIGH PRIORITY REGION 1" or zonename == "NEXUS" or zonename == "M.P.F. BUNKS" or zonename == "NEXUS STALKERIZATION CENTER" or zonename == "NEXUS INTERROGATION CENTER" then
-					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "NEXUS SECOND FLOOR" or zonename == "NEXUS PRISON" or zonename == "HIGH PRIORITY REGION 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "NEXUS THIRD FLOOR" or zonename == "O.C.A. BRIDGE" or zonename == "O.C.A. OFFICE" or zonename == "UPPER NEXUS" or zonename == "HIGH PRIORITY REGION 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "HIGH PRIORITY REGION 4" then
-					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
-					end)
-				elseif zonename == "HIGH PRIORITY REGION 5" then
-					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/five.wav")
-					end)
-				elseif zonename == "NEXUS TOP FLOOR" or zonename == "C.T.A. ARMORY" or zonename == "NEXUS REAR CATWALK" or zonename == "HIGH PRIORITY REGION 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/highpriorityregion.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
-					end)
-				elseif zonename == "LABOR STREET" or zonename == "POLITI-CONTROL SECTION 4" then
-					surface.PlaySound("npc/overwatch/radiovoice/controlsection.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
-					end)
-				elseif zonename == "LABOR ROAD" or zonename == "POLITI-CONTROL SECTION 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/controlsection.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "KADYROV STREET" or zonename == "MAIN STREET" or zonename == "POLITI-CONTROL SECTION 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/controlsection.wav")
-					timer.Simple(1.5, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "ROKOSSOVSKY STREET" or zonename == "INDUSTRIAL DISTRICT" or zonename == "PRODUCTION BLOCK 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "VOLGOGRAD ROAD" or zonename == "PRODUCTION BLOCK 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "SECRETARIAT ROAD" or zonename == "PRODUCTION BLOCK 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "LAUNDROMAT" or zonename == "PRODUCTION BLOCK 4" then
-					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
-					end)
-				elseif zonename == "PRODUCTION BLOCK 5" then
-					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/five.wav")
-					end)
-				elseif zonename == "PRODUCTION BLOCK 6" then
-					surface.PlaySound("npc/overwatch/radiovoice/productionblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/five.wav")
-					end)
-				elseif zonename == "CENTRAL WORKFORCE HUB" or zonename == "WORKFORCE INTAKE HUB" then
-					surface.PlaySound("npc/overwatch/radiovoice/workforceintake.wav")
-				elseif zonename == "SLUMS" or zonename == "DISTRIBUTIONS BLOCK 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/distributionblock.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "ALLEY" or zonename == "DISTRIBUTIONS BLOCK 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/distributionblock.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "TIMOSHENKO BRIDGE" or zonename == "DISTRIBUTIONS BLOCK 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/distributionblock.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "THE FAT NARGODIAN" or zonename == "REPURPOSED AREA 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/repurposedarea.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "HOSPITAL" or zonename == "REPURPOSED AREA 4" then
-					surface.PlaySound("npc/overwatch/radiovoice/repurposedarea.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
-					end)
-				elseif zonename == "TERMINAL THEATER" or zonename == "REPURPOSED AREA 2"then
-					surface.PlaySound("npc/overwatch/radiovoice/repurposedarea.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "COMMAND POINT" or zonename == "CONDEMNED ZONE 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/condemnedzone.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "45TH APARTMENT COMPLEX" or zonename == "RUNDOWN DISTRICT" or zonename == "RESIDENTIAL BLOCK 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/residentialblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "COMMUNAL DISTRICT" or zonename == "RESIDENTIAL BLOCK 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/residentialblock.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "NEXUS UNDERPASS" or zonename == "NOVA TUNNEL" or zonename == "REPURPOSED AREA 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/repurposedarea.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "ABANDONED TRAIN STATION" or zonename == "OUTLANDS ENTRANCE" or zonename == "RESTRICTED BLOCK 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/restrictedblock.wav")
-					timer.Simple(1.1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "SEWER SYSTEM ZONE 1" or zonename == "SEWER SYSTEM" or zonename == "STORM SYSTEM 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/stormsystem.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "SEWER SYSTEM ZONE 2" or zonename == "COMMUNAL DISTRICT" or zonename == "STORM SYSTEM 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/stormsystem.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "SEWER SYSTEM ZONE 3" or zonename == "STORM SYSTEM 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/stormsystem.wav")
-					timer.Simple(1, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "SEWER SYSTEM ENTRANCE" or zonename == "NON PATROL REGION 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/nonpatrolregion.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "TRAIN STATION SEWER ENTRANCE" or zonename == "SUBWAY TRACKS" or zonename == "NON PATROL REGION 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/nonpatrolregion.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "WASTE DUMP" or zonename == "NON PATROL REGION 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/nonpatrolregion.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "OUTLAND ZONE 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/outlandzone.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "OUTLAND ZONE 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/outlandzone.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "OUTLAND ZONE 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/outlandzone.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "OUTLAND ZONE 4" then
-					surface.PlaySound("npc/overwatch/radiovoice/outlandzone.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "CANAL BLOCK 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/canalblock.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "CANAL BLOCK 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/canalblock.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "CANAL BLOCK 3" then
-					surface.PlaySound("npc/overwatch/radiovoice/canalblock.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/three.wav")
-					end)
-				elseif zonename == "CANAL BLOCK 4" then
-					surface.PlaySound("npc/overwatch/radiovoice/canalblock.wav")
-					timer.Simple(1.2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/four.wav")
-					end)
-				elseif zonename == "STABILIZATION JURISDICTION 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/stabilizationjurisdiction.wav")
-					timer.Simple(2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
-				elseif zonename == "STABILIZATION JURISDICTION 2" then
-					surface.PlaySound("npc/overwatch/radiovoice/stabilizationjurisdiction.wav")
-					timer.Simple(2, function()
-						surface.PlaySound("npc/overwatch/radiovoice/two.wav")
-					end)
-				elseif zonename == "EXTERNAL JURISDICTION 1" then
-					surface.PlaySound("npc/overwatch/radiovoice/externaljurisdiction.wav")
-					timer.Simple(1.6, function()
-						surface.PlaySound("npc/overwatch/radiovoice/one.wav")
-					end)
+		    timer.Simple(0.1, function()
+		        surface.PlaySound("npc/overwatch/radiovoice/unitdownat.wav")
+		    end)
+		    timer.Simple(1, function()
+			    local lastDispatchDuration = 0
+
+			    if #dispatch > 1 then
+				    local d1 = math.max(getDispatchDuration(dispatch[1]), 1.5)
+				    local d2 = math.max(SoundDuration(dispatch[2]), 1.5)
+
+				    surface.PlaySound(dispatch[1])
+				    timer.Simple(d1 - .5, function()
+				        surface.PlaySound(dispatch[2])
+				        timer.Simple(d2 - .8, function()
+				            surface.PlaySound("npc/overwatch/radiovoice/remainingunitscontain.wav")
+				        end)
+				    end)
 				else
-					surface.PlaySound("npc/overwatch/radiovoice/404zone.wav")
+				    local d1 = math.max(SoundDuration("npc/overwatch/radiovoice/404zone.wav"), 1.5)
+				    surface.PlaySound("npc/overwatch/radiovoice/404zone.wav")
+				    timer.Simple(d1 + 0.3, function()
+				        surface.PlaySound("npc/overwatch/radiovoice/remainingunitscontain.wav")
+				    end)
 				end
 			end)
 		end)
