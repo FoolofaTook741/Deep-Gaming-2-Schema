@@ -177,7 +177,7 @@ function SCHEMA:Think()
 	end
 
 	if !timer.Exists("thinksporecluster") then
-		timer.Create("thinksporecluster", 360, 1, function()
+		timer.Create("thinksporecluster", 240, 1, function()
 			if GetSporeCount() <= 6 then
 				if GetICTCount() >= 1 then
 					SpawnCluster(math.random(1,#impulse.Config.SporeClusters))
