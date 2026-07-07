@@ -337,23 +337,50 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/six.wav"
 	}},
 	{name = "Stabilization Jurisdiction 1", pos1 = Vector(-10410.905273438, 11.682598114014, 8737.279296875), pos2 = Vector(-11953.028320313, -2149.7631835938, 8139.68359375), dispatch = {
-		"npc/overwatch/radiovoice/highpriorityregion.wav",
-		"npc/overwatch/radiovoice/five.wav"
+		"npc/overwatch/radiovoice/stabilizationjurisdiction.wav",
+		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Canal Block 3", pos1 = Vector(-12035.891601563, 1788.7338867188, 8144.4013671875), pos2 = Vector(-3419.7521972656, 1027.1517333984, 7938.38671875), dispatch = {
-		"npc/overwatch/radiovoice/canalblock.wav",
-		"npc/overwatch/radiovoice/three.wav"
+	{name = "Outland Zone 1", pos1 = Vector(-10331.71484375, -2221.4020996094, 8697.8671875), pos2 = Vector(-5136.0249023438, 2430.2751464844, 8169.6401367188), dispatch = {
+		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Outland Zone 3", pos1 = Vector(-10331.71484375, -2221.4020996094, 8697.8671875), pos2 = Vector(-5136.0249023438, 2430.2751464844, 8169.6401367188), dispatch = {
+	{name = "Outland Zone 1", pos1 = Vector(-11950.150390625, 19.293464660645, 8740.1025390625), pos2 = Vector(-10338.13671875, 2438.3837890625, 8197.708984375), dispatch = {
+		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Outland Zone 2", pos1 = Vector(-3287.2895507813, 3085.9448242188, 9320.93359375), pos2 = Vector(3535.5637207031, -2260.1206054688, 8171.9750976563), dispatch = {
+		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/two.wav"
+	}},
+	{name = "Outland Zone 3", pos1 = Vector(4998.2778320313, 3001.6960449219, 9549.560546875), pos2 = Vector(11254.059570313, -2271.5852050781, 8117.6000976563), dispatch = {
 		"npc/overwatch/radiovoice/outlandzone.wav",
 		"npc/overwatch/radiovoice/three.wav"
 	}},
-	{name = "Outland Zone 2", pos1 = Vector(-3287.2895507813, 3085.9448242188, 9320.93359375), pos2 = Vector(3535.5637207031, -2260.1206054688, 8171.9750976563)},
+	{name = "Outland Zone 4", pos1 = Vector(3523.1423339844, -3715.4138183594, 9774.1259765625), pos2 = Vector(-3082.9396972656, -8159.4096679688, 8150.1997070313), dispatch = {
+		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/four.wav"
+	}},
+	{name = "Canal Block 1", pos1 = Vector(-12035.891601563, 1788.7338867188, 8144.4013671875), pos2 = Vector(-3419.7521972656, 1027.1517333984, 7938.38671875), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Canal Block 2", pos1 = Vector(-3389.7326660156, -1456.7364501953, 8135.1186523438), pos2 = Vector(3385.2822265625, 1738.3218994141, 7913.9580078125), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/two.wav"
+	}},
+	{name = "Canal Block 3", pos1 = Vector(3543.2338867188, 2828.2897949219, 8087.3295898438), pos2 = Vector(13402.875976563, -2095.5720214844, 7100.8916015625), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/three.wav"
+	}},
+	{name = "Canal Block 4", pos1 = Vector(3073.1772460938, -4039.6303710938, 8115.7504882813), pos2 = Vector(-2889.1196289063, -8171.357421875, 7742.9697265625), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/four.wav"
+	}},
+	--[[
 	{name = "Canal Block 2", pos1 = Vector(-3389.7326660156, -1456.7364501953, 8135.1186523438), pos2 = Vector(3385.2822265625, 1738.3218994141, 7913.9580078125)},
-	{name = "Outland Zone 4", pos1 = Vector(3523.1423339844, -3715.4138183594, 9774.1259765625), pos2 = Vector(-3082.9396972656, -8159.4096679688, 8150.1997070313)},
 	{name = "Canal Block 4", pos1 = Vector(3073.1772460938, -4039.6303710938, 8115.7504882813), pos2 = Vector(-2889.1196289063, -8171.357421875, 7742.9697265625)},
-	{name = "Outland Zone 1", pos1 = Vector(4998.2778320313, 3001.6960449219, 9549.560546875), pos2 = Vector(11254.059570313, -2271.5852050781, 8117.6000976563)},
 	{name = "Canal Block 1", pos1 = Vector(3543.2338867188, 2828.2897949219, 8087.3295898438), pos2 = Vector(13402.875976563, -2095.5720214844, 7100.8916015625)}
+	]]--
 }
 
 impulse.Config.RemoveEnts = {
