@@ -10,7 +10,7 @@ impulse.Config.SpawnPos2 = Vector(-1150.7692871094, 2095.2966308594, 1234.239135
 impulse.Config.TPCPos = Vector(-11780.508789062, 2391.7241210938, 8192.03125)
 
 impulse.Config.SpawnNoCollide1 = Vector(-4589.0844726563, 2435.9165039063, 791.65179443359)
-impulse.Config.SpawnNoCollide2 = Vector(-1555.7536621094, 3299.931640625, 411.25061035156)
+impulse.Config.SpawnNoCollide2 = Vector(-1747.9808349609, 3326.6455078125, 336.25393676758)
 
 impulse.Config.NoPropZones = {
 	{
@@ -36,18 +36,6 @@ impulse.Config.BroadcastDistance = 600
 impulse.Config.Zone404Name = "Restricted Block 2"
 
 impulse.Config.RebelZone = "External Jurisdiction 1"
-
---[[
-impulse.Config.TrashSpawns = {
-	Vector(2088.836914, 4474.916016, 331.758179),
-	Vector(916.103516, 4652.148926, 146.852844),
-	Vector(1243.045166, 3462.953613, 142.836441),
-	Vector(-798.744324, 3552.433105, 136.886337),
-	Vector(-757.089661, 2128.268799, 138.581421),
-	Vector(1827.898438, 2174.824219, 136.45822),
-	Vector(3335.338379, 1559.376221, 143.442749),
-	Vector(5616.914062, 4640.706543, 333.537750)
-} ]]--
 
 
 impulse.Config.BulkCrateSpawn = Vector(-308.0358581543, 3066.3354492188, 136.03125)

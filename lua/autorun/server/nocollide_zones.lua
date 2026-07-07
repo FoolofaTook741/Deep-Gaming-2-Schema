@@ -1,9 +1,17 @@
 --prevents player collisions in spawns and on both sides of the teleporters
 
 NOCOLLIDE_ZONES = {
-    { --add more of these manually for tp zones, if applicable
-        mins = impulse.Config.SpawnNoCollide2,
-        maxs = impulse.Config.SpawnNoCollide1
+    {
+        mins = Vector(
+            math.min(impulse.Config.SpawnNoCollide1.x, impulse.Config.SpawnNoCollide2.x),
+            math.min(impulse.Config.SpawnNoCollide1.y, impulse.Config.SpawnNoCollide2.y),
+            math.min(impulse.Config.SpawnNoCollide1.z, impulse.Config.SpawnNoCollide2.z)
+        ),
+        maxs = Vector(
+            math.max(impulse.Config.SpawnNoCollide1.x, impulse.Config.SpawnNoCollide2.x),
+            math.max(impulse.Config.SpawnNoCollide1.y, impulse.Config.SpawnNoCollide2.y),
+            math.max(impulse.Config.SpawnNoCollide1.z, impulse.Config.SpawnNoCollide2.z)
+        )
     },
 }
 
