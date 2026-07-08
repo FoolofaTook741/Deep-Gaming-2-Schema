@@ -283,7 +283,7 @@ function impulse.Dispatch.SetupCityCode(code)
             end
 
             if code == CODE_FRACTURED then
-                timer.Simple(150, function()
+                timer.Simple(45, function()
                     for k, v in pairs(player.GetAll()) do
                         v:SendLua([[surface.PlaySound( "c24v3/social_infection.mp3" )]])
                     end
