@@ -234,9 +234,9 @@ local mpfBanCommand = {
     onRun = function(ply, arg, rawText)
 
         local rank = ply.GetTeamRank and ply:GetTeamRank()
-        local isDCO = ply:Team() == TEAM_CP and rank and rank >= RANK_DVL
+        local isDCO = ply:Team() == TEAM_CP and rank and rank >= RANK_OFC
         if not (ply:IsAdmin() or isDCO) then
-            return ply:Notify("You're either not an admin or DVL+.")
+            return ply:Notify("You're either not an admin or RL+.")
         end
 
         local name = arg[1]
@@ -316,7 +316,7 @@ local mpfUnbanCommand = {
     requiresArg = true,
     onRun = function(ply, arg, rawText)
         local rank = ply.GetTeamRank and ply:GetTeamRank()
-        local isDCO = ply:Team() == TEAM_CP and rank and rank >= RANK_DVL
+        local isDCO = ply:Team() == TEAM_CP and rank and rank >= RANK_OFC
         if not (ply:IsAdmin() or isDCO) then
             return ply:Notify("You're either not an admin or DVL+.")
         end
