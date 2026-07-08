@@ -271,7 +271,7 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/three.wav"
 	}},
 	{name = "External Jurisdiction 1", pos1 = Vector(-3570.6948242188, 8023.0341796875, 2758.775390625), pos2 = Vector(16129.291015625, 16128.91015625, -656.92224121094), dispatch = {
-		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/externaljurisdiction.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Outlands Tunnel", pos1 = Vector(3848.3168945313, 5651.4560546875, 498.14172363281), pos2 = Vector(3582.0480957031, 7901.4018554688, 292.72424316406), dispatch = {
@@ -317,19 +317,19 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/three.wav"
 	}},
 	{name = "Storm System 2", pos1 = Vector(-3098.0314941406, 164.14768981934, 2.1831855773926), pos2 = Vector(1248.3210449219, 4920.2172851563, -366.80670166016), dispatch = {
-		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/stormsystem.wav",
 		"npc/overwatch/radiovoice/two.wav"
 	}},
 	{name = "Storm System 1", pos1 = Vector(6969.4638671875, 639.02795410156, 79.737464904785), pos2 = Vector(3283.4982910156, 6478.9790039063, -529.25720214844), dispatch = {
-		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/stormsystem.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Storm System 1", pos1 = Vector(3446.4653320313, -496.43243408203, -33.204967498779), pos2 = Vector(3197.2036132813, 4874.447265625, -148.35145568848), dispatch = {
-		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/stormsystem.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Storm System 1", pos1 = Vector(369.02310180664, 5075.4838867188, -51.897613525391), pos2 = Vector(3211.9951171875, 4612.8774414063, -153.24819946289), dispatch = {
-		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/stormsystem.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Stabilization Jurisdiction 2", pos1 = Vector(-1257.9465332031, 3708.4028320313, 281.94729614258), pos2 = Vector(-1820.3475341797, 3454.1655273438, 108.08744049072), dispatch = {
