@@ -343,7 +343,20 @@ end)
 
 -- im too lazy to fix this fucking disaster
 
+local biosignalPlaying = false
+local DISPATCH_DURATION_OVERRIDES = {
+		    ["npc/overwatch/radiovoice/stabilizationjurisdiction.wav"] = 2.4,
+		    ["npc/overwatch/radiovoice/highpriorityregion.wav"] = 1.9,
+		    ["npc/overwatch/radiovoice/controlsection.wav"] = 2.1,
+		    
+		}
+
+local function getDispatchDuration(snd)
+    return DISPATCH_DURATION_OVERRIDES[snd] or SoundDuration(snd)
+end
+
 net.Receive("impulseHL2RPBioDeath", function(len, ply)
+	if biosignalPlaying then return end
 	if not IsValid(LocalPlayer()) then return end
 	local unit = net.ReadUInt(8)
 	local zone = net.ReadUInt(8)
@@ -353,13 +366,14 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 	zone = impulse.Config.Zones[zone]
 	unit = Entity(unit)
 	if not IsValid(unit) then return end
-	local zonename = string.upper(zone.name) or "404 ZONE"
+	local zonename = (zone and string.upper(zone.name)) or "404 ZONE"
 
 	if zone == 255 then
 		zonename = "404 ZONE"
 	end
 
 	if zone and unit and IsValid(unit) and unit:IsPlayer() and unit:IsCP() then
+		biosignalPlaying = true
 		if not zonename then
 			zonename = "404 ZONE"
 		end
@@ -417,16 +431,6 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 		if zone and zone.dispatch then
 		    dispatch = zone.dispatch
 		end
-		local DISPATCH_DURATION_OVERRIDES = {
-		    ["npc/overwatch/radiovoice/stabilizationjurisdiction.wav"] = 2.4,
-		    ["npc/overwatch/radiovoice/highpriorityregion.wav"] = 1.9,
-		    ["npc/overwatch/radiovoice/controlsection.wav"] = 2.1,
-		    
-		}
-
-		local function getDispatchDuration(snd)
-		    return DISPATCH_DURATION_OVERRIDES[snd] or SoundDuration(snd)
-		end
 		
 		surface.PlaySound("npc/overwatch/radiovoice/lostbiosignalforunit.wav")
 
@@ -446,6 +450,7 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 				        surface.PlaySound(dispatch[2])
 				        timer.Simple(d2 - .8, function()
 				            surface.PlaySound("npc/overwatch/radiovoice/remainingunitscontain.wav")
+				            biosignalPlaying = false
 				        end)
 				    end)
 				else
@@ -453,6 +458,7 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 				    surface.PlaySound("npc/overwatch/radiovoice/404zone.wav")
 				    timer.Simple(d1 + 0.3, function()
 				        surface.PlaySound("npc/overwatch/radiovoice/remainingunitscontain.wav")
+				        biosignalPlaying = false
 				    end)
 				end
 			end)
