@@ -9,8 +9,37 @@ impulse.Config.SpawnPos2 = Vector(-1150.7692871094, 2095.2966308594, 1234.239135
 
 impulse.Config.TPCPos = Vector(-11780.508789062, 2391.7241210938, 8192.03125)
 
-impulse.Config.SpawnNoCollide1 = Vector(-4589.0844726563, 2435.9165039063, 791.65179443359)
-impulse.Config.SpawnNoCollide2 = Vector(-1747.9808349609, 3326.6455078125, 336.25393676758)
+impulse.Config.NoCollideZones = {
+    { --spawn
+        Vector(-4589.0844726563, 2435.9165039063, 791.65179443359),
+        Vector(-1747.9808349609, 3326.6455078125, 336.25393676758)
+    },
+    { --metabase nocollide zone
+        Vector(3450.8505859375, -1363.8334960938, -40.650173187256),
+        Vector(3262.8950195313, -1170.9945068359, -203.34521484375)
+    },
+}
+
+impulse.Config.MBEntrance = Vector(3384.1794433594, -1252.8516845703, -167.96875)
+
+impulse.Config.NoPropZones = {
+	{
+		name = "OCA Offices", 
+		allow_combine = true, -- rp purposes
+		min = Vector(3490.649658, 4121.479004, 1913.500854),
+		max = Vector(3373.741455, 4174.976074, 5341.104004)
+	},
+	{
+		name = "Lighthouse", 
+		min = Vector(11133.083008, 14763.820312, 2360.274658),
+		max = Vector(5608.722168, 8470.268555, 83.837280)
+	},
+	{
+		name = "Sewers",
+		min = Vector(-2090.716797, 2208.125977, -422.201141),
+		max = Vector(2870.417480, 1724.121094, 1.592079)
+	}
+}
 
 impulse.Config.NoPropZones = {
 	{
