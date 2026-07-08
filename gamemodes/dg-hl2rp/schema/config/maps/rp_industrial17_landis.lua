@@ -736,7 +736,11 @@ impulse.Config.LoadScript = function()
         1460,
         1461,
 		2395,
-		8273
+		8273,
+		8274,
+		9872,
+		9873,
+		9874
     }
 
     for _, id in pairs(removeOnStart) do
