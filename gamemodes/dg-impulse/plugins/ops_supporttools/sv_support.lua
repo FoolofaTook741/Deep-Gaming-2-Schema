@@ -130,41 +130,45 @@ net.Receive("impulseOpsSTDoTeamLocked", function(len, ply)
     ply:Notify("Team "..teamid.." has been "..(locked and "locked" or "unlocked")..".")
 end)
 
+local refundChunks = {}
+
 net.Receive("impulseOpsSTDoRefund", function(len, ply)
-    if not isSupport(ply) then
-        return
-    end
+    if not isSupport(ply) then return end
 
     local s64 = net.ReadString()
-    local len = net.ReadUInt(32)
-    local items = pon.decode(net.ReadData(len))
-    local steamid = util.SteamIDFrom64(s64)
+    local totalChunks = net.ReadUInt(8)
+    local chunkIndex = net.ReadUInt(8)
+    local dataLen = net.ReadUInt(32)
+    local chunk = pon.decode(net.ReadData(dataLen))
 
+    refundChunks[s64] = refundChunks[s64] or {}
+    refundChunks[s64][chunkIndex] = chunk
+
+    if table.Count(refundChunks[s64]) < totalChunks then return end
+
+    local items = {}
+    for i = 1, totalChunks do
+        for k, v in pairs(refundChunks[s64][i]) do
+            items[k] = v
+        end
+    end
+    refundChunks[s64] = nil
+
+    local steamid = util.SteamIDFrom64(s64)
     local query = mysql:Select("impulse_players")
     query:Select("id")
     query:Where("steamid", steamid)
     query:Callback(function(result)
-        if not IsValid(ply) then
-            return
-        end
-
+        if not IsValid(ply) then return end
         if not type(result) == "table" or #result == 0 then
             return ply:Notify("This Steam account has not joined the server yet or the SteamID is invalid.")
         end
-
-        local impulseID = result[1].id
         local refundData = {}
-
-        for v,k in pairs(items) do
-            if not impulse.Inventory.ItemsRef[v] then
-                continue
-            end
-
+        for v, k in pairs(items) do
+            if not impulse.Inventory.ItemsRef[v] then continue end
             refundData[v] = k
         end
-
         impulse.Data.Write("SupportRefund_"..s64, refundData)
-
         ply:Notify("Issued support refund for user "..s64..".")
     end)
 
@@ -174,19 +178,11 @@ net.Receive("impulseOpsSTDoRefund", function(len, ply)
         url = "https://pinnacle-gaming.xyz/bans",
         color = 10181046,
         fields = {
-            {
-                name = "User Refunded:",
-                value = steamid
-            },
-            {
-                name = "Manager:",
-                value = "**"..ply:SteamName().."** ("..ply:SteamID64()..")"
-            }
+            { name = "User Refunded:", value = steamid },
+            { name = "Manager:", value = "**"..ply:SteamName().."** ("..ply:SteamID64()..")" }
         }
     }}
-
     ReqwestLog(embeds, DG_OPS)
-
     query:Execute()
 end)
 

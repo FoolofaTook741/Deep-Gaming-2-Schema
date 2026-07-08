@@ -125,36 +125,43 @@ function PANEL:Init()
 		table.insert(allButtons, { btn = btn, item = k })
 
 		function btn:DoClick()
-			Derma_StringRequest("impulse", "Amount of "..k.Name.." to refund", "1", function(val)
-				if not tonumber(val) then
-					return LocalPlayer():Notify("Not a number.")
-				end
+		    Derma_StringRequest("impulse", "Amount of "..k.Name.." to refund", "1", function(val)
+		        if not tonumber(val) then
+		            return LocalPlayer():Notify("Not a number.")
+		        end
+		        val = math.floor(tonumber(val))
+		        if val <= 0 then
+		            refund[self.ItemClass] = nil
+		            for i, t in pairs(refund2) do
+		                if t[1] == self.ItemClass then
+		                    refund2[i] = nil
+		                end
+		            end
+		            return LocalPlayer():Notify("Removed "..self.ItemClass)
+		        end
 
-				val = math.Clamp(math.floor(val), 0, 30)
+		        local function applyRefund(amount)
+		            for i, t in pairs(refund2) do
+		                if t[1] == self.ItemClass then
+		                    refund2[i] = nil
+		                end
+		            end
+		            refund[self.ItemClass] = amount
+		            table.insert(refund2, { self.ItemClass, amount })
+		            LocalPlayer():Notify("Selected "..k.Name.." x"..amount..".")
+		        end
 
-				if val == 0 then
-					refund[self.ItemClass] = nil
-
-					for i, t in pairs(refund2) do
-						if t[1] == self.ItemClass then
-							refund2[i] = nil
-						end
-					end
-
-					return LocalPlayer():Notify("Removed "..self.ItemClass)
-				end
-
-				for i, t in pairs(refund2) do
-					if t[1] == self.ItemClass then
-						refund2[i] = nil
-					end
-				end
-
-				refund[self.ItemClass] = val
-				table.insert(refund2, { self.ItemClass, val })
-
-				LocalPlayer():Notify("Selected "..k.Name.." x"..val..".")
-			end)
+		        if val > 30 then
+		            Derma_Query(
+					    "You are refunding " .. val .. " of " .. k.Name .. ". This exceeds the normal limit of 30. Are you sure?",
+					    "Confirm Large Refund",
+					    "Yes", function() applyRefund(val) end,
+					    "No", function() end
+					)
+		        else
+		            applyRefund(val)
+		        end
+		    end)
 		end
 
 		cats[catName]:AddItem(btn)
@@ -196,23 +203,38 @@ function PANEL:Init()
 	confirm:SetText("Issue Refund")
 
 	function confirm:DoClick()
-		local id = string.Trim(s64:GetValue(), " ")
+	    local id = string.Trim(s64:GetValue(), " ")
+	    if id == "" or not tonumber(id) then
+	        return LocalPlayer():Notify("Invalid Steam64ID.")
+	    end
+	    if not refund2 or table.Count(refund2) < 1 then
+	        return LocalPlayer():Notify("No refund items selected.")
+	    end
 
-		if id == "" or not tonumber(id) then
-			return LocalPlayer():Notify("Invalid Steam64ID.")
-		end
+	    local chunkSize = 20
+	    local keys = {}
+	    for k in pairs(refund) do
+	        table.insert(keys, k)
+	    end
 
-		if not refund2 or table.Count(refund2) < 1 then
-			return LocalPlayer():Notify("No refund items selected.")
-		end
+	    local totalChunks = math.ceil(#keys / chunkSize)
 
-		local data = pon.encode(refund)
+	    for i = 1, totalChunks do
+	        local chunk = {}
+	        for j = (i - 1) * chunkSize + 1, math.min(i * chunkSize, #keys) do
+	            local k = keys[j]
+	            chunk[k] = refund[k]
+	        end
 
-		net.Start("impulseOpsSTDoRefund")
-		net.WriteString(id)
-		net.WriteUInt(#data, 32)
-		net.WriteData(data, #data)
-		net.SendToServer()
+	        local data = pon.encode(chunk)
+	        net.Start("impulseOpsSTDoRefund")
+	        net.WriteString(id)
+	        net.WriteUInt(totalChunks, 8)
+	        net.WriteUInt(i, 8)
+	        net.WriteUInt(#data, 32)
+	        net.WriteData(data, #data)
+	        net.SendToServer()
+	    end
 	end
 
 	sheet:AddSheet("Refunder", b, "icon16/bricks.png")
