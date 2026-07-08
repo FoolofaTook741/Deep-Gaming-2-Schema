@@ -420,6 +420,7 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 		local DISPATCH_DURATION_OVERRIDES = {
 		    ["npc/overwatch/radiovoice/stabilizationjurisdiction.wav"] = 2.4,
 		    ["npc/overwatch/radiovoice/highpriorityregion.wav"] = 1.9,
+		    ["npc/overwatch/radiovoice/controlsection.wav"] = 2.1,
 		    
 		}
 
