@@ -3,20 +3,22 @@ local CurTime = CurTime
 local ipairs = ipairs
 local IsValid = IsValid
 
-NOCOLLIDE_ZONES = {
-    {
+NOCOLLIDE_ZONES = {}
+for _, zone in pairs(impulse.Config.NoCollideZones or {}) do
+    local v1, v2 = zone[1], zone[2]
+    table.insert(NOCOLLIDE_ZONES, {
         mins = Vector(
-            math.min(impulse.Config.SpawnNoCollide1.x, impulse.Config.SpawnNoCollide2.x),
-            math.min(impulse.Config.SpawnNoCollide1.y, impulse.Config.SpawnNoCollide2.y),
-            math.min(impulse.Config.SpawnNoCollide1.z, impulse.Config.SpawnNoCollide2.z)
+            math.min(v1.x, v2.x),
+            math.min(v1.y, v2.y),
+            math.min(v1.z, v2.z)
         ),
         maxs = Vector(
-            math.max(impulse.Config.SpawnNoCollide1.x, impulse.Config.SpawnNoCollide2.x),
-            math.max(impulse.Config.SpawnNoCollide1.y, impulse.Config.SpawnNoCollide2.y),
-            math.max(impulse.Config.SpawnNoCollide1.z, impulse.Config.SpawnNoCollide2.z)
+            math.max(v1.x, v2.x),
+            math.max(v1.y, v2.y),
+            math.max(v1.z, v2.z)
         )
-    },
-}
+    })
+end
 
 local NOCOLLIDE_TELEPORTS = {}
 
