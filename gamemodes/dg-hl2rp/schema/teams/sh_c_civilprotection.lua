@@ -394,7 +394,7 @@ quiz = {
             name = "i2",
             description = "i2",
             doorGroup = {1, 2, 3, 6, 7},
-            faction_xp = 360,
+            faction_xp = 1800,
             whitelistFailMessage = "You must be promoted to use this rank.",
             onBecome = makeOnBecome("i2"),
         },
