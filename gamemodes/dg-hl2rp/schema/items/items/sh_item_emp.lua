@@ -23,30 +23,70 @@ ITEM.UseWorkBarName = "Overloading..."
 ITEM.UseWorkBarFreeze = true
 ITEM.UseWorkBarSound = "ambient/energy/weld1.wav"
 
-function ITEM:OnUse(ply, door)
-	local id = door:GetCreationID()
-	local chance = math.random(1, 10)
-	local pos = door:GetPos() + Vector(-20, 0, 0)
-	local duration = 45
-	local ent = door
+local EMP_DOOR_IDS = {
+    [6957] = true,
+    [6958] = true,
+}
 
-	if chance < 3 then
-		ply:EmitSound("ambient/energy/zap1.wav")
-		ply:Notify("The EMP attempt failed.")
-		return
-	end
-	if door:IsDoor() then
-		if chance > 3 then
-			door:Fire("open")
+local function IsEMPDoor(ent)
+    return EMP_DOOR_IDS[ent:MapCreationID()] and game.GetMap() == "rp_industrial17_landis"
+end
+
+
+local RED = Color(255, 0, 0)
+local GREEN = Color(0, 255, 0)
+function ITEM:OnUse(ply, door)
+    local id = door:GetCreationID()
+    local chance = math.random(1, 10)
+    local pos = door:GetPos() + Vector(-20, 0, 0)
+    local duration = 45
+    local ent = door
+    if chance < 3 then
+        ply:EmitSound("ambient/energy/zap1.wav")
+        ply:Notify("The EMP attempt failed.")
+        return
+    end
+    if door:IsDoor() then
+        if IsEMPDoor(door) then
+		    for _, d in pairs(ents.FindByName("canaldoor")) do
+		        if IsValid(d) then
+		            d:Fire("Unlock", "", 0)
+		            d:Fire("Open", "", 0.2)
+		        end
+		    end
+		    for _, v in pairs(player.GetAll()) do
+		        if v:IsCP() then
+		            v:EmitSound("npc/overwatch/radiovoice/confirmupialert.wav")
+		            v:SendCombineMessage("***ALERT.. OUTLANDS BULKHEAD ERROR DETECTED***", RED)
+		        end
+		    end
 		    ply:EmitSound("buttons/combine_button1.wav")
-			ply:Notify("You have successfully overloaded the door.")
-			if GetCPCount() >= 3 or GetCombineCount() >= 3 then
-				ply:AddSkillXP("metabolism", math.random(1,2))
-			end
-		else
-			ply:EmitSound("ambient/energy/zap1.wav")
-			ply:Notify("The EMP attempt failed.")
+		    ply:Notify("You have successfully overloaded the canal gate.")
+		    timer.Simple(20, function()
+		        for _, d in pairs(ents.FindByName("canaldoor")) do
+		            if IsValid(d) then
+		                d:Fire("Close", "", 0)
+		                d:Fire("Lock", "", 0.3)
+		            end
+		        end
+		        for _, v in pairs(player.GetAll()) do
+		            if v:IsCP() then
+		                v:SendCombineMessage("***ALERT.. OUTLANDS GATE RESTORED***", GREEN)
+		            end
+		        end
+		    end)
 		end
+        if chance > 3 then
+            door:Fire("open")
+            ply:EmitSound("buttons/combine_button1.wav")
+            ply:Notify("You have successfully overloaded the door.")
+            if GetCPCount() >= 3 or GetCombineCount() >= 3 then
+                ply:AddSkillXP("metabolism", math.random(1,2))
+            end
+        else
+            ply:EmitSound("ambient/energy/zap1.wav")
+            ply:Notify("The EMP attempt failed.")
+        end
 	elseif door:GetClass() == "deep_combine_lock" then
 	    for _, door1 in ipairs(door.DoorList) do
 			if IsValid(door1) then
@@ -252,7 +292,7 @@ function ITEM:OnUse(ply, door)
 end
 
 function ITEM:ShouldTraceUse(ply, ent)
-	return (ent:GetClass() == "func_door" and (ent:GetSyncVar(SYNC_DOOR_GROUP) >= 2)) or ent:GetClass() == "deep_commsuplink" or ent:GetClass() == "impulse_hl2rp_rationmachine" or ent:GetClass() == "autoturret" or ent:GetClass() == "impulse_hl2rp_terminal" or ent:GetClass() == "deep_forcefield" or ent:GetClass() == "deep_forcefield_small" or ent:GetClass() == "deep_combine_lock"
+    return (ent:GetClass() == "func_door" and ((ent:GetSyncVar(SYNC_DOOR_GROUP) or 0) >= 2 or IsEMPDoor(ent))) or ent:GetClass() == "deep_commsuplink" or ent:GetClass() == "impulse_hl2rp_rationmachine" or ent:GetClass() == "autoturret" or ent:GetClass() == "impulse_hl2rp_terminal" or ent:GetClass() == "deep_forcefield" or ent:GetClass() == "deep_forcefield_small" or ent:GetClass() == "deep_combine_lock"
 end
 
 impulse.RegisterItem(ITEM)
