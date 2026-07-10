@@ -23,8 +23,36 @@ local randomSounds = {
 	"npc/overwatch/radiovoice/upi.wav"
 }
 
+local ordinalRadioChatter = {
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter1.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter2.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter3.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter4.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter5.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter6.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter7.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter8.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter9.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter10.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter11.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter12.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter13.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter14.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter15.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter16.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter17.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter18.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter19.wav",
+	"dg2hlaradio/ordinalchatter/jsqo_custom/ordinalchatter20.wav",
+}
+
 local function EmitChatter(ply)
-	local randomSound = randomSounds[math.random(1, #randomSounds)]
+	local randomSound = ""
+	if ply:Team() == TEAM_CP then
+		randomSound = randomSounds[math.random(1, #randomSounds)]
+	else
+		randomSound = ordinalRadioChatter[math.random(1, #ordinalRadioChatter)]
+	end
 	ply:EmitSound(randomSound, 60)
 end
 
@@ -34,12 +62,21 @@ function SCHEMA:Think()
 	if nextChatterCheck > CurTime() then return end
 	
 	for v,k in pairs(player.GetAll()) do
-		if k:Team() == TEAM_CP and k:GetMoveType() != MOVETYPE_NOCLIP and !k.IsRogue then
-			local curTime = CurTime()
+		if k:GetMoveType() ~= MOVETYPE_NOCLIP then
+			if k:Team() == TEAM_CP and ~k.IsRogue then
+				local curTime = CurTime()
 
-			if not k.nextChatter or curTime > k.nextChatter then
-				k.nextChatter = curTime + math.random(90, 120)
-				EmitChatter(k)
+				if not k.nextChatter or curTime > k.nextChatter then
+					k.nextChatter = curTime + math.random(90, 120)
+					EmitChatter(k)
+				end
+			elseif k:Team() == TEAM_OTA and impulse.Voice.HasAlyxClass(k, {"grunt", "wallhammer", "apf", "ordinal"}) then
+				local curTime = CurTime()
+
+				if not k.nextChatter or curTime > k.nextChatter then
+					k.nextChatter = curTime + math.random(180, 240)
+					EmitChatter(k)
+				end
 			end
 		end
 	end
