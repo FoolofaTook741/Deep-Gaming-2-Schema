@@ -4,10 +4,11 @@ ITEM.UniqueID = "item_portablehpcharger"
 ITEM.Name = "Portable Biogel Injection Station"
 ITEM.Desc =  "Deploy a biogel injection station to your hardpoint for your teammates to use."
 ITEM.Category = "Combine Tools"
-ITEM.Model = Model("models/Items/HealthKit.mdl")
-ITEM.FOV = 60.379656160458
-ITEM.CamPos = Vector(-57.306591033936, -25.21489906311, 8.5959882736206)
-ITEM.NoCenter = true
+ITEM.Model = Model("models/dg_models/dg_combine_props/vnl/health_charger002.mdl")
+
+ITEM.FOV = 9.1604584527221,
+ITEM.CamPos = Vector(-39.426933288574, -160, -5.5014328956604),
+ITEM.LookAt = Vector(0, 0, 9.1690544412608),
 ITEM.Weight = 3.5
 
 ITEM.Droppable = true
@@ -44,4 +45,6 @@ function ITEM:OnUse(ply)
 end
 
 impulse.RegisterItem(ITEM)
+
+
 
