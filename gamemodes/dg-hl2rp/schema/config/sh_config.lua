@@ -771,33 +771,52 @@ impulse.Config.VortessenceRange = 1080
 impulse.Config.VortessenceTime = 1200
 
 impulse.Config.BeepSounds = {
-	[TEAM_CP] = {
-		on = {
-			"npc/overwatch/radiovoice/on1.wav",
-			"npc/overwatch/radiovoice/on3.wav",
-			"npc/metropolice/vo/on2.wav"
-		},
-		off = {
-			"npc/metropolice/vo/off1.wav",
-			"npc/metropolice/vo/off2.wav",
-			"npc/metropolice/vo/off3.wav",
-			"npc/metropolice/vo/off4.wav",
-			"npc/overwatch/radiovoice/off2.wav",
-			"npc/overwatch/radiovoice/off2.wav"
-		}
-	},
+    [TEAM_CP] = {
+        on = {
+            "npc/overwatch/radiovoice/on1.wav",
+            "npc/overwatch/radiovoice/on3.wav",
+            "npc/metropolice/vo/on2.wav"
+        },
+        off = {
+            "npc/metropolice/vo/off1.wav",
+            "npc/metropolice/vo/off2.wav",
+            "npc/metropolice/vo/off3.wav",
+            "npc/metropolice/vo/off4.wav",
+            "npc/overwatch/radiovoice/off2.wav",
+            "npc/overwatch/radiovoice/off2.wav"
+        }
+    },
 
-	[TEAM_OTA] = {
-		on = {
-			"npc/combine_soldier/vo/on1.wav",
-			"npc/combine_soldier/vo/on2.wav"
-		},
-		off = {
-			"npc/combine_soldier/vo/off1.wav",
-			"npc/combine_soldier/vo/off2.wav",
-			"npc/combine_soldier/vo/off3.wav"
-		}
-	}
+    [TEAM_OTA] = {
+        on = {
+            "npc/combine_soldier/vo/on1.wav",
+            "npc/combine_soldier/vo/on2.wav"
+        },
+        off = {
+            "npc/combine_soldier/vo/off1.wav",
+            "npc/combine_soldier/vo/off2.wav",
+            "npc/combine_soldier/vo/off3.wav"
+        }
+    },
+
+    ["ALYX"] = {
+        on = {
+            "dg2hlaradio/soldier/combine_radio_on_01.wav",
+            "dg2hlaradio/soldier/combine_radio_on_02.wav",
+            "dg2hlaradio/soldier/combine_radio_on_03.wav",
+            "dg2hlaradio/soldier/combine_radio_on_04.wav",
+            "dg2hlaradio/soldier/combine_radio_on_05.wav"
+        },
+        off = {
+            "dg2hlaradio/soldier/combine_radio_off_01.wav",
+            "dg2hlaradio/soldier/combine_radio_off_02.wav",
+            "dg2hlaradio/soldier/combine_radio_off_03.wav",
+            "dg2hlaradio/soldier/combine_radio_off_04.wav",
+            "dg2hlaradio/soldier/combine_radio_off_05.wav",
+            "dg2hlaradio/soldier/combine_radio_off_06.wav",
+            "dg2hlaradio/soldier/combine_radio_off_07.wav"
+        }
+    }
 }
 
 

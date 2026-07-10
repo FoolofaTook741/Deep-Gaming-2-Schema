@@ -20,6 +20,22 @@ function impulse.Voice.GetClass(ply)
 	return def
 end
 
+function impulse.Voice.HasAlyxClass(ply, classNames)
+    if not IsValid(ply) then return false end
+
+    local classes = impulse.Voice.GetClass(ply)
+    
+    for _, classData in ipairs(classes) do
+        for _, name in ipairs(classNames) do
+            if classData.class == name then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
 -- jsqo 28.03.2026
 -- added the category parameter to the register function, 
 -- this allows us to group certain voicelines together for random selection. 
@@ -168,7 +184,7 @@ impulse.Voice.DefineClass("ordinal", function(ply)
 end, function(client, sounds, chatType)
 	if not IsValid(client) then return end
 
-	local beeps = impulse.Config.BeepSounds[client:Team()] or impulse.Config.BeepSounds[TEAM_CP]
+	local beeps = impulse.Config.BeepSounds["ALYX"] or impulse.Config.BeepSounds[TEAM_CP]
 
 	table.insert(sounds, 1, {(table.Random(beeps.on)), 0.25})
 	sounds[#sounds + 1] = {(table.Random(beeps.off)), nil, 0.25}
@@ -187,7 +203,7 @@ impulse.Voice.DefineClass("apf", function(ply)
 end, function(client, sounds, chatType)
 	if not IsValid(client) then return end
 
-	local beeps = impulse.Config.BeepSounds[client:Team()] or impulse.Config.BeepSounds[TEAM_CP]
+	local beeps = impulse.Config.BeepSounds["ALYX"] or impulse.Config.BeepSounds[TEAM_CP]
 
 	table.insert(sounds, 1, {(table.Random(beeps.on)), 0.25})
 	sounds[#sounds + 1] = {(table.Random(beeps.off)), nil, 0.25}
@@ -206,7 +222,7 @@ impulse.Voice.DefineClass("wallhammer", function(ply)
 end, function(client, sounds, chatType)
 	if not IsValid(client) then return end
 
-	local beeps = impulse.Config.BeepSounds[client:Team()] or impulse.Config.BeepSounds[TEAM_CP]
+	local beeps = impulse.Config.BeepSounds["ALYX"] or impulse.Config.BeepSounds[TEAM_CP]
 
 	table.insert(sounds, 1, {(table.Random(beeps.on)), 0.25})
 	sounds[#sounds + 1] = {(table.Random(beeps.off)), nil, 0.25}
@@ -228,7 +244,7 @@ impulse.Voice.DefineClass("grunt", function(ply)
 end, function(client, sounds, chatType)
 	if not IsValid(client) then return end
 
-	local beeps = impulse.Config.BeepSounds[client:Team()] or impulse.Config.BeepSounds[TEAM_CP]
+	local beeps = impulse.Config.BeepSounds["ALYX"] or impulse.Config.BeepSounds[TEAM_CP]
 
 	table.insert(sounds, 1, {(table.Random(beeps.on)), 0.25})
 	sounds[#sounds + 1] = {(table.Random(beeps.off)), nil, 0.25}

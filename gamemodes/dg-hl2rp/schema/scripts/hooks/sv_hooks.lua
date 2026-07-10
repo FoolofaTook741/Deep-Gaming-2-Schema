@@ -302,29 +302,28 @@ function SCHEMA:DoInventorySearch(searcher, searchee)
 end
 
 function SCHEMA:ChatStateChanged(ply, oldState, newState)
-	if (ply.CPBeepCooldown or 0) > CurTime() then
-		return
-	end
 
-	if ply:GetNoDraw() or not ply:Alive() then
-		return
-	end
+    if ply:GetNoDraw() or not ply:Alive() then
+        return
+    end
 
-	if ply:Team() == TEAM_CP then
-		if newState then
-			ply:EmitSound("NPC_MetroPolice.Radio.On")
-		else
-			ply:EmitSound("NPC_MetroPolice.Radio.Off")
-		end
+    local beeps = impulse.Config.BeepSounds[ply:Team()] or impulse.Config.BeepSounds[TEAM_CP]
+    
+    if impulse.Voice.HasAlyxClass(ply, {"grunt", "wallhammer", "apf", "ordinal"}) then
+        beeps = impulse.Config.BeepSounds["ALYX"]
+    end
 
-		ply.CPBeepCooldown = CurTime() + 1
-	elseif ply:Team() == TEAM_OTA then
-		if newState then
-			ply:EmitSound("npc/combine_soldier/vo/on"..math.random(1, 2)..".wav")
-		else
-			ply:EmitSound("npc/combine_soldier/vo/off"..math.random(1, 3)..".wav")
-		end
-	end
+    if newState then
+        local onSound = table.Random(beeps.on)
+        if onSound then
+            ply:EmitSound(onSound, 75, 100)
+        end
+    else
+        local offSound = table.Random(beeps.off)
+        if offSound then
+            ply:EmitSound(offSound, 75, 100)
+        end
+    end
 end
 
 function SCHEMA:PlayerDeath(ply)
