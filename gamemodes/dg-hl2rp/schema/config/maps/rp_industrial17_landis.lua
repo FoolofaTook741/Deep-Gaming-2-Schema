@@ -777,6 +777,23 @@ impulse.Config.LoadScript = function()
         if IsValid(ent) then ent:Remove() end
     end
 
+    local soundsToRemove = {
+        "jw_checkpoint_alarm",
+        "jw_bang",
+        "jw_citadel",
+        "jw_citadel2",
+        "jw_dispatch",
+        --"jw2_initialstart",
+    }
+
+    for _, name in pairs(soundsToRemove) do
+        for _, ent in pairs(ents.FindByName(name)) do
+            if IsValid(ent) then
+                ent:Remove()
+            end
+        end
+    end
+
 	hook.Add("PlayerCanHearCheck", "impulseHL2RPCanHearTheatre", function(listener, speaker)
 		if speaker:GetPos():WithinAABox(Vector(2294.3627929688, 720.26623535156, 354.81311035156), Vector(3009.0051269531, 957.97796630859, 47.19352722168)) and listener:GetPos():WithinAABox(Vector(2965.8940429688, 1498.8292236328, -143.17835998535), Vector(2152.6481933594, 528.80187988281, 491.6174621582)) then
 			listener.CanHear[speaker] = true
