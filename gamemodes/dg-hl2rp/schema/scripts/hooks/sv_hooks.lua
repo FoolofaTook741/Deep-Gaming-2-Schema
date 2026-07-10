@@ -1115,3 +1115,103 @@ net.Receive("DeepSpawnTeamChange", function(len, ply)
     ply:EmitSound("items/ammo_pickup.wav")
     DoSpawn(ply, teamID, choice)
 end)
+
+DG_DROWN_DAMAGE = 5
+DG_DROWN_INTERVAL = 1
+DG_AIR_TICK_RATE = 0.1
+DG_SYNC_INTERVAL = 1
+
+local playerAir = {}
+local nextDrownDamage = {}
+local wasSteady = {}
+local seqCounter = {}
+local nextSync = {}
+
+util.AddNetworkString("DG_WaterState")
+
+local function SendWaterState(ply, submerged, air)
+    seqCounter[ply] = (seqCounter[ply] or 0) + 1
+
+    net.Start("DG_WaterState")
+        net.WriteUInt(seqCounter[ply], 16)
+        net.WriteBool(submerged)
+        net.WriteFloat(air)
+    net.Send(ply)
+end
+
+timer.Create("DG_DrowningTick", DG_AIR_TICK_RATE, 0, function()
+    local waterThreshold = impulse.Config.WaterLevel or 3
+    local maxAir = impulse.Config.MaxAir
+
+    for _, ply in ipairs(player.GetAll()) do
+        if not IsValid(ply) or not ply:Alive() then continue end
+
+        local submerged = ply:WaterLevel() >= waterThreshold and ply:GetMoveType() != MOVETYPE_NOCLIP
+        local air = playerAir[ply] or maxAir
+        local wasTransition = false
+
+        if submerged then
+            air = math.max(0, air - DG_AIR_TICK_RATE)
+
+            if air <= 0 then
+                if not nextDrownDamage[ply] or CurTime() >= nextDrownDamage[ply] then
+                    nextDrownDamage[ply] = CurTime() + DG_DROWN_INTERVAL
+
+                    local dmginfo = DamageInfo()
+                    dmginfo:SetDamage(DG_DROWN_DAMAGE)
+                    dmginfo:SetDamageType(DMG_DROWN)
+                    dmginfo:SetAttacker(ply)
+                    dmginfo:SetInflictor(ply)
+
+                    ply.IsDrowning = true
+                    ply:TakeDamageInfo(dmginfo)
+                    timer.Simple(0.1, function()
+                        if IsValid(ply) then ply.dg_IsDrowning = nil end
+                    end)
+
+                    if ply:Health() <= 0 then
+                        ply:Kill()
+                    end
+                end
+            end
+        else
+            air = math.min(maxAir, air + DG_AIR_TICK_RATE)
+            if maxAir - air < 0.01 then air = maxAir end
+            nextDrownDamage[ply] = nil
+        end
+
+        local isSteady = not submerged and air >= maxAir
+        local justChangedState = (wasSteady[ply] ~= isSteady) or (playerAir[ply] and (playerAir[ply] >= maxAir) ~= (air >= maxAir))
+
+        playerAir[ply] = air
+
+        if not isSteady then
+            if not nextSync[ply] or CurTime() >= nextSync[ply] or justChangedState then
+                SendWaterState(ply, submerged, air)
+                nextSync[ply] = CurTime() + DG_SYNC_INTERVAL
+            end
+        elseif not wasSteady[ply] then
+            SendWaterState(ply, submerged, air)
+        end
+
+        wasSteady[ply] = isSteady
+    end
+end)
+
+hook.Add("PlayerSpawn", "DG_DrowningReset", function(ply)
+    local maxAir = impulse.Config.MaxAir
+    playerAir[ply] = maxAir
+    nextDrownDamage[ply] = nil
+    wasSteady[ply] = true
+    nextSync[ply] = nil
+
+    SendWaterState(ply, false, maxAir)
+end)
+
+hook.Add("PlayerDisconnected", "DG_DrowningCleanup", function(ply)
+    playerAir[ply] = nil
+    nextDrownDamage[ply] = nil
+    wasSteady[ply] = nil
+    seqCounter[ply] = nil
+    nextSync[ply] = nil
+end)

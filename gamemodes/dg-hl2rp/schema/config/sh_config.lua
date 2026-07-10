@@ -156,6 +156,8 @@ impulse.Config.MPFCacheTime = 180 --time for the cache to open after triggering
 impulse.Config.PersonalStorageUpgradeCost = 75000
 impulse.Config.GroupStorageUpgradeCost = 150000
 
+impulse.Config.MaxAir = 7
+
 impulse.Config.CommunityURL = "https://deepgaming2.com/news"
 impulse.Config.PanelURL = "https://deepgaming2.com/user"
 impulse.Config.DonateURL = "https://deepgaming2.com/shop"

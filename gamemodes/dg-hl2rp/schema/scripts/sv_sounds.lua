@@ -243,6 +243,10 @@ local augmentedcppain = {
 
 function SCHEMA:PlayerHurt(victim)
 	if IsValid(victim) then
+		if victim.IsDrowning then
+			victim.IsDrowning = nil
+			return
+		end
 		if (victim.NextPain or 0) > CurTime() then return end
 
 		

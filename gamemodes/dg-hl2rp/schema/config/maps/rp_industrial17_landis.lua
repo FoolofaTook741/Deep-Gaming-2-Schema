@@ -9,6 +9,8 @@ impulse.Config.SpawnPos2 = Vector(-1150.7692871094, 2095.2966308594, 1234.239135
 
 impulse.Config.TPCPos = Vector(-11780.508789062, 2391.7241210938, 8192.03125)
 
+--impulse.Config.WaterLevel = 2
+
 impulse.Config.NoCollideZones = {
     { --spawn
         Vector(-4589.0844726563, 2435.9165039063, 791.65179443359),

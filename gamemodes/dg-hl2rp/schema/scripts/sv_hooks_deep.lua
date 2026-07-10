@@ -1969,7 +1969,6 @@ local function IsVehicleLike(ent, cls)
     return cached
 end
 
-
 hook.Add("EntityTakeDamage", "DG_MergedDamage", function(target, dmginfo)
     if not IsValid(target) then return end
 
