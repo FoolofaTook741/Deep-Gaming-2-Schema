@@ -783,6 +783,7 @@ impulse.Config.LoadScript = function()
         "jw_citadel",
         "jw_citadel2",
         "jw_dispatch",
+        "beach_lightglow",
         --"jw2_initialstart",
     }
 
