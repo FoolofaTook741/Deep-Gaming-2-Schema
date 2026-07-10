@@ -63,7 +63,7 @@ function SCHEMA:Think()
 	
 	for v,k in pairs(player.GetAll()) do
 		if k:GetMoveType() ~= MOVETYPE_NOCLIP then
-			if k:Team() == TEAM_CP and ~k.IsRogue then
+			if k:Team() == TEAM_CP and not k.IsRogue then
 				local curTime = CurTime()
 
 				if not k.nextChatter or curTime > k.nextChatter then
