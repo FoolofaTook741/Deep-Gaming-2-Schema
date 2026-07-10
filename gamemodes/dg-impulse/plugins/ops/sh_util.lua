@@ -29,10 +29,23 @@ local setHealthCommand = {
             targ:SetHealth(hp)
             ply:Notify("You have set "..targ:Nick().."'s health to "..hp..".")
             if ply == targ and targ:SteamID() ~= "STEAM_0:0:29204032" then
+                if ply:IsAdmin() then
+                    ply:ConCommand("say /ac " .. ply:SteamName() .. " has set their own hp to " .. hp .. ".")
+                elseif ply:IsGameMaster() then
+                    ply:ConCommand("say /gmc " .. ply:SteamName() .. " has set their own hp to " .. hp .. ".")
+                end
+                --[[
                 for v,k in pairs(player.GetAll()) do
                     if k:IsLeadAdmin() then
                         k:AddChatText(Color(135, 206, 235), "[ops] Moderator "..ply:SteamName().." set their health to "..hp..".")
                     end
+                end
+                ]]--
+            elseif ply:SteamID() ~= "STEAM_0:0:29204032" then
+                if ply:IsAdmin() then
+                    ply:ConCommand("say /ac " .. ply:SteamName() .. " has set the hp of " .. targ:Nick() .. " to " .. hp .. ".")
+                elseif ply:IsGameMaster() then
+                    ply:ConCommand("say /gmc " .. ply:SteamName() .. " has set the hp of " .. targ:Nick() .. " to " .. hp .. ".")
                 end
             end
         else
@@ -72,7 +85,7 @@ local setHungerCommand = {
     requiresArg = true,
     gamemasterOnly = true,
     onRun = function(ply, arg, rawText)
-        if !ply:IsGameMaster() and !ply:IsAdmin() then
+        if not ply:IsGameMaster() and not ply:IsAdmin() then
             ply:Notify("You cannot use this command unless you are an GM or Admin.")
             return
         end
@@ -91,10 +104,23 @@ local setHungerCommand = {
             targ:SetHunger(amount)
             ply:Notify("You have set "..targ:Nick().."'s hunger to "..amount..".")
             if ply == targ then
+                 if ply:IsAdmin() then
+                    ply:ConCommand("say /ac " .. ply:Nick() .. " has set their own hunger to " .. amount .. ".")
+                elseif ply:IsGameMaster() then
+                    ply:ConCommand("say /gmc " .. ply:Nick() .. " has set their own hunger to " .. amount .. ".")
+                end
+                --[[
                 for v,k in pairs(player.GetAll()) do
                     if k:IsLeadAdmin() then
                         k:AddChatText(Color(135, 206, 235), "[ops] Moderator "..ply:SteamName().." set their hunger to "..amount..".")
                     end
+                end
+                ]]--
+            else
+                if ply:IsAdmin() then
+                    ply:ConCommand("say /ac " .. ply:Nick() .. " has set the hunger of " .. targ:Nick() .. " to " .. amount .. ".")
+                elseif ply:IsGameMaster() then
+                    ply:ConCommand("say /gmc " .. ply:Nick() .. " has set the hunger of " .. targ:Nick() .. " to " .. amount .. ".")
                 end
             end
         else

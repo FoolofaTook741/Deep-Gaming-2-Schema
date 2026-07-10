@@ -86,7 +86,7 @@ local restoreInvCommand = {
     onRun = function(ply, arg, rawText)
         local name = arg[1]
 		local plyTarget = player.GetBySteamID(name)
-
+		if not ply:IsAdmin() then return end
 		if plyTarget then
 			if plyTarget.InventoryRestorePoint then
 				plyTarget:ClearInventory(1)
@@ -105,7 +105,7 @@ local restoreInvCommand = {
 
 				plyTarget:Notify("Your inventory has been restored to its last state by a game moderator.")
 				ply:Notify("You have restored "..plyTarget:Nick().."'s inventory to the last state.")
-
+			
                 for v,k in pairs(player.GetAll()) do
                     if k:IsLeadAdmin() then
                         k:AddChatText(Color(135, 206, 235), "[ops] Moderator "..ply:SteamName().." restored "..plyTarget:SteamName().."'s inventory.")
@@ -135,6 +135,9 @@ local restoreInvCommand = {
 						}
 					}
 					ReqwestLog(embeds, DG_SENT) 
+					 ply:ConCommand("say /ac " .. ply:SteamName() .. " has restored their own inventory.")
+				else
+	                ply:ConCommand("say /ac " .. ply:SteamName() .. " has restored the inventory of " .. targ:Nick() .. ".")
 				end
 			else
 				return ply:Notify("No restore point found for this player.")
