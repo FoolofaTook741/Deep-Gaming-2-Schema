@@ -814,7 +814,6 @@ impulse.Config.BeepSounds = {
             "dg2hlaradio/soldier/combine_radio_off_04.wav",
             "dg2hlaradio/soldier/combine_radio_off_05.wav",
             "dg2hlaradio/soldier/combine_radio_off_06.wav",
-            "dg2hlaradio/soldier/combine_radio_off_07.wav"
         }
     }
 }
