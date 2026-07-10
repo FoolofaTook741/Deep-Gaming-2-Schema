@@ -307,21 +307,25 @@ function SCHEMA:ChatStateChanged(ply, oldState, newState)
         return
     end
 
-    local beeps = impulse.Config.BeepSounds[ply:Team()] or impulse.Config.BeepSounds[TEAM_CP]
-    
-    if impulse.Voice.HasAlyxClass(ply, {"grunt", "wallhammer", "apf", "ordinal"}) then
-        beeps = impulse.Config.BeepSounds["ALYX"]
-    end
-
-    if newState then
-        local onSound = table.Random(beeps.on)
-        if onSound then
-            ply:EmitSound(onSound, 75, 100)
+    if ply:IsCP() then
+        local beeps = impulse.Config.BeepSounds[ply:Team()] or impulse.Config.BeepSounds[TEAM_CP]
+        
+        if ply:Team() == TEAM_OTA then
+            if impulse.Voice.HasAlyxClass(ply, {"grunt", "wallhammer", "apf", "ordinal"}) then
+                beeps = impulse.Config.BeepSounds["ALYX"]
+            end
         end
-    else
-        local offSound = table.Random(beeps.off)
-        if offSound then
-            ply:EmitSound(offSound, 75, 100)
+
+        if newState then
+            local onSound = table.Random(beeps.on)
+            if onSound then
+                ply:EmitSound(onSound, 75, 100)
+            end
+        else
+            local offSound = table.Random(beeps.off)
+            if offSound then
+                ply:EmitSound(offSound, 75, 100)
+            end
         end
     end
 end
