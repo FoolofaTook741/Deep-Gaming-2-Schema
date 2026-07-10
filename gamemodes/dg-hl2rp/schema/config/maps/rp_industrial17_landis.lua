@@ -62,7 +62,7 @@ impulse.Config.NoPropZones = {
 
 impulse.Config.BroadcastDistance = 600
 
-impulse.Config.Zone404Name = "Restricted Block 2"
+--impulse.Config.Zone404Name = "Restricted Block 2"
 
 impulse.Config.RebelZone = "External Jurisdiction 1"
 
@@ -247,17 +247,17 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/transitblock.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Politi-Control Section 3", pos1 = Vector(-495.06716918945, 2393.5327148438, 78.705032348633), pos2 = Vector(-1206.76171875, 3862.1860351563, 1430.8989257813), dispatch = {
+	{name = "Politi-Control Section 1", pos1 = Vector(722.43969726563, 4724.8642578125, 1383.71484375), pos2 = Vector(2430.4912109375, 3073.2673339844, 120.54026031494), dispatch = {
 		"npc/overwatch/radiovoice/controlsection.wav",
-		"npc/overwatch/radiovoice/three.wav"
+		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Politi-Control Section 2", pos1 = Vector(720.03912353516, 3766.9677734375, 770.2958984375), pos2 = Vector(-400.27896118164, 3159.4372558594, 102.44743347168), dispatch = {
 		"npc/overwatch/radiovoice/controlsection.wav",
 		"npc/overwatch/radiovoice/two.wav"
 	}},
-	{name = "Politi-Control Section 1", pos1 = Vector(722.43969726563, 4724.8642578125, 1383.71484375), pos2 = Vector(2430.4912109375, 3073.2673339844, 120.54026031494), dispatch = {
+	{name = "Politi-Control Section 3", pos1 = Vector(-495.06716918945, 2393.5327148438, 78.705032348633), pos2 = Vector(-1206.76171875, 3862.1860351563, 1430.8989257813), dispatch = {
 		"npc/overwatch/radiovoice/controlsection.wav",
-		"npc/overwatch/radiovoice/one.wav"
+		"npc/overwatch/radiovoice/three.wav"
 	}},
 	{name = "Politi-Control Section 4", pos1 = Vector(2170.2209472656, 3049.2565917969, 391.8610534668), pos2 = Vector(1787.9787597656, 2377.9262695313, 103.69382476807), dispatch = {
 		"npc/overwatch/radiovoice/controlsection.wav",
@@ -267,17 +267,41 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/distributionblock.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Repurposed Area 6", pos1 = Vector(3042.0732421875, 1846.4735107422, 84.627540588379), pos2 = Vector(2185.6701660156, 552.33581542969, 561.56567382813), dispatch = {
+	{name = "Distributions Block 2", pos1 = Vector(2042.4051513672, 5128.0571289063, 1184.6356201172), pos2 = Vector(3427.3110351563, 4871.5439453125, 290.74411010742), dispatch = {
+		"npc/overwatch/radiovoice/distributionblock.wav",
+		"npc/overwatch/radiovoice/two.wav"
+	}},
+	{name = "Distributions Block 3", pos1 = Vector(2502.1926269531, 4786.0283203125, 629.04852294922), pos2 = Vector(3388.9965820313, 4308.9208984375, 292.66928100586), dispatch = {
+		"npc/overwatch/radiovoice/distributionblock.wav",
+		"npc/overwatch/radiovoice/three.wav"
+	}},
+	{name = "Repurposed Area 1", pos1 = Vector(5120.1020507813, 4774.0395507813, 669.40881347656), pos2 = Vector(6424.37109375, 5520.15234375, 260.62817382813), dispatch = {
 		"npc/overwatch/radiovoice/repurposedarea.wav",
-		"npc/overwatch/radiovoice/six.wav"
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Repurposed Area 1", pos1 = Vector(5829.48046875, 3988.4465332031, 343.16430664063), pos2 = Vector(6307.3090820313, 4831.654296875, 589.25183105469), dispatch = {
+		"npc/overwatch/radiovoice/repurposedarea.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Repurposed Area 2", pos1 = Vector(3042.0732421875, 1846.4735107422, 84.627540588379), pos2 = Vector(2185.6701660156, 552.33581542969, 561.56567382813), dispatch = {
+		"npc/overwatch/radiovoice/repurposedarea.wav",
+		"npc/overwatch/radiovoice/two.wav"
+	}},
+	{name = "Repurposed Area 3", pos1 = Vector(3369.677734375, 5155.1396484375, 443.96951293945), pos2 = Vector(2761.6416015625, 6005.9067382813, 255.42822265625), dispatch = {
+		"npc/overwatch/radiovoice/repurposedarea.wav",
+		"npc/overwatch/radiovoice/three.wav"
 	}},
 	{name = "Residential Block 1", pos1 = Vector(-354.58343505859, 4672.5639648438, 1135.3695068359), pos2 = Vector(552.44476318359, 3922.341796875, 109.15989685059), dispatch = {
 		"npc/overwatch/radiovoice/residentialblock.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Production Block 4", pos1 = Vector(72.936424255371, 3094.3312988281, 102.06623077393), pos2 = Vector(-486.07901000977, 2550.1560058594, 467.6842956543), dispatch = {
-		"npc/overwatch/radiovoice/productionblock.wav",
-		"npc/overwatch/radiovoice/four.wav"
+	{name = "Residential Block 2", pos1 = Vector(3902.0622558594, 2556.3735351563, 1215.9638671875), pos2 = Vector(3610.7233886719, 1742.609375, 3.6063334941864), dispatch = {
+		"npc/overwatch/radiovoice/residentialblock.wav",
+		"npc/overwatch/radiovoice/two.wav"
+	}},
+	{name = "Residential Block 2", pos1 = Vector(4186.453125, 1699.8149414063, 113.46675872803), pos2 = Vector(3607.2482910156, 2532.3791503906, -20.292783737183), dispatch = {
+		"npc/overwatch/radiovoice/residentialblock.wav",
+		"npc/overwatch/radiovoice/two.wav"
 	}},
 	{name = "Production Block 1", pos1 = Vector(3964.3664550781, 5645.154296875, 967.75732421875), pos2 = Vector(3461.2404785156, 4096.537109375, 294.43478393555), dispatch = {
 		"npc/overwatch/radiovoice/productionblock.wav",
@@ -291,48 +315,35 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/productionblock.wav",
 		"npc/overwatch/radiovoice/three.wav"
 	}},
-	{name = "Distributions Block 2", pos1 = Vector(2042.4051513672, 5128.0571289063, 1184.6356201172), pos2 = Vector(3427.3110351563, 4871.5439453125, 290.74411010742), dispatch = {
-		"npc/overwatch/radiovoice/distributionblock.wav",
-		"npc/overwatch/radiovoice/two.wav"
+	{name = "Production Block 4", pos1 = Vector(72.936424255371, 3094.3312988281, 102.06623077393), pos2 = Vector(-486.07901000977, 2550.1560058594, 467.6842956543), dispatch = {
+		"npc/overwatch/radiovoice/productionblock.wav",
+		"npc/overwatch/radiovoice/four.wav"
 	}},
-	{name = "Distributions Block 3", pos1 = Vector(2502.1926269531, 4786.0283203125, 629.04852294922), pos2 = Vector(3388.9965820313, 4308.9208984375, 292.66928100586), dispatch = {
-		"npc/overwatch/radiovoice/distributionblock.wav",
-		"npc/overwatch/radiovoice/three.wav"
+	{name = "Production Block 5", pos1 = Vector(3972.4770507813, 4726.8598632813, 908.97686767578), pos2 = Vector(5775.0522460938, 4481.4462890625, 272.92810058594), dispatch = {
+		"npc/overwatch/radiovoice/productionblock.wav",
+		"npc/overwatch/radiovoice/five.wav"
+	}},	
+	{name = "Production Block 6", pos1 = Vector(5014.912109375, 4147.701171875, 517.17614746094), pos2 = Vector(4226.6259765625, 3597.2658691406, 225.07489013672), dispatch = {
+		"npc/overwatch/radiovoice/productionblock.wav",
+		"npc/overwatch/radiovoice/six.wav"
 	}},
 	{name = "External Jurisdiction 1", pos1 = Vector(-3570.6948242188, 8023.0341796875, 2758.775390625), pos2 = Vector(16129.291015625, 16128.91015625, -656.92224121094), dispatch = {
 		"npc/overwatch/radiovoice/externaljurisdiction.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Outlands Tunnel", pos1 = Vector(3848.3168945313, 5651.4560546875, 498.14172363281), pos2 = Vector(3582.0480957031, 7901.4018554688, 292.72424316406), dispatch = {
-		"npc/overwatch/radiovoice/outlandzone.wav",
-		"npc/overwatch/radiovoice/two.wav"
+		"npc/overwatch/radiovoice/externaljurisdiction.wav",
+		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Production Block 5", pos1 = Vector(3972.4770507813, 4726.8598632813, 908.97686767578), pos2 = Vector(5775.0522460938, 4481.4462890625, 272.92810058594)},
-	{name = "Repurposed Area 1", pos1 = Vector(5120.1020507813, 4774.0395507813, 669.40881347656), pos2 = Vector(6424.37109375, 5520.15234375, 260.62817382813)},
-	{name = "Residential Block 2", pos1 = Vector(3902.0622558594, 2556.3735351563, 1215.9638671875), pos2 = Vector(3610.7233886719, 1742.609375, 3.6063334941864), dispatch = {
-		"npc/overwatch/radiovoice/deservicedarea.wav",
-		"npc/overwatch/radiovoice/two.wav"
+
+	--CZ
+	{name = "Condemned Zone 1", pos1 = Vector(4276.1806640625, 1440.9912109375, 179.46832275391), pos2 = Vector(6644.6567382813, 3190.8598632813, 1869.3879394531), dispatch = {
+		"npc/overwatch/radiovoice/condemnedzone.wav",
+		"npc/overwatch/radiovoice/1.wav"
 	}},
-	{name = "High Priority Region 4", pos1 = Vector(1705.3116455078, 6458.8603515625, 303.36569213867), pos2 = Vector(1300.3034667969, 4757.7431640625, 176.52156066895), dispatch = {
-		"npc/overwatch/radiovoice/highpriorityregion.wav",
-		"npc/overwatch/radiovoice/four.wav"
-	}},
-	{name = "Production Block 6", pos1 = Vector(5014.912109375, 4147.701171875, 517.17614746094), pos2 = Vector(4226.6259765625, 3597.2658691406, 225.07489013672), dispatch = {
-		"npc/overwatch/radiovoice/productionblock.wav",
-		"npc/overwatch/radiovoice/six.wav"
-	}},
-	{name = "Production Block 5", pos1 = Vector(3386.8393554688, 5142.6025390625, 998.31317138672), pos2 = Vector(2761.6416015625, 6005.9067382813, 255.42822265625), dispatch = {
-		"npc/overwatch/radiovoice/productionblock.wav",
-		"npc/overwatch/radiovoice/five.wav"
-	}},
-	{name = "Restricted Block 2", pos1 = Vector(4276.1806640625, 1440.9912109375, 179.46832275391), pos2 = Vector(6644.6567382813, 3190.8598632813, 1869.3879394531), dispatch = {
-		"npc/overwatch/radiovoice/deservicedarea.wav",
-		"npc/overwatch/radiovoice/two.wav"
-	}},
-	{name = "Production Block 4", pos1 = Vector(1761.7663574219, -1838.5847167969, 554.47509765625), pos2 = Vector(3470.4421386719, 531.71875, -180.70111083984), dispatch = {
-		"npc/overwatch/radiovoice/productionblock.wav",
-		"npc/overwatch/radiovoice/four.wav"
-	}},
+
+
+	--NEXUS
 	{name = "High Priority Region 2", pos1 = Vector(697.07946777344, 4507.560546875, -675.19787597656), pos2 = Vector(3171.7204589844, 1780.3907470703, -366.50933837891), dispatch = {
 		"npc/overwatch/radiovoice/highpriorityregion.wav",
 		"npc/overwatch/radiovoice/two.wav"
@@ -345,15 +356,22 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/highpriorityregion.wav",
 		"npc/overwatch/radiovoice/three.wav"
 	}},
+	{name = "High Priority Region 4", pos1 = Vector(1705.3116455078, 6458.8603515625, 303.36569213867), pos2 = Vector(1300.3034667969, 4757.7431640625, 176.52156066895), dispatch = {
+		"npc/overwatch/radiovoice/highpriorityregion.wav",
+		"npc/overwatch/radiovoice/four.wav"
+	}},
+
+
+	--Sewers
 	{name = "Storm System 2", pos1 = Vector(-3098.0314941406, 164.14768981934, 2.1831855773926), pos2 = Vector(1248.3210449219, 4920.2172851563, -366.80670166016), dispatch = {
 		"npc/overwatch/radiovoice/stormsystem.wav",
 		"npc/overwatch/radiovoice/two.wav"
 	}},
-	{name = "Storm System 1", pos1 = Vector(6969.4638671875, 639.02795410156, 79.737464904785), pos2 = Vector(3283.4982910156, 6478.9790039063, -529.25720214844), dispatch = {
+	{name = "Storm System 1", pos1 = Vector(6969.4638671875, 639.02795410156, 79.737464904785), pos2 = Vector(4475.021484375, 6488.2319335938, -571.26080322266), dispatch = {
 		"npc/overwatch/radiovoice/stormsystem.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Storm System 1", pos1 = Vector(3446.4653320313, -496.43243408203, -33.204967498779), pos2 = Vector(3197.2036132813, 4874.447265625, -148.35145568848), dispatch = {
+	{name = "Storm System 1", pos1 = Vector(3441.9975585938, -485.33270263672, 46.834350585938), pos2 = Vector(3197.2036132813, 4874.447265625, -148.35145568848), dispatch = {
 		"npc/overwatch/radiovoice/stormsystem.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
@@ -361,6 +379,18 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/stormsystem.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
+	{name = "Storm System 1", pos1 = Vector(3740.634765625, 1649.4927978516, 80.773811340332), pos2 = Vector(7351.2416992188, -549.89349365234, -50.279678344727), dispatch = {
+		"npc/overwatch/radiovoice/stormsystem.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Storm System 3", pos1 = Vector(1761.7663574219, -1838.5847167969, 554.47509765625), pos2 = Vector(3470.4421386719, 531.71875, -180.70111083984), dispatch = {
+		"npc/overwatch/radiovoice/stormsystem.wav",
+		"npc/overwatch/radiovoice/three.wav"
+	}},
+
+
+
+	-- OZ
 	{name = "Stabilization Jurisdiction 2", pos1 = Vector(-1257.9465332031, 3708.4028320313, 281.94729614258), pos2 = Vector(-1820.3475341797, 3454.1655273438, 108.08744049072), dispatch = {
 		"npc/overwatch/radiovoice/highpriorityregion.wav",
 		"npc/overwatch/radiovoice/six.wav"

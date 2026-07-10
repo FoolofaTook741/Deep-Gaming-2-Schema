@@ -1,3 +1,5 @@
+--[[
+
 net.Receive("impulseQuestUpdate", function()
     local id = net.ReadInt(8)
     local quest = net.ReadTable()
@@ -20,3 +22,5 @@ net.Receive("impulseCompleteQuest", function()
     local pnl = vgui.Create("impulseQuestCompleted")
     pnl:SetQuestTitle(questTitle)
 end)
+
+]]--

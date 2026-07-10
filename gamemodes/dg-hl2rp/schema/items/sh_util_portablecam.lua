@@ -41,11 +41,13 @@ function ITEM:OnUse(ply)
 
     local tr = util.TraceLine(trace)
 
+    --[[
     if ply:GetZoneName() == impulse.Config.RebelZone then
         ply:Notify("You cannot place a camera in the Rebel Zone!", 1)
         return false
     end
-
+    ]]--
+    
     local cam = ents.Create("pinnacle_portable_cam")
     if cam.CPPISetOwner then
         cam:CPPISetOwner(ply)

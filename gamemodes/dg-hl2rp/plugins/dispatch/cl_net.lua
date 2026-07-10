@@ -348,7 +348,8 @@ local DISPATCH_DURATION_OVERRIDES = {
 		    ["npc/overwatch/radiovoice/stabilizationjurisdiction.wav"] = 2.4,
 		    ["npc/overwatch/radiovoice/highpriorityregion.wav"] = 1.9,
 		    ["npc/overwatch/radiovoice/controlsection.wav"] = 2.1,
-		    
+		    ["npc/overwatch/radiovoice/repurposedarea.wav"] = 1.6,
+		    ["npc/overwatch/radiovoice/externaljurisdiction.wav"] = 1.9
 		}
 
 local function getDispatchDuration(snd)
