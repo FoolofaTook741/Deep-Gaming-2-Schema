@@ -6,10 +6,9 @@ ITEM.Desc =  "Deploy a biogel injection station to your hardpoint for your teamm
 ITEM.Category = "Combine Tools"
 ITEM.Model = Model("models/dg_models/dg_combine_props/vnl/health_charger002.mdl")
 
-ITEM.FOV = 9.1604584527221,
-ITEM.CamPos = Vector(-39.426933288574, -160, -5.5014328956604),
-ITEM.LookAt = Vector(0, 0, 9.1690544412608),
-ITEM.Weight = 3.5
+ITEM.FOV = 13.372492836676
+ITEM.CamPos = Vector(143.95414733887, -20.171918869019, 93.524353027344)
+ITEM.NoCenter = true
 
 ITEM.Droppable = true
 ITEM.DropOnDeath = false

@@ -5,7 +5,7 @@ include('shared.lua')
  
 function ENT:Initialize()
  
-	self:SetModel( "models/Items/HealthKit.mdl" )
+	self:SetModel( "models/dg_models/dg_combine_props/vnl/health_charger002.mdl" )
 	self:PhysicsInit( SOLID_VPHYSICS )      -- Make us work with physics,
 	self:SetMoveType( MOVETYPE_VPHYSICS )   -- after all, gmod is a physics
 	self:SetSolid( SOLID_VPHYSICS )         -- Toolbox
