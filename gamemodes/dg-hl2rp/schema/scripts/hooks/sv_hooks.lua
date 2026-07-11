@@ -307,7 +307,7 @@ function SCHEMA:ChatStateChanged(ply, oldState, newState)
         return
     end
 
-    if ply:IsCP() and ply:Team() ~= TEAM_OCA then
+    if ply:IsCP() and ply:Team() ~= TEAM_CA then
         local beeps = impulse.Config.BeepSounds[ply:Team()] or impulse.Config.BeepSounds[TEAM_CP]
         
         if ply:Team() == TEAM_OTA then
