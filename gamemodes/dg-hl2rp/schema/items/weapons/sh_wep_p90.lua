@@ -5,8 +5,9 @@ ITEM.Name = "FN P90"
 ITEM.Desc =  "A special Belgian SMG that fires 5.7x28 rounds."
 ITEM.Category = "Weapons"
 ITEM.Model = Model("models/weapons/arccw_go/v_smg_p90.mdl")
-ITEM.FOV = 6.2249283667622
-ITEM.CamPos = Vector(100, 100, 36.10315322876)
+ITEM.FOV = 4.1060171919771
+ITEM.CamPos = Vector(-46.762176513672, 142.12034606934, 44.928367614746)
+ITEM.NoCenter = true
 ITEM.Weight = 4
 
 ITEM.Droppable = true
