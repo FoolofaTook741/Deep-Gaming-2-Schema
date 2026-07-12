@@ -1,3 +1,7 @@
+if file.Exists("qa_environment.txt", "GAME") then
+    MsgC(Color(211, 120, 0), "[VyHub] QA/Dev environment detected — skipping VyHub load.\n")
+    return
+end
 
 local f = string.format
 
