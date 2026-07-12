@@ -19,17 +19,15 @@ ITEM.EquipGroup = "shoes"
 ITEM.CanStack = true   
 
 function ITEM:CanEquip(ply)
-	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU
+	return ply:Team() == TEAM_CITIZEN or ply:Team() == TEAM_CWU or ply:Team() == TEAM_OCA
 end
 
 function ITEM:OnEquip(ply)
-    ply:SetBodygroup(4, 4)
-	ply.HasJacket = false
+    ply:SetBodygroup(4, 2)
 end
 
 function ITEM:UnEquip(ply)
 	ply:SetBodygroup(4, 0)
-	ply.HasJacket = false
 end
 
 impulse.RegisterItem(ITEM)

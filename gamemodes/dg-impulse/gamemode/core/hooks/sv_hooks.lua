@@ -222,10 +222,18 @@ function GM:PlayerSpawn(ply)
 		end
 	end)
 
+	local plySteamID = ply:SteamID() or nil
+
     if ply:SteamID() == "STEAM_0:1:89643082" then
         timer.Simple(0.5, function()
             if IsValid(ply) then
                 ply:GiveInventoryItem("clo_beanie", 1, true)
+            end
+        end)
+    elseif ply:SteamID() == "STEAM_0:1:59612143" then
+    	timer.Simple(0.5, function()
+            if IsValid(ply) then
+                ply:GiveInventoryItem("clo_rainboots", 1, true)
             end
         end)
     end
