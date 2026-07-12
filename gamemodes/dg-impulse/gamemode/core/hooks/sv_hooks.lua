@@ -1319,7 +1319,10 @@ function GM:PlayerSpawnProp(ply, model)
 	local limit
 	local price
 
-	if ply:IsDonator() or ply:IsGameMaster() then
+	if ply:IsCollaborator() then
+		limit = impulse.Config.PropLimitCollaborator
+		price = impulse.Config.PropPriceDonator
+	elseif ply:IsDonator() or ply:IsGameMaster() then
 		limit = impulse.Config.PropLimitDonator
 		price = impulse.Config.PropPriceDonator
 	else
@@ -1332,9 +1335,11 @@ function GM:PlayerSpawnProp(ply, model)
 		return false
 	end
 
-	if ply:CanAfford(price) then
-		ply:TakeMoney(price)
-		ply:Notify("You have purchased a prop for "..impulse.Config.CurrencyPrefix..price..".")
+	if ply:CanAfford(price)then
+		if price > 0 then
+			ply:TakeMoney(price)
+			ply:Notify("You have purchased a prop for "..impulse.Config.CurrencyPrefix..price..".")
+		end
 	else
 		ply:Notify("You need "..impulse.Config.CurrencyPrefix..price.." to spawn this prop.")
 		return false
