@@ -31,6 +31,9 @@ function ITEM:OnUse(ply)
         if ply.HasBackpack == true then
             ply:Notify("Taking adrenaline pills with a backpack has no effects so it has been blocked.")
             return false
+        elseif ply:GetTeamClass() == CLASS_PAYBACK and ply:Team() == TEAM_OTA then
+            ply:Notify("The pills have no effect on a unit with so many existing augments.")
+            return true
         end
         if ply.Drugs then
             ply.Drugs = (ply.Drugs + 1) or 0
