@@ -597,7 +597,7 @@ local LOCATION_DATA = {
     },
     OZ = {
         label  = "OZ",
-        desc   = "Elite Protection Unit staging area. Restricted to authorised personnel.",
+        desc   = "Overwatch Transhuman Arm and Elite Protection Unit forward operating base. Restricted to authorised personnel.",
     },
 }
 
@@ -821,8 +821,10 @@ local function OpenSpawnUI(team, ozAvail, nexusOK, fobOK, ozOK, cityCode)
             locOK = nexusOK
             if not locOK then attackMsg = "Location under attack" end
         elseif locName == "FOB" then
-            locOK = fobOK
-            if not locOK then attackMsg = "Location under attack" end
+		    locOK = fobOK
+		    if not locOK then
+		        attackMsg = fobCityOK and "Location under attack" or "Unavailable below Fractured"
+		    end
         elseif locName == "OZ" then
             locOK = ozOK and ozAvail
             if not ozOK then
@@ -851,6 +853,7 @@ net.Receive("DeepSpawnSelectorOpen", function()
     local nexusOK  = net.ReadBool()
     local fobOK    = net.ReadBool()
     local ozOK     = net.ReadBool()
+    local fobCityOK = net.ReadBool()
     local cityCode = net.ReadUInt(8)
 
     timer.Simple(0.1, function()

@@ -222,10 +222,18 @@ function GM:PlayerSpawn(ply)
 		end
 	end)
 
+	local plySteamID = ply:SteamID() or nil
+
     if ply:SteamID() == "STEAM_0:1:89643082" then
         timer.Simple(0.5, function()
             if IsValid(ply) then
                 ply:GiveInventoryItem("clo_beanie", 1, true)
+            end
+        end)
+    elseif ply:SteamID() == "STEAM_0:1:59612143" then
+    	timer.Simple(0.5, function()
+            if IsValid(ply) then
+                ply:GiveInventoryItem("clo_rainboots", 1, true)
             end
         end)
     end
@@ -1311,7 +1319,10 @@ function GM:PlayerSpawnProp(ply, model)
 	local limit
 	local price
 
-	if ply:IsDonator() or ply:IsGameMaster() then
+	if ply:IsCollaborator() then
+		limit = impulse.Config.PropLimitCollaborator
+		price = impulse.Config.PropPriceDonator
+	elseif ply:IsDonator() or ply:IsGameMaster() then
 		limit = impulse.Config.PropLimitDonator
 		price = impulse.Config.PropPriceDonator
 	else
@@ -1324,9 +1335,11 @@ function GM:PlayerSpawnProp(ply, model)
 		return false
 	end
 
-	if ply:CanAfford(price) then
-		ply:TakeMoney(price)
-		ply:Notify("You have purchased a prop for "..impulse.Config.CurrencyPrefix..price..".")
+	if ply:CanAfford(price)then
+		if price > 0 then
+			ply:TakeMoney(price)
+			ply:Notify("You have purchased a prop for "..impulse.Config.CurrencyPrefix..price..".")
+		end
 	else
 		ply:Notify("You need "..impulse.Config.CurrencyPrefix..price.." to spawn this prop.")
 		return false

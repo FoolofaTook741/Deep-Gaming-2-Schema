@@ -7,6 +7,10 @@ impulse.Config.MenuCamAng = Angle(5.5624189376831, 179.52142333984, 0)
 impulse.Config.SpawnPos1 = Vector(-5159.873046875, 3580.8022460938, 16.564235687256)
 impulse.Config.SpawnPos2 = Vector(-1150.7692871094, 2095.2966308594, 1234.2391357422)
 
+impulse.Config.APCSpawn = Vector(-11258.426757813, 287.59600830078, 8192.03125)
+impulse.Config.HCSpawn = Vector(-10748.7265625, -303.71423339844, 8615.7607421875)
+impulse.Config.DropshipSpawn = Vector(-11258.426757813, 287.59600830078, 8192.03125)
+
 impulse.Config.TPCPos = Vector(-11780.508789062, 2391.7241210938, 8192.03125)
 
 --impulse.Config.WaterLevel = 2

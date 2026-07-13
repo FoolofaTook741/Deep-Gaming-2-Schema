@@ -788,6 +788,8 @@ function GM:HUDPaint()
 				local maxProps
 				if lp:IsGameMaster() then
 					maxProps = "∞"
+				elseif lp:IsCollaborator() then
+					maxProps = impulse.Config.PropLimitCollaborator
 				else
 					maxProps = (lp:IsDonator() and impulse.Config.PropLimitDonator) or impulse.Config.PropLimit
 				end
