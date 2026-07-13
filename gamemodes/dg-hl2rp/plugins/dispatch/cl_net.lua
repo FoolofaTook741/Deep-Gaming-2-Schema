@@ -357,7 +357,6 @@ local function getDispatchDuration(snd)
 end
 
 net.Receive("impulseHL2RPBioDeath", function(len, ply)
-	if biosignalPlaying then return end
 	if not IsValid(LocalPlayer()) then return end
 	local unit = net.ReadUInt(8)
 	local zone = net.ReadUInt(8)
@@ -374,6 +373,7 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 	end
 
 	if zone and unit and IsValid(unit) and unit:IsPlayer() and unit:IsCP() then
+		local alreadyPlaying = biosignalPlaying
 		biosignalPlaying = true
 		if not zonename then
 			zonename = "404 ZONE"
@@ -432,7 +432,7 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 		if zone and zone.dispatch then
 		    dispatch = zone.dispatch
 		end
-		
+		if alreadyPlaying then return end
 		surface.PlaySound("npc/overwatch/radiovoice/lostbiosignalforunit.wav")
 
 		timer.Simple(2, function()
