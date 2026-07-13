@@ -29,8 +29,4 @@ function ITEM:CanEquip(ply)
 	return ply:Team() != TEAM_VORT and ply:Team() != TEAM_ZOMBIE
 end
 
-function ITEM:CanEquip(ply)
-	return ply:Team() ~= TEAM_VORT
-end
-
 impulse.RegisterItem(ITEM)
