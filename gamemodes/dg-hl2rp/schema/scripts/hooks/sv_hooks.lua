@@ -1168,10 +1168,6 @@ timer.Create("DG_DrowningTick", DG_AIR_TICK_RATE, 0, function()
                     timer.Simple(0.1, function()
                         if IsValid(ply) then ply.dg_IsDrowning = nil end
                     end)
-
-                    if ply:Health() <= 0 then
-                        ply:Kill()
-                    end
                 end
             end
         else
