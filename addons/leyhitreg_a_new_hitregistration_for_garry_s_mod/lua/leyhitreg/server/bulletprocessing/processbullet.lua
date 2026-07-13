@@ -170,6 +170,8 @@ function LeyHitreg:EntityFireBullets(plyorwep, bullet)
 
     local hitTable = LeyHitreg.ForceHit[ply]
 
+    PrintTable(hitTable)
+
     if (not hitTable) then
         return self:FallbackEntityFireBullets(ply, wep, bullet)
     end
@@ -182,12 +184,6 @@ function LeyHitreg:EntityFireBullets(plyorwep, bullet)
 
     tableremove(hitTable, 1)
     local target = shot.target
-
-
-    -- print(canSee)
-    -- print(target) 
-    -- PrintTable(shot)
-
     local targetpos = target:GetBonePosition(shot.targetBone)
 
     if (not targetpos) then
@@ -200,6 +196,10 @@ function LeyHitreg:EntityFireBullets(plyorwep, bullet)
 
     LeyHitreg:HitScanBullet(ply, target, bullet, shot, shot.targetBone, shot.targetHitGroup, newshootpos)
 
+    if shot.fraction then 
+        bullet.Damage = bullet.Damage * (shot.fraction) -- For shotguns, calculates how many pellets would have hit by checking the fraction of the hull that was hit
+    end 
+        
     bullet.Src = newshootpos
     bullet.Dir = newdir
     bullet.Spread = vector_origin
@@ -230,7 +230,7 @@ function LeyHitreg:EntityFireBullets(plyorwep, bullet)
     return true
 end
 
-function LeyHitreg:InsertPlayerData(ply, cmd, wep, shouldPrimary, target, targetBone, targetHitGroup)
+function LeyHitreg:InsertPlayerData(ply, cmd, wep, shouldPrimary, fractionHit, target, targetBone, targetHitGroup)
     if (#self.ForceHit[ply] > 500) then
         ply:Kick("[/LeyHitreg/] No Exploiting, little boy.")
         return
@@ -238,6 +238,7 @@ function LeyHitreg:InsertPlayerData(ply, cmd, wep, shouldPrimary, target, target
 
     table.insert(self.ForceHit[ply], {
         ["shouldPrimary"] = shouldPrimary,
+        ["fraction"] = fractionHit,
         ["target"] = target,
         ["targetPos"] = target:GetPos(),
         ["targetBone"] = targetBone,
@@ -277,7 +278,7 @@ function LeyHitreg:CanPrimaryAttack(wep)
     return true
 end
 
-function LeyHitreg:ProcessBullet(ply, cmd, wep, shouldPrimary, target, targetBone)
+function LeyHitreg:ProcessBullet(ply, cmd, wep, shouldPrimary, fractionHit, target, targetBone)
     self.ForceHit[ply] = self.ForceHit[ply] or {}
 
     if (not target or target:Health() < 0) then
@@ -304,12 +305,12 @@ function LeyHitreg:ProcessBullet(ply, cmd, wep, shouldPrimary, target, targetBon
             end
         end
 
-        local hookRet = hook.Call("LeyHitreg:ProcessBullet", nil, ply, cmd, wep, shouldPrimary, target, targetBone, targetHitGroup)
+        local hookRet = hook.Call("LeyHitreg:ProcessBullet", nil, ply, cmd, wep, shouldPrimary, fractionHit, target, targetBone, targetHitGroup)
         if (hookRet == false) then
             return
         end
 
-        self:InsertPlayerData(ply, cmd, wep, shouldPrimary, target, targetBone, targetHitGroup)
+        self:InsertPlayerData(ply, cmd, wep, shouldPrimary, fractionHit, target, targetBone, targetHitGroup)
     end
 end
 

@@ -8,13 +8,14 @@ function LeyHitreg:SpreadedEntityFireBullets(ply, wep, bullet, spread)
     end
 
     local bulletSpread = spread or LeyHitreg:GetWeaponSpread(ply, wep, bullet)
-    local appliedAny, newDir = self:ApplyBulletSpread(ply, bullet.Dir, bulletSpread)
+    local appliedAny, newDir = self:ApplyBulletSpread(ply, wep, bullet.Dir, bulletSpread)
 
     if (not appliedAny) then
         return
     end
 
-    bullet.Spread = vector_origin
+    bullet.Spread = spread
     bullet.Dir = newDir
     return true
 end
+ 

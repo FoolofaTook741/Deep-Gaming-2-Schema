@@ -3,6 +3,7 @@ if (SERVER) then
 end
 
 print("[/LeyHitreg/] Loading...")
+
 LeyHitreg = LeyHitreg or {}
 
 
@@ -11,9 +12,6 @@ LeyHitreg = LeyHitreg or {}
 LeyHitreg.ShotDirForceDisabled = false
 LeyHitreg.DisableSecurityChecks = false
 LeyHitreg.IgnoreCanNextPrimaryAttack = true
-
-
-
 
 
 -- don't touch anything below this. no config. no, leave it. thanks.
@@ -26,7 +24,7 @@ LeyHitreg.ShowActualShotSpreadedHit = false -- debug: show where the shot actual
 LeyHitreg.BrokenDefaultSpread = false -- debug: enable broken default spread behaviour, broken because its only applied visually now
 LeyHitreg.LogHitgroupMismatches = false -- debug: log hitgroup mismatches
 LeyHitreg.LogFixedBullets = false -- debug: log the amount of bullets which got hitregged
-LeyHitreg.LogInvalidFOV = false -- debug: log invalid FOV
+LeyHitreg.LogInvalidFOV = false -- debug: log invalid FOV 
 LeyHitreg.LogInvalidShots = false -- debug: log the invalid shots
 LeyHitreg.BulletAimbot = false -- debug: set eyeangles to position of bullet
 LeyHitreg.LogTargetBone = false -- debug: log target bone
@@ -34,6 +32,7 @@ LeyHitreg.HitScanDisabled = false -- debug: disable hitscan within bullet cb
 LeyHitreg.BulletOverwriteDisabled = false -- debug: disable hitscan and bullet overwrite
 LeyHitreg.AnnounceClientHits = false -- debug: log when the client sends a hit to server
 LeyHitreg.DisableLagComp = false -- debug: disable sources original lag compensation
+
 
 if (LeyHitreg.Disabled) then
     print("[/LeyHitreg/] Disabled")

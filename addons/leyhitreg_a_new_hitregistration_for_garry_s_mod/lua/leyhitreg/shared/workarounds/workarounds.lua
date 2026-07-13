@@ -39,7 +39,7 @@ function LeyHitreg:IsIgnoreWep(wep)
     end
 
     -- Ignore shotguns
-    if (wep.Shotgun or wep.IsShotgun or wep.ShotgunReload or wep.ShotGun or wep.Primary and wep.Primary.NumShots and wep.Primary.NumShots > 1) then
+    --[[if (wep.Shotgun or wep.IsShotgun or wep.ShotgunReload or wep.ShotGun or wep.Primary and wep.Primary.NumShots and wep.Primary.NumShots > 1) then
         return true
     end
     -- Ignore modern day SWEP creators who are too busy reinventing the wheel to add a single wep.IsShotgun variable
@@ -61,7 +61,7 @@ function LeyHitreg:IsIgnoreWep(wep)
 
     if (ACT3_CAT_SHOTGUN and wep.ACT3Cat and wep.ACT3Cat == ACT3_CAT_SHOTGUN) then
         return true
-    end
+    end]]
 
     return false
 end
@@ -144,6 +144,11 @@ function LeyHitreg:GetWeaponSpread(ply, wep, bullet)
     if (wep.GetBuff and wep.ApplyRandomSpread and wep.TryBustDoor and ArcCW) then
         return ArcCW.MOAToAcc * wep:GetBuff("AccuracyMOA") * 4.5
     end
+
+    -- plutonic 
+    if wep.CalculateSpread then 
+        return wep:CalculateSpread()
+    end 
 
 
     -- CW2 workaround

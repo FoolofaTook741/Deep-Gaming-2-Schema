@@ -21,9 +21,11 @@ function LeyHitreg:StartCommand(ply, cmd)
 
     local targetEntIndex = cmd:GetUpMove()
     local targetBone = cmd:GetMouseWheel()
+    local bulletsHit = cmd:GetMouseX()
 
     cmd:SetUpMove(0)
     cmd:SetMouseWheel(0)
+    cmd:SetMouseX(0)
 
     if (targetBone > 0xFF) then
         return
@@ -69,7 +71,7 @@ function LeyHitreg:StartCommand(ply, cmd)
 
     end
 
-    LeyHitreg:ProcessBullet(ply, cmd, wep, shouldPrimary, target, targetBone)
+    LeyHitreg:ProcessBullet(ply, cmd, wep, shouldPrimary, bulletsHit, target, targetBone)
 end
 
 timer.Create("LeyHitreg.BulletMax", 0.1, 0, function()
