@@ -10,19 +10,19 @@ local Vehicles = {
         Cost = 2000,
         class = CLASS_NOMAD,
         faction = TEAM_OTA,
-        spawnVec = Vector(10697.18359375, -2660.2351074219, 8027.494140625)
+        spawnVec = impulse.Config.APCSpawn
     },
     ["lvs_helicopter_hl2_combine_dropship_bypass"] = {
         Cost = 18000,
         class = CLASS_NOMAD,
         faction = TEAM_OTA,
-        spawnVec = Vector(4532.4228515625, 4595.2587890625, 219.46025085449)
+        spawnVec = impulse.Config.DropshipSpawn
     },
     ["lvs_helicopter_hl2_combine_hunter"] = {
         Cost = 25000,
         class = CLASS_NOMAD,
         faction = TEAM_OTA,
-        spawnVec = Vector(4369.9853515625, 4603.8139648438, 219.46025085449)
+        spawnVec = impulse.Config.HCSpawn
     }
 }
 
