@@ -11,6 +11,18 @@ TEAM_CA = impulse.Teams.Define({
 	cp = true,
 	doorGroup = {1, 2, 6, 7},
 
+
+	customCheck = function(plr, teamId)
+		local canJoin = plr:GetTeamWhitelist("TEAM_CA") >= RANK_INTERN
+
+		if !canJoin then 
+			plr:Notify("You are not whitelisted for this faction!")
+			return false
+		end 
+
+		return true 
+	end,
+
 	classes = {
 		{
 			name = "Administration Branch",
@@ -25,8 +37,8 @@ TEAM_CA = impulse.Teams.Define({
 			name = "Assistant",
 			description = "intern",
 			doorGroup = {2},
-			xp = 0,
-			whitelistlevel = 50,
+			xp = 750,
+			whitelistLevel = 1,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
 					ply:SetModel(ply.defaultModel)
@@ -65,97 +77,11 @@ TEAM_CA = impulse.Teams.Define({
 			end
 		},
 		{
-			name = "Representative",
-			description = "rep",
-			doorGroup = {1, 2, 3, 6, 7},
-			xp = 5,
-			whitelistLevel = 51,
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,4)
-					ply:SetBodygroup(3,5)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,0)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Representative " .. ply:GetSavedRPName())
-				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,34)
-					ply:SetBodygroup(3,9)
-					ply:SetBodygroup(1,10)
-					ply:SetBodygroup(4,5)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Agent " .. ply:GetSavedRPName())
-				else
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,44)
-					ply:SetBodygroup(3,9)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,0)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Reporter " .. ply:GetSavedRPName())
-				end
-			end
-		},
-		{
-			name = "Coordinator",
-			description = "coordinator",
-			doorGroup = {1, 2, 3, 6, 7},
-			xp = 5,
-			whitelistLevel = 52,
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,5)
-					ply:SetBodygroup(3,5)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,0)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Coordinator " .. ply:GetSavedRPName())
-				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,34)
-					ply:SetBodygroup(3,9)
-					ply:SetBodygroup(1,10)
-					ply:SetBodygroup(4,5)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Senior Agent " .. ply:GetSavedRPName())
-				else
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,44)
-					ply:SetBodygroup(3,9)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,0)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Producer " .. ply:GetSavedRPName())
-				end
-			end
-		},
-		{
 			name = "Councilor",
 			description = "councilor",
 			doorGroup = {1, 2, 3, 4, 6, 7},
-			xp = 5,
-			whitelistLevel = 53,
+			xp = 900,
+			whitelistLevel = 2,
 			onBecome = function(ply, rank)
 				if ply:GetTeamClass() == CLASS_BASE then
 					ply:SetModel(ply.defaultModel)
@@ -194,101 +120,11 @@ TEAM_CA = impulse.Teams.Define({
 			end
 		},
 		{
-			name = "Minister",
-			description = "Minister",
-			doorGroup = {1, 2, 3, 4, 6, 7},
-			xp = 5,
-			whitelistLevel = 54,
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,35)
-					ply:SetBodygroup(3,7)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,0)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Minister " .. ply:GetSavedRPName())
-				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,34)
-					ply:SetBodygroup(3,9)
-					ply:SetBodygroup(1,10)
-					ply:SetBodygroup(4,5)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Supervisory Agent " .. ply:GetSavedRPName())
-				else
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,44)
-					ply:SetBodygroup(3,9)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,0)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Assistant Media Director " .. ply:GetSavedRPName())
-				end
-			end
-		},
-		{
-			name = "Deputy City Administrator",
-			description = "ca",
-			xp = 5,
-			doorGroup = {1, 2, 3, 4, 5, 6, 7},
-			whitelistLevel = 5,
-			--[[canPromote = {
-				[RANK_OWG] = true
-			},]]
-			onBecome = function(ply, rank)
-				if ply:GetTeamClass() == CLASS_BASE then
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,34)
-					ply:SetBodygroup(3,7)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,0)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:Give("plutonic_357")
-					ply:SetRPName("Councilor " .. ply:GetSavedRPName())
-				elseif ply:GetTeamClass() == CLASS_INTELLIGENCE then
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,43)
-					ply:SetBodygroup(3,12)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,1)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("S.A.I.C. " .. ply:GetSavedRPName())
-				else
-					ply:SetModel(ply.defaultModel)
-					ply:SetBodygroup(2,44)
-					ply:SetBodygroup(3,9)
-					ply:SetBodygroup(1,0)
-					ply:SetBodygroup(4,0)
-					ply:SetBodygroup(5,0)
-					ply:SetBodygroup(6,0)
-					ply:SetBodygroup(7,0)
-					ply:SetBodygroup(8,0)
-					ply:SetRPName("Media Director " .. ply:GetSavedRPName())
-				end
-			end
-		},
-		{
 			name = "City Administrator",
 			description = "ca",
-			xp = 5,
+			xp = 1200,
 			doorGroup = {1, 2, 3, 4, 5, 6, 7},
-			whitelistLevel = 6,
+			whitelistLevel = 3,
 			--[[canPromote = {
 				[RANK_OWG] = true
 			},]]
