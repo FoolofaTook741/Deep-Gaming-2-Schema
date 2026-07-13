@@ -970,11 +970,12 @@ function DeepSpawn_OpenSelector(ply, team)
     if not IsValid(ply) then return end
     if not SPAWN_TEAMS[team] then return end
  
+ 	local cityCode = impulse.Dispatch and impulse.Dispatch.GetCityCode() or 0
     local ozAvail  = CanUseOZ(ply, team)
     local nexusOK  = not IsLocationLockedOut("Nexus")
-    local fobOK    = not IsLocationLockedOut("FOB")
     local ozOK     = not IsLocationLockedOut("OZ")
-    local cityCode = impulse.Dispatch and impulse.Dispatch.GetCityCode() or 0
+    local fobOK    = not IsLocationLockedOut("FOB") and cityCode >= CODE_FRACTURED
+    local fobCityOK = cityCode >= CODE_FRACTURED
 
     if team == TEAM_CP and not nexusOK and not fobOK and not ozOK then
         nexusOK = true
@@ -989,6 +990,7 @@ function DeepSpawn_OpenSelector(ply, team)
         net.WriteBool(nexusOK)
         net.WriteBool(fobOK)
         net.WriteBool(ozOK)
+        net.WriteBool(fobCityOK)
         net.WriteUInt(cityCode, 8)
     net.Send(ply)
 end
