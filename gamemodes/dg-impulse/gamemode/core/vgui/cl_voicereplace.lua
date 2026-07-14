@@ -2,23 +2,6 @@
 local PANEL = {}
 local PlayerVoicePanels = {}
 
-
-local w, h = ScrW(), ScrH()
-local blurDrawPanel = {
-	[1] = function(x, y, w, h)
-		-- Bokeh DOF blur
-		render.UpdateScreenEffectTexture()
-
-		render.SetScissorRect(x, y, x+w, y+h, true)
-		DrawBokehDOF(6, 0, 0)
-		render.SetScissorRect(0, 0, 0, 0, false)
-	end
-}
-
-local function BlurRect(x, y, w, h)
-	blurDrawPanel[1](x,y,w,h)
-end
-
 function PANEL:Init()
 
 	self.LabelName = vgui.Create( "DLabel", self )
@@ -29,7 +12,7 @@ function PANEL:Init()
 
 	self.Color = color_transparent
 
-	self:SetSize( ScrW() / 2, 40 )
+	self:SetSize( 250, 32 + 8 )
 	self:DockPadding( 4, 4, 4, 4 )
 	self:DockMargin( 2, 2, 2, 2 )
 	self:Dock( BOTTOM )
@@ -50,17 +33,19 @@ end
 function PANEL:Paint( w, h )
 
 	if ( !IsValid( self.ply ) ) then return end
-	surface.SetDrawColor(Color(0,0,0,215)) -- menu body
-	surface.DrawRect(0, 0, w, h)
-
 	local vol = self.ply:VoiceVolume()
 	local col =  team.GetColor(self.ply:Team())
 
-	surface.SetDrawColor( color_white )
-	surface.DrawOutlinedRect(0, 0, w, h, 1)
+	draw.RoundedBox( 4, 0, 0, w, h, Color(20, 20, 20, 235))
+	draw.RoundedBox( 4, 0, 0, vol * w, 5, Color(vol * col.r, vol * col.g, vol * col.b, vol * 250) )
+
 end
 
 function PANEL:Think()
+	
+	if ( IsValid( self.ply ) ) then
+		self.LabelName:SetText( self.ply:KnownName() )
+	end
 
 	if ( self.fadeAnim ) then
 		self.fadeAnim:Run()

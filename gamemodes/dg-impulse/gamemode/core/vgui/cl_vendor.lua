@@ -2,6 +2,9 @@ local PANEL = {}
 
 local BASE_W, BASE_H = 1170, 1050
 
+local moneyIcon = Material("impulse/icons/banknotes-128.png")
+local moneyCol = Color(133, 227, 91, 255)
+
 function PANEL:Init()
     local sw, sh = ScrW(), ScrH()
     local w = math.min(BASE_W, sw * 0.85)
@@ -51,45 +54,42 @@ function PANEL:SetupVendor()
 
     local w, h = self:GetSize()
     local colW    = w * 0.435
-    local rightX  = w * 0.564
-    local listY   = h * 0.118
+    local rightX  = w * 0.574
+    local listY   = h * 0.15
 
     local vNameLbl = vgui.Create("DLabel", self)
     vNameLbl:SetText(self.Vendor.Name or "Vendor")
     vNameLbl:SetFont("Impulse-Elements27-Shadow")
-    vNameLbl:SetPos(10, 33)
-    vNameLbl:SizeToContents()
-
-    if vNameLbl:GetWide() >= colW - 20 then
-        vNameLbl:SetFont("Impulse-Elements20A-Shadow")
-        vNameLbl:SizeToContents()
-    end
+    vNameLbl:SetPos(10, 40)
+    vNameLbl:SetSize(colW, 28)
 
     local vDescLbl = vgui.Create("DLabel", self)
     vDescLbl:SetText(self.Vendor.Desc or "")
-    vDescLbl:SetFont("Impulse-Elements14-Shadow")
-    vDescLbl:SetPos(10, 58)
-    vDescLbl:SetSize(colW - 10, 20)
+    vDescLbl:SetFont("Impulse-Elements16-Shadow")
+    vDescLbl:SetTextInset(10, 2)
+    vDescLbl:SetPos(0, 75)
+    vDescLbl:SetSize(colW, 20)
 
     local yNameLbl = vgui.Create("DLabel", self)
     yNameLbl:SetText("You")
     yNameLbl:SetFont("Impulse-Elements27-Shadow")
-    yNameLbl:SetPos(rightX, 33)
+    yNameLbl:SetPos(rightX, 40)
     yNameLbl:SizeToContents()
 
     local yDescLbl = vgui.Create("DLabel", self)
-    yDescLbl:SetText("You have " .. LocalPlayer():GetMoney() .. " " .. impulse.Config.CurrencyName)
+    yDescLbl:SetText("")
     yDescLbl:SetFont("Impulse-Elements17-Shadow")
-    yDescLbl:SetPos(rightX, 58)
-    yDescLbl:SetSize(colW - 10, 20)
+    yDescLbl:SetPos(rightX, 75)
+    yDescLbl:SetSize(colW - 10, 30)
     yDescLbl.lastMoney = LocalPlayer():GetMoney()
 
-    function yDescLbl:Think()
-        if self.lastMoney ~= LocalPlayer():GetMoney() then
-            self.lastMoney = LocalPlayer():GetMoney()
-            self:SetText("You have " .. LocalPlayer():GetMoney() .. " " .. impulse.Config.CurrencyName)
-        end
-    end
+    function yDescLbl:Paint(w, h)
+        surface.SetMaterial(moneyIcon)
+        surface.SetDrawColor(moneyCol)
+        surface.DrawTexturedRect(2, h / 2 - 12, 24, 24)
+
+        draw.SimpleText(LocalPlayer():GetMoney() .. " " .. impulse.Config.CurrencyName, "Impulse-Elements19-Shadow", 35, h / 2 + 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end 
 
     local empty = true
 
@@ -172,16 +172,20 @@ function PANEL:SetupVendor()
     if LocalPlayer():IsSuperAdmin() and impulse.Vendor.InjectVendorEditButton then
         impulse.Vendor.InjectVendorEditButton(self, vendorType)
     end
+
+    self:SetTitle("Vendor " .. self.Vendor.Name)
 end
 
 local headerDark = Color(20, 20, 20, 180)
 local listDark = Color(0, 0, 0, 28)
+local descLight = Color(60, 60, 60, 150)
+local divider = Color(100, 100, 100, 200)
 function PANEL:Paint(w, h)
     derma.SkinHook("Paint", "Frame", self, w, h)
 
     local colW   = w * 0.435
     local rightX = w * 0.564
-    local listY  = h * 0.118
+    local listY  = h * 0.135
     local headerH = listY - (h * 0.0357)
 
     surface.SetDrawColor(headerDark)
@@ -191,6 +195,16 @@ function PANEL:Paint(w, h)
     surface.SetDrawColor(listDark)
     surface.DrawRect(0, listY, colW, h)
     surface.DrawRect(rightX, listY, colW, h)
+
+    surface.SetDrawColor(descLight)
+    surface.DrawRect(0, h * 0.0357 + 37, colW, headerH - 28)
+
+    surface.SetDrawColor(descLight)
+    surface.DrawRect(rightX, h * 0.0357 + 37, colW, headerH - 28)
+
+    surface.SetDrawColor(divider)
+    surface.DrawRect(0, h * 0.0357 + headerH + 9, colW, 4)
+    surface.DrawRect(rightX, h * 0.0357 + headerH + 9, colW, 4)
 end
 
 vgui.Register("impulseVendorMenu", PANEL, "DFrame")

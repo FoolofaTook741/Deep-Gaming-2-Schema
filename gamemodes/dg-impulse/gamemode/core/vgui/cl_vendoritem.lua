@@ -1,6 +1,4 @@
 local PANEL = {}
-local pinkOutline = Color(255, 81, 81, 150)
-
 
 function PANEL:Init()
 	self.model = vgui.Create("DModelPanel", self)
@@ -79,42 +77,30 @@ function PANEL:OnMousePressed()
 	end
 end
 
-local activeCol = Color(35, 35, 35, 0)
+local activeCol = Color(35, 35, 35, 88)
 local hoverCol = Color(120, 120, 120, 88)
-local disabledCol = Color(15, 15, 15, 255)
+local disabledCol = Color(15, 15, 15, 150)
 local grey = Color(170, 170, 170, 150)
-local disabledOutlineCol = Color(255, 81, 81, 150)
-local activeOutlineCol = Color(255, 255, 255, 150)
-local purchaseOutline = Color(81, 255, 81, 150)
+
+local detailBg = Color(110, 110, 110, 200)
 
 function PANEL:Paint(w, h)
 	local col = activeCol
-	local outlineCol = activeOutlineCol
 	local cost = self.SellData.Cost
-	local trade = self.SellData.Trade
-	local tradename = self.SellData.TradeName or "Unnamed Item"
 	local max = self.SellData.Max
 	local hasItem, amount = LocalPlayer():HasInventoryItem(impulse.Inventory.ClassToNetID(self.Item.UniqueID))
-	local disabled
-	local maxed
+	local disabled = false
+	local maxed = false
 
-	if not trade and (cost and cost > LocalPlayer():GetMoney()) or (self.SellData.CanBuy and self.SellData.CanBuy(LocalPlayer()) == false) then
+	if (cost and cost > LocalPlayer():GetMoney()) or (self.SellData.CanBuy and self.SellData.CanBuy(LocalPlayer()) == false) then
 		col = disabledCol
 		disabled = true
-		outlineCol = disabledOutlineCol
-	end
-
-	if not cost and trade and not LocalPlayer():HasInventoryItem(impulse.Inventory.ClassToNetID(trade)) then
-		col = activeCol
-		disabled = true
-		outlineCol = disabledOutlineCol
 	end
 
 	if max and hasItem and amount >= max then
 		col = disabledCol
 		disabled = true
 		maxed = true
-		outlineCol = disabledOutlineCol
 	end
 
 	surface.SetDrawColor(col)
@@ -130,33 +116,25 @@ function PANEL:Paint(w, h)
 		surface.DrawRect(0, 0, w, h)
 	end
 
-	draw.SimpleText(self.Item.Name, "Impulse-Elements18-Shadow", 80, 10, (disabled and grey) or color_white)
-	
+	draw.SimpleText(self.Item.Name, "Impulse-Elements18-Shadow", 85, 10, (disabled and grey) or color_white)
+
 	local desc = ""
 
 	if cost then
 		desc = cost.." "..impulse.Config.CurrencyName
-		outlineCol = purchaseOutline
 	else
 		desc = "Free"
-	end
-
-	if trade then
-		desc = "Trade " .. tradename .. " for item"
 	end
 
 	if self.SellData.Desc then
 		desc = desc.." ("..self.SellData.Desc..")"
 	end
 
-	draw.SimpleText(desc, "Impulse-Elements17-Shadow", 80, 30, grey)
+	draw.SimpleText(desc, "Impulse-Elements17-Shadow", 85, 30, grey)
 
 	if max then
-		draw.SimpleText((amount or 0).."/"..max.." (max limit)", "Impulse-Elements17-Shadow", 80, 45, grey)
+		draw.SimpleText((amount or 0).."/"..max.." (max limit)", "Impulse-Elements17-Shadow", 85, 45, grey)
 	end
-
-	surface.SetDrawColor(outlineCol)
-	surface.DrawOutlinedRect(0, 0, w, h, 1)
 end
 
 vgui.Register("impulseVendorItem", PANEL, "DPanel")
