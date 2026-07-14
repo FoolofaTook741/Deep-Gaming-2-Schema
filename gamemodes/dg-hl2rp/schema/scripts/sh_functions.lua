@@ -164,7 +164,7 @@ function meta:IsCPCommand()
 			return true
 		end
 	elseif self:Team() == TEAM_CA then
-		if rank >= RANK_COUNCILMAN then
+		if rank >= RANK_COUNCILOR then
 			return true
 		end
 	end
@@ -185,7 +185,7 @@ function meta:IsCommander()
 			return true
 		end
 	elseif self:Team() == TEAM_CA then
-		if rank >= RANK_EA then
+		if rank >= RANK_CA then
 			return true
 		end
 	end
