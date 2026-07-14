@@ -8,7 +8,7 @@ if SERVER then
     util.AddNetworkString("DeepEditTeleport")
 
     function TOOL:LeftClick(trace)
-        if !self:GetOwner():IsGameMaster() then return end 
+        if !self:GetOwner():IsGameMaster() and !self:GetOwner():IsAdmin() then return end 
 
         local ang = trace.HitNormal:Angle()
 	    ang.pitch = ang.pitch + 90
@@ -75,7 +75,7 @@ if CLIENT then
     local color_d = Color(62, 163, 96)
 
     function TOOL:Deploy()
-        if !self:GetOwner():IsGameMaster() then return end 
+        if !self:GetOwner():IsGameMaster() and !self:GetOwner():IsAdmin() then return end 
 
         hook.Add("PostDrawEffects", "DeepDrawTeleports", function(d, s)
             if TP_EDITING then 
