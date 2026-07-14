@@ -2086,9 +2086,9 @@ local hicomRadio = {
 	requiresArg = true,
 	requiresAlive = true,
 	onRun = function(ply, arg, rawText)
-		if ((ply:Team() == TEAM_OTA and ply:GetTeamRank() >= RANK_ORD) or (ply:Team() == TEAM_CP and ply:GetTeamRank() >= RANK_DVL) or (ply:Team() == TEAM_CA and ply:GetTeamRank() == RANK_EA)) then
+		if ((ply:Team() == TEAM_OTA and ply:GetTeamRank() >= RANK_ORD) or (ply:Team() == TEAM_CP and ply:GetTeamRank() >= RANK_DVL) or (ply:Team() == TEAM_CA and ply:GetTeamRank() == RANK_CA)) then
 			for v,k in pairs(player.GetAll()) do
-				if k:GetTeamClass() and ((k:Team() == TEAM_OTA and k:GetTeamRank() >= RANK_ORD) or (k:Team() == TEAM_CP and k:GetTeamRank() >= RANK_DVL) or (k:Team() == TEAM_CA and k:GetTeamRank() == RANK_EA)) or k.SnooperMode == true then
+				if k:GetTeamClass() and ((k:Team() == TEAM_OTA and k:GetTeamRank() >= RANK_ORD) or (k:Team() == TEAM_CP and k:GetTeamRank() >= RANK_DVL) or (k:Team() == TEAM_CA and k:GetTeamRank() == RANK_CA)) or k.SnooperMode == true then
 					k:SendChatClassMessage(60, rawText, ply)
 				end
 			ply:EmitBudgetSound("ambient/levels/prison/radio_random2.wav")

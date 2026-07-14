@@ -401,15 +401,15 @@ net.Receive("impulseHL2RPBioDeath", function(len, ply)
 			end
 			timer.Simple(4, function() globalsound("ambient/alyx_alert.wav") end)
 			timer.Simple(8, function() globalsound("ambient/alyx_alert.wav") end)
-		elseif rank == RANK_EA and team == TEAM_CA then
+		elseif rank == RANK_CA and team == TEAM_CA then
 			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR CITY ADMINISTRATOR: "..unit:Name().. " | LOCATION: "..zonename, Color(50, 0, 0))
 			if jammer != true then
 				impulse.AddCombineWaypoint("COMMANDER GRADE UNIT KILLED", unit:GetPos(), 120, 3, 6, 6, unit)
 			end
 			timer.Simple(4, function() globalsound("ambient/alyx_alert.wav") end)
 			timer.Simple(8, function() globalsound("ambient/alyx_alert.wav") end)
-		elseif rank >= RANK_EA and team == TEAM_CA then
-			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR DEPUTY CITY ADMINISTRATOR: "..unit:Name().. " | LOCATION: "..zonename, Color(150, 0, 0))
+		elseif rank >= RANK_COUNCILOR and team == TEAM_CA then
+			LocalPlayer():SendCombineMessage("LOST BIOSIGNAL FOR COUNCILOR: "..unit:Name().. " | LOCATION: "..zonename, Color(150, 0, 0))
 			if jammer != true then
 				impulse.AddCombineWaypoint("HIGH COMMAND UNIT KILLED", unit:GetPos(), 120, 3, 4, 4, unit)
 			end
