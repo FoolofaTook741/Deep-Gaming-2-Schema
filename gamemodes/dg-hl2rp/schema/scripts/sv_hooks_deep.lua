@@ -553,7 +553,7 @@ timer.Create("impulse_afk_legs_tick", 5, 0, function()
 end)
 
 net.Receive("DeepFundingOperation", function(len,ply)
-    if ply:Team() != TEAM_CA or ply:GetTeamRank() < RANK_COUNCILMAN then
+    if ply:Team() != TEAM_CA or ply:GetTeamRank() < RANK_COUNCILOR then
         local sid = ply:SteamID()
         for k,v in pairs(player.GetAll()) do
             if v:IsAdmin() then
@@ -589,7 +589,7 @@ net.Receive("DeepFundingOperation", function(len,ply)
         ply:Notify("You cannot afford this upgrade.")
         return
     end
-    if ply:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_COUNCILMAN then
+    if ply:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_COUNCILOR then
         if upgrade == "Rations" && funds >= rationcost && !timer.Exists("OCARationUpgrade") then
             if RES_OCAAB == true then
                 OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS - (rationcost * 0.75)
@@ -830,7 +830,7 @@ end)
 
 
 net.Receive("DeepCivilianTaxRate", function(len, ply) 
-    if ply:Team() != TEAM_CA or ply:GetTeamRank() < RANK_COUNCILMAN then
+    if ply:Team() != TEAM_CA or ply:GetTeamRank() < RANK_COUNCILOR then
         local sid = ply:SteamID()
         for k,v in pairs(player.GetAll()) do
             if v:IsAdmin() then
@@ -840,7 +840,7 @@ net.Receive("DeepCivilianTaxRate", function(len, ply)
         return
     end
     local tax = math.floor(net.ReadUInt(8))
-    if not ply:Team() == TEAM_CA or ply:GetTeamRank() < RANK_COUNCILMAN then
+    if not ply:Team() == TEAM_CA or ply:GetTeamRank() < RANK_COUNCILOR then
         ply:Notify("You cannot use this as your current team.")
     elseif timer.Exists("CivTaxCooldown") then
         ply:Notify("You must wait " .. math.floor(timer.TimeLeft("CivTaxCooldown")) .. " seconds.")
@@ -860,7 +860,7 @@ net.Receive("DeepCivilianTaxRate", function(len, ply)
 end)
 
 net.Receive("DeepSetRent", function(len, ply) 
-    if ply:Team() != TEAM_CA or ply:GetTeamRank() < RANK_COUNCILMAN then
+    if ply:Team() != TEAM_CA or ply:GetTeamRank() < RANK_COUNCILOR then
         local sid = ply:SteamID()
         for k,v in pairs(player.GetAll()) do
             if v:IsAdmin() then
@@ -871,7 +871,7 @@ net.Receive("DeepSetRent", function(len, ply)
     end
     local aaa = math.floor(net.ReadUInt(8))
     local price = math.Clamp(aaa, 15, 40)
-    if not ply:Team() == TEAM_CA or ply:GetTeamRank() < RANK_COUNCILMAN then
+    if not ply:Team() == TEAM_CA or ply:GetTeamRank() < RANK_COUNCILOR then
         ply:Notify("You cannot use this as your current team/rank.")
     elseif timer.Exists("CivTaxCooldown") then
         ply:Notify("You must wait " .. math.floor(timer.TimeLeft("CivTaxCooldown")) .. " seconds.")
@@ -893,7 +893,7 @@ net.Receive("DeepWorkerTaxRate", function(len, ply)
         return
     end
     local tax = math.floor(net.ReadUInt(8))
-    if not ply:Team() == TEAM_CA or ply:GetTeamRank() < RANK_COUNCILMAN then
+    if not ply:Team() == TEAM_CA or ply:GetTeamRank() < RANK_COUNCILOR then
         ply:Notify("You cannot use this as your current team.")
     elseif timer.Exists("CWTaxCooldown") then
         ply:Notify("You must wait " .. math.floor(timer.TimeLeft("CWTaxCooldown")) .. " seconds.")

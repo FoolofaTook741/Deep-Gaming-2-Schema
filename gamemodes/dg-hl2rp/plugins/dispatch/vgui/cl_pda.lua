@@ -806,7 +806,7 @@ or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_ORD) then
 end
 
 
-    if ((LocalPlayer():Team() == TEAM_CP and rank >= RANK_OFC) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_DEPUTY) or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_OCP)) then
+    if ((LocalPlayer():Team() == TEAM_CP and rank >= RANK_OFC) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR) or (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_OCP)) then
         if LocalPlayer():IsSuperAdmin() then
             self.citylockdown = vgui.Create("DButton", self.utilPnl)
             self.citylockdown:SetFont("DebugFixed")
@@ -963,7 +963,7 @@ end
     self.tScroll = vgui.Create("DScrollPanel", self.tPnl)
     self.tScroll:Dock(FILL)
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then 
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then 
         self.economyPnl = vgui.Create("DPanel", self.sheet)
         self.economyPnl:Dock(FILL)
         StyleCombinePanel(self.economyPnl, 32)
@@ -974,7 +974,7 @@ end
         econSheet.Button.EconText = true
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.armorSuits = vgui.Create("DButton", self.economyPnl)
         self.armorSuits:SetFont("DebugFixed")
         self.armorSuits:SetText("IMPROVED ARMOR CHARGERS (30m) - 12000C")
@@ -996,7 +996,7 @@ end
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.rationReward = vgui.Create("DButton", self.economyPnl)
         self.rationReward:SetFont("DebugFixed")
         self.rationReward:SetText("INCREASED RATION REWARD (30m) - 4000C")
@@ -1018,7 +1018,7 @@ end
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.ammoCrate = vgui.Create("DButton", self.economyPnl)
         self.ammoCrate:SetFont("DebugFixed")
         self.ammoCrate:SetText("INCREASED AMMO CAPACITY (30m) - 8000C")
@@ -1040,7 +1040,7 @@ end
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.healthVials = vgui.Create("DButton", self.economyPnl)
         self.healthVials:SetFont("DebugFixed")
         self.healthVials:SetText("VENDORS: ENHANCED HEALTH VIALS (15m) - 9000C")
@@ -1062,7 +1062,7 @@ end
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.incendiaries = vgui.Create("DButton", self.economyPnl)
         self.incendiaries:SetFont("DebugFixed")
         self.incendiaries:SetText("VENDORS: INCENDIARY GRENADES (10m) - 15000C")
@@ -1106,7 +1106,7 @@ end
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then 
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then 
         self.taxPnl = vgui.Create("DPanel", self.sheet)
         self.taxPnl:Dock(FILL)
         StyleCombinePanel(self.taxPnl, 32)
@@ -1116,7 +1116,7 @@ end
         taxSheet.Button.NoShowSquad = true
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.taxPnl.CivTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
         self.taxPnl.CivTaxSlider:SetText("R.T.R. - CIVIC POPULACE")
         self.taxPnl.CivTaxSlider:SetMax(50)
@@ -1127,7 +1127,7 @@ end
     end
 
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.SaveCivTax = vgui.Create("DButton", self.taxPnl)
         self.SaveCivTax:SetFont("BudgetLabel")
         self.SaveCivTax:SetText("APPLY CIVIC TAX RATE")
@@ -1149,7 +1149,7 @@ end
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.taxPnl.RentSlider = vgui.Create("DNumSlider", self.taxPnl)
         self.taxPnl.RentSlider:SetText("RENT (PER DOOR)")
         self.taxPnl.RentSlider:SetMax(40)
@@ -1160,7 +1160,7 @@ end
     end
 
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.SaveRent = vgui.Create("DButton", self.taxPnl)
         self.SaveRent:SetFont("BudgetLabel")
         self.SaveRent:SetText("APPLY RENT")
@@ -1520,7 +1520,7 @@ end
         end
     end
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.taxPnl.CWTaxSlider = vgui.Create("DNumSlider", self.taxPnl)
         self.taxPnl.CWTaxSlider:SetText("R.T.R. - CIVIC WORKFORCE")
         self.taxPnl.CWTaxSlider:SetMax(50)
@@ -1531,7 +1531,7 @@ end
     end
 
 
-    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILMAN and LocalPlayer():GetTeamClass() == CLASS_BASE then
+    if LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR and LocalPlayer():GetTeamClass() == CLASS_BASE then
         self.SaveCWTax = vgui.Create("DButton", self.taxPnl)
         self.SaveCWTax:SetFont("BudgetLabel")
         self.SaveCWTax:SetText("APPLY C.W. TAX RATE")

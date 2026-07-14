@@ -394,7 +394,7 @@ function PANEL:SetupUI()
     if IsValid(self.terminalEnt) and self.terminalEnt:GetOverwatchIndex() and
         (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_OTA and LocalPlayer():GetTeamRank() >= RANK_OCP) or
         (LocalPlayer():Team() == TEAM_CP and LocalPlayer():GetTeamRank() >= RANK_OFC) or
-        (LocalPlayer():Team() == TEAM_CA and LocalPlayer():GetTeamRank() >= RANK_COUNCILMAN)) then
+        (LocalPlayer():Team() == TEAM_CA and LocalPlayer():GetTeamRank() >= RANK_COUNCILOR)) then
 
         doDispatch = true
 
@@ -854,7 +854,7 @@ function PANEL:SetupUI()
         self:AddTab("CONV. INDEX", self.convictIndex)
     end
 
-    if self.terminalEnt:GetOverwatchIndex() and (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_CA and LocalPlayer():GetTeamRank() >= RANK_COUNCILMAN)) then
+    if self.terminalEnt:GetOverwatchIndex() and (LocalPlayer():IsCPCommand() or (LocalPlayer():Team() == TEAM_CA and LocalPlayer():GetTeamRank() >= RANK_COUNCILOR)) then
         self:AddTab("DISPATCH", self.dispatch)
     end
 
