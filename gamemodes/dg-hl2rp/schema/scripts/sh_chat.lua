@@ -2551,7 +2551,7 @@ impulse.RegisterChatCommand("/declarerogue", declareRogueCommand)
 local removeRagdollsCommand = {
     description = "Removes all NPC corpses.",
     requiresArg = false,
-    leadAdminOnly = true,
+    gameMasterOnly = true,
     onRun = function(ply)
         for _, v in ipairs(player.GetAll()) do
 			if (IsValid(v) && !v:IsBot()) then
@@ -2562,7 +2562,7 @@ local removeRagdollsCommand = {
     end
 }
 
-impulse.RegisterChatCommand("/removeragdolls", removeRagdollsCommand)
+impulse.RegisterChatCommand("/cleanupragdolls", removeRagdollsCommand)
 
 local changealiasCommand = {
     description = "OTA NOMAD and Ghost Command.",
