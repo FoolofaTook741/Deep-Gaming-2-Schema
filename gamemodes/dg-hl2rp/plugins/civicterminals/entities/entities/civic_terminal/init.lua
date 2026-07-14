@@ -122,7 +122,7 @@ net.Receive("impulseHL2RPOCABUpdate", function(_, ply)
         return
     end
 
-    if ply:GetTeamRank() < RANK_REPRESENTATIVE then
+    if ply:GetTeamRank() < RANK_COUNCILOR then
         LogOCABExploit(ply, "Insufficient rank")
         return
     end

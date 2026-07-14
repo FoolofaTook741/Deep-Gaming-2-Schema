@@ -201,10 +201,8 @@ local function GetTeamRankNames(teamVal)
             [RANK_MINISTER]   = "Minister",
         },
         [TEAM_CA] = {
-            [RANK_INTERN]         = "Intern",
-            [RANK_REPRESENTATIVE] = "Representative",
-            [RANK_COUNCILMAN]     = "Councilman",
-            [RANK_DEPUTY]         = "Deputy/Exec",
+            [RANK_ASSISTANT]         = "Assistant",
+            [RANK_COUNCILOR]         = "Councilor",
             [RANK_CA]             = "CA",
         },
     }
@@ -267,10 +265,8 @@ end
 
 local function GetRankShortTable()
     return {
-        [RANK_INTERN]         = "Intern+",
-        [RANK_REPRESENTATIVE] = "Rep+",
-        [RANK_COUNCILMAN]     = "Councilman+",
-        [RANK_DEPUTY]         = "Exec+",
+        [RANK_ASSISTANT]         = "Assistant+",
+        [RANK_COUNCILOR]      = "Councilor+",
         [RANK_CA]             = "CA+",
         [RANK_I1]             = "i1+",
         [RANK_I2]             = "i2+",

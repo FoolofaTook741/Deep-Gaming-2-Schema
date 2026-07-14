@@ -381,7 +381,7 @@ ENT.Menus['OCAB'] = {
                 return LocalPlayer():Notify("You must be a member of the OCA to do this.")
             end
 
-            if LocalPlayer():GetTeamRank() < RANK_REPRESENTATIVE then
+            if LocalPlayer():GetTeamRank() < RANK_COUNCILOR then
                 self:EmitSound("combine_tech/civic_station/station_menu_select_denied.mp3")
                 return LocalPlayer():Notify("You must be a Representative+ to do this.")
             end

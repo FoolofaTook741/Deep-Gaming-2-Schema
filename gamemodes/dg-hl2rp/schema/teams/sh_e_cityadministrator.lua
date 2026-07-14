@@ -13,7 +13,7 @@ TEAM_CA = impulse.Teams.Define({
 
 
 	customCheck = function(plr, teamId)
-		local canJoin = plr:GetTeamWhitelist("TEAM_CA") >= RANK_INTERN
+		local canJoin = plr:GetTeamWhitelist("TEAM_CA") >= RANK_ASSISTANT
 
 		if !canJoin then 
 			plr:Notify("You are not whitelisted for this faction!")
@@ -172,10 +172,14 @@ TEAM_CA = impulse.Teams.Define({
 CLASS_BASE = 1
 CLASS_INTELLIGENCE = 2
 
-RANK_INTERN = 1 -- Assistant
+--[[RANK_INTERN = 1 -- Assistant
 RANK_REPRESENTATIVE = 2 -- Representative
 RANK_COUNCILMAN = 3 -- Coordinator/Councilman
 RANK_DEPUTY = 4 -- Councilor/Executive
 RANK_MINISTER = 5 -- Minister
 RANK_CA = 6 -- Deputy City Administrator
-RANK_EA = 7 -- City Administrator
+RANK_EA = 7 -- City Administrator]]
+
+RANK_ASSISTANT = 1
+RANK_COUNCILOR = 2
+RANK_CA = 3

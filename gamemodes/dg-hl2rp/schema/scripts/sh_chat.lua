@@ -243,7 +243,7 @@ local toggleForcefield = {
             (ply:GetTeamClass() == CLASS_RESEARCH and rank >= RANK_EMPLOYEE and (ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT)) or
             (rank >= RANK_I2 and ply:Team() == TEAM_CP) or
             (ply:Team() == TEAM_OTA) or
-            (ply:Team() == TEAM_CA and rank >= RANK_REPRESENTATIVE) or
+            (ply:Team() == TEAM_CA and rank >= RANK_COUNCILOR) or
             ply:IsAdmin() or
             ply:IsCPCommand() then
 
@@ -474,12 +474,12 @@ local radioRND = {
             ply:Notify("The radio is not available at this time.")
         else
             if (ply:Team() == TEAM_CWU or ply:Team() == TEAM_VORT) and ply:GetTeamClass() == CLASS_RESEARCH and ply:GetTeamRank() >= RANK_INTERN or
-               (ply:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_REPRESENTATIVE) or
+               (ply:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_COUNCILOR) or
 			   (ply:Team() == TEAM_CP and ply:GetTeamRank() >= RANK_OFC) then
                 rawText = hook.Run("ChatClassMessageSend", 8, rawText, ply) or rawText
                 for k,v in pairs(player.GetAll()) do
                     if (v:GetTeamClass() == CLASS_RESEARCH) or
-                       v:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_REPRESENTATIVE or
+                       v:Team() == TEAM_CA and ply:GetTeamRank() >= RANK_COUNCILOR or
                        v.SnooperMode == true then
                         v:SendChatClassMessage(200, rawText, ply)
                     end

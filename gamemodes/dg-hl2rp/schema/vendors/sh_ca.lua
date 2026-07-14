@@ -17,7 +17,7 @@ VENDOR.Sell = {
 		BuyMax = 4,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -29,7 +29,7 @@ VENDOR.Sell = {
 		BuyMax = 4,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -53,7 +53,7 @@ VENDOR.Sell = {
 		BuyMax = 4,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -65,7 +65,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_COUNCILMAN && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -89,7 +89,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -101,7 +101,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_COUNCILMAN && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -113,7 +113,7 @@ VENDOR.Sell = {
 		BuyMax = 2,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -126,7 +126,7 @@ VENDOR.Sell = {
 		TempCooldown = 600,
 		Restricted = true,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE) then
+			if (ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE) then
 				return true
 			else return false
 			end
@@ -139,7 +139,7 @@ VENDOR.Sell = {
 		Restricted = true,
 		Cost = 50,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE) then
+			if (ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE) then
 				return true
 			else return false
 			end
@@ -151,7 +151,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -163,7 +163,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -175,7 +175,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -187,7 +187,7 @@ VENDOR.Sell = {
 		BuyMax = 2,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -199,7 +199,7 @@ VENDOR.Sell = {
 		BuyMax = 3,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_COUNCILMAN && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -211,7 +211,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_DEPUTY && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_CA && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -222,7 +222,7 @@ VENDOR.Sell = {
 		Max = 1,
 		Restricted = true,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_COUNCILMAN) then
+			if (ply:GetTeamRank() >= RANK_CA) then
 				return true
 			else return false
 			end
@@ -234,8 +234,7 @@ VENDOR.Sell = {
 		TempCooldown = 120,
 		Restricted = true,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_DEPUTY and ply:GetTeamClass() == CLASS_BASE) or 
-			   (ply:GetTeamRank() >= RANK_COUNCILMAN && impulse.Dispatch.GetCityCode() >= CODE_JW) then
+			if (ply:GetTeamRank() >= RANK_CA and ply:GetTeamClass() == CLASS_BASE) then
 				return true
 			else
 				return false
@@ -248,8 +247,7 @@ VENDOR.Sell = {
 		TempCooldown = 120,
 		Restricted = true,
 		CanBuy = function(ply)
-			if (ply:GetTeamRank() >= RANK_CA and ply:GetTeamClass() == CLASS_BASE) or 
-			   (ply:GetTeamRank() >= RANK_DEPUTY && impulse.Dispatch.GetCityCode() >= CODE_JW) then
+			if (ply:GetTeamRank() >= RANK_CA and ply:GetTeamClass() == CLASS_BASE) then
 				return true
 			else return false
 			end
@@ -261,7 +259,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 300,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_COUNCILMAN && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_CA && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -273,7 +271,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 300,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_DEPUTY && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_CA && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -297,7 +295,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -309,7 +307,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 120,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_REPRESENTATIVE && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -321,7 +319,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 3600,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_COUNCILMAN && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_COUNCILOR && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -333,7 +331,7 @@ VENDOR.Sell = {
 		BuyMax = 1,
 		TempCooldown = 3600,
 		CanBuy = function(ply)
-			if ply:GetTeamRank() >= RANK_DEPUTY && ply:GetTeamClass() == CLASS_BASE then
+			if ply:GetTeamRank() >= RANK_CA && ply:GetTeamClass() == CLASS_BASE then
 				return true
 			else return false
 			end
@@ -347,7 +345,7 @@ VENDOR.Sell = {
 }
 
 function VENDOR:CanUse(ply)
-    return ply:Team() == TEAM_CA and ply:GetTeamRank() != nil and ply:GetTeamRank() >= RANK_INTERN
+    return ply:Team() == TEAM_CA and ply:GetTeamRank() != nil and ply:GetTeamRank() >= RANK_ASSISTANT
 end
 
 function VENDOR:OnItemPurchased(class, ply)

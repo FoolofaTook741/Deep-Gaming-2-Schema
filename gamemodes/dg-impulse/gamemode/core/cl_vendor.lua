@@ -294,10 +294,8 @@ local TEAM_OPTIONS  = {}
 local CODE_OPTIONS  = {}
 local function RefreshOptions()
     RANK_OPTIONS = {
-        {"Intern",      RANK_INTERN},
-        {"Rep",         RANK_REPRESENTATIVE},
-        {"Councilman",  RANK_COUNCILMAN},
-        {"Deputy/Exec", RANK_DEPUTY},
+        {"Assistant",   RANK_ASSISTANT},
+        {"Councilor",   RANK_COUNCILOR},
         {"CA",          RANK_CA},
         {"i1",          RANK_I1},
         {"i2",          RANK_I2},
@@ -412,10 +410,8 @@ local TEAM_RANK_MAP = {
     },
     [function() return TEAM_CA  end] = {
         {"Any Rank",    -1},
-        {"Intern",      function() return RANK_INTERN         end},
-        {"Rep",         function() return RANK_REPRESENTATIVE end},
-        {"Councilman",  function() return RANK_COUNCILMAN     end},
-        {"Deputy/Exec", function() return RANK_DEPUTY         end},
+        {"Assistant",   function() return RANK_ASSISTANT      end},
+        {"Councilor",   function() return RANK_COUNCILOR      end},
         {"CA",          function() return RANK_CA             end},
     },
 }

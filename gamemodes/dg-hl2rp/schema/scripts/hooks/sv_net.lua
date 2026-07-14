@@ -494,7 +494,7 @@ net.Receive("impulseHL2RPRankBecome", function(len, ply)
         team = "TEAM_CA"
         local plyrank = ply:GetTeamWhitelist(team)
         if plyrank >= ranktwo then
-			if rank < RANK_REPRESENTATIVE and div == CLASS_BASETWO then
+			if rank < RANK_COUNCILOR and div == CLASS_BASETWO then
 				ply:Notify("You cannot use this class unless you are a representative or greater.")
 			elseif plyrank >= ranktwo && ply:GetTeamClass() == division then
 				ply:SetTeamRank(rank)
