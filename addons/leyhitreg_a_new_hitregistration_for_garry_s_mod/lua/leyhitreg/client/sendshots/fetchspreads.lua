@@ -20,17 +20,17 @@ function LeyHitreg:PlayerSwitchWeapon(ply, oldWep, newWep)
 
     ply.LeyHitreg_NeedsSpreadForce = newWep
 
-    timer.Simple(1, function()
-        if (not IsValid(ply)) then
+    timer.Simple(1, function() 
+        if (not IsValid(ply) or not IsValid(newWep)) then
             return
         end
+
         ply.LeyHitreg_NeedsSpreadForce = nil
-        if (not IsValid(newWep)) then
-            return
-        end
+
         if (ply:GetActiveWeapon() != newWep) then
             return
         end
+
         LeyHitreg.WeaponSpreads[classname] = LeyHitreg.WeaponSpreads[classname] or vector_origin
     end)
 

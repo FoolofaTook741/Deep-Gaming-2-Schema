@@ -170,8 +170,6 @@ function LeyHitreg:EntityFireBullets(plyorwep, bullet)
 
     local hitTable = LeyHitreg.ForceHit[ply]
 
-    PrintTable(hitTable)
-
     if (not hitTable) then
         return self:FallbackEntityFireBullets(ply, wep, bullet)
     end
@@ -197,7 +195,7 @@ function LeyHitreg:EntityFireBullets(plyorwep, bullet)
     LeyHitreg:HitScanBullet(ply, target, bullet, shot, shot.targetBone, shot.targetHitGroup, newshootpos)
 
     if shot.fraction then 
-        bullet.Damage = bullet.Damage * (shot.fraction) -- For shotguns, calculates how many pellets would have hit by checking the fraction of the hull that was hit
+        bullet.Damage = wep.Primary.Damage * (shot.fraction) -- For shotguns, calculates how many pellets would have hit by checking the fraction of the hull that was hit
     end 
         
     bullet.Src = newshootpos
