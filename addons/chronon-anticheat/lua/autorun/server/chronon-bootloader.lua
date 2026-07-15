@@ -1,3 +1,8 @@
+if file.Exists("qa_environment.txt", "GAME") then
+    MsgC(Color(211, 120, 0), "QA/Dev environment detected — skipping Chronon load.\n")
+    return
+end
+
 local include 	   = include
 
 print ("Loading Chronon.." .. "\n")
