@@ -894,7 +894,7 @@ impulse.Config.LootPools = {
 			["bl_omr"] = {Rarity = 690, Rep = 2},
 			["bl_osiprmk1"] = {Rarity = 740, Rep = 2},
 			["util_heavyceramicplate"] = {Rarity = 680, Rep = 2},
-			["cos_elitevest"] = {Rarity = 945, Rep = 1},
+			["cos_elitevest"] = {Rarity = 945, Rep = 2},
 			["wep_mp7a8"] = {Rarity = 830, Rep = 1},
 			["bl_ar3"] = {Rarity = 930, Rep = 1},
 			["wep_osiprmk1c"] = {Rarity = 970, Rep = 1},
@@ -909,25 +909,25 @@ impulse.Config.LootPools = {
 	},
 	["hardpointammobox"] = {
 		Items = {
-			["item_ar2ammocrate"] = {Rarity = 800, Rep = 2},
+			["item_ar2ammocrate"] = {Rarity = 850, Rep = 2},
 			--["wep_shotgun"] = {Rarity = 600},
 			--["bl_ar2e"] = {Rarity = 765, Rep = 2},
-			["bl_ar2"] = {Rarity = 620, Rep = 2},
+			["bl_ar2"] = {Rarity = 620, Rep = 3},
 			["bl_apf"] = {Rarity = 820, Rep = 1},
-			["bl_omr"] = {Rarity = 690, Rep = 2},
-			["bl_osiprmk1"] = {Rarity = 980, Rep = 2},
+			["bl_omr"] = {Rarity = 690, Rep = 1},
+			["bl_osiprmk1"] = {Rarity = 830, Rep = 2},
 			["util_heavyceramicplate"] = {Rarity = 680, Rep = 2},
-			["cos_elitevest"] = {Rarity = 945, Rep = 1},
+			["cos_elitevest"] = {Rarity = 945, Rep = 2},
 			["wep_mp7a8"] = {Rarity = 860, Rep = 1},
-			["bl_ar3"] = {Rarity = 930, Rep = 1},
+			["bl_ar3"] = {Rarity = 900, Rep = 1},
 			["wep_ak47u"] = {Rarity = 910, Rep = 1},
 			--["util_energycore"] = {Rarity = 730, Rep = 6},
 			["item_ammocrate"] = {Rarity = 600, Rep = 5},
-			["util_particleaccelerator"] = {Rarity = 999, Rep = 1},
+			["util_particleaccelerator"] = {Rarity = 990, Rep = 1},
 			["cos_conscriptarmor"] = {Rarity = 500, Rep = 2},
 		},
 		MaxItems = 18,
-		MinItems = 9
+		MinItems = 10
 	},
 
 	--[[
