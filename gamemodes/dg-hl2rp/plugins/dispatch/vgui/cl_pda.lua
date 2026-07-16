@@ -838,7 +838,7 @@ end
         end
     end
 
-    if (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_ORD) or (LocalPlayer():Team() == TEAM_CP and rank >= RANK_DVL) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_CA) then
+    if (LocalPlayer():Team() == TEAM_OTA and rank >= RANK_ORD) or (LocalPlayer():Team() == TEAM_CP and rank >= RANK_DVL) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR) then
         self.rations = vgui.Create("DButton", self.utilPnl)
         self.rations:SetFont("DebugFixed")
         self.rations:SetText("")
@@ -899,7 +899,7 @@ end
         end
     end
 
-    if (LocalPlayer():Team() == TEAM_CP and rank >= RANK_DVL) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_CA) or (LocalPlayer():GetTeamClass() == CLASS_GHOST and LocalPlayer():GetTeamRank() == RANK_OFC and LocalPlayer():Team() == TEAM_CP) then
+    if (LocalPlayer():Team() == TEAM_CP and rank >= RANK_DVL) or (LocalPlayer():Team() == TEAM_CA and rank >= RANK_COUNCILOR) or (LocalPlayer():GetTeamClass() == CLASS_GHOST and LocalPlayer():GetTeamRank() == RANK_OFC and LocalPlayer():Team() == TEAM_CP) then
         self.separationpolicy = vgui.Create("DButton", self.utilPnl)
         self.separationpolicy:SetFont("DebugFixed")
         self.separationpolicy:SetText("TOGGLE SEPERATION POLICY")
