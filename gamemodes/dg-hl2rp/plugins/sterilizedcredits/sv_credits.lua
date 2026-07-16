@@ -199,8 +199,8 @@ net.Receive("DeepAwardSCs", function(len, ply)
     end
 
     local balance = ply.AwardBalance
-    if amount < 50 then
-        ply:Notify("You cannot distribute less than 50 SCs.")
+    if amount < 25 then
+        ply:Notify("You cannot distribute less than 25 SCs.")
         return
     end
 
