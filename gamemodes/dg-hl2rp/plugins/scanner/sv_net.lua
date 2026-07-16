@@ -23,9 +23,20 @@ net.Receive("impulseHL2RPDeployScanner",function(len,ply)
     if not ply:IsCP() then
         return 
     end
-    if not (ply:GetTeamClass() == CLASS_GRID) and not (ply:Team() == TEAM_OTA and ply:GetTeamClass() == CLASS_NOMAD) and not (ply:GetTeamRank() >= RANK_OFC and ply:Team() == TEAM_CP) then
+
+    if (
+        not (ply:GetTeamClass() == CLASS_GRID) and 
+        not (ply:Team() == TEAM_OTA and ply:GetTeamClass() == CLASS_NOMAD) and 
+        not (ply:GetTeamRank() >= RANK_OFC and ply:Team() == TEAM_CP)
+    ) then
         return ply:Notify("You must be a GRID/NOMAD unit to deploy Scanners!")
     end
+
+    if (
+        ply:Team() == TEAM_CP and ply:GetTeamRank() < RANK_I2
+    ) then 
+        return ply:Notify("You must be an i2 or above to deploy a Scanner!")
+    end 
 
     if ply:IsScanner() then
         return
