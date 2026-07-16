@@ -14,7 +14,7 @@ local function IsInRestrictedZone(pos)
 end
 
 hook.Add("PlayerSpawnedProp", "impulseRestrictedZonePropCheck", function(ply, model, ent)
-    if ply:IsSuperAdmin() then return end
+    if ply:IsLeadAdmin() then return end
 
     local restricted, zone = IsInRestrictedZone(ent:GetPos())
     if restricted then
@@ -26,7 +26,7 @@ hook.Add("PlayerSpawnedProp", "impulseRestrictedZonePropCheck", function(ply, mo
 end)
 
 hook.Add("PlayerSpawnedRagdoll", "impulseRestrictedZoneRagdollCheck", function(ply, model, ent)
-    if ply:IsSuperAdmin() then return end
+    if ply:IsLeadAdmin() then return end
 
     local restricted, zone = IsInRestrictedZone(ent:GetPos())
     if restricted then
@@ -38,7 +38,7 @@ hook.Add("PlayerSpawnedRagdoll", "impulseRestrictedZoneRagdollCheck", function(p
 end)
 
 hook.Add("PlayerSpawnedSENT", "impulseRestrictedZoneSENTCheck", function(ply, ent)
-    if ply:IsSuperAdmin() then return end
+    if ply:IsLeadAdmin() then return end
 
     local restricted, zone = IsInRestrictedZone(ent:GetPos())
     if restricted then
