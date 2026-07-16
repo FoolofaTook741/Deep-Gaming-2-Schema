@@ -177,40 +177,45 @@ net.Receive("DeepAwardSCs", function(len, ply)
     if not ply:Team() == TEAM_CP and not ply:IsCPCommand() then
         return
     end
+
     local targ = net.ReadEntity()
     if targ:Team() != TEAM_CP then
         return
     end
+
     if targ == ply then
-        ply:Notify("Don't be selfish dickhead -JRB.")
         return
     end
-    if targ:IsCPCommand() then
-        ply:Notify("Your nepotism is showing bud, why you trying to trade SCs with supervisors you're a pussy. Give to the low ranks who actually need it bitch. -JRB")
-        timer.Simple(6, function()
-            ply:Notify("Technically you could workaround this but you are not that much of a pussy are you? -JRB")
-        end)
+
+    if targ:IsCPCommand() or targ:GetTeamWhitelist("TEAM_CP") >= RANK_OFC then
+        ply:Notify("You cannot distribute SCs to supervisors")
         return
     end
+
     local amount = net.ReadUInt(20)
     amount = math.floor(amount)
     if not ply.AwardBalance then
         ply.AwardBalance = 0
     end
+
     local balance = ply.AwardBalance
-    if amount == 0 then
+    if amount < 50 then
+        ply:Notify("You cannot distribute less than 50 SCs.")
         return
     end
+
     if balance < amount then
         ply:Notify("You do not have enough award credits to do this action (Currently:" .. balance .. ").")
         return
     end
+
     ply.AwardBalance = ply.AwardBalance - amount
     for k,v in pairs(player.GetAll()) do
         if v:IsCP() then
             v:SendCombineMessage(string.upper(ply:Name()) .. " HAS AWARDED " .. string.upper(targ:Name()) .. " " .. amount .. " STERILIZED CREDITS.", Color(100,255,100))
         end
     end
+
     net.Start("deepupdateawardcredits")
     net.WriteUInt(ply.AwardBalance, 16)
     net.Send(ply)

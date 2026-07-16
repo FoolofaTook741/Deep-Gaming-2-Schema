@@ -275,7 +275,7 @@ function PANEL:SetupUI()
     self.lblReminder:Dock(TOP)
     self.lblReminder:DockMargin(8, 4, 8, 0)
 
-    if lp:Team() == TEAM_CP and lp:GetTeamClass() == CLASS_GRID then
+    if lp:Team() == TEAM_CP and lp:GetTeamClass() == CLASS_GRID and lp:GetTeamRank() >= RANK_I2 then
         self.btnScanner = vgui.Create("DButton", self.bulletin)
         self.btnScanner:SetText("DEPLOY GRID SCANNER")
         self.btnScanner:Dock(TOP)
