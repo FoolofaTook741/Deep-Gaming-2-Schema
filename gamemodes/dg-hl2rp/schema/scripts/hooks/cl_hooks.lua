@@ -294,18 +294,18 @@ function impulse.Markup.Create()
 	}, {__index = MARKUP_HELPER})
 end
 
-hook.Add("RenderScreenspaceEffects", "PGHL2RP-Filter", function()
-    local tab = {}
-    tab[ "$pp_colour_addr" ] = 0
-    tab[ "$pp_colour_addg" ] = 0
-    tab[ "$pp_colour_addb" ] = 0
-    tab[ "$pp_colour_brightness" ] = 0.03
-    tab[ "$pp_colour_contrast" ] = 1.15
-    tab[ "$pp_colour_colour" ] = 1.15
-    tab[ "$pp_colour_mulr" ] = 0
-    tab[ "$pp_colour_mulg" ] = 0
-    tab[ "$pp_colour_mulb" ] = 0
+local tab = {}
+tab[ "$pp_colour_addr" ] = 0
+tab[ "$pp_colour_addg" ] = 0
+tab[ "$pp_colour_addb" ] = 0
+tab[ "$pp_colour_brightness" ] = 0.01
+tab[ "$pp_colour_contrast" ] = 0.9
+tab[ "$pp_colour_colour" ] = 1.15
+tab[ "$pp_colour_mulr" ] = 0
+tab[ "$pp_colour_mulg" ] = 0
+tab[ "$pp_colour_mulb" ] = 0
 
+hook.Add("RenderScreenspaceEffects", "PGHL2RP-Filter", function()
     DrawColorModify(tab)
 end)
 
