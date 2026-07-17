@@ -1,14 +1,38 @@
 impulse.Config.MapWorkshopID = "3132024232"
 --impulse.Config.MapContentWorkshopID = "1406336883"
 
-impulse.Config.MenuCamPos = Vector(2383.0532226563, 3583.2353515625, 715.42004394531)
-impulse.Config.MenuCamAng = Angle(33.692054748535, 179.71202087402, 0)
+impulse.Config.MenuCamPos = Vector(-765.56866455078, 3562.11328125, 1048.875)
+impulse.Config.MenuCamAng = Angle(-43.157539367676, 177.13320922852, 0)
 
 
 impulse.Config.SpawnPos1 = Vector(-4059.7294921875, 2897.4719238281, 464.03125)
 impulse.Config.SpawnPos2 = Vector(-2150.8576660156, 2882.19140625, 464.03125)
 
 impulse.Config.BroadcastPos = Vector(2725.4353027344, 4052.03125, 3416.03125)
+
+impulse.Config.TPCPos = Vector(-11780.508789062, 2391.7241210938, 8192.03125)
+impulse.Config.MBEntrance = Vector(3384.1794433594, -1252.8516845703, -167.96875)
+
+impulse.Config.APCSpawn = Vector(-11258.426757813, 287.59600830078, 8192.03125)
+impulse.Config.HCSpawn = Vector(-10748.7265625, -303.71423339844, 8615.7607421875)
+impulse.Config.DropshipSpawn = Vector(-11258.426757813, 287.59600830078, 8192.03125)
+
+
+
+impulse.Config.NoCollideZones = {
+    { --spawn
+        Vector(-4589.0844726563, 2435.9165039063, 791.65179443359),
+        Vector(-1747.9808349609, 3326.6455078125, 336.25393676758)
+    },
+    { --metabase nocollide zone
+        Vector(3450.8505859375, -1363.8334960938, -40.650173187256),
+        Vector(3262.8950195313, -1170.9945068359, -203.34521484375)
+    },
+}
+
+impulse.Config.NexusSpawnPicture = "dg2/spawns/i17_nexus.png"
+impulse.Config.FOBSpawnPicture   = "dg2/spawns/i17_fob.png"
+impulse.Config.OZSpawnPicture    = "dg2/spawns/i17_oz.png"
 
 impulse.Config.MapType = "Woodland"
 
@@ -27,15 +51,10 @@ impulse.Config.BlacklistEnts = {
 	["item_suitcharger"] = true
 }
 
-impulse.Config.TrashSpawns = {
-	Vector(304.29629516602, 2783.9064941406, 136.03125),
-	Vector(327.79919433594, 2330.0576171875, 128.03125),
-	Vector(3501.7392578125, 1761.4069824219, 136.03125),
-	Vector(3833.9353027344, 5195.4267578125, 328.03125),
-	Vector(739.79364013672, 4675.3891601562, 136.03125),
-	Vector(2350.9865722656, 1964.5738525391, 136.03125),
-	Vector(2394.0307617188, 3209.3955078125, 136.03125),
-	Vector(2512.7282714844, 5083.9892578125, 328.03125)
+impulse.Config.XenContaminationZones = {
+    "Storm System 1",
+    "Storm System 2",
+    "Storm System 3",
 }
 
 impulse.Config.SporeClusters = {
@@ -163,38 +182,37 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/transitblock.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Politi-Control Section 3", pos1 = Vector(-495.06716918945, 2393.5327148438, 78.705032348633), pos2 = Vector(-1206.76171875, 3862.1860351563, 1430.8989257813), dispatch = {
+
+	--Politi-Control Section
+	{name = "Politi-Control Section 1", pos1 = Vector(722.43969726563, 4724.8642578125, 1383.71484375), pos2 = Vector(2430.4912109375, 3073.2673339844, 120.54026031494), dispatch = {
 		"npc/overwatch/radiovoice/controlsection.wav",
-		"npc/overwatch/radiovoice/three.wav"
+		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Politi-Control Section 2", pos1 = Vector(720.03912353516, 3766.9677734375, 770.2958984375), pos2 = Vector(-400.27896118164, 3159.4372558594, 102.44743347168), dispatch = {
 		"npc/overwatch/radiovoice/controlsection.wav",
 		"npc/overwatch/radiovoice/two.wav"
 	}},
-	{name = "Politi-Control Section 1", pos1 = Vector(722.43969726563, 4724.8642578125, 1383.71484375), pos2 = Vector(2430.4912109375, 3073.2673339844, 120.54026031494), dispatch = {
+	{name = "Politi-Control Section 3", pos1 = Vector(-495.06716918945, 2393.5327148438, 78.705032348633), pos2 = Vector(-1206.76171875, 3862.1860351563, 1430.8989257813), dispatch = {
 		"npc/overwatch/radiovoice/controlsection.wav",
-		"npc/overwatch/radiovoice/one.wav"
+		"npc/overwatch/radiovoice/three.wav"
 	}},
 	{name = "Politi-Control Section 4", pos1 = Vector(2170.2209472656, 3049.2565917969, 391.8610534668), pos2 = Vector(1787.9787597656, 2377.9262695313, 103.69382476807), dispatch = {
 		"npc/overwatch/radiovoice/controlsection.wav",
 		"npc/overwatch/radiovoice/four.wav"
 	}},
-	{name = "Distributions Block 1", pos1 = Vector(790.70037841797, 1899.3322753906, 310.92437744141), pos2 = Vector(1640.4722900391, 481.14428710938, 35.838199615479), dispatch = {
-		"npc/overwatch/radiovoice/distributionblock.wav",
-		"npc/overwatch/radiovoice/one.wav"
-	}},
-	{name = "Repurposed Area 6", pos1 = Vector(3042.0732421875, 1846.4735107422, 84.627540588379), pos2 = Vector(2185.6701660156, 552.33581542969, 561.56567382813), dispatch = {
-		"npc/overwatch/radiovoice/repurposedarea.wav",
-		"npc/overwatch/radiovoice/six.wav"
-	}},
+
+
+	--Residential Block
 	{name = "Residential Block 1", pos1 = Vector(-354.58343505859, 4672.5639648438, 1135.3695068359), pos2 = Vector(552.44476318359, 3922.341796875, 109.15989685059), dispatch = {
 		"npc/overwatch/radiovoice/residentialblock.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
-	{name = "Production Block 4", pos1 = Vector(72.936424255371, 3094.3312988281, 102.06623077393), pos2 = Vector(-486.07901000977, 2550.1560058594, 467.6842956543), dispatch = {
-		"npc/overwatch/radiovoice/productionblock.wav",
-		"npc/overwatch/radiovoice/four.wav"
+	{name = "Residential Block 2", pos1 = Vector(3902.0622558594, 2556.3735351563, 1215.9638671875), pos2 = Vector(3610.7233886719, 1742.609375, 3.6063334941864), dispatch = {
+		"npc/overwatch/radiovoice/deservicedarea.wav",
+		"npc/overwatch/radiovoice/two.wav"
 	}},
+
+	--Production Block
 	{name = "Production Block 1", pos1 = Vector(3964.3664550781, 5645.154296875, 967.75732421875), pos2 = Vector(3461.2404785156, 4096.537109375, 294.43478393555), dispatch = {
 		"npc/overwatch/radiovoice/productionblock.wav",
 		"npc/overwatch/radiovoice/one.wav"
@@ -207,6 +225,28 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/productionblock.wav",
 		"npc/overwatch/radiovoice/three.wav"
 	}},
+	{name = "Production Block 4", pos1 = Vector(-969.46356201172, 898.09436035156, 552.98431396484), pos2 = Vector(746.61004638672, 1861.2332763672, -479.36846923828), dispatch = {
+		"npc/overwatch/radiovoice/productionblock.wav",
+		"npc/overwatch/radiovoice/four.wav"
+	}},
+	{name = "Production Block 4", pos1 = Vector(72.936424255371, 3094.3312988281, 102.06623077393), pos2 = Vector(-486.07901000977, 2550.1560058594, 467.6842956543), dispatch = {
+		"npc/overwatch/radiovoice/productionblock.wav",
+		"npc/overwatch/radiovoice/four.wav"
+	}},
+	{name = "Production Block 5", pos1 = Vector(3972.4770507813, 4726.8598632813, 908.97686767578), pos2 = Vector(5775.0522460938, 4481.4462890625, 272.92810058594), dispatch = {
+		"npc/overwatch/radiovoice/productionblock.wav",
+		"npc/overwatch/radiovoice/five.wav"
+	}},
+	{name = "Production Block 5", pos1 = Vector(3386.8393554688, 5142.6025390625, 998.31317138672), pos2 = Vector(2761.6416015625, 6005.9067382813, 255.42822265625), dispatch = {
+		"npc/overwatch/radiovoice/productionblock.wav",
+		"npc/overwatch/radiovoice/five.wav"
+	}},
+
+	--Distributions Block	
+	{name = "Distributions Block 1", pos1 = Vector(790.70037841797, 1899.3322753906, 310.92437744141), pos2 = Vector(1640.4722900391, 481.14428710938, 35.838199615479), dispatch = {
+		"npc/overwatch/radiovoice/distributionblock.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},	
 	{name = "Distributions Block 2", pos1 = Vector(2042.4051513672, 5128.0571289063, 1184.6356201172), pos2 = Vector(3427.3110351563, 4871.5439453125, 290.74411010742), dispatch = {
 		"npc/overwatch/radiovoice/distributionblock.wav",
 		"npc/overwatch/radiovoice/two.wav"
@@ -215,83 +255,117 @@ impulse.Config.Zones = {
 		"npc/overwatch/radiovoice/distributionblock.wav",
 		"npc/overwatch/radiovoice/three.wav"
 	}},
+
+	-- Shell Beach
 	{name = "External Jurisdiction 1", pos1 = Vector(-3570.6948242188, 8023.0341796875, 2758.775390625), pos2 = Vector(16129.291015625, 16128.91015625, -656.92224121094), dispatch = {
-		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/externaljurisdiction.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Outlands Tunnel", pos1 = Vector(3848.3168945313, 5651.4560546875, 498.14172363281), pos2 = Vector(3582.0480957031, 7901.4018554688, 292.72424316406), dispatch = {
 		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/nine.wav"
+	}},
+	
+	--Repurposed Area, 1 is bar and 2 is theater
+	{name = "Repurposed Area 1", pos1 = Vector(5120.1020507813, 4774.0395507813, 669.40881347656), pos2 = Vector(6424.37109375, 5520.15234375, 260.62817382813), dispatch = {
+		"npc/overwatch/radiovoice/repurposedarea.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Repurposed Area 6", pos1 = Vector(3042.0732421875, 1846.4735107422, 84.627540588379), pos2 = Vector(2185.6701660156, 552.33581542969, 561.56567382813), dispatch = {
+		"npc/overwatch/radiovoice/repurposedarea.wav",
 		"npc/overwatch/radiovoice/two.wav"
 	}},
-	{name = "Production Block 5", pos1 = Vector(3972.4770507813, 4726.8598632813, 908.97686767578), pos2 = Vector(5775.0522460938, 4481.4462890625, 272.92810058594)},
-	{name = "Repurposed Area 1", pos1 = Vector(5120.1020507813, 4774.0395507813, 669.40881347656), pos2 = Vector(6424.37109375, 5520.15234375, 260.62817382813)},
-	{name = "Residential Block 2", pos1 = Vector(3902.0622558594, 2556.3735351563, 1215.9638671875), pos2 = Vector(3610.7233886719, 1742.609375, 3.6063334941864), dispatch = {
-		"npc/overwatch/radiovoice/deservicedarea.wav",
-		"npc/overwatch/radiovoice/two.wav"
-	}},
-	{name = "High Priority Region 4", pos1 = Vector(1705.3116455078, 6458.8603515625, 303.36569213867), pos2 = Vector(1300.3034667969, 4757.7431640625, 176.52156066895), dispatch = {
+
+
+	--Nexus
+	{name = "High Priority Region 1", pos1 = Vector(2494.0302734375, 4295.9614257813, 1056.0299072266), pos2 = Vector(3069.5178222656, 2586.4875488281, 38.227142333984), dispatch = {
 		"npc/overwatch/radiovoice/highpriorityregion.wav",
-		"npc/overwatch/radiovoice/four.wav"
-	}},
-	{name = "Production Block 6", pos1 = Vector(5014.912109375, 4147.701171875, 517.17614746094), pos2 = Vector(4226.6259765625, 3597.2658691406, 225.07489013672), dispatch = {
-		"npc/overwatch/radiovoice/productionblock.wav",
-		"npc/overwatch/radiovoice/six.wav"
-	}},
-	{name = "Production Block 5", pos1 = Vector(3386.8393554688, 5142.6025390625, 998.31317138672), pos2 = Vector(2761.6416015625, 6005.9067382813, 255.42822265625), dispatch = {
-		"npc/overwatch/radiovoice/productionblock.wav",
-		"npc/overwatch/radiovoice/five.wav"
-	}},
-	{name = "Restricted Block 2", pos1 = Vector(4276.1806640625, 1440.9912109375, 179.46832275391), pos2 = Vector(6644.6567382813, 3190.8598632813, 1869.3879394531), dispatch = {
-		"npc/overwatch/radiovoice/deservicedarea.wav",
-		"npc/overwatch/radiovoice/two.wav"
-	}},
-	{name = "Production Block 4", pos1 = Vector(1761.7663574219, -1838.5847167969, 554.47509765625), pos2 = Vector(3470.4421386719, 531.71875, -180.70111083984), dispatch = {
-		"npc/overwatch/radiovoice/productionblock.wav",
-		"npc/overwatch/radiovoice/four.wav"
+		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "High Priority Region 2", pos1 = Vector(697.07946777344, 4507.560546875, -675.19787597656), pos2 = Vector(3171.7204589844, 1780.3907470703, -366.50933837891), dispatch = {
 		"npc/overwatch/radiovoice/highpriorityregion.wav",
 		"npc/overwatch/radiovoice/two.wav"
 	}},
-	{name = "High Priority Region 1", pos1 = Vector(2494.0302734375, 4295.9614257813, 1056.0299072266), pos2 = Vector(3069.5178222656, 2586.4875488281, 38.227142333984), dispatch = {
-		"npc/overwatch/radiovoice/highpriorityregion.wav",
-		"npc/overwatch/radiovoice/one.wav"
-	}},
+	
 	{name = "High Priority Region 3", pos1 = Vector(2545.8649902344, 2583.7351074219, 1476.9350585938), pos2 = Vector(3106.1884765625, 4088.427734375, 5257.8002929688), dispatch = {
 		"npc/overwatch/radiovoice/highpriorityregion.wav",
 		"npc/overwatch/radiovoice/three.wav"
 	}},
-	{name = "Storm System 2", pos1 = Vector(-3098.0314941406, 164.14768981934, 2.1831855773926), pos2 = Vector(1248.3210449219, 4920.2172851563, -366.80670166016), dispatch = {
-		"npc/overwatch/radiovoice/canalblock.wav",
+	{name = "High Priority Region 4", pos1 = Vector(1705.3116455078, 6458.8603515625, 303.36569213867), pos2 = Vector(1300.3034667969, 4757.7431640625, 176.52156066895), dispatch = {
+		"npc/overwatch/radiovoice/highpriorityregion.wav",
+		"npc/overwatch/radiovoice/four.wav"
+	}},
+
+	--Restricted Block
+	{name = "Restricted Block 1", pos1 = Vector(5014.912109375, 4147.701171875, 517.17614746094), pos2 = Vector(4226.6259765625, 3597.2658691406, 225.07489013672), dispatch = {
+		"npc/overwatch/radiovoice/deservicedarea.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	
+	{name = "Restricted Block 2", pos1 = Vector(4276.1806640625, 1440.9912109375, 179.46832275391), pos2 = Vector(6644.6567382813, 3190.8598632813, 1869.3879394531), dispatch = {
+		"npc/overwatch/radiovoice/deservicedarea.wav",
 		"npc/overwatch/radiovoice/two.wav"
 	}},
-	{name = "Storm System 1", pos1 = Vector(6969.4638671875, 639.02795410156, 79.737464904785), pos2 = Vector(3283.4982910156, 6478.9790039063, -529.25720214844), dispatch = {
-		"npc/overwatch/radiovoice/canalblock.wav",
+
+	--Storm System
+	{name = "Storm System 1", pos1 = Vector(6969.4638671875, 639.02795410156, 79.737464904785), pos2 = Vector(3448.8718261719, 4842.5927734375, -135.47499084473), dispatch = {
+		"npc/overwatch/radiovoice/stormsystem.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Storm System 2", pos1 = Vector(3751.1030273438, 1661.2915039063, -251.18135070801), pos2 = Vector(7332.9799804688, -411.33575439453, 27.127868652344), dispatch = {
+		"npc/overwatch/radiovoice/stormsystem.wav",
+		"npc/overwatch/radiovoice/two.wav"
+	}},
+	{name = "Storm System 3", pos1 = Vector(1761.7663574219, -1838.5847167969, 554.47509765625), pos2 = Vector(3470.4421386719, 531.71875, -180.70111083984), dispatch = {
+		"npc/overwatch/radiovoice/stormsystem.wav",
+		"npc/overwatch/radiovoice/three.wav"
+	}},
+
+	-- Outlands
+	{name = "Stabilization Jurisdiction 1", pos1 = Vector(-10410.905273438, 11.682598114014, 8737.279296875), pos2 = Vector(-11953.028320313, -2149.7631835938, 8139.68359375), dispatch = {
+		"npc/overwatch/radiovoice/stabilizationjurisdiction.wav",
 		"npc/overwatch/radiovoice/one.wav"
 	}},
 	{name = "Stabilization Jurisdiction 2", pos1 = Vector(-1257.9465332031, 3708.4028320313, 281.94729614258), pos2 = Vector(-1820.3475341797, 3454.1655273438, 108.08744049072), dispatch = {
-		"npc/overwatch/radiovoice/highpriorityregion.wav",
-		"npc/overwatch/radiovoice/six.wav"
-	}},
-	{name = "Stabilization Jurisdiction 1", pos1 = Vector(-10410.905273438, 11.682598114014, 8737.279296875), pos2 = Vector(-11953.028320313, -2149.7631835938, 8139.68359375), dispatch = {
-		"npc/overwatch/radiovoice/highpriorityregion.wav",
-		"npc/overwatch/radiovoice/five.wav"
-	}},
-	{name = "Canal Block 3", pos1 = Vector(-12035.891601563, 1788.7338867188, 8144.4013671875), pos2 = Vector(-3419.7521972656, 1027.1517333984, 7938.38671875), dispatch = {
-		"npc/overwatch/radiovoice/canalblock.wav",
-		"npc/overwatch/radiovoice/three.wav"
+		"npc/overwatch/radiovoice/stabilizationjurisdiction.wav",
+		"npc/overwatch/radiovoice/two.wav"
 	}},
 	{name = "Outland Zone 1", pos1 = Vector(-10331.71484375, -2221.4020996094, 8697.8671875), pos2 = Vector(-5136.0249023438, 2430.2751464844, 8169.6401367188), dispatch = {
 		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Outland Zone 1", pos1 = Vector(-11950.150390625, 19.293464660645, 8740.1025390625), pos2 = Vector(-10338.13671875, 2438.3837890625, 8197.708984375), dispatch = {
+		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Outland Zone 2", pos1 = Vector(-3287.2895507813, 3085.9448242188, 9320.93359375), pos2 = Vector(3535.5637207031, -2260.1206054688, 8171.9750976563), dispatch = {
+		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/two.wav"
+	}},
+	{name = "Outland Zone 3", pos1 = Vector(4998.2778320313, 3001.6960449219, 9549.560546875), pos2 = Vector(11254.059570313, -2271.5852050781, 8117.6000976563), dispatch = {
+		"npc/overwatch/radiovoice/outlandzone.wav",
 		"npc/overwatch/radiovoice/three.wav"
 	}},
-	{name = "Outland Zone 2", pos1 = Vector(-3287.2895507813, 3085.9448242188, 9320.93359375), pos2 = Vector(3535.5637207031, -2260.1206054688, 8171.9750976563)},
-	{name = "Canal Block 2", pos1 = Vector(-3389.7326660156, -1456.7364501953, 8135.1186523438), pos2 = Vector(3385.2822265625, 1738.3218994141, 7913.9580078125)},
-	{name = "Outland Zone 4", pos1 = Vector(3523.1423339844, -3715.4138183594, 9774.1259765625), pos2 = Vector(-3082.9396972656, -8159.4096679688, 8150.1997070313)},
-	{name = "Canal Block 4", pos1 = Vector(3073.1772460938, -4039.6303710938, 8115.7504882813), pos2 = Vector(-2889.1196289063, -8171.357421875, 7742.9697265625)},
-	{name = "Outland Zone 3", pos1 = Vector(4998.2778320313, 3001.6960449219, 9549.560546875), pos2 = Vector(11254.059570313, -2271.5852050781, 8117.6000976563)},
-	{name = "Canal Block 1", pos1 = Vector(3543.2338867188, 2828.2897949219, 8087.3295898438), pos2 = Vector(13402.875976563, -2095.5720214844, 7100.8916015625)},
-	{name = "Condemned Zone 1", pos1 = Vector(-2183.1391601563, -5091.9497070313, 7708.818359375), pos2 = Vector(1319.9522705078, -9572.263671875, 6660.8920898438)}
+	{name = "Outland Zone 4", pos1 = Vector(3523.1423339844, -3715.4138183594, 9774.1259765625), pos2 = Vector(-3082.9396972656, -8159.4096679688, 8150.1997070313), dispatch = {
+		"npc/overwatch/radiovoice/outlandzone.wav",
+		"npc/overwatch/radiovoice/four.wav"
+	}},
+	{name = "Canal Block 1", pos1 = Vector(-12035.891601563, 1788.7338867188, 8144.4013671875), pos2 = Vector(-3419.7521972656, 1027.1517333984, 7938.38671875), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/one.wav"
+	}},
+	{name = "Canal Block 2", pos1 = Vector(-3389.7326660156, -1456.7364501953, 8135.1186523438), pos2 = Vector(3385.2822265625, 1738.3218994141, 7913.9580078125), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/two.wav"
+	}},
+	{name = "Canal Block 3", pos1 = Vector(3543.2338867188, 2828.2897949219, 8087.3295898438), pos2 = Vector(13402.875976563, -2095.5720214844, 7100.8916015625), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/three.wav"
+	}},
+	{name = "Canal Block 4", pos1 = Vector(3073.1772460938, -4039.6303710938, 8115.7504882813), pos2 = Vector(-2889.1196289063, -8171.357421875, 7742.9697265625), dispatch = {
+		"npc/overwatch/radiovoice/canalblock.wav",
+		"npc/overwatch/radiovoice/four.wav"
+	}},
 }
 
 impulse.Config.BulkCrateSpawn = Vector(-279.53720092773, 3037.5583496094, 136.03125)
@@ -331,10 +405,10 @@ impulse.Config.PrisonCells = {
 	Vector(3079.7795410156, 3352.03125, 89.428901672363)
 }
 
-impulse.Config.JWButtonPos = Vector(3181.96875, 4005, 3449)
-impulse.Config.JWOffButtonPos = Vector(3182, 3991, 3449)
-impulse.Config.AJButtonPos = Vector(6881.28125, 1899, -349.46875)
-impulse.Config.AJOffButtonPos = Vector(6881.28125, 1869, -349.46875)
+--impulse.Config.JWButtonPos = Vector(3181.96875, 4005, 3449)
+--0impulse.Config.JWOffButtonPos = Vector(3182, 3991, 3449)
+--impulse.Config.AJButtonPos = Vector(6881.28125, 1899, -349.46875)
+--impulse.Config.AJOffButtonPos = Vector(6881.28125, 1869, -349.46875)
 
 impulse.Config.Buttons = {
 	{
@@ -574,54 +648,124 @@ impulse.Config.LoadScript = function()
 		end
 	end
 
-			local autoLockDoors = {
-			1882, 
-			2063,
-			2307,
-			4032,
-			4794,
-			2739,
-			2935,
-			2936,
-			2937,
-			2128
-		}
-		for v,k in pairs(autoLockDoors) do
-			local door = ents.GetMapCreatedEntity(k)
-
-			if not IsValid(door) or not door:IsDoor() then
-				continue
-			end
-			
-			door:Fire("unlock")
-			door:Fire("close")
-
-			timer.Simple(2, function()
-				if IsValid(door) then
-					door:Fire("lock")
-				end
-			end)
+	for v,k in pairs(ents.FindByClass("npc_turret_ceiling")) do
+		if k:MapCreationID() != -1 then
+			k:Remove()
 		end
+	end
+
+	local autoLockDoors = {
+		1882, 
+		2063,
+		2307,
+		4032,
+		4794,
+		2739,
+		2935,
+		2936,
+		2937,
+		2128,
+		2218,
+		5213,
+		5219,
+		2366,
+		9356,
+		2193,
+
+	}
+	for v,k in pairs(autoLockDoors) do
+		local door = ents.GetMapCreatedEntity(k)
+
+		if not IsValid(door) or not door:IsDoor() then
+			continue
+		end
+		
+		door:Fire("unlock")
+		door:Fire("close")
+
+		timer.Simple(2, function()
+			if IsValid(door) then
+				door:Fire("lock")
+			end
+		end)
+	end
+
+	local removeOnStart = {
+        2184,
+        9245,
+        7061,
+        9336,
+        9337,
+        5481,
+
+    }
+
+    for _, id in pairs(removeOnStart) do
+        local ent = ents.GetMapCreatedEntity(id)
+        if IsValid(ent) then ent:Remove() end
+    end
 end
 
-impulse.Config.CPSpawnLocations = {Vector(2020.302734375, 3417.7314453125, -543.96875),
-Vector(2431.2819824219, 3281.7680664063, -543.96875),
-Vector(1585.4149169922, 3030.2497558594, -543.96875),
-Vector(1716.6280517578, 3899.3010253906, -543.96875),
-Vector(3263.1926269531, 3596.2326660156, 256.03125),
-Vector(3327.1259765625, 3811.1020507813, 400.03125),
-Vector(2627.1743164063, 2592.03125, 128.03125),
-Vector(2464.8583984375, 4507.8525390625, -303.96875)
+impulse.Config.CPSpawnLocations = {
+    Nexus = {
+        Vector(2122.5451660156, 2701.2983398438, -543.96875),
+		Vector(3184.7907714844, 3268.984375, 392.03125),
+		Vector(1568.03125, 2479.96875, -607.96875),
+		Vector(3383.5893554688, 4014.484375, 392.02871704102),
+		Vector(2640.03125, 3999.9677734375, 256.03143310547),
+		Vector(1927.96875, 2101.0012207031, -607.96875),
+		Vector(2883.9177246094, 3872.1481933594, 392.03125),
+		Vector(2031.96875, 3408.03125, -543.96875),
+		Vector(2823.96875, 2902.2351074219, 256.03125),
+    },
+    FOB = {
+        Vector(4013.4516601563, 4152.314453125, 376.03125),
+        Vector(4016.8278808594, 4455.96875, 376.03125),
+        Vector(4148.8969726563, 4319.8671875, 376.03125),
+    },
+    OZ = {
+        Vector(-11246.87890625, -1110.0057373047, 8192.03125),
+		Vector(-11125.334960938, -1121.0834960938, 8192.03125),
+		Vector(-10965.041992188, -1135.6927490234, 8192.03125),
+		Vector(-10822.734375, -1148.6629638672, 8192.03125),
+		Vector(-10686.622070313, -1319.96875, 8192.03125),
+		Vector(-10851.657226563, -1319.96875, 8192.03125),
+		Vector(-11008.330078125, -1313.8959960938, 8192.03125),
+		Vector(-11167.107421875, -1307.7413330078, 8192.03125),
+		Vector(-11262.248046875, -1304.0538330078, 8192.03125),
+		Vector(-10682.099609375, -1053.5335693359, 8320.03125),
+		Vector(-10947.384765625, -1247.8615722656, 8320.03125),
+		Vector(-11231.092773438, -1224.9061279297, 8320.03125),
+		Vector(-11234.98828125, -1049.7443847656, 8320.03125),
+    },
 }
 
-impulse.Config.OTASpawnLocations = {Vector(2597.3569335938, 2651.3076171875, 528.03125),
-Vector(2564.5866699219, 4079.96875, 528.03125),
-Vector(3327.1540527344, 3788.7448730469, 400.03125),
-Vector(2582.8791503906, 3486.5576171875, 832.03125),
-Vector(3265.9543457031, 4049.3796386719, 1408.03125),
-Vector(3174.3178710938, 3229.7731933594, 528.03125),
-Vector(3103.6762695313, 2917.7551269531, 392.03125),
-Vector(3121.6674804688, 3431.6276855469, 592.03240966797)
+impulse.Config.OTASpawnLocations = {
+    Nexus = {
+        Vector(2703.37890625, 3451.8056640625, 1408.8146972656),
+		Vector(3088.326171875, 4025.53515625, 528.03125),
+		Vector(3274.0573730469, 3992.5393066406, 528.03125),
+		Vector(2588.1059570313, 3526.0925292969, 828.03125),
+		Vector(2797.3200683594, 4752.9619140625, 832.03125),
+		Vector(3196.9196777344, 4191.6303710938, 832.52545166016),
+		Vector(2895.1396484375, 2648.5419921875, 1408.03125),
+		Vector(2667.2150878906, 2709.2526855469, 1408.03125),
+    },
+    OZ = {
+        Vector(-11246.87890625, -1110.0057373047, 8192.03125),
+		Vector(-11125.334960938, -1121.0834960938, 8192.03125),
+		Vector(-10965.041992188, -1135.6927490234, 8192.03125),
+		Vector(-10822.734375, -1148.6629638672, 8192.03125),
+		Vector(-10686.622070313, -1319.96875, 8192.03125),
+		Vector(-10851.657226563, -1319.96875, 8192.03125),
+		Vector(-11008.330078125, -1313.8959960938, 8192.03125),
+		Vector(-11167.107421875, -1307.7413330078, 8192.03125),
+		Vector(-11262.248046875, -1304.0538330078, 8192.03125),
+		Vector(-10682.099609375, -1053.5335693359, 8320.03125),
+		Vector(-10947.384765625, -1247.8615722656, 8320.03125),
+		Vector(-11231.092773438, -1224.9061279297, 8320.03125),
+		Vector(-11234.98828125, -1049.7443847656, 8320.03125),
+    },
 }
 
 impulse.Config.CASpawnLocations = {Vector(2597.3569335938, 2651.3076171875, 528.03125),
@@ -648,6 +792,11 @@ impulse.Config.StalkerSpawnLocations = {Vector(3028.3254394531, 3731.0737304688,
 Vector(2527.6389160156, 4432.1484375, -303.96875),
 Vector(3103.8054199219, 4575.0546875, -303.96875),
 Vector(3065.1179199219, 4532.9594726563, 1408.03125),
+}
+
+impulse.Config.CrematorSpawnLocations = {
+	Vector(2625.3688964844, 2592.03125, 128.03125),
+	Vector(2698.4118652344, 3055.96875, 64.03125)
 }
 
 local gates = {
@@ -758,83 +907,187 @@ impulse.RegisterChatCommand("/combinegate", {
 	end
 })
 
-if SERVER then
-	resource.AddWorkshop( "3465221427" ) -- Deep Gaming 2 - Content Pack #2
-	resource.AddWorkshop( "2853989986" ) -- Half-Life Alyx: Hazmat male and female
-	resource.AddWorkshop( "2685051966" ) -- Image Tool - Your pictures in the world!
-	resource.AddWorkshop( "2905875154" ) -- Project: Synapse - Props Pack
-	resource.AddWorkshop( "2942500044" ) -- Project: Synapse - Resource Pack
-	resource.AddWorkshop( "2979382377" ) -- Project: Synapse - Sound Pack
-	resource.AddWorkshop( "1562056573" ) -- Large Sci-Fi Generator / Reactor
-	resource.AddWorkshop( "3490155976" ) -- HL Alyx Combine Animated Prop [discontinued]
-	resource.AddWorkshop( "635535045" ) -- Handheld Radio
-	resource.AddWorkshop( "3303394137" ) -- undefined
-	resource.AddWorkshop( "104491619" ) -- Metropolice Pack
-	resource.AddWorkshop( "104603291" ) -- Extended Spawnmenu
-	resource.AddWorkshop( "105042805" ) -- Combine Administrators v2
-	resource.AddWorkshop( "108024198" ) -- Food and Household items
-	resource.AddWorkshop( "121412995" ) -- Combine AR3 Machine Gun
-	resource.AddWorkshop( "173482196" ) -- SProps Workshop Edition
-	resource.AddWorkshop( "206166550" ) -- Sabre-aN's Headcrab Zombie Mod
-	resource.AddWorkshop( "282312812" ) -- HL2RP ID Cards
-	resource.AddWorkshop( "411141331" ) -- PPSh-41 [CW2.0]
-	resource.AddWorkshop( "744901224" ) -- 4K Templar Sword
-	resource.AddWorkshop( "1574676244" ) -- Half-Life 2 Building Kit
-	resource.AddWorkshop( "1651398810" ) -- impulse framework content
-	resource.AddWorkshop( "1689357640" ) -- impulse: Half-Life 2 Roleplay Content
-	resource.AddWorkshop( "1784911999" ) -- LED screens
-	resource.AddWorkshop( "1929148608" ) -- impulse: Christmas Content
-	resource.AddWorkshop( "1931077830" ) -- impulse: Half-Life 2 Roleplay Content 2
-	resource.AddWorkshop( "1967574455" ) -- impulse: Half-Life 2 Roleplay Content 3
-	resource.AddWorkshop( "1996672418" ) -- [TFA] Half-Life: Alyx - Shotgun
-	resource.AddWorkshop( "2035519790" ) -- HL:Alyx Combine Grunt
-	resource.AddWorkshop( "2037241085" ) -- HL:Alyx Combine Suppressor
-	resource.AddWorkshop( "2043900984" ) -- [Half Life: Alyx] Infestation Control props
-	resource.AddWorkshop( "2085971768" ) -- impulse: Half-Life 2 Roleplay Content 4
-	resource.AddWorkshop( "2109019567" ) -- [Half Life: Alyx] Combine Workers (Player, NPC, Ragdoll)
-	resource.AddWorkshop( "2117238555" ) -- impulse: Half-Life 2 Roleplay Content 5
-	resource.AddWorkshop( "2131228609" ) -- [ArcCW] M2 Browning
-	resource.AddWorkshop( "2160883169" ) -- [TFA] BAR M1918 - Service Model
-	resource.AddWorkshop( "2228994615" ) -- [Half Life: Alyx] Xen Pack (Props)
-	resource.AddWorkshop( "2230543274" ) -- Willard Combine Upgrades
-	resource.AddWorkshop( "2473879362" ) -- Willard 2.0 Combine Pack
-	resource.AddWorkshop( "2521715069" ) -- [TFA] Combine-Modified SMG
-	resource.AddWorkshop( "2630235485" ) -- [TFA] AK47 and Type 56 (Call of Duty Black Ops: Cold War)
-	resource.AddWorkshop( "2631194512" ) -- Nemez Combine Soldier Remake Pack
-	resource.AddWorkshop( "2653493568" ) -- Combine Suits 2.0 - Tweaked
-	resource.AddWorkshop( "2665902404" ) -- [TFA] [AT] Project HL2 MMod Pack
-	resource.AddWorkshop( "2774420106" ) -- [HALF-LIFE: ALYX] Infestation Control models.
-	resource.AddWorkshop( "2797830728" ) -- TFA HL:A Weapons
-	resource.AddWorkshop( "2866027579" ) -- AmmoWorkbench
-	resource.AddWorkshop( "2891252709" ) -- Half Life 2 Props Extended
-	resource.AddWorkshop( "2920724950" ) -- Willard Networks V1 Models
-	resource.AddWorkshop( "2926909009" ) -- Willard Networks V1 Playermodels
-	resource.AddWorkshop( "2941435647" ) -- Fast Zombie With Headcrab Playermodel
-	resource.AddWorkshop( "2965143123" ) -- [TFA] PTRS-41
-	resource.AddWorkshop( "2980005772" ) -- Deep Gaming Materials Pack
-	resource.AddWorkshop( "3032450089" ) -- DGH Asset Pack A
-	resource.AddWorkshop( "3035353556" ) -- DGH Asset Pack B
-	resource.AddWorkshop( "3096690838" ) -- Deep Gaming music pack
+local outlandsgateCommand = {
+    description = "Opens the Outlands Gate. (Combine only)",
+    requiresAlive = true,
+    onRun = function(ply, arg, rawText)
+        if ply:Team() != TEAM_OTA and ply:Team() != TEAM_CP then
+            ply:Notify("You must be a member of the OTA or CP i1+ to use this.")
+            return
+        elseif ply:Team() == TEAM_CP and ply:GetTeamRank() <= RANK_I1 then
+            ply:Notify("You must be a member of the OTA or CP i1+ to use this.")
+            return
+        end
+        if (ply:GetPos() - Vector(-1144.7131347656, 3583.7971191406, 128.03125)):LengthSqr() > (800 ^ 2) then
+            ply:Notify("You are not near the outlands gate.")
+            return
+        end
+        if timer.Exists("ozgatecooldown") then
+            ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozgatecooldown")) .. " seconds before using this command.")
+            return
+        end
 
-	resource.AddWorkshop( "3159278363" ) -- DGH Asset Pack C
-	resource.AddWorkshop( "3222165323" ) -- Deep Gaming HL2RP - Content Pack #1
-	resource.AddWorkshop( "2452057425" ) -- Soviet Lab Electronics Prop Pack from Snowdrop Escape
-	resource.AddWorkshop( "1909557607" ) -- [TTT/Sandbox] Combine Sniper
-	resource.AddWorkshop( "3028357706" ) -- [LVS] - Half-Life 2 - Pack
-	resource.AddWorkshop( "2912816023" ) -- [LVS] - Framework
-	resource.AddWorkshop( "3027255911" ) -- [LVS] - Military - Pack
-	resource.AddWorkshop( "2922255746" ) -- [LVS] - Helicopters - Pack
-	resource.AddWorkshop( "2840031720" ) -- TFA Base
-	resource.AddWorkshop( "2216838577" ) -- [Half Life: Alyx] Consumables Misc (Props)
-	resource.AddWorkshop( "3490004161" ) -- Pinnacle Gaming Content #2
-	resource.AddWorkshop( "1744257891" ) -- i17 v3 Content
-	resource.AddWorkshop( "2041528484" ) -- HL:Alyx Vanilla Combine
-	resource.AddWorkshop( "2892681669" ) -- [NPC] VALKYRIA Civil Protection maskless
-	resource.AddWorkshop( "771487490" ) -- [simfphys] LUA Vehicles - Base
-	resource.AddWorkshop( "831680603" ) -- [simfphys] - Armed
-	resource.AddWorkshop( "2892682541" ) -- [MATERIALS] VALKYRIA Civil Protection maskless
-	resource.AddWorkshop( "417428923" ) -- Episodic Pill Pack
-	resource.AddWorkshop( "950845673" ) -- Parakeet's Pill Pack
-	resource.AddWorkshop( "3616199913" ) -- Fallout 76 – Workstation Props (REUPLOAD)
-	resource.AddWorkshop( "3130877181" ) -- rp_wn_industrial24_v1_5
+        local door1 = ents.GetMapCreatedEntity(6120)
+        local door2 = ents.GetMapCreatedEntity(6119)
+
+        if not IsValid(door1) and not IsValid(door2) then
+            ply:Notify("Could not find the outlands gate doors.")
+            return
+        end
+
+        if IsValid(door1) then
+		    door1:Fire("Unlock", "", 0)
+		    door1:Fire("Open", "", 0.2)
+		end
+		if IsValid(door2) then
+		    door2:Fire("Unlock", "", 0)
+		    door2:Fire("Open", "", 0.2)
+		end
+
+        timer.Simple(20, function()
+		    if IsValid(door1) then
+		        door1:Fire("Close", "", 0)
+		        door1:Fire("Lock", "", 0.3)
+		    end
+		    if IsValid(door2) then
+		        door2:Fire("Close", "", 0)
+		        door2:Fire("Lock", "", 0.3)
+		    end
+		end)
+        for _, v in pairs(player.GetAll()) do
+            if v:IsCP() then
+                v:SendCombineMessage(ply:Name() .. " HAS OPENED THE OUTLANDS GATE.", Color(0, 100, 0))
+            end
+        end
+
+        timer.Simple(20, function()
+            for _, v in pairs(player.GetAll()) do
+                if v:IsCP() then
+                    v:SendCombineMessage("THE OUTLANDS GATE HAS CLOSED.", Color(0, 100, 0))
+                end
+            end
+        end)
+
+        timer.Create("ozgatecooldown", 30, 1, function() timer.Remove("ozgatecooldown") end)
+        ply:Notify("You have opened the outlands gate.")
+    end
+}
+impulse.RegisterChatCommand("/ozg", outlandsgateCommand)
+
+local shellbeachCommand = {
+    description = "Opens the Shell Beach Gate. (Combine only)",
+    requiresAlive = true,
+    onRun = function(ply, arg, rawText)
+        if ply:Team() != TEAM_OTA and ply:Team() != TEAM_CP then
+            ply:Notify("You must be a member of the OTA or CP Supervisor to use this.")
+            return
+        elseif ply:Team() == TEAM_CP and ply:GetTeamRank() <= RANK_OFC then
+            ply:Notify("You must be a member of the OTA or CP Supervisor to use this.")
+            return
+        end
+        if (ply:GetPos() - Vector(3715.5456542969, 5655.2045898438, 320.03125)):LengthSqr() > (800 ^ 2) then
+            ply:Notify("You are not near the beach gate.")
+            return
+        end
+        if timer.Exists("ozgatecooldown") then
+            ply:Notify("You must wait " .. math.floor(timer.TimeLeft("ozgatecooldown")) .. " seconds before using this command.")
+            return
+        end
+
+        local door1 = ents.GetMapCreatedEntity(5339)
+        local door2 = ents.GetMapCreatedEntity(5338)
+
+        if not IsValid(door1) and not IsValid(door2) then
+            ply:Notify("Could not find the beach gate doors.")
+            return
+        end
+
+        if IsValid(door1) then door1:Fire("Open") end
+        if IsValid(door2) then door2:Fire("Open") end
+
+        timer.Simple(20, function()
+            if IsValid(door1) then door1:Fire("Close") end
+            if IsValid(door2) then door2:Fire("Close") end
+        end)
+
+        for _, v in pairs(player.GetAll()) do
+            if v:IsCP() then
+                v:SendCombineMessage(ply:Name() .. " HAS OPENED THE EJ-1 GATE.", Color(0, 100, 0))
+            end
+        end
+
+        timer.Simple(20, function()
+            for _, v in pairs(player.GetAll()) do
+                if v:IsCP() then
+                    v:SendCombineMessage("THE EJ-1 GATE HAS CLOSED.", Color(0, 100, 0))
+                end
+            end
+        end)
+
+        timer.Create("ozgatecooldown", 30, 1, function() timer.Remove("ozgatecooldown") end)
+        ply:Notify("You have opened the beach gate.")
+    end
+}
+impulse.RegisterChatCommand("/beachgate", shellbeachCommand)
+
+local apcgarageCommand = {
+    description = "Opens the APC Garage door. (Combine only)",
+    requiresAlive = true,
+    onRun = function(ply, arg, rawText)
+        if ply:Team() != TEAM_OTA and ply:Team() != TEAM_CP then
+            ply:Notify("You must be a member of the OTA or CP Supervisor to use this.")
+            return
+        elseif ply:Team() == TEAM_CP and ply:GetTeamRank() <= RANK_OFC then
+            ply:Notify("You must be a member of the OTA or CP Supervisor to use this.")
+            return
+        end
+        if (ply:GetPos() - Vector(1538.256714, 3756.728760, 192.031250)):LengthSqr() > (800 ^ 2) then
+            ply:Notify("You are not near the APC Garage.")
+            return
+        end
+        if timer.Exists("apcgatecooldown") then
+            ply:Notify("You must wait " .. math.floor(timer.TimeLeft("apcgatecooldown")) .. " seconds before using this command.")
+            return
+        end
+
+        local door = ents.GetMapCreatedEntity(3145)
+        if not IsValid(door) then
+            ply:Notify("Could not find the APC Garage door.")
+            return
+        end
+
+        door:Fire("Open")
+        timer.Simple(20, function()
+            if IsValid(door) then
+                door:Fire("Close")
+            end
+        end)
+
+        for _, v in pairs(player.GetAll()) do
+            if v:IsCP() then
+                v:SendCombineMessage(ply:Name() .. " HAS OPENED THE APC GARAGE.", Color(0, 100, 0))
+            end
+        end
+
+        timer.Simple(20, function()
+            for _, v in pairs(player.GetAll()) do
+                if v:IsCP() then
+                    v:SendCombineMessage("THE APC GARAGE DOOR HAS CLOSED.", Color(0, 100, 0))
+                end
+            end
+        end)
+
+        timer.Create("apcgatecooldown", 30, 1, function() timer.Remove("apcgatecooldown") end)
+        ply:Notify("You have opened the APC Garage.")
+    end
+}
+impulse.RegisterChatCommand("/apcgarage", apcgarageCommand)
+
+
+
+
+--[[
+if SERVER then
+
 end
+]]--

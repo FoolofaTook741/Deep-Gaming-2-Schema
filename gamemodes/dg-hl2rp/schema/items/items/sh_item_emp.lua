@@ -26,10 +26,12 @@ ITEM.UseWorkBarSound = "ambient/energy/weld1.wav"
 local EMP_DOOR_IDS = {
     [6957] = true,
     [6958] = true,
+    [6119] = true,
+    [6120] = true,
 }
 
 local function IsEMPDoor(ent)
-    return EMP_DOOR_IDS[ent:MapCreationID()] and game.GetMap() == "rp_industrial17_landis"
+    return EMP_DOOR_IDS[ent:MapCreationID()] and (game.GetMap() == "rp_industrial17_landis" or game.GetMap() == "rp_wn_industrial24_v1_5")
 end
 
 
