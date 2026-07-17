@@ -64,11 +64,6 @@ net.Receive("cuffsDoSearch", function(len, ply)
         return
     end
 
-    if not targ:IsHandcuffed() then
-        ply:Notify("You must detain a player before searching them.")
-        return
-    end
-
     if ply:GetPos():DistToSqr(targ:GetPos()) > (200 * 200) then
         ply:Notify("No player in search range.")
         return
@@ -369,6 +364,7 @@ local function RemoveShield(ply)
     ply.shield = nil
 end
 
+--[[
 local function ShouldHaveShield(ply)
     if not IsValid(ply) or not ply:Alive() then return false end
     if ply:Team() ~= TEAM_OTA then return false end
@@ -384,7 +380,7 @@ local function ShouldHaveShield(ply)
     if wep:GetClass() ~= "plutonic_osish" then return false end
 
     return true
-end
+end ]]--
 
 local function EnsureFollowLoop(ply)
     local tname = ShieldTimerName(ply)
@@ -404,6 +400,8 @@ local function EnsureFollowLoop(ply)
         end
     end)
 end
+
+--[[
 
 timer.Create("Deep_WallhammerShield", MASTER_RATE, 0, function()
     for _, ply in ipairs(team.GetPlayers(TEAM_OTA)) do
@@ -432,6 +430,7 @@ hook.Add("PlayerDeath", "RemoveSteroidStimOnDeath", function(ply)
         ply.MeleeMult = 1
     end
 end)
+]]--
 
 local function canHearCheck(listener, allPlayers) -- based on darkrps voice chat optomization this is called every 0.5 seconds in the think hook
     if not IsValid(listener) then return end

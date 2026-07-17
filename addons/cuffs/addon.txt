@@ -1,9 +1,0 @@
-"AddonInfo"
-{
-	"name"        "Cuffs"
-	"version"     "1.2.14"
-	"author_name" "my_hat_stinks"
-	"author_url"  ""
-	"info"        "Handcuffs and hand-ties"
-	"override"    "0"
-}

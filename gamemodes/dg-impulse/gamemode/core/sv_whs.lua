@@ -1,3 +1,5 @@
+--[[
+
 local SHIELD_MODEL = "models/hunter/tubes/circle4x4.mdl"
 local SHIELD_MAT   = "effects/bluelaser2"
 local SHIELD_SCALE = 0.55
@@ -48,4 +50,4 @@ function meta:DrawWallhammerShield(wep)
     end
 end
 
-
+]]--

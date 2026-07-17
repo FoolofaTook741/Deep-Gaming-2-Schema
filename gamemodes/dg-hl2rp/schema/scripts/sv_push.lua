@@ -18,7 +18,7 @@ end)
 
 hook.Add("KeyPress", "PushMechanic", function(ply, key)
     if ( key == IN_USE ) then
-        if ply:Alive() and ply.NextPush < CurTime() and !ply:IsHandcuffed() and !ply:GetSyncVar(SYNC_ARRESTED, false) and ply:Team() != TEAM_ZOMBIE and ply:Team() != TEAM_STALKER and !ply:IsScanner() then
+        if ply:Alive() and ply.NextPush < CurTime() and !ply:GetSyncVar(SYNC_ARRESTED, false) and ply:Team() != TEAM_ZOMBIE and ply:Team() != TEAM_STALKER and !ply:IsScanner() then
         	local dir = ply:GetAimVector()
         	local t = ply:GetEyeTrace().Entity
             if (t and t:IsPlayer()) and (ply:GetPos():Distance( t:GetPos() ) <= 100) then
