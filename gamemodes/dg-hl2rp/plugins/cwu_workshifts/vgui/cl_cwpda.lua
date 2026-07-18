@@ -19,7 +19,7 @@ end
 function PANEL:SetUpCWPDA()
     self.sheet = vgui.Create("DColumnSheet", self)
 	self.sheet:Dock(FILL)
-	self.sheet.Navigation:SetWidth(50)
+	self.sheet.Navigation:SetWidth(90)
 	
 	if IsValid(self.make) then
 		self.make:Remove()
@@ -270,6 +270,20 @@ function PANEL:SetUpCWPDA()
 		function self.workerPnl:Paint()
 			return
 		end
+	end
+
+	if LocalPlayer():Team() == TEAM_CWU and LocalPlayer():GetTeamRank() >= RANK_SUPERVISOR then
+		self.civicMeritsPnl = vgui.Create("DPanel", self.sheet)
+		self.civicMeritsPnl:Dock(FILL)
+
+		function self.civicMeritsPnl:Paint()
+			return
+		end
+
+		self.sheet:AddSheet("CIVIC MERITS", self.civicMeritsPnl).Button:SetFont("DebugFixed")
+
+		self.civicMeritsList = vgui.Create("impulseCivicMeritsList", self.civicMeritsPnl)
+		self.civicMeritsList:Dock(FILL)
 	end
 end
 

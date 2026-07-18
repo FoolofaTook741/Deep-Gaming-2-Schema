@@ -269,13 +269,13 @@ end
 function PANEL:BuildSquadTab()
     if not IsValid(self.squadPnl) then
         local lp = LocalPlayer()
-        local n = lp:Team() == TEAM_CP and "PT" or "SQUAD"
+        local n = lp:Team() == TEAM_CP and "Protection Team" or "SQUAD"
 
         self.squadPnl = vgui.Create("DPanel", self.sheet)
         self.squadPnl:Dock(FILL)
         StyleCombinePanel(self.squadPnl, 32)
 
-        local squadSheet = self:AddCombineTab(n .. "S", self.squadPnl)
+        local squadSheet = self:AddCombineTab(n .. "s", self.squadPnl)
         squadSheet.Button:SetFont("DebugFixed")
 
         self.squadContent = vgui.Create("DPanel", self.squadPnl)
@@ -620,7 +620,7 @@ function PANEL:SetupPDA()
     self.utilPnl:Dock(FILL)
     StyleCombinePanel(self.utilPnl, 32)
 
-    local utilSheet = self:AddCombineTab("UTIL", self.utilPnl)
+    local utilSheet = self:AddCombineTab("UTILITY", self.utilPnl)
     utilSheet.Button:SetFont("DebugFixed")
     utilSheet.Button.NoShowSquad = true
 
@@ -956,9 +956,27 @@ end
     self.tPnl:Dock(FILL)
     StyleCombinePanel(self.tPnl, 0)
 
-    local tmnlSheet = self:AddCombineTab("TMNL", self.tPnl)
+    local tmnlSheet = self:AddCombineTab("TERMINAL", self.tPnl)
     tmnlSheet.Button:SetFont("DebugFixed")
     tmnlSheet.Button.NoShowSquad = true
+
+    local canManageCivicMerits =
+        (LocalPlayer():Team() == TEAM_CP and rank >= RANK_I1) or
+        (LocalPlayer():Team() == TEAM_CA and rank ~= nil)
+
+    if canManageCivicMerits then
+        self.civicMeritsPnl = vgui.Create("DPanel", self.sheet)
+        self.civicMeritsPnl:Dock(FILL)
+        StyleCombinePanel(self.civicMeritsPnl, 0)
+
+        local cvmrSheet = self:AddCombineTab("CIVIC MERITS", self.civicMeritsPnl)
+        cvmrSheet.Button:SetFont("DebugFixed")
+        cvmrSheet.Button.NoShowSquad = true
+
+        self.civicMeritsList = vgui.Create("impulseCivicMeritsList", self.civicMeritsPnl)
+        self.civicMeritsList:Dock(FILL)
+        self.civicMeritsList:DockMargin(6, 6, 6, 6)
+    end
 
     self.tScroll = vgui.Create("DScrollPanel", self.tPnl)
     self.tScroll:Dock(FILL)
@@ -1187,7 +1205,7 @@ end
         self.scPnl:Dock(FILL)
         StyleCombinePanel(self.scPnl, 32)
 
-        local scSheet = self:AddCombineTab("SC", self.scPnl)
+        local scSheet = self:AddCombineTab("STERILIZED CREDITS", self.scPnl)
         scSheet.Button:SetFont("DebugFixed")
         scSheet.Button.NoShowSquad = true
         scSheet.Button.EconText = false

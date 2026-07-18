@@ -11,6 +11,8 @@ lightCombineBlue = Color(58, 130, 144) -- hovered bg
 lightCombineBlueText = Color(89,171,179) -- hovered text
 local ocaBroadcastCol = Color(128, 0, 128)
 cp = Material("icons/civilprotection_logo.png")
+local sprite_light_ignorez = Material("sprites/light_ignorez")
+local claw_icon = Material("icons/npc_icon_combineclaw.png")
 
 local Point = Vector(19, -0, 7)
 
@@ -272,7 +274,7 @@ ENT.Menus['LoyalistTier'] = {
         surface.DrawLine(-525, -240, 500, -240)
         draw.DrawText("CIVIC TERMINAL :: " .. self:EntIndex() * 21, font32, 400, -285, lightCombineBlueText, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
 
-        draw.DrawText("LOYALIST TIER ", font50, -450, -300, lightCombineBlueText, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.DrawText("CIVIC STATUS ", font50, -450, -300, lightCombineBlueText, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         surface.DrawLine(-525, 300, 500, 300)
 
         surface.SetDrawColor(lightCombineBlue.r, lightCombineBlue.g + 20, lightCombineBlue.b + 20, 30)
@@ -281,12 +283,14 @@ ENT.Menus['LoyalistTier'] = {
         surface.SetDrawColor(lightCombineBlue.r, lightCombineBlue.g, lightCombineBlue.b, 30)
         surface.DrawRect(-190, -175, 380, 275)
 
-		local tier = LocalPlayer().LoyalistTier
-		tier = (tier == nil) and "Loading..." or tostring(tier)
+        surface.SetDrawColor(lightCombineBlueText)
+        surface.DrawLine(0, -160, 0, 40)
+
+		local tier = tostring(LocalPlayer():GetLoyalistLevel())
         draw.DrawText(
             tier,
             font64,
-            0,
+            -95,
             -100,
             lightCombineBlue,
             TEXT_ALIGN_CENTER,
@@ -295,9 +299,30 @@ ENT.Menus['LoyalistTier'] = {
 
         draw.DrawText(
             "LOYALIST TIER",
-            font40,
-            0,
-            -0,
+            font32,
+            -95,
+            -20,
+            lightCombineBlue,
+            TEXT_ALIGN_CENTER,
+            TEXT_ALIGN_CENTER
+        )
+
+		local merits = tostring(LocalPlayer():GetCivicMerits())
+        draw.DrawText(
+            merits,
+            font64,
+            95,
+            -100,
+            lightCombineBlue,
+            TEXT_ALIGN_CENTER,
+            TEXT_ALIGN_CENTER
+        )
+
+        draw.DrawText(
+            "CIVIC MERITS",
+            font32,
+            95,
+            -20,
             lightCombineBlue,
             TEXT_ALIGN_CENTER,
             TEXT_ALIGN_CENTER
@@ -474,7 +499,7 @@ ENT.Menus["Main"] = {
 			self:OpenMenu("request")
 		end),
 
-		CVButton("CITIZEN STATUS", -190, -50, 380, 52, CVCOLOR_BLUE, function(self)
+		CVButton("CIVIC STATUS", -190, -50, 380, 52, CVCOLOR_BLUE, function(self)
 			self:OpenMenu("LoyalistTier")
 		end),
 
@@ -507,17 +532,6 @@ ENT.__CurrentMenu = ""
 
 function ENT:OpenMenu(menu_)
     self.__CurrentMenu = menu_
-
-    if menu_ == "LoyalistTier" then
-        LocalPlayer().LoyalistTier = nil
-
-        if (self._nextLoyalistReq or 0) > CurTime() then return end
-        self._nextLoyalistReq = CurTime() + 2
-
-        net.Start("impulseHL2RPGetLoyalistTier")
-            net.WriteEntity(self)
-        net.SendToServer()
-    end
 end
 
 
@@ -538,8 +552,8 @@ local function IsVGUIOpen()
     end
 end
 
-local function DrawButton(text, x, y, w, h, color)
-    if IsVGUIOpen() then
+local function DrawButton(text, x, y, w, h, color, vguiOpen)
+    if vguiOpen then
         return false
     end
 
@@ -562,7 +576,7 @@ local function DrawButton(text, x, y, w, h, color)
     end
     surface.DrawRect(x, y, w, h)
 
-    surface.SetDrawColor(OLCol[color][hovered and 2 or 1])
+    surface.SetDrawColor(lightCombineBlueText)
     surface.DrawOutlinedRect(x, y, w, h, 3.5)
 
     -- Draw button text
@@ -571,7 +585,7 @@ local function DrawButton(text, x, y, w, h, color)
         font50,
         x + w / 2,
         y + h / 2 - 25,
-        hovered and lightCombineBlueText or combineBlue, -- Hovered or default text color
+        lightCombineBlueText, -- Hovered or default text color
         TEXT_ALIGN_CENTER,
         TEXT_ALIGN_CENTER
     )
@@ -580,15 +594,26 @@ local function DrawButton(text, x, y, w, h, color)
 end
 ENT.UIVisibleTime = 0
 
+local DRAW_POS = Vector(-28, 0, 0)
+local DRAW_ANG = Angle(0, 263, 90)
+local DIST_CHECK_INTERVAL = 0.15
+
 function ENT:Draw()
     self:DrawModel()
-    local pos = Vector(-28, 0, 0)
-    local ang = Angle(0, 263, 90)
     local lp = LocalPlayer()
 
-    if lp:GetPos():DistToSqr(self:GetPos()) <= 95 * 95 then
+    if not self.CachedPos then
+        self.CachedPos = self:GetPos()
+    end
+
+    if (self.NextDistCheck or 0) <= CurTime() then
+        self.NextDistCheck = CurTime() + DIST_CHECK_INTERVAL
+        self.InRange = lp:GetPos():DistToSqr(self.CachedPos) <= 95 * 95
+    end
+
+    if self.InRange then
         if self.UIVisibleTime == 0 then
-            self.UIVisibleTime = CurTime() + 0.1
+            self.UIVisibleTime = CurTime() + .25
         end
     else
         self.UIVisibleTime = 0
@@ -598,19 +623,19 @@ function ENT:Draw()
     if CurTime() < self.UIVisibleTime then return end
 
     local glowPos = self:LocalToWorld(Vector(-15, 0, 0))
-    render.SetMaterial(Material("sprites/light_ignorez")) 
+    render.SetMaterial(sprite_light_ignorez) 
     render.DrawSprite(glowPos, 110, 75, Color(50, 173, 255, 5)) -- Blue Glow
 
-	local glowPos = self:LocalToWorld(Vector(-24, 20.5, 2))
-	render.SetMaterial(Material("sprites/light_ignorez")) 
+	local glowPos2 = self:LocalToWorld(Vector(-24, 20.5, 2))
+	render.SetMaterial(sprite_light_ignorez) 
 	local alpha = 100 * math.abs(math.sin(CurTime() * 2))
-	render.DrawSprite(glowPos, 2, 2, Color(0, 255, 0, alpha)) 
+	render.DrawSprite(glowPos2, 2, 2, Color(0, 255, 0, alpha))
 
     local trace = util.IntersectRayWithPlane(
         lp:EyePos(),
         lp:GetAimVector(),
-        self:LocalToWorld(pos),
-        self:LocalToWorldAngles(ang):Up()
+        self:LocalToWorld(DRAW_POS),
+        self:LocalToWorldAngles(DRAW_ANG):Up()
     )
 
     local cursor = nil
@@ -620,7 +645,7 @@ function ENT:Draw()
         cursor.z = math.Clamp(cursor.z, -7.3, 7.3)
     end
 
-    cam.Start3D2D(self:LocalToWorld(pos), self:LocalToWorldAngles(ang), 0.02)
+    cam.Start3D2D(self:LocalToWorld(DRAW_POS), self:LocalToWorldAngles(DRAW_ANG), 0.02)
 
         local cx, cy = 0, 0
         if cursor then
@@ -634,7 +659,7 @@ function ENT:Draw()
         surface.SetMaterial(Glowie2)
         surface.DrawTexturedRectUV(-565, -365, 1130, 730, -0, -0, 1, .4)
 
-        surface.SetMaterial(Material("icons/npc_icon_combineclaw.png"))
+        surface.SetMaterial(claw_icon)
         surface.SetDrawColor(50, 173, 255, 255)
         surface.DrawTexturedRect(425, -325, 100, 100)
 
@@ -643,6 +668,7 @@ function ENT:Draw()
             activemenu.paint(self)
 
             if activemenu.buttons and cursor then
+                local vguiOpen = IsVGUIOpen()
                 for k, v in ipairs(activemenu.buttons) do
                     local x, y, w, h = v[2], v[3], v[4], v[5]
                     local hovered = cx >= x and cx <= x + w and cy >= y and cy <= y + h
@@ -652,10 +678,10 @@ function ENT:Draw()
                         surface.DrawRect(x - 1, y - 1, w + 2, h + 2)
                     end
 
-                    DrawButton(unpack(v))
+                    DrawButton(v[1], v[2], v[3], v[4], v[5], v[6], vguiOpen)
 
-					if hovered and input.IsKeyDown(KEY_E) and not self._clickCooldown then
-						if IsVGUIOpen() then
+                    if hovered and input.IsKeyDown(KEY_E) and not self._clickCooldown then
+						if vguiOpen then
 							return
 						end
 
@@ -672,7 +698,7 @@ function ENT:Draw()
 
 						surface.PlaySound("combine_tech/civic_station/station_menu_hover.mp3")
 					end
-                end
+				end
             end
         end
 

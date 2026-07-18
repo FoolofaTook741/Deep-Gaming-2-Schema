@@ -33,6 +33,7 @@ SYNC_BIGINT = 4
 SYNC_HUGEINT = 5
 SYNC_MINITABLE = 6
 SYNC_INTSTACK = 7
+SYNC_SIGNEDINT = 8
 
 SYNC_TYPE_PUBLIC = 1
 SYNC_TYPE_PRIVATE = 2
@@ -164,6 +165,8 @@ ioRegister[SERVER][SYNC_BIGINT] = function(val) return net.WriteUInt(val, 16) en
 ioRegister[CLIENT][SYNC_BIGINT] = function(val) return net.ReadUInt(16) end
 ioRegister[SERVER][SYNC_HUGEINT] = function(val) return net.WriteUInt(val, 32) end
 ioRegister[CLIENT][SYNC_HUGEINT] = function(val) return net.ReadUInt(32) end
+ioRegister[SERVER][SYNC_SIGNEDINT] = function(val) return net.WriteInt(val, 16) end
+ioRegister[CLIENT][SYNC_SIGNEDINT] = function(val) return net.ReadInt(16) end
 ioRegister[SERVER][SYNC_STRING] = function(val) return net.WriteString(val) end
 ioRegister[CLIENT][SYNC_STRING] = function(val) return net.ReadString() end
 ioRegister[SERVER][SYNC_MINITABLE] = function(val) return net.WriteData(pon.encode(val), 32) end

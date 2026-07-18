@@ -34,6 +34,7 @@ function GM:PlayerInitialSpawn(ply)
 	query:Select("firstjoin")
 	query:Select("languages")
 	query:Select("sterilizedcredits")
+	query:Select("civic_merits")
 	query:Where("steamid", ply:SteamID())
 	query:Callback(function(result, ok, err)
 		if not ok then
@@ -372,6 +373,8 @@ function impulse.SetupPlayer(ply, dbData)
 	local data = util.JSONToTable(rawData) or {}
 	ply.impulseData = data
 	ply.impulseID = dbData.id
+	ply:SetSyncVar(SYNC_CIVIC_ID, dbData.id, true)
+	ply:SetSyncVar(SYNC_CIVIC_MERITS, tonumber(dbData.civic_merits) or 0, true)
 
 	if ply.impulseData and ply.impulseData.Achievements then
 		local count = table.Count(ply.impulseData.Achievements)

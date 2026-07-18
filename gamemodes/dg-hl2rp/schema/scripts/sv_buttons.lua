@@ -204,3 +204,4 @@ PG_STAFFLOGS = "https://discord.com/api/webhooks/1471357087421566997/Dm2E-4T1bf8
 PG_HIGHVALUE = "https://discord.com/api/webhooks/1471357239024554114/_oxqoQ3shquqdFipQv1dbymcwd1soxFAw2jchZyRrTi-p53bta3Nc8AYoYj_vhp0RM0z"
 PG_DIVISIONAL_WHITELIST = "https://discord.com/api/webhooks/1473702072594464790/fAVaEmzChBoVh0S2wXBSrXiYw5hKSSaom6qhJxnofe7COxswYtPnak--Mtm-NQLKcpWf" -- Self Explanatory
 DG_E2 = "https://discord.com/api/webhooks/1511635343806435348/5OltFOimvvf37PS7ZHcDI8DySH_vqK7YiRBK_Xa6yEr79Yxzcc77C642zFsQ-pPMx9wj"
+DG_CVMERITS = "https://discord.com/api/webhooks/1528197213682143402/cQaKQ6YmONskR7ML8XtgWi-jxeG6ydDOVuJ1XKwDmgeV0TQFKwTjYkCm7Au0hpdEaKZb" -- Civic Merits
