@@ -25,7 +25,7 @@ function ENT:Use(activator, caller)
     end
     self.Cooldowns[sid] = CurTime() + self.COOLDOWN
 
-    if activator:IsCollaborator() then
+    if activator:IsCollaborator() or activator:Team() == TEAM_CA then
         DyePaintMachineOpen(activator, self)
     else
         DyeShopOpen(activator, self)

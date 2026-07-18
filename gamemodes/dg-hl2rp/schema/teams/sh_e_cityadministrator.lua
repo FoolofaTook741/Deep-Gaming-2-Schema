@@ -117,6 +117,8 @@ TEAM_CA = impulse.Teams.Define({
 					ply:SetBodygroup(8,0)
 					ply:SetRPName("Assistant Media Director " .. ply:GetSavedRPName())
 				end
+				ply:GiveInventoryItem("clo_suitjacket", 1, true)
+				ply:GiveInventoryItem("clo_whitejeans", 1, true)
 			end
 		},
 		{

@@ -143,7 +143,7 @@ net.Receive("dye.PaintMachine.Apply", function(len, client)
         return
     end
 
-    if not client:IsCollaborator() then
+    if not (client:IsCollaborator() or client:Team() == TEAM_CA) then
         client:Notify("This machine is for Collaborators only.")
         return
     end
@@ -282,7 +282,7 @@ net.Receive("dye.Shop.Apply", function(len, client)
         return
     end
 
-    if not client:IsDonator() and not client:IsCollaborator() then
+    if not client:IsDonator() and not client:IsCollaborator() and not client:Team() == TEAM_CA then
         if not client:CanAfford(DYE_SHOP_COST) then
             client:Notify("You cannot afford this dye.")
             return
