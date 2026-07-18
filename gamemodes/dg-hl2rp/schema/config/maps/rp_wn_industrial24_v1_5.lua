@@ -912,10 +912,7 @@ local outlandsgateCommand = {
     description = "Opens the Outlands Gate. (Combine only)",
     requiresAlive = true,
     onRun = function(ply, arg, rawText)
-        if ply:Team() != TEAM_OTA and ply:Team() != TEAM_CP then
-            ply:Notify("You must be a member of the OTA or CP i1+ to use this.")
-            return
-        elseif ply:Team() == TEAM_CP and ply:GetTeamRank() <= RANK_I1 then
+        if (ply:Team() != TEAM_OTA and ply:Team() != TEAM_CP) or (ply:Team() == TEAM_CP and ply:GetTeamRank() <= RANK_I2)then
             ply:Notify("You must be a member of the OTA or CP i1+ to use this.")
             return
         end
