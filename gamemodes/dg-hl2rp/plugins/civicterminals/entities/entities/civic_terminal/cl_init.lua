@@ -13,6 +13,10 @@ local ocaBroadcastCol = Color(128, 0, 128)
 cp = Material("icons/civilprotection_logo.png")
 local sprite_light_ignorez = Material("sprites/light_ignorez")
 local claw_icon = Material("icons/npc_icon_combineclaw.png")
+local atmInputStr = ""
+local atmStatusMsg = nil
+local atmStatusColor = color_white
+local atmStatusExpire = 0
 
 local Point = Vector(19, -0, 7)
 
@@ -42,6 +46,19 @@ local OLCol = {
 	[CVCOLOR_BLUE] = {Color(71,98,105,100), Color(71,98,105,100)},
 	[CVCOLOR_PURPLE] =  {Color(71,98,105,100), Color(71,98,105,100)}
 }
+
+net.Receive("impulseATMResult", function()
+    local success = net.ReadBool()
+    local message = net.ReadString()
+
+    atmStatusMsg = message
+    atmStatusColor = success and Color(80, 220, 120) or Color(255, 90, 90)
+    atmStatusExpire = CurTime() + 4
+
+    if success then
+        atmInputStr = ""
+    end
+end)
 
 function CVButton(text, x, y, w, h, color, onuse)
 	return {text, x, y, w, h, color, onuse}
@@ -90,7 +107,9 @@ ENT.Menus[""] = {
 ENT.Menus["balances"] = {
 	buttons = {
 		CVButton("WITHDRAW/DEPOSIT", -190, 140, 380, 52, CVCOLOR_GREEN, function(self)
-			vgui.Create("impulseATMMenu")
+			atmInputStr = ""
+			atmStatusMsg = nil
+			self:OpenMenu("ATM")
 		end),
 		CVButton("RETURN", -190, 200, 380, 52, CVCOLOR_RED, function(self)
 			self:OpenMenu("Main")
@@ -253,6 +272,87 @@ ENT.Menus["request"] = {
 		surface.SetDrawColor(lightCombineBlue.r, lightCombineBlue.g, lightCombineBlue.b, 30)
 		surface.DrawRect(-190, -175, 380, 275)
 		
+
+		surface.DrawLine(-525, 300, 500, 300)
+	end
+}
+
+local function ATMKeypadButton(label, x, y, onuse)
+	return CVButton(label, x, y, 110, 45, CVCOLOR_BLUE, onuse)
+end
+
+ENT.Menus["ATM"] = {
+	buttons = {
+		ATMKeypadButton("7", -170, -110, function(self) atmInputStr = atmInputStr .. "7" end),
+		ATMKeypadButton("8", -55,  -110, function(self) atmInputStr = atmInputStr .. "8" end),
+		ATMKeypadButton("9",  60,  -110, function(self) atmInputStr = atmInputStr .. "9" end),
+
+		ATMKeypadButton("4", -170, -60, function(self) atmInputStr = atmInputStr .. "4" end),
+		ATMKeypadButton("5", -55,  -60, function(self) atmInputStr = atmInputStr .. "5" end),
+		ATMKeypadButton("6",  60,  -60, function(self) atmInputStr = atmInputStr .. "6" end),
+
+		ATMKeypadButton("1", -170, -10, function(self) atmInputStr = atmInputStr .. "1" end),
+		ATMKeypadButton("2", -55,  -10, function(self) atmInputStr = atmInputStr .. "2" end),
+		ATMKeypadButton("3",  60,  -10, function(self) atmInputStr = atmInputStr .. "3" end),
+
+		CVButton("CLR", -170, 40, 110, 45, CVCOLOR_RED, function(self) atmInputStr = "" end),
+		ATMKeypadButton("0", -55, 40, function(self)
+			if atmInputStr ~= "" then
+				atmInputStr = atmInputStr .. "0"
+			end
+		end),
+		CVButton("DEL", 60, 40, 110, 45, CVCOLOR_RED, function(self)
+			atmInputStr = string.sub(atmInputStr, 1, -2)
+		end),
+
+		CVButton("WITHDRAW", -215, 128, 205, 52, CVCOLOR_GREEN, function(self)
+			local amount = math.floor(tonumber(atmInputStr) or 0)
+			if amount < 1 then return end
+
+			self:EmitSound("combine_tech/civic_station/station_menu_select.mp3")
+			net.Start("impulseATMWithdraw")
+				net.WriteUInt(amount, 32)
+			net.SendToServer()
+		end),
+		CVButton("DEPOSIT", 10, 128, 205, 52, CVCOLOR_GREEN, function(self)
+			local amount = math.floor(tonumber(atmInputStr) or 0)
+			if amount < 1 then return end
+
+			self:EmitSound("combine_tech/civic_station/station_menu_select.mp3")
+			net.Start("impulseATMDeposit")
+				net.WriteUInt(amount, 32)
+			net.SendToServer()
+		end),
+
+		CVButton("RETURN", -190, 215, 380, 52, CVCOLOR_RED, function(self)
+			self:OpenMenu("balances")
+		end)
+	},
+	paint = function(self)
+		surface.DrawLine(-525, -240, 500, -240)
+		draw.DrawText("CIVIC TERMINAL :: " .. self:EntIndex() * 21, font32, 400, -285, lightCombineBlueText, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+		draw.DrawText("CREDIT MANAGEMENT ", font50, -450, -300, lightCombineBlueText, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+
+		local prefix = impulse.Config.CurrencyPrefix
+		local cash = LocalPlayer():GetSyncVar(SYNC_MONEY, 0)
+		local bank = LocalPlayer():GetSyncVar(SYNC_BANKMONEY, 0)
+
+		draw.DrawText("CASH: " .. prefix .. cash .. "   |   BANK: " .. prefix .. bank, font24, 0, -200, lightCombineBlue, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
+		surface.SetDrawColor(lightCombineBlue.r, lightCombineBlue.g, lightCombineBlue.b, 40)
+		surface.DrawRect(-190, -175, 380, 40)
+		surface.SetDrawColor(lightCombineBlueText)
+		surface.DrawOutlinedRect(-190, -175, 380, 40)
+
+		local displayAmount = atmInputStr == "" and "0" or atmInputStr
+		local amountText = prefix .. displayAmount
+		surface.SetFont(font32)
+		local amountW, amountH = surface.GetTextSize(amountText)
+		draw.DrawText(amountText, font32, 0, -155 - amountH / 2 - 2, lightCombineBlueText, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
+		if atmStatusMsg and CurTime() < atmStatusExpire then
+			draw.DrawText(atmStatusMsg, font24, 0, 160, atmStatusColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+		end
 
 		surface.DrawLine(-525, 300, 500, 300)
 	end
@@ -580,16 +680,17 @@ local function DrawButton(text, x, y, w, h, color, vguiOpen)
     surface.DrawOutlinedRect(x, y, w, h, 3.5)
 
     -- Draw button text
+    surface.SetFont(font50)
+    local textW, textH = surface.GetTextSize(text)
     draw.DrawText(
         text,
         font50,
         x + w / 2,
-        y + h / 2 - 25,
+        y + h / 2 - textH / 2 - 3,
         lightCombineBlueText, -- Hovered or default text color
         TEXT_ALIGN_CENTER,
-        TEXT_ALIGN_CENTER
+        TEXT_ALIGN_TOP
     )
-
     return hovered
 end
 ENT.UIVisibleTime = 0

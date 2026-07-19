@@ -289,40 +289,59 @@ local function IsPlayerCloseToTerminal(ply, terminalClass)
 end
 
 
+util.AddNetworkString("impulseATMResult")
+
+local function SendATMResult(ply, success, message)
+    net.Start("impulseATMResult")
+        net.WriteBool(success)
+        net.WriteString(message)
+    net.Send(ply)
+end
+
 net.Receive("impulseATMWithdraw", function(len, ply)
+    if (ply.nextATM or 0) > CurTime() then
+        return
+    end
+    ply.nextATM = CurTime() + 1
 
+    local amount = net.ReadUInt(32)
 
-	local amount = net.ReadUInt(32)
-	if not isnumber(amount) or amount < 1 or amount >= 1 / 0 or amount > 1000000000 then return end
+    if not isnumber(amount) or amount < 1 or amount >= 1 / 0 or amount > 1000000000 then
+        return SendATMResult(ply, false, "Invalid withdrawal amount.")
+    end
 
-	amount = math.floor(amount)
+    amount = math.floor(amount)
 
-	if ply:CanAffordBank(amount) then
-		ply:TakeBankMoney(amount)
-		ply:GiveMoney(amount)
-		ply:Notify("You have withdrawn "..impulse.Config.CurrencyPrefix..amount.." from your bank account.")
-	else
-		ply:Notify("You cannot afford to withdraw this amount of money.")
-	end
-	ply.nextATM = CurTime() + 1
+    if ply:CanAffordBank(amount) then
+        ply:TakeBankMoney(amount)
+        ply:GiveMoney(amount)
+        SendATMResult(ply, true, "Withdrew " .. impulse.Config.CurrencyPrefix .. amount .. " from your bank account.")
+    else
+        SendATMResult(ply, false, "You cannot afford to withdraw this amount of money.")
+    end
 end)
 
 net.Receive("impulseATMDeposit", function(len, ply)
+    if (ply.nextATM or 0) > CurTime() then
+        return
+    end
+    ply.nextATM = CurTime() + 1
 
+    local amount = net.ReadUInt(32)
 
-	local amount = net.ReadUInt(32)
-	if not isnumber(amount) or amount < 1 or amount >= 1 / 0 or amount > 10000000000 then return end
+    if not isnumber(amount) or amount < 1 or amount >= 1 / 0 or amount > 10000000000 then
+        return SendATMResult(ply, false, "Invalid deposit amount.")
+    end
 
-	amount = math.floor(amount)
+    amount = math.floor(amount)
 
-	if ply:CanAfford(amount) then
-		ply:TakeMoney(amount)
-		ply:GiveBankMoney(amount)
-		ply:Notify("You have deposited "..impulse.Config.CurrencyPrefix..amount.." to your bank account.")
-	else
-		ply:Notify("You cannot afford to deposit this amount of money.")
-	end
-	ply.nextATM = CurTime() + 1
+    if ply:CanAfford(amount) then
+        ply:TakeMoney(amount)
+        ply:GiveBankMoney(amount)
+        SendATMResult(ply, true, "Deposited " .. impulse.Config.CurrencyPrefix .. amount .. " to your bank account.")
+    else
+        SendATMResult(ply, false, "You cannot afford to deposit this amount of money.")
+    end
 end)
 
 net.Receive("impulseTeamChange", function(len, ply)
