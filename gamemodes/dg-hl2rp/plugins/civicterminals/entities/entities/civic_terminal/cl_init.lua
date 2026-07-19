@@ -429,7 +429,7 @@ ENT.Menus['LoyalistTier'] = {
         )
 
 		draw.DrawText(
-            "CID: ".. LocalPlayer():SteamID64(),
+            "CID: ".. LocalPlayer():GetCivicID(),
             font24,
             0,
             60,

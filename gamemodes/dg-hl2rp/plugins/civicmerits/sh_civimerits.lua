@@ -1,6 +1,6 @@
 function PLUGIN:CreateSyncVars()
     SYNC_CIVIC_MERITS = impulse.Sync.RegisterVar(SYNC_SIGNEDINT)
-    SYNC_CIVIC_ID = impulse.Sync.RegisterVar(SYNC_INT)
+    SYNC_CIVIC_ID = impulse.Sync.RegisterVar(SYNC_BIGINT)
 end
 
 impulse.CivicMerits = impulse.CivicMerits or {}
