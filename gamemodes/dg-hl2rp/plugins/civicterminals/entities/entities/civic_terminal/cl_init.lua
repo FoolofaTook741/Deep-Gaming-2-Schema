@@ -351,7 +351,7 @@ ENT.Menus["ATM"] = {
 		draw.DrawText(amountText, font32, 0, -155 - amountH / 2 - 2, lightCombineBlueText, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 		if atmStatusMsg and CurTime() < atmStatusExpire then
-			draw.DrawText(atmStatusMsg, font24, 0, 160, atmStatusColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+			draw.DrawText(atmStatusMsg, font24, 0, 180, atmStatusColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 		end
 
 		surface.DrawLine(-525, 300, 500, 300)
