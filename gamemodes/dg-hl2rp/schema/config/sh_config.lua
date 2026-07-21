@@ -233,17 +233,14 @@ impulse.Config.RankColours = {
 	["eventmanager"] = Color(255, 83, 73),
 
 	-- Lead Administration
-	["leadadmincollaborator"] = Color(0, 200, 0),
 	["leadadminstaff"] = Color(0, 200, 0),
 	
 
 	-- Lead Event Team
 	["leadevents"] = Color(104, 159, 56),
-	["leadeventscollaborator"] = Color(104, 159, 56),
 
 	-- Staff
 	["admin"] = Color(34, 88, 216),
-	["admincollaborator"] = Color(34, 88, 216),
 	["jnradmin"] = Color(34, 88, 216),
 
 	["moderator"] = Color(34, 88, 216),
@@ -252,11 +249,9 @@ impulse.Config.RankColours = {
 
 	-- Senior Event Team
 	["seniorgamemaster"] = Color(104, 159, 56),
-	["seniorgamemastercollaborator"] = Color(104, 159, 56),
 
 	-- Event Team
 	["gamemaster"] = Color(255, 97, 0),
-	["gamemastercollaborator"] = Color(255, 97, 0),
 	["juniorgamemaster"] = Color(255, 97, 0),
 	["trialgamemaster"] = Color(255, 97, 0),
 

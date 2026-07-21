@@ -223,12 +223,13 @@ net.Receive("opsReportSync", function()
     end
 end)
 
+local blue = Color(238, 210, 2)
 net.Receive("opsGiveWarn", function()
 	local reason = net.ReadString()
 	local template = "You have received a warning from a Game Moderator for a violation of the server rules.\nReason: "..reason.."\nPlease read the server rules again before continuing. Repeated offences will be punished by a ban."
 	local id = "warn_"..os.time()
 
-	impulse.MenuMessage.Add(id, "Warning Notice", template, Color(238, 210, 2), "https://pinnacle-gaming.xyz/news", "View more details")
+	impulse.MenuMessage.Add(id, "Warning Notice", template, blue, "https://discord.com/invite/ftM9jcztCt", "View more details")
 	impulse.MenuMessage.Save(id)
 end)
 
@@ -276,7 +277,7 @@ net.Receive("opsGetRecord", function()
 
 	if curScore != score and score > 3 then
 		impulse.MenuMessage.Remove("badsport")
-		impulse.MenuMessage.Add("badsport", "Poor Disciplinary Record Notice", template, col, "https://pinnacle-gaming.xyz/news", "View more details")
+		impulse.MenuMessage.Add("badsport", "Poor Disciplinary Record Notice", template, col, "https://discord.com/invite/ftM9jcztCt", "View more details")
 	end
 
 	cookie.Set("ops-record-badsportscore", score)
@@ -310,4 +311,34 @@ net.Receive("opsE2Viewer", function()
 
 	local pnl = vgui.Create("impulseE2Viewer")
 	pnl:SetupE2S(e2s)
+end)
+
+net.Receive("dgBroadcastAction", function()
+    local kind = net.ReadUInt(4)
+    local red = Color(220, 60, 60)
+    local green = Color(90, 200, 100)
+
+    if kind == 1 then
+        local targetName = net.ReadString()
+        local adminName = net.ReadString()
+        local reason = net.ReadString()
+
+        chat.AddText(
+            red, targetName, color_white, " has been warned by ",
+            green, adminName, color_white, ". Reason: ",
+            green, reason
+        )
+    elseif kind == 2 then
+        local targetName = net.ReadString()
+        local adminName = net.ReadString()
+        local lengthText = net.ReadString()
+        local reason = net.ReadString()
+
+        chat.AddText(
+            red, targetName, color_white, " has been banned by ",
+            green, adminName, color_white, " for ",
+            red, lengthText, color_white, ". Reason: ",
+            green, reason
+        )
+    end
 end)

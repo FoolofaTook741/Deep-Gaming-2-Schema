@@ -1710,17 +1710,21 @@ hook.Add( "PlayerChangedTeam", "trackeventspawns", function(ply, oldTeam, newTea
 end)
 
 hook.Add("PlayerInitialSpawn", "retardfix", function(ply)
+    if not IsValid(ply) then return end
     timer.Simple(2, function()
+        if not IsValid(ply) then return end
         ply:SetRunSpeed(impulse.Config.JogSpeed)
         ply:SetWalkSpeed(110)
     end)
 end)
 
 hook.Add("PlayerInitialSpawn", "InitVoiceLines", function(ply)
+    if not IsValid(ply) then return end
     ply.VoiceLines = true
 end)
 
 hook.Add("PlayerInitialSpawn", "DeepSyncDecreeState", function(ply)
+    if not IsValid(ply) then return end
     timer.Simple(1, function()
         if not IsValid(ply) then return end
 

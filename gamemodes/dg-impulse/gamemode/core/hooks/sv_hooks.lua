@@ -560,11 +560,13 @@ function impulse.SetupPlayer(ply, dbData)
 end
 
 function GM:PostSetupPlayer(ply)
+	if not isValid(ply) then return end
 	ply.impulseData.Achievements = ply.impulseData.Achievements or {}
 	for v,k in pairs(impulse.Config.Achievements) do
 		ply:AchievementCheck(v)
 	end
 	timer.Simple(3, function()
+		if not isValid(ply) then return end
 		if ply:IsCollaborator() then
 	        ply:SetLocalSyncVar(SYNC_HUNGER, 100)
 	    else

@@ -1,4 +1,0 @@
-[submodule "lua/vyhub/lang"]
-	path = lua/vyhub/lang
-	url = git@github.com:matbyte-com/vyhub-lang.git
-	branch = gmod

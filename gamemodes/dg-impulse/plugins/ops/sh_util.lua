@@ -3,6 +3,13 @@ if SERVER then
     util.AddNetworkString("opsGetRecord")
 end
 
+local function ValidString(s, maxLen)
+    return type(s) == "string" and #s > 0 and #s <= (maxLen or 64)
+end
+local function ValidSteamID(sid)
+    return type(sid) == "string" and sid:match("^STEAM_%d:%d:%d+$") ~= nil
+end
+
 
 local setHealthCommand = {
     description = "Sets health of the specified player.",
@@ -278,79 +285,49 @@ local snooperModeCommand = {
 
 impulse.RegisterChatCommand("/snoopermode", snooperModeCommand)
 
-
 local banCommand = {
     description = "Bans the specified player from the server. (time in minutes)",
     requiresArg = true,
     adminOnly = true,
     onRun = function(ply, arg, rawText)
-        if ply:IsAdmin() or ply:IsLeadAdmin() or ply:IsSuperAdmin() then
-            local name = arg[1]
-            local plyTarget = impulse.FindPlayer(name)
-            local time = arg[2]
-            if not time or not tonumber(time) then
-                return ply:Notify("No time value supplied.")
-            end
-            time = tonumber(time)
-            if time < 0 then
-                return ply:Notify("Negative time values are not allowed.")
-            end
-            if time > 10000000 then
-                time = 0
-            end
-            local reason = ""
-            for v,k in pairs(arg) do
-                if v > 2 then
-                    reason = reason.." "..k
-                end
-            end
-            reason = string.Trim(reason)
-            if plyTarget and ply != plyTarget then
-                if plyTarget:IsSuperAdmin() then
-                    return ply:Notify("You can not ban this user.")
-                end
-                VyHub.Ban:create(plyTarget:SteamID64(), time, reason, ply:SteamID64())
-                ply:Notify("You have banned "..plyTarget:SteamName().." for "..time.." minutes.")
-                local steamid = plyTarget:SteamID64() or "BOT"
-                local bm = "**"..ply:SteamName().."** ("..ply:SteamID()..")"
-                local rs = reason or "None Provided"
-                local duration = time .. " Minutes"
-                local userbanned = "**"..plyTarget:SteamName().."** ("..steamid..") ("..plyTarget:Nick()..")"
+        if not (ply:IsAdmin() or ply:IsLeadAdmin() or ply:IsSuperAdmin()) then return end
 
-                local embeds = {
-                    title = "Ban Issued",
-                    description = "User was banned by a staff member.",
-                    url = "https://pinnacle-gaming.xyz/bans",
-                    color = 15548997,
-                    fields = {
-                        {
-                            name = "Banned User:",
-                            value = userbanned
-                        },
-                        {
-                            name = "Banning Moderator:",
-                            value = bm
-                        },
-                        {
-                            name = "Reason:",
-                            value = rs
-                        },
-                        {
-                            name = "Length:",
-                            value = tostring(duration)
-                        }
-                    }
-                }
-                
-                ReqwestLog(embeds, DG_OPS)
+        local name = arg[1]
+        local plyTarget = impulse.FindPlayer(name)
+        local time = arg[2]
+        if not time or not tonumber(time) then
+            return ply:Notify("No time value supplied.")
+        end
+        time = tonumber(time)
+        if time < 0 then
+            return ply:Notify("Negative time values are not allowed.")
+        end
+        if time > 10000000 then
+            time = 0
+        end
 
-            else
-                return ply:Notify("Could not find player: "..tostring(name))
+        local reason = ""
+        for v, k in pairs(arg) do
+            if v > 2 then
+                reason = reason.." "..k
             end
         end
+        reason = string.Trim(reason)
+        if not ValidString(reason, 256) then
+            reason = "No reason provided."
+        end
+
+        if not plyTarget or ply == plyTarget then
+            return ply:Notify("Could not find player: "..tostring(name))
+        end
+        if plyTarget:IsSuperAdmin() then
+            return ply:Notify("You can not ban this user.")
+        end
+
+        DG.Bans:Create(plyTarget:SteamID(), ply:SteamID(), ply:SteamName(), time, reason, "ingame")
+        ply:Notify("You have banned "..plyTarget:SteamName().." for "..(time == 0 and "permanent" or time.." minutes")..".")
     end
 }
-
 impulse.RegisterChatCommand("/ban", banCommand)
 
 local warnCommand = {
@@ -372,9 +349,9 @@ local warnCommand = {
                 return ply:Notify("No reason provided.")
             end
             if plyTarget and ply != plyTarget then
-                VyHub.Warning:create(plyTarget:SteamID64(), reason, ply:SteamID64())                
+                DG.Warns:Create(plyTarget:SteamID(), ply:SteamID(), ply:SteamName(), reason, "ingame")
                 ply:Notify("You have warned "..plyTarget:SteamName().." for "..reason..".")
-                local steamid = plyTarget:SteamID64() or "BOT"
+                local steamid = plyTarget:SteamID() or "BOT"
 
                 local embeds = {
                     title = "Warn Issued",
@@ -409,29 +386,91 @@ local ipBanCommand = {
     requiresArg = true,
     superAdminOnly = true,
     onRun = function(ply, arg, rawText)
-        if ply:IsSuperAdmin() then
-            local steamid = arg[1]
-            local targ = player.GetBySteamID(steamid)
-            if targ:IsSuperAdmin() then
-                ply:Notify("You cannot ban a superadmin's ip.")
-                return
-            end
-            if ply:IsSuperAdmin() then
-                ply:Notify(targ:Name() .. " banned via IP address.")
-                game.ConsoleCommand("addip 0 " .. targ:IPAddress())
-                VyHub.Ban:create(targ:SteamID64(), 0, "Synchronized Platform Ban Issued, Contact Community Management for Support.", ply:SteamID64())
-                game.ConsoleCommand(writeip)
-                for k,v in pairs(player.GetAll()) do
-                    if v:IsSuperAdmin() then
-                        v:AddChatText(Color(135, 206, 235), "[ops] SuperAdmin "..ply:SteamName().." IP banned " .. steamid .. ".")
-                    end
-                end
-                return
+        if not ply:IsSuperAdmin() then return end
+
+        local steamid = arg[1]
+        if not ValidSteamID(steamid) then
+            return ply:Notify("Invalid SteamID.")
+        end
+
+        local targ = player.GetBySteamID(steamid)
+        if not IsValid(targ) then
+            return ply:Notify("Player not found online.")
+        end
+        if targ:IsSuperAdmin() then
+            return ply:Notify("You cannot ban a superadmin's ip.")
+        end
+
+        ply:Notify(targ:Name() .. " banned via IP address.")
+        game.ConsoleCommand("addip 0 " .. targ:IPAddress())
+        DG.Bans:Create(steamid, ply:SteamID(), ply:SteamName(), 0, "Synchronized Platform Ban Issued, Contact Community Management for Support.", "ingame")
+        game.ConsoleCommand("writeip")
+
+        for _, v in pairs(player.GetAll()) do
+            if v:IsSuperAdmin() then
+                v:AddChatText(Color(135, 206, 235), "[ops] SuperAdmin "..ply:SteamName().." IP banned "..steamid..".")
             end
         end
     end
 }
-impulse.RegisterChatCommand("/ipban", ipBanCommand)
+
+local removeWarnCommand = {
+    description = "Removes a specific warning by ID. /removewarn <steamid> <warnid>",
+    requiresArg = true,
+    adminOnly = true,
+    onRun = function(ply, arg, rawText)
+        if not (ply:IsAdmin() or ply:IsLeadAdmin() or ply:IsSuperAdmin()) then return end
+
+        local steamid = arg[1]
+        local warnID = tonumber(arg[2])
+        if not ValidSteamID(steamid) then return ply:Notify("Invalid SteamID.") end
+        if not warnID then return ply:Notify("Invalid warn ID.") end
+
+        DG.Warns:Remove(steamid, warnID, ply:SteamID())
+        ply:Notify("Removed warn #"..warnID.." for "..steamid..".")
+    end
+}
+impulse.RegisterChatCommand("/removewarn", removeWarnCommand)
+
+local unbanCommand = {
+    description = "Removes all active bans for a player. /unban <steamid>",
+    requiresArg = true,
+    adminOnly = true,
+    onRun = function(ply, arg, rawText)
+        if not (ply:IsAdmin() or ply:IsLeadAdmin() or ply:IsSuperAdmin()) then return end
+
+        local steamid = arg[1]
+        if not ValidSteamID(steamid) then return ply:Notify("Invalid SteamID.") end
+
+        DG.Bans:RemoveActive(steamid, ply:SteamID())
+        ply:Notify("Cleared active ban(s) for "..steamid..".")
+    end
+}
+impulse.RegisterChatCommand("/unban", unbanCommand)
+
+local lookupCommand = {
+    description = "View a connected player's warn and ban history. /lookup <player>",
+    requiresArg = true,
+    adminOnly = true,
+    onRun = function(ply, arg, rawText)
+        if not (ply:IsAdmin() or ply:IsLeadAdmin() or ply:IsSuperAdmin()) then return end
+
+        local targ = impulse.FindPlayer(arg[1])
+        if not IsValid(targ) or not targ.dgRecord then
+            return ply:Notify("Player not found, or their record hasn't loaded yet.")
+        end
+
+        ply:Notify("--- Record for "..targ:SteamName().." ("..targ:SteamID()..") ---")
+        for _, w in ipairs(targ.dgRecord.warns) do
+            ply:Notify("[Warn #"..w.id.."] ("..DG.WarnStatusLabel(w)..") "..w.reason)
+        end
+        for _, b in ipairs(targ.dgRecord.bans) do
+            local length = (tonumber(b.length_minutes) == 0) and "permanent" or (b.length_minutes.." min")
+            ply:Notify("[Ban #"..b.id.."] ("..DG.BanStatusLabel(b)..", "..length..") "..b.reason)
+        end
+    end
+}
+impulse.RegisterChatCommand("/lookup", lookupCommand)
 
 local resetRationCommand = {
     description = "Resets a player's ration cooldown. Args: STEAMID",
@@ -946,3 +985,13 @@ local authRaid = {
 }
 
 impulse.RegisterChatCommand("/authraid", authRaid)
+
+local myStandingCommand = {
+    description = "View your own warning and ban history.",
+    requiresArg = false,
+    onRun = function(ply, arg, rawText)
+        net.Start("dgRequestRecord")
+        net.Send(ply)
+    end
+}
+impulse.RegisterChatCommand("/mystanding", myStandingCommand)
