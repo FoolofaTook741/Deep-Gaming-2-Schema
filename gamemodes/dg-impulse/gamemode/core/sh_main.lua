@@ -81,9 +81,7 @@ function meta:IsDeveloper()
         return true
     end
 
-    local steamID = self:SteamID()
-
-    return steamID == "STEAM_0:1:95921723" or steamID == "STEAM_0:0:104958683" or steamID == "STEAM_0:1:65644683"
+    return self:SteamID() == "STEAM_0:1:95921723", self:SteamID() == "STEAM_0:0:104958683", self:SteamID() == "STEAM_0:1:65644683"
 end
 
 --- Returns if a player has donator status
