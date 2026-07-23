@@ -180,6 +180,7 @@ function VyHub.Player:change_game_group(ply, group)
         query:Where("steamid", ply:SteamID())
         query:Execute()
         ply:SetUserGroup(group, true)
+        QueueDiscordSync(ply:SteamID())
         local rankCol = impulse.Config.RankColours[ply:GetUserGroup()]
         if rankCol then
             ply:SetWeaponColor(Vector(rankCol.r / 255, rankCol.g / 255, rankCol.b / 255))
