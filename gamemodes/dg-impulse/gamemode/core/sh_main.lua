@@ -56,22 +56,34 @@ function meta:IsLeadDeveloper()
     return self:SteamID() == "STEAM_0:1:52886245"
 end
 
+local superadminGroups = {
+    ["leaddeveloper"] = true,
+    ["staffmanager"] = true,
+    ["eventmanager"] = true,
+    ["superadmin"] = true,
+}
 --- Returns if a player is an impulse framework lead developer
 -- @realm shared
 -- @treturn bool Is superadmin
 function meta:IsSuperAdmin()
-	return self:IsUserGroup("superadmin") or self:IsUserGroup("leaddeveloper") or self:IsUserGroup("developer")
+    if superadminGroups[self.GetUserGroup(self)] then
+        return true
+    end
+
+    return false
 end
 
 --- Returns if a player is an impulse framework developer
 -- @realm shared
 -- @treturn bool Is developer
 function meta:IsDeveloper()
-    if self.IsLeadDeveloper(self) or self:IsUserGroup("developer") then
+    if self:IsLeadDeveloper() or self:IsUserGroup("developer") then
         return true
     end
 
-    return self:SteamID() == "STEAM_0:1:95921723", self:SteamID() == "STEAM_0:0:104958683", self:SteamID() == "STEAM_0:1:65644683"
+    local steamID = self:SteamID()
+
+    return steamID == "STEAM_0:1:95921723" or steamID == "STEAM_0:0:104958683" or steamID == "STEAM_0:1:65644683"
 end
 
 --- Returns if a player has donator status
@@ -82,7 +94,13 @@ function meta:IsDonator()
 end
 
 function meta:IsCollaborator()
-    return self:IsUserGroup("collaborator") or self:IsSuperAdmin() or self:IsUserGroup("admincollaborator") or self:IsUserGroup("leadadmincollaborator") or self:IsUserGroup("gamemastercollaborator") or self:IsUserGroup("seniorgamemastercollaborator")
+    return self:IsUserGroup("collaborator")
+        or self:IsSuperAdmin()
+        or self:IsUserGroup("admincollaborator")
+        or self:IsUserGroup("leadadminstaffcollaborator")
+        or self:IsUserGroup("leadeventscollaborator")
+        or self:IsUserGroup("gamemastercollaborator")
+        or self:IsUserGroup("seniorgamemastercollaborator")
 end
 
 function meta:IsE2()
@@ -90,13 +108,23 @@ function meta:IsE2()
 end
 
 local adminGroups = {
-    ["admin"] = true,
-    ["leadadmin"] = true,
-    ["leaddeveloper"] = true,
-    ["developer"] = true,
-    ["admincollaborator"] = true,
     ["leadadmincollaborator"] = true,
-    ["communitymanager"] = true,
+    ["leadadminstaff"] = true,
+    ["leadadminstaffcollaborator"] = true,
+
+    ["leadevents"] = true,
+    ["leadeventscollaborator"] = true,
+
+    ["admin"] = true,
+    ["admincollaborator"] = true,
+    ["jnradmin"] = true,
+    ["moderator"] = true,
+    ["jnrmoderator"] = true,
+    ["trialmod"] = true,
+
+    ["jnrdeveloper"] = true,
+    ["developer"] = true,
+    ["leaddeveloper"] = true
 }
 
 function meta:IsAdmin()
@@ -112,11 +140,15 @@ function meta:IsAdmin()
 end
 
 local leadAdminGroups = {
-    ["leadadmin"] = true,
+    ["leadadmincollaborator"] = true,
+    ["leadadminstaff"] = true,
+    ["leadadminstaffcollaborator"] = true,
+
+    ["leadevents"] = true,
+    ["leadeventscollaborator"] = true,
+
     ["leaddeveloper"] = true,
-    ["developer"] = true,
-    ["communitymanager"] = true,
-    ["leadadmincollaborator"] = true
+    ["developer"] = true
 }
 
 function meta:IsLeadAdmin()
@@ -131,12 +163,21 @@ function meta:IsLeadAdmin()
     return false
 end
 
+local gameMasterGroups = {
+
+    ["gamemaster"] = true,
+    ["gamemastercollaborator"] = true,
+    ["juniorgamemaster"] = true,
+    ["trialgamemaster"] = true,
+}
+
+
 function meta:IsGameMaster()
     if self.IsSuperAdmin(self) or self:IsLeadAdmin() or self:IsAdmin() or self:IsSeniorGameMaster() then
         return true
     end
 
-    if self:GetUserGroup() == "gamemaster" or self:GetUserGroup() == "gamemastercollaborator" then 
+    if gameMasterGroups[self.GetUserGroup(self)] then
         return true
     end
 

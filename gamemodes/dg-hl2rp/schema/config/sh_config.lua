@@ -194,19 +194,47 @@ impulse.Config.DoorGroups = {
 }
 
 impulse.Config.RankColours = {
+	-- Community Management
 	["superadmin"] = Color(201, 15, 12),
 	["communitymanager"] = Color(84, 204, 5),
-	["leadadmin"] = Color(0, 200, 0),
+	["staffmanager"] = Color(84, 204, 5),
+	["eventmanager"] = Color(84, 204, 5),
+
+	-- Lead Administration
 	["leadadmincollaborator"] = Color(0, 200, 0),
+	["leadadminstaff"] = Color(0, 200, 0),
+	
+
+	-- Lead Event Team
+	["leadevents"] = Color(104, 159, 56),
+	["leadeventscollaborator"] = Color(104, 159, 56),
+
+	-- Staff
 	["admin"] = Color(34, 88, 216),
 	["admincollaborator"] = Color(34, 88, 216),
+	["jnradmin"] = Color(34, 88, 216),
+
+	["moderator"] = Color(34, 88, 216),
+	["jnrmoderator"] = Color(34, 88, 216),
+	["trialmod"] = Color(34, 88, 216),
+
+	-- Senior Event Team
 	["seniorgamemaster"] = Color(104, 159, 56),
 	["seniorgamemastercollaborator"] = Color(104, 159, 56),
+
+	-- Event Team
 	["gamemaster"] = Color(255, 97, 0),
 	["gamemastercollaborator"] = Color(255, 97, 0),
+	["juniorgamemaster"] = Color(255, 97, 0),
+	["trialgamemaster"] = Color(255, 97, 0),
+
+	-- Development
 	["developer"] = Color(255, 229, 0),
+	["jnrdeveloper"] = Color(255, 229, 0),
 	["leaddeveloper"] = Color(125, 0, 0),
 	["mapper"] = Color(255, 229, 0),
+
+	-- Donators
 	["donator"] = Color(150, 50, 200),
 	["collaborator"] = Color(200, 50, 150)
 }

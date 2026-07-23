@@ -22,4 +22,5 @@ concommand.Add("impulse_setgroup", function(ply, cmd, args)
 	query:Execute()
 
 	print("[impulse] Set '"..steamid.."'' to group '"..group.."'.")
+	QueueDiscordSync(steamid)
 end)
