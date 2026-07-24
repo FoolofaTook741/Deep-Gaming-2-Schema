@@ -140,7 +140,7 @@ end
 local leadAdminGroups = {
     ["leadadmincollaborator"] = true,
     ["leadadminstaff"] = true,
-    ["leadadminstaffcollaborator"] = true,
+    ["leadadmincollaborator"] = true,
 
     ["leadevents"] = true,
     ["leadeventscollaborator"] = true,
