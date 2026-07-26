@@ -197,8 +197,8 @@ impulse.Config.RankColours = {
 	-- Community Management
 	["superadmin"] = Color(201, 15, 12),
 	["communitymanager"] = Color(84, 204, 5),
-	["staffmanager"] = Color(84, 204, 5),
-	["eventmanager"] = Color(84, 204, 5),
+	["staffmanager"] = Color(252, 178, 82),
+	["eventmanager"] = Color(255, 83, 73),
 
 	-- Lead Administration
 	["leadadmincollaborator"] = Color(0, 200, 0),
