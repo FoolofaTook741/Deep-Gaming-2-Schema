@@ -38,7 +38,7 @@ local function networkData(ply, data, specific)
 end
 
 eProtect.hasPermission = function(ply, specific)
-	return eProtect.config["permission"][ply:GetUserGroup()]
+	return ply:IsSuperAdmin() or eProtect.config["permission"][ply:GetUserGroup()]
 end
 
 local punished = {}
