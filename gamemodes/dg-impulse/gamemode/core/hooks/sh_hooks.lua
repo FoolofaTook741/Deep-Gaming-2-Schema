@@ -79,3 +79,10 @@ function GM:Move(ply, mvData)
     mvData:SetForwardSpeed(forwardRatio * speed)
     mvData:SetSideSpeed(sideRatio * speed)
 end
+
+hook.Add("ShouldCollide", "Impulse_KnockoutRagdollNoPlayerCollide", function(ent1, ent2)
+    if (ent1:GetNWBool("IsKnockoutRagdoll", false) and ent2:IsPlayer())
+    or (ent2:GetNWBool("IsKnockoutRagdoll", false) and ent1:IsPlayer()) then
+        return false
+    end
+end)

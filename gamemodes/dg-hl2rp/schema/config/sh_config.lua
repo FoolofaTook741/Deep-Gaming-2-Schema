@@ -158,6 +158,7 @@ impulse.Config.PersonalStorageUpgradeCost = 75000
 impulse.Config.GroupStorageUpgradeCost = 150000
 
 impulse.Config.MaxAir = 7
+impulse.Config.RAGDOLL_CARRY_SPEED = 40
 
 impulse.Config.CommunityURL = "https://deepgaming2.com/news"
 impulse.Config.PanelURL = "https://deepgaming2.com/user"

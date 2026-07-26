@@ -578,6 +578,28 @@ function GM:ShowHelp()
 end
 
 local TALK_DIST_SQR = (impulse.Config.TalkDistance or 350) ^ 2
+local function BroadcastKnockedOutMumble(ply)
+    local plyPos = ply:GetPos()
+
+    for v, k in pairs(player.GetAll()) do
+        if (plyPos - k:GetPos()):LengthSqr() <= TALK_DIST_SQR or k.SnooperMode == true then
+            k:SendChatClassMessage(10, "mutters something unintelligible.", ply)
+        end
+    end
+end
+
+local KNOCKOUT_BLOCKED_COMMANDS = {
+		    ["/y"] = true,
+		    ["/w"] = true,
+		    ["/g"] = true,
+		    ["/me"] = true,
+		    ["/it"] = true,
+		    ["//"] = true,
+		    ["/looc"] = true,
+		    ["/ooc"] = true,
+		}
+
+
 local talkCol = Color(255, 255, 100)
 local infoCol = Color(135, 206, 250)
 local strTrim = string.Trim
@@ -601,7 +623,13 @@ function GM:PlayerSay(ply, text, teamChat, newChat)
 		end
 
 		local command = impulse.chatCommands[string.lower(cmdRaw)]
+
 		if command then
+			if ply.KnockedOut and KNOCKOUT_BLOCKED_COMMANDS[string.lower(cmdRaw)] then
+		        BroadcastKnockedOutMumble(ply)
+		        return ""
+		    end
+
 			if command.cooldown and command.lastRan then
 				if command.lastRan + command.cooldown > CurTime() then
 					return ""
@@ -638,6 +666,17 @@ function GM:PlayerSay(ply, text, teamChat, newChat)
 		end
 
 	elseif ply:Alive() then
+		if ply.KnockedOut then
+	        local plyPos = ply:GetPos()
+
+	        for v, k in pairs(player.GetAll()) do
+	            if (plyPos - k:GetPos()):LengthSqr() <= TALK_DIST_SQR or k.SnooperMode == true then
+	                k:SendChatClassMessage(10, "mutters something unintelligible.", ply)
+	            end
+	        end
+
+	        return ""
+	    end
 	    text = hook.Run("ProcessICChatMessage", ply, text) or text
 	    text = hook.Run("ChatClassMessageSend", 1, text, ply) or text
 
@@ -747,7 +786,7 @@ local function ApplyDeathMetadata(ragdoll, ply, attacker, dmginfo)
     ragdoll.Killer       = attacker
     ragdoll.DmgInfo      = dmginfo
     ragdoll.CanConstrain = false
-    ragdoll.NoCarry      = true
+    ragdoll.NoCarry      = false
     ragdoll.TeamOnDeath  = ply:Team()
 
     if ply.LastFall and ply.LastFall > CurTime() - 0.5 then
@@ -1153,25 +1192,23 @@ function GM:PostCleanupMap()
 	hook.Run("InitPostEntity")
 end
 
+local function InKnockoutGrace(ply)
+    return ply.KnockedOut or (ply.KnockoutGraceUntil and CurTime() < ply.KnockoutGraceUntil)
+end
+
 function GM:GetFallDamage(ply, speed)
-	if ply:Name() == "Fast Zombie" then
+	if ply:Name() == "Fast Zombie" or InKnockoutGrace(ply) then
         return 0
     end
-
 	ply.LastFall = CurTime()
-
 	local dmg = speed * 0.05
-
 	if speed > 780 then
 		dmg = dmg + 75
 	end
-
 	local shouldBreakLegs = hook.Run("PlayerShouldBreakLegs", ply, dmg)
-
 	if shouldBreakLegs != nil and shouldBreakLegs == false then
 		return dmg
 	end
-
 	local strength = ply:GetSkillLevel("strength")
 	local vitality = ply:GetSkillLevel("vitality")
 	
@@ -1708,6 +1745,139 @@ end
 function GM:LongswordHitEntity(ply, ent)
 	-- if tree then vood ect.
 end
+
+local function CreateKnockoutRagdoll(ply)
+    local ragdoll = ents.Create("prop_ragdoll")
+    ragdoll:SetModel(ply:GetModel())
+    ragdoll:SetPos(ply:GetPos())
+    ragdoll:SetSkin(ply:GetSkin())
+    for _, group in pairs(ply:GetBodyGroups()) do
+        ragdoll:SetBodygroup(group.id, ply:GetBodygroup(group.id))
+    end
+
+    ragdoll:SetNWBool("IsKnockoutRagdoll", true)
+    ragdoll:SetNWEntity("KnockedOutPlayer", ply)
+
+    ragdoll:Spawn()
+    ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+
+    local velocity = ply:GetVelocity()
+    for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
+        local physObj = ragdoll:GetPhysicsObjectNum(i)
+        if not IsValid(physObj) then continue end
+
+        physObj:SetVelocity(velocity)
+
+        local boneIndex = ragdoll:TranslatePhysBoneToBone(i)
+        if boneIndex then
+            local pos, ang = ply:GetBonePosition(boneIndex)
+            physObj:SetPos(pos)
+            physObj:SetAngles(ang)
+        end
+    end
+
+    return ragdoll
+end
+
+local PLAYER_HULL_MINS = Vector(-16, -16, 0)
+local PLAYER_HULL_MAXS = Vector(16, 16, 72)
+
+local function IsPositionClear(pos)
+    local tr = util.TraceHull({
+        start = pos,
+        endpos = pos,
+        mins = PLAYER_HULL_MINS,
+        maxs = PLAYER_HULL_MAXS,
+        mask = MASK_PLAYERSOLID
+    })
+    return not tr.StartSolid
+end
+
+local function FindClearRevivePos(pos)
+    if IsPositionClear(pos) then return pos end
+
+    --test straight up first
+    for step = 8, 128, 8 do
+        local testPos = pos + Vector(0, 0, step)
+        if IsPositionClear(testPos) then return testPos end
+    end
+
+    --then spiral out horizontally
+    for radius = 16, 96, 16 do
+        for angle = 0, 315, 45 do
+            local rad = math.rad(angle)
+            local testPos = pos + Vector(math.cos(rad) * radius, math.sin(rad) * radius, 4)
+            if IsPositionClear(testPos) then return testPos end
+        end
+    end
+
+    return pos --don't find shit means fuck it dude!!!
+end
+
+function GM:ReviveFromKnockout(ply)
+    if not IsValid(ply) or not ply.KnockedOut then return end
+
+    timer.Remove("StunBatonKnockout_" .. ply:EntIndex())
+
+    ply.KnockedOut = false
+    ply.KnockoutGraceUntil = CurTime() + 5
+    ply:SetSyncVar(SYNC_KNOCKEDOUT, false, true)
+    ply:Freeze(false)
+    ply:SetNoDraw(false)
+    ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+
+    ply:SetPos(FindClearRevivePos(ply:GetPos()))
+
+    if IsValid(ply.KnockoutRagdoll) then
+        ply.KnockoutRagdoll:Remove()
+    end
+    ply.KnockoutRagdoll = nil
+end
+
+function GM:StunBatonKnockout(attacker, ply)
+    if not IsValid(ply) or not ply:Alive() or ply.KnockedOut then return end
+    if not IsValid(attacker) or not attacker:IsPlayer() or attacker:Team() ~= TEAM_CP then return end
+
+    ply.KnockedOut = true
+    local KNOCKOUT_DURATION = 120
+    ply:SetSyncVar(SYNC_KNOCKEDOUT, true, true)
+    ply:SetSyncVar(SYNC_KNOCKOUT_ENDS, math.Round(CurTime() + KNOCKOUT_DURATION), true)
+    ply:Freeze(true)
+    ply:SetNoDraw(true)
+    ply:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
+    ply:SetNWBool("DynamicFlashlight", false)
+	if ply:FlashlightIsOn() then
+	    ply:Flashlight(false)
+	end
+
+    local ragdoll = CreateKnockoutRagdoll(ply)
+    ply.KnockoutRagdoll = ragdoll
+
+    timer.Simple(0.1, function()
+        if not IsValid(ply) or not IsValid(ragdoll) then return end
+        net.Start("impulseRagdollLink")
+        net.WriteEntity(ragdoll)
+        net.Send(ply)
+    end)
+
+    timer.Create("StunBatonKnockout_" .. ply:EntIndex(), KNOCKOUT_DURATION, 1, function()
+        GAMEMODE:ReviveFromKnockout(ply)
+    end)
+end
+
+hook.Add("EntityTakeDamage", "Impulse_KnockedOutPlayerNoDamage", function(target, dmginfo)
+    if IsValid(target) and target:IsPlayer() and target:GetSyncVar(SYNC_KNOCKEDOUT, false) then
+        return true
+    end
+end)
+
+hook.Add("Think", "Impulse_SyncKnockoutRagdollPosition", function()
+    for _, ply in ipairs(player.GetAll()) do
+        if ply.KnockedOut and IsValid(ply.KnockoutRagdoll) then
+            ply:SetPos(ply.KnockoutRagdoll:GetPos())
+        end
+    end
+end)
 
 if SERVER then
     util.AddNetworkString("OverheadChatBubbleMessage")

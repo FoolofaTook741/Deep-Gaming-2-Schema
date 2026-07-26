@@ -522,3 +522,140 @@ concommand.Add("impulse_reloadmenu", function()
 
 	impulse.MainMenu = vgui.Create("impulseMainMenu")
 end)
+
+local koVignette = Material("mrp/menu_stuff/vignette.png")
+local state = { active = false, phase = "dark", phaseStart = 0, phaseEnd = 0 }
+
+local MAX_CYCLE_RADIUS_FRAC = 0.5
+local TAIL_RESERVE = 30
+
+local ko = { state = "idle", radius = 1, phaseStart = 0, phaseDur = 0, fromRadius = 1, toRadius = 1 }
+
+local function StartPhase(state, dur, fromR, toR)
+    ko.state, ko.phaseStart, ko.phaseDur = state, CurTime(), dur
+    ko.fromRadius, ko.toRadius = fromR, toR
+end
+
+local function DrawVisionCircle(radiusFrac)
+    local scrW, scrH = ScrW(), ScrH()
+    local cx, cy = scrW * 0.5, scrH * 0.5
+    local maxRadius = math.sqrt(cx * cx + cy * cy)
+
+    local aspectX, aspectY = 1.3, 0.8 -- oval shape to mimic eyes ig
+
+    local baseRadius = maxRadius * math.Clamp(radiusFrac, 0, 1)
+    local featherWidth = math.min(maxRadius * 0.14, baseRadius * 0.6) -- width of the softish transition zone
+
+    if baseRadius >= maxRadius + featherWidth then return end
+
+    local function DrawStencilLayer(radius, alpha)
+        render.ClearStencil()
+        render.SetStencilEnable(true)
+        render.SetStencilWriteMask(0xFF)
+        render.SetStencilTestMask(0xFF)
+        render.SetStencilReferenceValue(1)
+        render.SetStencilCompareFunction(STENCIL_ALWAYS)
+        render.SetStencilPassOperation(STENCIL_REPLACE)
+        render.SetStencilFailOperation(STENCIL_KEEP)
+        render.SetStencilZFailOperation(STENCIL_KEEP)
+
+        if radius > 0 then
+            render.OverrideColorWriteEnable(true, false)
+
+            local segments, poly = 48, {}
+            for i = 1, segments do
+                local a = (i / segments) * math.pi * 2
+                poly[i] = {x = cx + math.cos(a) * radius * aspectX, y = cy + math.sin(a) * radius * aspectY}
+            end
+            surface.SetDrawColor(255, 255, 255, 255)
+            surface.DrawPoly(poly)
+
+            render.OverrideColorWriteEnable(false)
+        end
+
+        render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
+        surface.SetDrawColor(0, 0, 0, alpha)
+        surface.DrawRect(0, 0, scrW, scrH)
+
+        render.SetStencilCompareFunction(STENCIL_ALWAYS)
+        render.SetStencilEnable(false)
+    end
+
+    DrawStencilLayer(baseRadius + featherWidth, 255)
+
+    local FEATHER_LAYERS = 4
+    for i = 1, FEATHER_LAYERS do
+        local t = 1 - (i / FEATHER_LAYERS)
+        DrawStencilLayer(baseRadius + featherWidth * t, 70)
+    end
+end
+
+local koBlur = Material("pp/blurscreen")
+
+local function ApplyKnockoutBlur(amount)
+    if not impulse.GetSetting("perf_blur") or amount <= 0 then return end
+
+    surface.SetDrawColor(color_white)
+    surface.SetMaterial(koBlur)
+    for i = 1, 4 do
+        koBlur:SetFloat("$blur", amount * (i / 3))
+        koBlur:Recompute()
+        render.UpdateScreenEffectTexture()
+        surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+    end
+end
+
+hook.Add("HUDPaintBackground", "Impulse_KnockoutScreenEffect", function()
+    local lp = LocalPlayer()
+    local knockedOut = IsValid(lp) and lp:GetSyncVar(SYNC_KNOCKEDOUT, false)
+
+    if not knockedOut then
+        if ko.state != "idle" then ko.state, ko.radius = "idle", 1 end
+        return
+    end
+
+    local endsAt = lp:GetSyncVar(SYNC_KNOCKOUT_ENDS, CurTime())
+    local timeLeft = endsAt - CurTime()
+
+    if ko.state == "idle" then
+        StartPhase("closing_intro", 0.4, 1, 0)
+    end
+
+    local frac = math.Clamp((CurTime() - ko.phaseStart) / ko.phaseDur, 0, 1)
+    ko.radius = Lerp(frac, ko.fromRadius, ko.toRadius)
+
+    if frac >= 1 then
+        if ko.state == "closing_intro" then
+		    StartPhase("initial_pause", 5, 0, 0)
+		elseif ko.state == "initial_pause" then
+		    if timeLeft > TAIL_RESERVE then
+		        StartPhase("open", math.Rand(2.5, 3.5), 0, math.Rand(0.15, MAX_CYCLE_RADIUS_FRAC))
+		    else
+		        StartPhase("tail_pause", math.Rand(2, 3), 0, 0)
+		    end
+		elseif ko.state == "closing_cycle" then
+            if timeLeft > TAIL_RESERVE then
+                StartPhase("black_gap", math.Rand(2.5, 4.5), 0, 0)
+            else
+                StartPhase("tail_pause", math.Rand(2, 3), 0, 0)
+            end
+        elseif ko.state == "black_gap" then
+            if timeLeft > TAIL_RESERVE then
+                StartPhase("open", math.Rand(2.5, 3.5), 0, math.Rand(0.15, MAX_CYCLE_RADIUS_FRAC))
+            else
+                StartPhase("tail_pause", math.Rand(2, 3), 0, 0)
+            end
+        elseif ko.state == "open" then
+            StartPhase("hold", math.Rand(1.5, 3), ko.toRadius, ko.toRadius)
+        elseif ko.state == "hold" then
+    		StartPhase("closing_cycle", math.Rand(1.8, 2.5), ko.toRadius, 0)
+        elseif ko.state == "tail_pause" then
+            StartPhase("outro_fade", math.max(timeLeft, 0.1), 0, 1)
+        elseif ko.state == "outro_fade" then
+            ko.state = "done"
+        end
+    end
+
+    ApplyKnockoutBlur((1 - ko.radius) * 4)
+    DrawVisionCircle(ko.radius)
+end)

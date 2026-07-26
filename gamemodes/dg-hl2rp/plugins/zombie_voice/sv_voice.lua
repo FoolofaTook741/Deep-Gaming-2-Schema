@@ -1,5 +1,5 @@
 function PLUGIN:PlayerCanHearPlayersVoice(listener, talker)
-	if talker:Team() == TEAM_ZOMBIE or talker:Team() == TEAM_CREMATOR then return false end
+	if talker:Team() == TEAM_ZOMBIE or talker:Team() == TEAM_CREMATOR or talker.KnockedOut then return false end
 end
 
 function PLUGIN:PlayerSay(ply,say)
@@ -12,19 +12,19 @@ function PLUGIN:PlayerSay(ply,say)
 end
 
 function PLUGIN:PlayerSpawnProp(ply)
-	if ply:Team() == TEAM_ZOMBIE then
+	if ply:Team() == TEAM_ZOMBIE or ply.KnockedOut then
 		return false
 	end
 end
 
 function PLUGIN:PlayerSpawnVehicle(ply)
-	if ply:Team() == TEAM_ZOMBIE then
+	if ply:Team() == TEAM_ZOMBIE or ply.KnockedOut then
 		return false
 	end
 end
 
 function PLUGIN:PlayerUse(ply,ent)
-	if ply:Team() == TEAM_ZOMBIE then
+	if ply:Team() == TEAM_ZOMBIE or ply.KnockedOut then
         return false
 	end
 end

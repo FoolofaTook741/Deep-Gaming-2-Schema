@@ -230,6 +230,9 @@ local function ShouldIgnite( ent )
         if cls == "impulse_item" and ent.Item and ent.Item.UniqueID == "item_ashes" then
             return false
         end
+        if cls == "prop_ragdoll" and ent:GetNWBool("IsKnockoutRagdoll", false) then
+            return false
+        end
         return true
     end
     if cls == "prop_physics" and IsWooden( ent ) then return true end

@@ -648,8 +648,12 @@ function SCHEMA:PlayerRagdollSpawned(ragdoll, ply, attacker)
     end]]--
 end
 
+local function InKnockoutGrace(ply)
+    return ply.KnockedOut or (ply.KnockoutGraceUntil and CurTime() < ply.KnockoutGraceUntil)
+end
+
 function SCHEMA:PlayerShouldBreakLegs(ply)
-	return ply:Team() != TEAM_OTA and ply:Team() != TEAM_ZOMBIE and ply.Team(ply) != TEAM_STALKER
+	return ply:Team() != TEAM_OTA and ply:Team() != TEAM_ZOMBIE and ply.Team(ply) != TEAM_STALKER and not InKnockoutGrace(ply)
 end
 
 function SCHEMA:PlayerShouldTakeDamage(ply, att)

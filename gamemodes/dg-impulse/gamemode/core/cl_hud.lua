@@ -654,11 +654,13 @@ function GM:HUDPaint()
 
 		return
 	else
-		fde = 0
-		if deathRegistered then
-			deathRegistered = false
-		end
-		lp.Ragdoll = nil
+	    fde = 0
+	    if deathRegistered then
+	        deathRegistered = false
+	    end
+	    if not lp:GetSyncVar(SYNC_KNOCKEDOUT, false) then
+	        lp.Ragdoll = nil
+	    end
 	end
 
 	if impulse.hudEnabled == false or (impulse.CinematicIntro and lp:Alive()) or (IsValid(impulse.MainMenu) and impulse.MainMenu:IsVisible()) or hook.Run("ShouldDrawHUDBox") == false then

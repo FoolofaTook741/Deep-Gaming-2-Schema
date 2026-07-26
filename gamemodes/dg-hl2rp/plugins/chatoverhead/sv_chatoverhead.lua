@@ -1,7 +1,7 @@
 if SERVER then
     util.AddNetworkString("OverheadChatBubbleMessage") -- temp fallback
     hook.Add("PlayerSay", "ChatBubbleProcess", function(ply, text)
-        if CHAT_BANNED and CHAT_BANNED[ply:SteamID()] then return end
+        if (CHAT_BANNED and CHAT_BANNED[ply:SteamID()]) or ply.KnockedOut then return end
         if impulse.Ops and impulse.Ops.AutoMod and impulse.Ops.AutoMod.FilterMessage(ply, text) then
             return
         end

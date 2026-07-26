@@ -111,20 +111,46 @@ function SWEP:ClubAttack()
 			    ent.StunTime = CurTime() + self.Primary.FlashTime
 			    ent.StunStartTime = CurTime()
 
-			    if not hasLSWep and not ent:IsFrozen() and self.GetMode and self:GetMode() == 2 then
-			        ent.Hits = (ent.Hits or 0) + 1
-			        if ent.Hits >= 3 then
-			            ent:Freeze(true)
-			            ent:SetSyncVar(SYNC_STUNNED, true, true)
-			            timer.Simple(2, function()
-			                if IsValid(ent) then
-			                    ent:Freeze(false)
-			                    ent.Hits = 0
-			                    ent:SetSyncVar(SYNC_STUNNED, false, true)
-			                end
-			            end)
-			        end
-			    end
+			    if not hasLSWep and self.GetMode then
+				    local mode = self:GetMode()
+
+				    if mode == 2 and not ent:IsFrozen() then
+					    if not ent.StunComboLastHit or (CurTime() - ent.StunComboLastHit) > 5 then
+					        ent.StunComboHits = {}
+					        ent.Hits = 0
+					    end
+
+					    ent.Hits = (ent.Hits or 0) + 1
+					    ent.StunComboHits = ent.StunComboHits or {}
+					    table.insert(ent.StunComboHits, 2)
+					    if #ent.StunComboHits > 2 then
+					        table.remove(ent.StunComboHits, 1)
+					    end
+					    ent.StunComboLastHit = CurTime()
+
+				        if ent.Hits >= 3 then
+				            ent:Freeze(true)
+				            ent:SetSyncVar(SYNC_STUNNED, true, true)
+				            timer.Simple(2, function()
+				                if IsValid(ent) then
+				                    ent:Freeze(false)
+				                    ent.Hits = 0
+				                    ent:SetSyncVar(SYNC_STUNNED, false, true)
+				                end
+				            end)
+				        end
+				    elseif mode == 3 then
+				        local combo = ent.StunComboHits
+				        local withinWindow = ent.StunComboLastHit and (CurTime() - ent.StunComboLastHit) <= 3
+				        local comboReady = withinWindow and combo and combo[1] == 2 and combo[2] == 2
+
+				        ent.StunComboHits = {}
+
+				        if comboReady and not ent.KnockedOut then
+				            hook.Run("StunBatonKnockout", self:GetOwner(), ent)
+				        end
+				    end
+				end
 			elseif SERVER and ent:IsPlayer() and self.Primary.StunTime then
 			    ent.StunTime = CurTime() + self.Primary.StunTime
 			    ent.StunStartTime = CurTime()

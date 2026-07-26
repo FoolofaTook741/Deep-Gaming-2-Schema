@@ -108,22 +108,24 @@ local bringCommand = {
 			ply:Notify("You cannot use this command unless you are a Gamemaster or Admin.")
 			return
 		end
-        local name = arg[1]
+	    local name = arg[1]
 		local plyTarget = impulse.FindPlayer(name)
-
 		if plyTarget and ply != plyTarget then
 			if not plyTarget:Alive() then
 				plyTarget:Spawn()
 				plyTarget:Notify("You have been respawned by a game moderator.")
 				ply:Notify("Target was dead, automatically respawned.")
+			elseif plyTarget.KnockedOut then
+				GAMEMODE:ReviveFromKnockout(plyTarget)
+				plyTarget:Notify("You have been revived by a game moderator.")
+				ply:Notify("Target was knocked out, automatically revived.")
 			end
-
 			opsBring(ply, plyTarget)
 			ply:Notify(plyTarget:Name().." has been brought to your position.")
 		else
 			return ply:Notify("Could not find player: "..tostring(name))
 		end
-    end
+	end
 }
 
 impulse.RegisterChatCommand("/bring", bringCommand)

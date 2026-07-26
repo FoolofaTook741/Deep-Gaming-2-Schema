@@ -36,6 +36,8 @@ SWEP.CarryHack = nil
 SWEP.Constr = nil
 SWEP.PreviousOwner = nil
 
+SWEP.QuickDraw = true
+
 local THROW_VELOCITY_CAP = 150
 local CARRY_FORCE_LIMIT = 40000
 local CARRY_WEIGHT_LIMIT = 100
@@ -217,6 +219,16 @@ function SWEP:Reset(throw)
 		hook.Run("GravGunOnDropped", self:GetOwner(), self.HoldingEntity, throw)
 	end
 
+	if self.OriginalWalkSpeed then
+		local ply = self:GetOwner()
+		if IsValid(ply) then
+			ply:SetWalkSpeed(self.OriginalWalkSpeed)
+			ply:SetRunSpeed(self.OriginalRunSpeed)
+		end
+		self.OriginalWalkSpeed = nil
+		self.OriginalRunSpeed = nil
+	end
+
 	self.dt.carried_rag = nil
 	self.HoldingEntity = nil
 	self.CarryHack = nil
@@ -299,43 +311,64 @@ if SERVER then
 
 	local stand_time = 0
 
+	local RAGDOLL_DROP_DIST_SQR = 60 ^ 2
+	local RAGDOLL_VERTICAL_BOOST = .15
+
 	function SWEP:Think()
-		if not self:CheckValidity() then
-			return
+	    if not self:CheckValidity() then
+	        return
+	    end
+
+	    local curTime = CurTime()
+	    local isRagdoll = self.HoldingEntity:GetClass() == "prop_ragdoll"
+
+	    if isRagdoll then
+		    local carryPos = self.CarryHack:GetPos()
+		    local weaponPos = self:GetPos()
+		    local horizDiff = weaponPos - carryPos
+		    horizDiff.z = 0
+
+		    if horizDiff:Dot(horizDiff) > RAGDOLL_DROP_DIST_SQR then
+		        self:Reset()
+		        return
+		    end
+		elseif curTime > ent_diff_time then
+		    ent_diff = self:GetPos() - self.HoldingEntity:GetPos()
+		    if ent_diff:Dot(ent_diff) > 40000 then
+		        self:Reset()
+		        return
+		    end
+
+		    ent_diff_time = curTime + 1
 		end
 
-		local curTime = CurTime()
+	    local obb = math.abs(self.HoldingEntity:GetModelBounds():Length2D())
+	    local offset = self:GetOwner():GetAimVector() * (35 + obb)
 
-		if curTime > ent_diff_time then
-			ent_diff = self:GetPos() - self.HoldingEntity:GetPos()
-			if ent_diff:Dot(ent_diff) > 40000 then
-				self:Reset()
-				return
-			end
+	    if isRagdoll and offset.z > 0 then
+	        offset.z = offset.z * RAGDOLL_VERTICAL_BOOST
+	    end
 
-			ent_diff_time = curTime + 1
-		end
+	    local desiredPos = self:GetOwner():EyePos() + offset
 
-		if curTime > stand_time then
-			if IsPlayerStandsOn(self.HoldingEntity) then
-				self:Reset()
-				return
-			end
+	    if isRagdoll then
+	        local currentPos = self.CarryHack:GetPos()
+	        local dist = currentPos:Distance(desiredPos)
+	        local maxStep = impulse.Config.RAGDOLL_CARRY_SPEED * FrameTime()
 
-			stand_time = curTime + 0.1
-		end
+	        self.CarryHack:SetPos(dist > maxStep and (currentPos + (desiredPos - currentPos):GetNormalized() * maxStep) or desiredPos)
+	    else
+	        self.CarryHack:SetPos(desiredPos)
+	    end
 
-		local obb = math.abs(self.HoldingEntity:GetModelBounds():Length2D())
-		self.CarryHack:SetPos(self:GetOwner():EyePos() + self:GetOwner():GetAimVector() * (35 + obb))
+	    local targetAng = self:GetOwner():GetAngles()
 
-		local targetAng = self:GetOwner():GetAngles()
+	    if self.CarryHack.PreferedAngle then
+	        targetAng.p = 0
+	    end
 
-		if self.CarryHack.PreferedAngle then
-			targetAng.p = 0
-		end
-
-		self.CarryHack:SetAngles(targetAng)
-		self.HoldingEntity:PhysWake()
+	    self.CarryHack:SetAngles(targetAng)
+	    self.HoldingEntity:PhysWake()
 	end
 end
 
@@ -600,6 +633,11 @@ function SWEP:Pickup()
 
 				bone = trace.PhysicsBone
 				max_force = 0
+
+				self.OriginalWalkSpeed = ply:GetWalkSpeed()
+				self.OriginalRunSpeed = ply:GetRunSpeed()
+				ply:SetWalkSpeed(impulse.Config.RAGDOLL_CARRY_SPEED)
+				ply:SetRunSpeed(impulse.Config.RAGDOLL_CARRY_SPEED)
 			else
 				self.dt.carried_rag = nil
 			end
