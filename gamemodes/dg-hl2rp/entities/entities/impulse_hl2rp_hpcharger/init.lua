@@ -17,7 +17,7 @@ end
 function ENT:Use(caller, activator)
     if self.cooldown > CurTime() then return end
 
-    if caller:Team() == TEAM_CP or caller:Team() == TEAM_OTA or caller:Team() == TEAM_CA then
+    if caller:Team() == TEAM_CP or caller:Team() == TEAM_OTA or caller:Team() == TEAM_CA or caller:Team() == TEAM_CREMATOR then
         if caller:Team() == TEAM_OTA and caller:GetTeamClass() == CLASS_PAYBACK then
             if caller:Health() < caller:GetMaxHealth() then
                 self:EmitBudgetSound("items/medshot4.wav")
