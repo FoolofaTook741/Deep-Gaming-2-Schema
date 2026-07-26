@@ -567,5 +567,10 @@ function meta:SetupWhitelists()
 
 			self.Whitelists[realTeam or k.team] = level
 		end
+
+		if self:Team() == TEAM_CITIZEN or self:Team() == TEAM_CWU then
+			local loyalistLevel = self.Whitelists["TEAM_CITIZEN"] or 0
+			self:SetSyncVar(SYNC_LOYALIST_LEVEL, loyalistLevel, true)
+		end
 	end)
 end
