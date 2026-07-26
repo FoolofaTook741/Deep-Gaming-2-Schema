@@ -30,7 +30,7 @@ function impulse.Ops.EventManager.GetCurEvents()
 end
 
 function meta:IsEventAdmin()
-	return self:IsSuperAdmin() or ((self:IsAdmin() or self:IsGameMaster()) and impulse.Ops.EventManager.GetEventMode())
+	return self:IsSuperAdmin() or ((self:IsAdmin() or self:IsEventGameMaster()) and impulse.Ops.EventManager.GetEventMode())
 end
 
 if SERVER then

@@ -10,6 +10,18 @@ local function IsGamemaster(ply)
     return group == "gamemaster" or group == "seniorgamemaster" or ply:IsAdmin() or ply:IsSuperAdmin()
 end
 
+local eventGameMasterGroups = {
+    ["gamemaster"] = true,
+    ["gamemastercollaborator"] = true,
+}
+
+function meta:IsEventGameMaster()
+    if self:IsSeniorGameMaster() then
+        return true
+    end
+    return eventGameMasterGroups[self:GetUserGroup()] or false
+end
+
 local function IsSeniorGamemaster(ply)
     local group = ply:GetUserGroup()
     return group == "seniorgamemaster" or ply:IsAdmin() or ply:IsSuperAdmin()
