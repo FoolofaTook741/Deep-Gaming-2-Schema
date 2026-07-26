@@ -33,10 +33,15 @@ if CLIENT then
 	} -- THIS IS INFORMATIVE PURPOSE ONLY !
 
 	APG_notifyLevels = {
-		"leadadmin",
+		"leadadminstaff",
+		"leadevents",
+		"leadeventscollaborator",
+		"leadstaffcollaborator",
 		"admin",
 		"leaddeveloper",
-		"superadmin"
+		"superadmin",
+		"staffmanager",
+		"eventmanager"
 	}
 end
 
