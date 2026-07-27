@@ -4,30 +4,6 @@ FPP.DisconnectedPlayers = FPP.DisconnectedPlayers or {}
 local PLAYER = FindMetaTable("Player")
 local ENTITY = FindMetaTable("Entity")
 
-
-local function IsGamemaster(ply)
-    local group = ply:GetUserGroup()
-    return group == "gamemaster" or group == "seniorgamemaster" or ply:IsAdmin() or ply:IsSuperAdmin()
-end
-
-local eventGameMasterGroups = {
-    ["gamemaster"] = true,
-    ["gamemastercollaborator"] = true,
-}
-
-function meta:IsEventGameMaster()
-    if self:IsSeniorGameMaster() then
-        return true
-    end
-    return eventGameMasterGroups[self:GetUserGroup()] or false
-end
-
-local function IsSeniorGamemaster(ply)
-    local group = ply:GetUserGroup()
-    return group == "seniorgamemaster" or ply:IsAdmin() or ply:IsSuperAdmin()
-end
-
-
 --[[-------------------------------------------------------------------------
 Checks if a model is blocked
 ---------------------------------------------------------------------------]]
@@ -473,16 +449,16 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
             elseif tonumber(FPP.RestrictedTools[tool].admin) == 2 and not ply:IsSuperAdmin() then
                 FPP.Notify(ply, "Toolgun restricted! Superadmin only!", false)
                 return false
-            elseif tonumber(FPP.RestrictedTools[tool].admin) == 3 and not IsGamemaster(ply) then
+            elseif tonumber(FPP.RestrictedTools[tool].admin) == 3 and not ply:IsGameMaster() then
                 FPP.Notify(ply, "Toolgun restricted! Gamemaster only!", false)
                 return false
-            elseif tonumber(FPP.RestrictedTools[tool].admin) == 4 and not IsSeniorGamemaster(ply) then
+            elseif tonumber(FPP.RestrictedTools[tool].admin) == 4 and not ply:IsSeniorGameMaster() then
                 FPP.Notify(ply, "Toolgun restricted! Senior Gamemaster only!", false)
                 return false
             elseif (tonumber(FPP.RestrictedTools[tool].admin) == 1 and ply:IsAdmin()) or
                    (tonumber(FPP.RestrictedTools[tool].admin) == 2 and ply:IsSuperAdmin()) or
-                   (tonumber(FPP.RestrictedTools[tool].admin) == 3 and IsGamemaster(ply)) or
-                   (tonumber(FPP.RestrictedTools[tool].admin) == 4 and IsSeniorGamemaster(ply)) then
+                   (tonumber(FPP.RestrictedTools[tool].admin) == 3 and ply:IsGameMaster()) or
+                   (tonumber(FPP.RestrictedTools[tool].admin) == 4 and ply:IsSeniorGameMaster()) then
                 CanGroup = true
             end
 

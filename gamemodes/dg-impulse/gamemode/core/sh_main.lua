@@ -169,6 +169,17 @@ local gameMasterGroups = {
     ["trialgamemaster"] = true,
 }
 
+local eventGameMasterGroups = {
+    ["gamemaster"] = true,
+    ["gamemastercollaborator"] = true,
+}
+
+function meta:IsEventGameMaster()
+    if self:IsSeniorGameMaster() then
+        return true
+    end
+    return eventGameMasterGroups[self:GetUserGroup()] or false
+end
 
 function meta:IsGameMaster()
     if self.IsSuperAdmin(self) or self:IsLeadAdmin() or self:IsAdmin() or self:IsSeniorGameMaster() then
