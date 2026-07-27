@@ -79,7 +79,7 @@ TEAM_CA = impulse.Teams.Define({
 		{
 			name = "Councilor",
 			description = "councilor",
-			doorGroup = {1, 2, 3, 4, 6, 7},
+			doorGroup = {1, 2, 3, 4, 5, 6, 7},
 			xp = 900,
 			whitelistLevel = 2,
 			onBecome = function(ply, rank)
