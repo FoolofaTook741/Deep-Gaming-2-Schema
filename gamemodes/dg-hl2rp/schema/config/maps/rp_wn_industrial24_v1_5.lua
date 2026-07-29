@@ -1014,7 +1014,7 @@ local shellbeachCommand = {
         if ply:Team() != TEAM_OTA and ply:Team() != TEAM_CP then
             ply:Notify("You must be a member of the OTA or CP Supervisor to use this.")
             return
-        elseif ply:Team() == TEAM_CP and ply:GetTeamRank() <= RANK_OFC then
+        elseif ply:Team() == TEAM_CP and ply:GetTeamRank() < RANK_OFC then
             ply:Notify("You must be a member of the OTA or CP Supervisor to use this.")
             return
         end
