@@ -19,6 +19,7 @@ AddRagdollFizzleZone({name = "ragdollfizzle1", pos1 = Vector(-819.23693847656, 4
 AddRagdollFizzleZone({name = "ragdollfizzle2", pos1 = Vector(-326.84661865234, 5590.6079101563, 7994.7416992188), pos2 = Vector(-521.20452880859, 6105.7353515625, 8150.1049804688)})
 AddRagdollFizzleZone({name = "ragdollfizzle3", pos1 = Vector(7638.119140625, -123.09993743896, 6689.6918945313), pos2 = Vector(7420.34765625, -651.41143798828, 6946.5073242188)})
 AddRagdollFizzleZone({name = "ragdollfizzle4", pos1 = Vector(7664.0341796875, -106.89172363281, 165.01664733887), pos2 = Vector(7386.3935546875, -693.77673339844, -171.12861633301)})
+AddRagdollFizzleZone({name = "ragdollfizzle5", pos1 = Vector(2839.9765625, 3386.2299804688, 256.58151245117), pos2 = Vector(2796.01953125, 3341.0314941406, 277.89901733398)})
 
 local function AABBOverlap(mins1, maxs1, mins2, maxs2)
     return mins1.x <= maxs2.x and maxs1.x >= mins2.x
