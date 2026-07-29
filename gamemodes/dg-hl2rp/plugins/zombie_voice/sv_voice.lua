@@ -3,11 +3,10 @@ function PLUGIN:PlayerCanHearPlayersVoice(listener, talker)
 end
 
 function PLUGIN:PlayerSay(ply,say)
-	if ply then
-		if ply:Team() == TEAM_ZOMBIE then
-			if not (string.Left(say,1) == "/") or string.Left(say,2) == "/y" or string.Left(say,2) == "/w" then
-				return ""
-			end
+	if IsValid(ply) and ply:Team() == TEAM_ZOMBIE then
+		say = say:lower()
+		if not (string.Left(say,1) == "/") or string.Left(say,2) == "/y" or string.Left(say,2) == "/w" then
+			return ""
 		end
 	end
 end
