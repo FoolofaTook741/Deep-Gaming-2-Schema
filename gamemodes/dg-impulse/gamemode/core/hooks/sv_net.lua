@@ -2,6 +2,7 @@ util.AddNetworkString("impulseJoinData")
 util.AddNetworkString("impulseATMWithdraw")
 util.AddNetworkString("impulseATMDeposit")
 util.AddNetworkString("impulseATMOpen")
+util.AddNetworkString("impulseATMTransfer")
 util.AddNetworkString("impulseReadNote")
 util.AddNetworkString("impulseTeamChange")
 util.AddNetworkString("impulseRedownloadLightmaps")
@@ -342,6 +343,49 @@ net.Receive("impulseATMDeposit", function(len, ply)
     else
         SendATMResult(ply, false, "You cannot afford to deposit this amount of money.")
     end
+end)
+
+local MAX_TRANSFER_AMOUNT = 1000000000
+
+net.Receive("impulseATMTransfer", function(len, ply)
+    if (ply.nextATM or 0) > CurTime() then
+        return
+    end
+    ply.nextATM = CurTime() + 1
+
+    local target = net.ReadEntity()
+    local amount = net.ReadUInt(32)
+
+    if not isnumber(amount) or amount < 1 or amount >= 1 / 0 or amount > MAX_TRANSFER_AMOUNT then
+        return SendATMResult(ply, false, "Invalid transfer amount.")
+    end
+
+    amount = math.floor(amount)
+
+    if not IsValid(target) or not target:IsPlayer() then
+        return SendATMResult(ply, false, "Invalid recipient.")
+    end
+
+    if target == ply then
+        return SendATMResult(ply, false, "You cannot transfer credits to yourself.")
+    end
+
+    if target:IsCP() or target:Team() == TEAM_ZOMBIE or target:Team() == TEAM_STALKER or target:Team() == TEAM_CREMATOR then
+        return SendATMResult(ply, false, "This player cannot receive a credit transfer.")
+    end
+
+    if ply:CanAffordBank(amount) then
+        ply:TakeBankMoney(amount)
+    elseif ply:CanAfford(amount) then
+        ply:TakeMoney(amount)
+    else
+        return SendATMResult(ply, false, "You cannot afford to send this amount of money.")
+    end
+
+    target:GiveBankMoney(amount)
+
+    SendATMResult(ply, true, "Sent " .. impulse.Config.CurrencyPrefix .. amount .. " to " .. target:Nick() .. ".")
+    target:Notify("You received " .. impulse.Config.CurrencyPrefix .. amount .. " from " .. ply:Nick() .. ".")
 end)
 
 net.Receive("impulseTeamChange", function(len, ply)
