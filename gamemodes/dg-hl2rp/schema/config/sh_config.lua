@@ -194,6 +194,37 @@ impulse.Config.DoorGroups = {
 	[7] = "Research & Development",
 }
 
+impulse.Config.Usergroups = {
+	["superadmin"] 						= "superadmin",
+	["communitymanager"] 				= "superadmin",
+	["staffmanager"] 	 				= "superadmin",
+	["eventmanager"] 	 				= "superadmin",
+
+	["leaddeveloper"] 					= "superadmin",
+	["developer"] 						= "superadmin",
+	["jnrdeveloper"] 					= "superadmin",
+
+	["leadadmincollaborator"] 			= "leadadmin",
+	["leadadminstaff"] 					= "leadadmin",
+	["leadevents"] 						= "leadadmin",
+	["leadeventscollaborator"] 			= "leadadmin",
+	
+	["admin"] 							= "admin",
+	["admincollaborator"] 				= "admin",
+	["jnradmin"] 						= "admin",
+	["moderator"] 						= "admin",
+	["jnrmoderator"] 					= "admin",
+	["trialmod"] 						= "admin",
+
+	["seniorgamemaster"] 				= "seniorgamemaster",
+	["seniorgamemastercollaborator"] 	= "seniorgamemaster",
+
+	["gamemaster"] 						= "gamemaster",
+	["gamemastercollaborator"] 			= "gamemaster",
+	["juniorgamemaster"] 				= "juniorgamemaster",
+	["trialgamemaster"] 				= "juniorgamemaster",
+}
+
 impulse.Config.RankColours = {
 	-- Community Management
 	["superadmin"] = Color(201, 15, 12),

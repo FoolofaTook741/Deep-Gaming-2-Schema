@@ -49,39 +49,72 @@ end
 
 local eMeta = FindMetaTable("Entity")
 
---- Returns if a player is an impulse framework lead developer
--- @realm shared
--- @treturn bool Is lead developer
+function meta:GetImpulseGroup()
+    return impulse.Config.Usergroups[self:GetUserGroup() or "user"] or "user"
+end 
+
 function meta:IsLeadDeveloper()
     return self:SteamID() == "STEAM_0:1:52886245"
 end
 
-local superadminGroups = {
-    ["leaddeveloper"] = true,
-    ["staffmanager"] = true,
-    ["eventmanager"] = true,
-    ["superadmin"] = true,
-}
---- Returns if a player is an impulse framework lead developer
--- @realm shared
--- @treturn bool Is superadmin
-function meta:IsSuperAdmin()
-    if superadminGroups[self.GetUserGroup(self)] then
-        return true
-    end
-
-    return false
-end
-
---- Returns if a player is an impulse framework developer
--- @realm shared
--- @treturn bool Is developer
 function meta:IsDeveloper()
-    if self:IsLeadDeveloper() or self:IsUserGroup("developer") then
+    if self:IsLeadDeveloper() or self:IsUserGroup("developer") or self:IsUserGroup("jnrdeveloper") then
         return true
     end
 
     return self:SteamID() == "STEAM_0:1:95921723", self:SteamID() == "STEAM_0:0:104958683", self:SteamID() == "STEAM_0:1:65644683"
+end
+
+function meta:IsSuperAdmin()
+    return self:GetImpulseGroup() == "superadmin"
+end
+
+function meta:IsLeadAdmin()
+    if self:IsSuperAdmin() then
+        return true
+    end
+    
+    return self:GetImpulseGroup() == "leadadmin"
+end
+
+function meta:IsAdmin()
+    if self:IsSuperAdmin() then
+        return true
+    end
+
+    if self:IsLeadAdmin() then 
+        return true 
+    end 
+
+    return self:GetImpulseGroup() == "admin"
+end
+
+function meta:IsSeniorGameMaster()
+    if self:IsAdmin() then
+        return true
+    end
+
+    return self:GetImpulseGroup() == "seniorgamemaster"
+end
+
+function meta:IsEventGameMaster()
+    if self:IsSeniorGameMaster() then
+        return true
+    end
+
+    return self:GetImpulseGroup() == "gamemaster"
+end
+
+function meta:IsGameMaster()
+    if self:IsSeniorGameMaster() then
+        return true
+    end
+
+    if self:IsEventGameMaster() then 
+        return true 
+    end 
+
+    return self:GetImpulseGroup() == "juniorgamemaster"
 end
 
 --- Returns if a player has donator status
@@ -103,106 +136,6 @@ end
 
 function meta:IsE2()
     return self:IsDonator() or (self:GetNWBool("HasE2", false))
-end
-
-local adminGroups = {
-    ["leadadmincollaborator"] = true,
-    ["leadadminstaff"] = true,
-    ["leadadminstaffcollaborator"] = true,
-
-    ["leadevents"] = true,
-    ["leadeventscollaborator"] = true,
-
-    ["admin"] = true,
-    ["admincollaborator"] = true,
-    ["jnradmin"] = true,
-    ["moderator"] = true,
-    ["jnrmoderator"] = true,
-    ["trialmod"] = true,
-
-    ["jnrdeveloper"] = true,
-    ["developer"] = true,
-    ["leaddeveloper"] = true
-}
-
-function meta:IsAdmin()
-    if self.IsSuperAdmin(self) then
-        return true
-    end
-    
-    if adminGroups[self.GetUserGroup(self)] then
-        return true
-    end
-
-    return false
-end
-
-local leadAdminGroups = {
-    ["leadadmincollaborator"] = true,
-    ["leadadminstaff"] = true,
-    ["leadadmincollaborator"] = true,
-
-    ["leadevents"] = true,
-    ["leadeventscollaborator"] = true,
-
-    ["leaddeveloper"] = true,
-    ["developer"] = true
-}
-
-function meta:IsLeadAdmin()
-    if self.IsSuperAdmin(self) then
-        return true
-    end
-    
-    if leadAdminGroups[self.GetUserGroup(self)] then
-        return true
-    end
-
-    return false
-end
-
-local gameMasterGroups = {
-
-    ["gamemaster"] = true,
-    ["gamemastercollaborator"] = true,
-    ["juniorgamemaster"] = true,
-    ["trialgamemaster"] = true,
-}
-
-local eventGameMasterGroups = {
-    ["gamemaster"] = true,
-    ["gamemastercollaborator"] = true,
-}
-
-function meta:IsEventGameMaster()
-    if self:IsSeniorGameMaster() then
-        return true
-    end
-    return eventGameMasterGroups[self:GetUserGroup()] or false
-end
-
-function meta:IsGameMaster()
-    if self.IsSuperAdmin(self) or self:IsLeadAdmin() or self:IsAdmin() or self:IsSeniorGameMaster() then
-        return true
-    end
-
-    if gameMasterGroups[self.GetUserGroup(self)] then
-        return true
-    end
-
-    return false
-end
-
-function meta:IsSeniorGameMaster()
-    if self.IsSuperAdmin(self) or self:IsLeadAdmin() or self:IsAdmin() then
-        return true
-    end
-
-    if self:GetUserGroup() == "seniorgamemaster" or self:GetUserGroup() == "seniorgamemastercollaborator" then 
-        return true
-    end
-
-    return false
 end
 
 --- Returns if a player is in the spawn zone
