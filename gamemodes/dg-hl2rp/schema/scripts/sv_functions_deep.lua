@@ -121,6 +121,8 @@ function ReqwestLog(embeddedmessages, webhook)
     end
     local serverName = (hostname == "Deep Gaming 2 | Half Life 2 Roleplay") and "Main" or "Dev"
 
+    if (serverName == "Dev") then return end
+
     for _, embed in ipairs(embeddedmessages) do
         embed.fields = embed.fields or {}
         table.insert(embed.fields, {
