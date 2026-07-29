@@ -54,7 +54,7 @@ end
 timer.Create("Impulse_RagdollFizzleCheck", .5, 0, function()
     for _, ragdoll in ipairs(ents.FindByClass("prop_ragdoll")) do
         if ragdoll.Fizzling then continue end
-        if ragdoll:GetNWBool("IsKnockoutRagdoll", false) then continue end
+        --if ragdoll:GetNWBool("IsKnockoutRagdoll", false) then continue end
 
         local rMins, rMaxs = ragdoll:WorldSpaceAABB()
 
