@@ -283,17 +283,17 @@ end
 
 ENT.Menus["ATM"] = {
 	buttons = {
-		ATMKeypadButton("7", -170, -110, function(self) atmInputStr = atmInputStr .. "7" end),
-		ATMKeypadButton("8", -55,  -110, function(self) atmInputStr = atmInputStr .. "8" end),
-		ATMKeypadButton("9",  60,  -110, function(self) atmInputStr = atmInputStr .. "9" end),
+		ATMKeypadButton("1", -170, -110, function(self) atmInputStr = atmInputStr .. "1" end),
+		ATMKeypadButton("2", -55,  -110, function(self) atmInputStr = atmInputStr .. "2" end),
+		ATMKeypadButton("3",  60,  -110, function(self) atmInputStr = atmInputStr .. "3" end),
 
 		ATMKeypadButton("4", -170, -60, function(self) atmInputStr = atmInputStr .. "4" end),
 		ATMKeypadButton("5", -55,  -60, function(self) atmInputStr = atmInputStr .. "5" end),
 		ATMKeypadButton("6",  60,  -60, function(self) atmInputStr = atmInputStr .. "6" end),
 
-		ATMKeypadButton("1", -170, -10, function(self) atmInputStr = atmInputStr .. "1" end),
-		ATMKeypadButton("2", -55,  -10, function(self) atmInputStr = atmInputStr .. "2" end),
-		ATMKeypadButton("3",  60,  -10, function(self) atmInputStr = atmInputStr .. "3" end),
+		ATMKeypadButton("7", -170, -10, function(self) atmInputStr = atmInputStr .. "7" end),
+		ATMKeypadButton("8", -55,  -10, function(self) atmInputStr = atmInputStr .. "8" end),
+		ATMKeypadButton("9",  60,  -10, function(self) atmInputStr = atmInputStr .. "9" end),
 
 		CVButton("CLR", -170, 40, 110, 45, CVCOLOR_RED, function(self) atmInputStr = "" end),
 		ATMKeypadButton("0", -55, 40, function(self)
