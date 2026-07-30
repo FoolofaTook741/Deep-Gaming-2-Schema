@@ -588,17 +588,13 @@ local function BroadcastKnockedOutMumble(ply)
     end
 end
 
-local KNOCKOUT_BLOCKED_COMMANDS = {
-		    ["/y"] = true,
-		    ["/w"] = true,
-		    ["/g"] = true,
-		    ["/me"] = true,
-		    ["/it"] = true,
-		    ["//"] = true,
-		    ["/looc"] = true,
-		    ["/ooc"] = true,
-		}
-
+local KNOCKOUT_ALLOWED_COMMANDS = {
+    ["/report"] = true,
+    ["/pm"] = true,
+    ["/reply"] = true,
+    ["/rmsg"] = true,
+    ["/rcl"] = true,
+}
 
 local talkCol = Color(255, 255, 100)
 local infoCol = Color(135, 206, 250)
@@ -625,7 +621,7 @@ function GM:PlayerSay(ply, text, teamChat, newChat)
 		local command = impulse.chatCommands[string.lower(cmdRaw)]
 
 		if command then
-			if ply.KnockedOut and KNOCKOUT_BLOCKED_COMMANDS[string.lower(cmdRaw)] then
+			if ply.KnockedOut and not KNOCKOUT_ALLOWED_COMMANDS[string.lower(cmdRaw)] then
 		        BroadcastKnockedOutMumble(ply)
 		        return ""
 		    end
@@ -668,13 +664,7 @@ function GM:PlayerSay(ply, text, teamChat, newChat)
 	elseif ply:Alive() then
 		if ply.KnockedOut then
 	        local plyPos = ply:GetPos()
-
-	        for v, k in pairs(player.GetAll()) do
-	            if (plyPos - k:GetPos()):LengthSqr() <= TALK_DIST_SQR or k.SnooperMode == true then
-	                k:SendChatClassMessage(10, "mutters something unintelligible.", ply)
-	            end
-	        end
-
+	        BroadcastKnockedOutMumble(ply)
 	        return ""
 	    end
 	    text = hook.Run("ProcessICChatMessage", ply, text) or text
