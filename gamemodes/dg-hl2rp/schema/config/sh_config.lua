@@ -369,7 +369,7 @@ impulse.Config.Achievements = {
 	},
 	["ach_costlydeath"] = {
 		Name = "Costly Death",
-		Desc = "Die to a player with 20000 credits on you",
+		Desc = "Die to a player with 1000 credits on you",
 		Icon = Material("impulse/icons/banknotes-128.png"),
 		Points = 20
 	},
