@@ -768,6 +768,7 @@ impulse.Config.ArrestCharges = {
 	{name = "Capital malcompliance", severity = 5, sound = "npc/overwatch/radiovoice/capitalmalcompliance.wav"},
 	{name = "Destruction of corporal social protection units", severity = 12, sound = "npc/overwatch/radiovoice/destrutionofcpt.wav"},
 	{name = "415, civic disunity", severity = 4, sound = "npc/overwatch/radiovoice/disturbingunity415.wav"},
+	{name = "PRIORITY ONE SUSPECT", severity = 20, sound = "npc/overwatch/radiovoice/suspectisnow187.wav"},
 }
 impulse.Config.DispatchLines = {
     {name = "Anti-citizen reported in this community", text = "Attention, ground-units: Anti-citizen reported in this community. Code: LOCK, CAUTERIZE, STABILIZE.", sound = "npc/overwatch/cityvoice/f_anticitizenreport_spkr.wav", volume = 80},
