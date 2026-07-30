@@ -345,8 +345,12 @@ net.Receive("impulseATMDeposit", function(len, ply)
 end)
 
 net.Receive("impulseTeamChange", function(len, ply)
-	if (ply.lastTeamTry or 0) > CurTime() then return end
-	if teamID == TEAM_STALKER then
+	if (ply.lastTeamTry or 0) > CurTime() then 
+		return
+	elseif ply.KnockedOut then
+		ply:Notify("You are unconcious.")
+		return
+	elseif teamID == TEAM_STALKER then
 		ply:Notify("This is not a playable team.")
 		return
 	end
