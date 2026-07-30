@@ -319,6 +319,13 @@ local CID_KP_ROW_PITCH = 44
 local CID_KP_W = CID_KP_BTN_W * 3 + CID_KP_GAP * 2
 local CID_FIELD_Y = CID_KP_ROW_TOP - 50
 
+local function GetDisplayName(ply)
+	if ply.IsDebugFake then
+		return ply:Nick()
+	end
+	return ply:RawName()
+end
+
 local function GetTransferEligiblePlayers()
 	local list = {}
 	for _, ply in ipairs(player.GetAll()) do
@@ -329,6 +336,23 @@ local function GetTransferEligiblePlayers()
 	end
 	table.sort(list, function(a, b) return a:Nick() < b:Nick() end)
 	return list
+end
+
+local function TruncateText(text, maxWidth, font)
+	surface.SetFont(font)
+	local w = surface.GetTextSize(text)
+	if w <= maxWidth then return text end
+
+	local ellipsis = "..."
+	local truncated = text
+	while #truncated > 0 do
+		truncated = string.sub(truncated, 1, -2)
+		local testW = surface.GetTextSize(truncated .. ellipsis)
+		if testW <= maxWidth then
+			return truncated .. ellipsis
+		end
+	end
+	return ellipsis
 end
 
 local function DrawArc(x, y, radius, thickness, startAng, endAng, seg, color)
@@ -544,7 +568,8 @@ ENT.Menus["Transfer"] = {
 			if ply then
 				local y = ROW_TOP + (i - 1) * ROW_PITCH
 				local realTarget = ply.IsDebugFake and ply.RealPlayer or ply
-				table.insert(self.DynamicRows, CVButton(ply:Nick(), ROW_X, y, ROW_W, ROW_H, CVCOLOR_BLUE, function(term)
+				local label = TruncateText(GetDisplayName(ply), ROW_W - 24, font50)
+				table.insert(self.DynamicRows, CVButton(label, ROW_X, y, ROW_W, ROW_H, CVCOLOR_BLUE, function(term)
 					transferSelectedTarget = realTarget
 					transferInputStr = ""
 					term:OpenMenu("TransferAmount")
@@ -625,7 +650,7 @@ ENT.Menus["TransferAmount"] = {
 		draw.DrawText("CIVIC TERMINAL :: " .. self:EntIndex() * 21, font32, 400, -285, lightCombineBlueText, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
 		draw.DrawText("CREDITS TRANSFER ", font50, -450, -300, lightCombineBlueText, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
-		local recipName = IsValid(transferSelectedTarget) and transferSelectedTarget:Nick() or "UNKNOWN"
+		local recipName = IsValid(transferSelectedTarget) and transferSelectedTarget:RawName() or "UNKNOWN"
 		local prefix = impulse.Config.CurrencyPrefix
 		local bank = LocalPlayer():GetSyncVar(SYNC_BANKMONEY, 0)
 
@@ -683,7 +708,7 @@ ENT.Menus["TransferConfirm"] = {
 		draw.DrawText("CIVIC TERMINAL :: " .. self:EntIndex() * 21, font32, 400, -285, lightCombineBlueText, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
 		draw.DrawText("CONFIRM TRANSFER ", font50, -450, -300, lightCombineBlueText, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
-		local recipName = IsValid(transferSelectedTarget) and transferSelectedTarget:Nick() or "UNKNOWN"
+		local recipName = IsValid(transferSelectedTarget) and transferSelectedTarget:RawName() or "UNKNOWN"
 		local prefix = impulse.Config.CurrencyPrefix
 		local displayAmount = transferInputStr == "" and "0" or transferInputStr
 

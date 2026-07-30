@@ -347,6 +347,7 @@ function impulse.SetupPlayer(ply, dbData)
 	end
 
 	ply:SetSyncVar(SYNC_RPNAME, dbData.rpname, true)
+	ply:SetSyncVar(SYNC_RAW_RPNAME, dbData.rpname, true)
 	ply:SetSyncVar(SYNC_XP, dbData.xp, true)
 	ply:SetSyncVar(SYNC_CP_XP, tonumber(dbData.cp_xp) or 0, true)
 	local lang = dbData.languages or 0
