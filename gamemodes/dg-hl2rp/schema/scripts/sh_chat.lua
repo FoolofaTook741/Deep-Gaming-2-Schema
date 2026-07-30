@@ -2755,17 +2755,16 @@ if CLIENT then
 
 impulse.RegisterChatClass(51, function(message, speaker)
     if not IsValid(speaker) then return end
-
     if speaker:Team() == TEAM_CWU then
         local cwuclasses = {"of Maintenance", "of Commerce", "of Medicine", "of Refinery", "of I.C.T.", "of R&D"}
         local cwranks = {"Intern", "Employee", "Supervisor", "Director", "Minister"}
         if speaker:GetTeamRank() >= 1 then
-            chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: " .. (cwranks[speaker:GetTeamRank()] or "Unknown") .. " " .. (cwuclasses[speaker:GetTeamClass()] or "Unknown") .. ", Loyalist Level: " .. tostring(message))
+            chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: " .. (cwranks[speaker:GetTeamRank()] or "Unknown") .. " " .. (cwuclasses[speaker:GetTeamClass()] or "Unknown") .. ", Civic ID: " .. tostring(speaker:GetCivicID()) .. ", Loyalist Level: " .. tostring(message))
         else
-            chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", team.GetName(speaker:Team()) .. ", Branch: Unassigned. Loyalist Level: " .. tostring(message))
+            chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", team.GetName(speaker:Team()) .. ", Branch: Unassigned. Civic ID: " .. tostring(speaker:GetCivicID()) .. ", Loyalist Level: " .. tostring(message))
         end
     elseif speaker:Team() == TEAM_CITIZEN then
-        chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", team.GetName(speaker:Team()), ", Loyalist Level: ", tostring(message))
+        chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", team.GetName(speaker:Team()), ", Civic ID: ", tostring(speaker:GetCivicID()), ", Loyalist Level: ", tostring(message))
     else
 		if speaker:Team() ~= TEAM_ZOMBIE then
         	chat.AddText(team.GetColor(speaker:Team()), speaker:Name(), " shows ID: ", speaker:Name(), ", ", team.GetName(speaker:Team()))
