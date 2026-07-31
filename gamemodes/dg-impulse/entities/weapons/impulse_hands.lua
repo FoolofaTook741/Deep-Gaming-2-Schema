@@ -36,8 +36,6 @@ SWEP.CarryHack = nil
 SWEP.Constr = nil
 SWEP.PreviousOwner = nil
 
-SWEP.QuickDraw = true
-
 local THROW_VELOCITY_CAP = 150
 local CARRY_FORCE_LIMIT = 40000
 local CARRY_WEIGHT_LIMIT = 100
