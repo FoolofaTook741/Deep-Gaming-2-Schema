@@ -366,17 +366,20 @@ end
 
 if SERVER then
     hook.Add("OnPlayerChangedTeam", "ShieldMovementCleanup", function(ply)
-        timer.Simple(0, function()
-            ply.restrictMovement = false
+	    if not ply.restrictMovement then return end
+
+	    timer.Simple(0, function()
+	        if not IsValid(ply) then return end
+	        ply.restrictMovement = false
 	        ply.disableSprint = false
 	        ply:SetJumpPower(160)
-	        if ply:Team() ~= TEAM_ZOMBIE and ply:Team() ~= TEAM_CREMATOR  then
+	        if ply:Team() ~= TEAM_ZOMBIE and ply:Team() ~= TEAM_CREMATOR and ply:Team() ~= TEAM_VORT then
 	            ply:SetRunSpeed(impulse.Config.JogSpeed)
 	            ply:SetWalkSpeed(impulse.Config.WalkSpeed)
 	            ply:SetSlowWalkSpeed(impulse.Config.WalkSpeed * impulse.Config.SlowWalkRatio)
 	        end
-	        end)
-    end)
+	    end)
+	end)
 end
 
 SWEP.canBeDestroyedByDamage = false
