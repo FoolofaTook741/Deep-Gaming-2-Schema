@@ -280,7 +280,7 @@ hook.Add("OnPlayerChangedTeam", "zombienameset", function( ply, oldTeam, newTeam
 end)
 
 hook.Add("OnPlayerChangedTeam", "zombieSpeedFix", function(ply, oldTeam, newTeam)
-    if newTeam == TEAM_ZOMBIE then return end --zombie hook handles its own speed
+    if newTeam == TEAM_ZOMBIE or newTeam == TEAM_VORT then return end --zombie and vort hooks handles their own speed
     if oldTeam == TEAM_ZOMBIE then
         timer.Simple(0.1, function()
             if IsValid(ply) and ply:Team() ~= TEAM_ZOMBIE and ply:Team() ~= TEAM_CREMATOR then

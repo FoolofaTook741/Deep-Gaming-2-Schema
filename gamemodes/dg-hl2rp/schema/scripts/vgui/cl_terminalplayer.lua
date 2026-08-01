@@ -297,8 +297,9 @@ function PANEL:Paint(w,h)
 	end
 
  	if self.IsBOL and self.BOLCrime then
+ 		local chargeData = impulse.Config.ArrestCharges[self.BOLCrime]
  		surface.SetTextPos(70, 17)
- 		surface.DrawText("CONVICTION: "..impulse.Config.ArrestCharges[self.BOLCrime].name)
+ 	    surface.DrawText("CONVICTION: "..(chargeData and chargeData.name or "UNKNOWN"))
  		return
  	end
 	if not self.convictData then return end

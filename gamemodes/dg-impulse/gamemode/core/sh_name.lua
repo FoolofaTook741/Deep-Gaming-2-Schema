@@ -150,5 +150,9 @@ function meta:KnownName()
 	return custom or self:GetSyncVar(SYNC_RPNAME, self:SteamName())
 end
 
+function meta:RawName()
+	return self:GetSyncVar(SYNC_RAW_RPNAME, self:SteamName())
+end
+
 meta.GetName = meta.Name
 meta.Nick = meta.Name

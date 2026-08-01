@@ -220,6 +220,7 @@ end
 -- @table SyncDefaults
 
 SYNC_RPNAME = impulse.Sync.RegisterVar(SYNC_STRING)
+SYNC_RAW_RPNAME = impulse.Sync.RegisterVar(SYNC_STRING)
 SYNC_XP = impulse.Sync.RegisterVar(SYNC_HUGEINT)
 SYNC_MONEY = impulse.Sync.RegisterVar(SYNC_HUGEINT)
 SYNC_BANKMONEY = impulse.Sync.RegisterVar(SYNC_HUGEINT)

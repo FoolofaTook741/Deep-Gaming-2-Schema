@@ -688,6 +688,47 @@ local groupChatCommand = {
 impulse.RegisterChatCommand("/group", groupChatCommand)
 impulse.RegisterChatCommand("/g", groupChatCommand)
 
+local reviveCommand = {
+    description = "Revive a person from being knocked out",
+    requiresArg = false,
+    adminOnly = false,
+    onRun = function(ply, arg, rawText)
+        if !ply:IsGameMaster() and !ply:IsAdmin() then
+            ply:Notify("You cannot use this command unless you are an admin.")
+            return
+        end
+
+        local name = arg[1]
+        local plyTarget = ply
+
+        if name and name != "" then
+            plyTarget = impulse.FindPlayer(name)
+
+            if not plyTarget then
+                return ply:Notify("Could not find player: "..tostring(name))
+            end
+        end
+
+        if not plyTarget.KnockedOut then
+            if plyTarget == ply then
+                return ply:Notify("You are not knocked out.")
+            else
+                return ply:Notify(plyTarget:Name().." is not knocked out.")
+            end
+        end
+
+        GAMEMODE:ReviveFromKnockout(plyTarget)
+
+        if plyTarget == ply then
+            ply:Notify("You have been revived.")
+        else
+            plyTarget:Notify("You have been revived by a game moderator.")
+            ply:Notify(plyTarget:Name().." has been revived.")
+        end
+    end
+}
+impulse.RegisterChatCommand("/revive", reviveCommand)
+
 impulse.RegisterChatCommand("/unshackle", {
     description = "Removes shackles from a vortigaunt by Steam ID.",
     leadAdminOnly = true,

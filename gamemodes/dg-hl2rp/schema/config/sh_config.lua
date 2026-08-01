@@ -369,7 +369,7 @@ impulse.Config.Achievements = {
 	},
 	["ach_costlydeath"] = {
 		Name = "Costly Death",
-		Desc = "Die to a player with 20000 credits on you",
+		Desc = "Die to a player with 1000 credits on you",
 		Icon = Material("impulse/icons/banknotes-128.png"),
 		Points = 20
 	},
@@ -768,6 +768,7 @@ impulse.Config.ArrestCharges = {
 	{name = "Capital malcompliance", severity = 5, sound = "npc/overwatch/radiovoice/capitalmalcompliance.wav"},
 	{name = "Destruction of corporal social protection units", severity = 12, sound = "npc/overwatch/radiovoice/destrutionofcpt.wav"},
 	{name = "415, civic disunity", severity = 4, sound = "npc/overwatch/radiovoice/disturbingunity415.wav"},
+	{name = "PRIORITY ONE SUSPECT", severity = 20, sound = "npc/overwatch/radiovoice/suspectisnow187.wav"},
 }
 impulse.Config.DispatchLines = {
     {name = "Anti-citizen reported in this community", text = "Attention, ground-units: Anti-citizen reported in this community. Code: LOCK, CAUTERIZE, STABILIZE.", sound = "npc/overwatch/cityvoice/f_anticitizenreport_spkr.wav", volume = 80},

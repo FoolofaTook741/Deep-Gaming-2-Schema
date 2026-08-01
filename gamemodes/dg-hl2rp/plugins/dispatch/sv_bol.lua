@@ -8,9 +8,9 @@ util.AddNetworkString("deepgamingSacrificeCode")
 
 function meta:AddDispatchBOL(crime, expiry)
 	if self == PRIORITY_ONE_SUSPECT then
-		crime = 999
-	else
-		local crimeData = impulse.Config.ArrestCharges[crime]
+		crime = 23
+	elseif not impulse.Config.ArrestCharges[crime] then
+		return
 	end
 	local id = self:SteamID()
 
