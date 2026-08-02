@@ -3,7 +3,7 @@ AddCSLuaFile("cl_init.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-    self:SetModel("models/props_combine/combine_dispenser.mdl")
+    self:SetModel("models/props_combine/hls/combine_dispenser.mdl")
     self:PhysicsInitBox(
         Vector(-8, -8, 0),
         Vector(8, 8, 48)
