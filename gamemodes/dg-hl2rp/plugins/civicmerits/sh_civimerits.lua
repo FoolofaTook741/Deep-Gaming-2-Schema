@@ -6,6 +6,7 @@ end
 impulse.CivicMerits = impulse.CivicMerits or {}
 
 impulse.CivicMerits.MaxAdd = 10
+impulse.CivicMerits.MaxSubtract = 20
 impulse.CivicMerits.MaxReasonLength = 200
 impulse.CivicMerits.AdjustCooldown = 2
 impulse.CivicMerits.Min = -50
@@ -87,6 +88,10 @@ local civicMeritsCommand = {
 
         if isAddition and amount > impulse.CivicMerits.MaxAdd then
             return ply:Notify("You may only issue up to " .. impulse.CivicMerits.MaxAdd .. " merits at a time.")
+        end
+
+        if not isAddition and amount > impulse.CivicMerits.MaxSubtract then
+            return ply:Notify("You may only subtract up to " .. impulse.CivicMerits.MaxSubtract .. " merits at a time.")
         end
 
         local targ = player.GetBySteamID(steamid)
