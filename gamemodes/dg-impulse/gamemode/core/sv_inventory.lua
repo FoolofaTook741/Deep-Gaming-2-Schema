@@ -720,6 +720,7 @@ function meta:DropInventoryItem(itemid)
 
     local ent = impulse.Inventory.SpawnItem(item.class, tr.HitPos)
     ent.ItemOwner = self
+    ent.IsDroppedItem = true
     ent.IsRestrictedItem = item.restricted
     ent.dyeData = savedDyeData  -- attach to world entity
 
@@ -743,6 +744,12 @@ function meta:DropInventoryItem(itemid)
 
     ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
 end
+
+hook.Add("ShouldCollide", "ImpulseDroppedItemsNoCollide", function(ent1, ent2)
+    if ent1.IsDroppedItem and ent2.IsDroppedItem then
+        return false
+    end
+end)
 
 --- Uses a specific inventory item
 -- @realm server
