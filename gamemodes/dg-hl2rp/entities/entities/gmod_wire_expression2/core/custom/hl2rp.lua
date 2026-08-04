@@ -11,5 +11,5 @@ end
 
 __e2setcost(25)
 e2function number hl2rpGetCityCode()
-	return impulse.Dispatch.GetCityCode()
+	return CODE_CIVIL --impulse.Dispatch.GetCityCode()
 end
