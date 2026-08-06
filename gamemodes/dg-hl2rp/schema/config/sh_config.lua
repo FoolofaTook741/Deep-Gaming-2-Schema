@@ -204,23 +204,18 @@ impulse.Config.Usergroups = {
 	["developer"] 						= "superadmin",
 	["jnrdeveloper"] 					= "superadmin",
 
-	["leadadmincollaborator"] 			= "leadadmin",
 	["leadadminstaff"] 					= "leadadmin",
 	["leadevents"] 						= "leadadmin",
-	["leadeventscollaborator"] 			= "leadadmin",
 	
 	["admin"] 							= "admin",
-	["admincollaborator"] 				= "admin",
 	["jnradmin"] 						= "admin",
 	["moderator"] 						= "admin",
 	["jnrmoderator"] 					= "admin",
 	["trialmod"] 						= "admin",
 
 	["seniorgamemaster"] 				= "seniorgamemaster",
-	["seniorgamemastercollaborator"] 	= "seniorgamemaster",
 
 	["gamemaster"] 						= "gamemaster",
-	["gamemastercollaborator"] 			= "gamemaster",
 	["juniorgamemaster"] 				= "juniorgamemaster",
 	["trialgamemaster"] 				= "juniorgamemaster",
 }
