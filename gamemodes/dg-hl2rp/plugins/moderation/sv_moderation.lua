@@ -431,7 +431,7 @@ function DG.Bans:CheckActive(steamid, callback)
     query:Execute()
 end
 
-net.Receive("dgRequestRecord", function(len, ply)
+function DG.SendRecordToPlayer(ply)
     if not ply.dgRecord then return end
 
     net.Start("dgSendRecord")
@@ -451,6 +451,10 @@ net.Receive("dgRequestRecord", function(len, ply)
             net.WriteBool(DG.IsBanEnforced(b))
         end
     net.Send(ply)
+end
+
+net.Receive("dgRequestRecord", function(len, ply)
+    DG.SendRecordToPlayer(ply)
 end)
 
 local function deletePendingAction(id)
