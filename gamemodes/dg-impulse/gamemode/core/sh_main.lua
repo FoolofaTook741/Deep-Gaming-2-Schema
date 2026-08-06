@@ -127,11 +127,7 @@ end
 function meta:IsCollaborator()
     return self:IsUserGroup("collaborator")
         or self:IsSuperAdmin()
-        or self:IsUserGroup("admincollaborator")
-        or self:IsUserGroup("leadadminstaffcollaborator")
-        or self:IsUserGroup("leadeventscollaborator")
-        or self:IsUserGroup("gamemastercollaborator")
-        or self:IsUserGroup("seniorgamemastercollaborator")
+        or self:GetNWBool("IsCollaborator", false)
 end
 
 function meta:IsE2()
