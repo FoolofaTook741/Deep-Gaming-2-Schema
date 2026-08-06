@@ -60,3 +60,45 @@ net.Receive("DeepPlaySound", function()
         surface.PlaySound(sound)    
     end
 end)
+
+net.Receive("dgSendRecord", function()
+    local warnCount = net.ReadUInt(16)
+    local warns = {}
+    for i = 1, warnCount do
+        warns[i] = {
+            id = net.ReadUInt(32),
+            reason = net.ReadString(),
+            created_at = net.ReadUInt(32),
+            active = net.ReadBool()
+        }
+    end
+
+    local banCount = net.ReadUInt(16)
+    local bans = {}
+    for i = 1, banCount do
+        bans[i] = {
+            id = net.ReadUInt(32),
+            reason = net.ReadString(),
+            created_at = net.ReadUInt(32),
+            active = net.ReadBool()
+        }
+    end
+
+    chat.AddText(Color(238, 210, 2), "--- Your Standing ---")
+
+    if #warns == 0 then
+        chat.AddText(color_white, "No warnings on record.")
+    else
+        for _, w in ipairs(warns) do
+            chat.AddText(color_white, "[Warn #"..w.id.."] ("..(w.active and "ACTIVE" or "expired/removed")..") "..w.reason)
+        end
+    end
+
+    if #bans == 0 then
+        chat.AddText(color_white, "No bans on record.")
+    else
+        for _, b in ipairs(bans) do
+            chat.AddText(color_white, "[Ban #"..b.id.."] ("..(b.active and "ACTIVE" or "expired/removed")..") "..b.reason)
+        end
+    end
+end)
