@@ -453,28 +453,43 @@ net.Receive("dgRequestRecord", function(len, ply)
     net.Send(ply)
 end)
 
-local function markActionDone(id, resultMessage)
-    local q = mysql:Update("impulse_pendingactions")
-    q:Update("status", "done")
-    q:Update("result_message", resultMessage)
-    q:Update("processed_at", os.time())
+local function deletePendingAction(id)
+    local q = mysql:Delete("impulse_pendingactions")
     q:Where("id", id)
     q:Execute()
 end
 
-local function markActionError(id, resultMessage)
+local function finishPendingAction(id, status, resultMessage)
     local q = mysql:Update("impulse_pendingactions")
-    q:Update("status", "error")
+    q:Update("status", status)
     q:Update("result_message", resultMessage)
     q:Update("processed_at", os.time())
     q:Where("id", id)
+    q:Callback(function()
+        timer.Simple(60, function()
+            deletePendingAction(id)
+        end)
+    end)
     q:Execute()
+end
+
+local function markActionDone(id, resultMessage)
+    finishPendingAction(id, "done", resultMessage)
+end
+
+local function markActionError(id, resultMessage)
+    finishPendingAction(id, "error", resultMessage)
 end
 
 local function executePendingAction(row)
     local payload = util.JSONToTable(row.payload) or {}
 
     local function finish(ok, message)
+        if row.action_type == "syncgroup" then
+            deletePendingAction(row.id)
+            return
+        end
+
         if ok then
             markActionDone(row.id, message)
         else
@@ -497,7 +512,7 @@ local function executePendingAction(row)
         impulse.SyncGroupFromDatabase(steamid)
         finish(true, "Group sync requested for "..steamid..".")
     else
-        markActionError(row.id, "Unknown action type: "..tostring(row.action_type))
+        finish(false, "Unknown action type: "..tostring(row.action_type))
     end
 end
 
