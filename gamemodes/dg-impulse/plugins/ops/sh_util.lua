@@ -990,8 +990,7 @@ local myStandingCommand = {
     description = "View your own warning and ban history.",
     requiresArg = false,
     onRun = function(ply, arg, rawText)
-        net.Start("dgRequestRecord")
-        net.Send(ply)
+        DG.SendRecordToPlayer(ply)
     end
 }
 impulse.RegisterChatCommand("/mystanding", myStandingCommand)
