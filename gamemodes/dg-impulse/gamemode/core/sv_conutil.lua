@@ -1,4 +1,3 @@
---[[
 concommand.Add("impulse_setgroup", function(ply, cmd, args)
 	if ply != NULL or IsValid(ply) then
 		return
@@ -25,4 +24,3 @@ concommand.Add("impulse_setgroup", function(ply, cmd, args)
 	print("[impulse] Set '"..steamid.."'' to group '"..group.."'.")
 	QueueDiscordSync(steamid)
 end)
---]]
