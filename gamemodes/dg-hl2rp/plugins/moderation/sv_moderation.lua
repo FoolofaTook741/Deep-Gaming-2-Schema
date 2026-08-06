@@ -500,6 +500,12 @@ local function executePendingAction(row)
         DG.Warns:Create(payload.steamid, payload.admin_steamid, payload.admin_name, payload.reason, "discord", finish)
     elseif row.action_type == "removewarn" then
         DG.Warns:Remove(payload.steamid, tonumber(payload.warn_id), payload.admin_steamid or "DISCORD", finish)
+    elseif row.action_type == "syncgroup" then
+        local steamid = tostring(payload.steamid or ""):Trim():upper()
+        if not ValidSteamID(steamid) then return finish(false, "Invalid SteamID.") end
+        if not isfunction(impulse.SyncGroupFromDatabase) then return finish(false, "Rank sync function is unavailable.") end
+        impulse.SyncGroupFromDatabase(steamid)
+        finish(true, "Group sync requested for "..steamid..".")
     else
         markActionError(row.id, "Unknown action type: "..tostring(row.action_type))
     end
