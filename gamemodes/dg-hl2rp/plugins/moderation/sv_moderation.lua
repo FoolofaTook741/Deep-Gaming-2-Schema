@@ -453,16 +453,6 @@ net.Receive("dgRequestRecord", function(len, ply)
     net.Send(ply)
 end)
 
-local myStandingCommand = {
-    description = "View your own warning and ban history.",
-    requiresArg = false,
-    onRun = function(ply, arg, rawText)
-        net.Start("dgRequestRecord")
-        net.Send(ply)
-    end
-}
-impulse.RegisterChatCommand("/mystanding", myStandingCommand)
-
 local function markActionDone(id, resultMessage)
     local q = mysql:Update("impulse_pendingactions")
     q:Update("status", "done")
