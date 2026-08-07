@@ -271,7 +271,7 @@ function APG.smartCleanup( notify, callback )
 		if IsValid(v) and v.GetPhysicsObject then
 			local phys = v:GetPhysicsObject()
 			if IsValid(phys) and phys:IsMotionEnabled() then
-				if v.isFadingDoor and APG.isBadEnt(ent) then
+				if v.isFadingDoor and APG.isBadEnt(v) then
 					SafeRemoveEntity(v)
 				else
 					table.insert(bad, {ent = v, phys = phys})
@@ -412,9 +412,28 @@ function APG.startDJob( job, content )
 	end)
 end
 
-hook.Add("InitPostEntity", "APG_Load", function()
-	hook.Add("Think", "APG_Load", function()
-		APG.initialize()
-		hook.Remove("Think", "APG_Load")
+local function queueAPGLoad(isRefresh)
+	timer.Create("APG_DeferredLoad", 0.1, 1, function()
+		if not APG then return end
+
+		if isRefresh then
+			if not APG.reload then return end
+
+			APG.reload()
+			print("[APG] Settings and modules reapplied after Lua refresh.")
+		else
+			if not APG.initialize then return end
+
+			APG.initialize()
+			print("[APG] Settings and modules initialized.")
+		end
 	end)
+end
+
+hook.Add("InitPostEntity", "APG_Load", function()
+	queueAPGLoad(false)
+end)
+
+hook.Add("OnReloaded", "APG_LoadAfterRefresh", function()
+	queueAPGLoad(true)
 end)
