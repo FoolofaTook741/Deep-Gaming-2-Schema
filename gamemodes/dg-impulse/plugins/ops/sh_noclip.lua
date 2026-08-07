@@ -23,6 +23,7 @@ hook.Add("PlayerNoClip", "opsNoclip", function(ply, state)
 				ply.RecentlyNoclipped = true 
 
 				timer.Simple(60, function()
+					if not IsValid(ply) then return end
 					ply.RecentlyNoclipped = false
 				end)
 
