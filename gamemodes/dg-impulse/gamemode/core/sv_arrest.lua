@@ -164,9 +164,7 @@ function meta:UnJail()
 		return
 	end
 
-	if self:Alive() then
-		self:Spawn()
-	end
+	self:Spawn()
 	
 	self:UnArrest()
 
