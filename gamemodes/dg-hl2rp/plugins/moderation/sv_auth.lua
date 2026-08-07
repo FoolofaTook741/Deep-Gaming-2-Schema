@@ -1,4 +1,5 @@
 local authedCollaborators = {}
+util.AddNetworkString("impulseRefreshGroupRank")
 
 
 function impulse.UpdateSyncedGroup(steamID, group, syncDiscord)
@@ -18,6 +19,10 @@ function impulse.UpdateSyncedGroup(steamID, group, syncDiscord)
 
 		if IsValid(target) then
 			target:SetUserGroup(group)
+
+			net.Start("impulseRefreshGroupRank")
+        	net.WriteString(target:GetUserGroup())
+   			net.Send(target)
 
 			local colour = impulse.Config.RankColours[target:GetUserGroup()]
 
@@ -65,6 +70,9 @@ function impulse.SyncGroupFromDatabase(steamID)
 		end
 
 		target:SetUserGroup(group)
+		net.Start("impulseRefreshGroupRank")
+		net.WriteString(target:GetUserGroup())
+		net.Send(target)
 
 		local colour = impulse.Config.RankColours[target:GetUserGroup()]
 

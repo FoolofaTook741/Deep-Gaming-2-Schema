@@ -408,39 +408,40 @@ local blockNormalTabs = {
 function GM:PostReloadToolsMenu()
     local spawnMenu = g_SpawnMenu
 
-    if spawnMenu then
-        local tabs = spawnMenu.CreateMenu
-        local closeMe = {}
-        local ply = LocalPlayer()
+    if not IsValid(spawnMenu) then
+        return
+    end
 
-        for _, k in pairs(tabs:GetItems()) do
-            if blockedTabs[k.Name] then
-                table.insert(closeMe, k.Tab)
-            end
+    local tabs = spawnMenu.CreateMenu
+    local ply = LocalPlayer()
 
-            if ply and ply:IsValid() then
-                if k.Name == "Pills" and not ply:IsSuperAdmin() then
-                    table.insert(closeMe, k.Tab)
-                end
+    if not IsValid(tabs) or not IsValid(ply) then
+        return
+    end
 
-                if blockNormalTabs[k.Name] and not ply:IsAdmin() then
-                    table.insert(closeMe, k.Tab)
-                end
+    for _, item in ipairs(tabs:GetItems()) do
+        local allowed = true
 
-                if k.Name == "#spawnmenu.category.npcs" and not ply:IsGameMaster() then
-                    table.insert(closeMe, k.Tab)
-                end
-
-                if k.Name == "#spawnmenu.category.vehicles" and not (ply:IsDonator() or ply:IsGameMaster()) then
-                    table.insert(closeMe, k.Tab)
-                end
-            end
+        if blockedTabs[item.Name] then
+            allowed = false
+        elseif item.Name == "Pills" and not ply:IsSuperAdmin() then
+            allowed = false
+        elseif blockNormalTabs[item.Name] and not ply:IsAdmin() then
+            allowed = false
+        elseif item.Name == "#spawnmenu.category.npcs"
+        and not ply:IsGameMaster() then
+            allowed = false
+        elseif item.Name == "#spawnmenu.category.vehicles"
+        and not (ply:IsDonator() or ply:IsGameMaster()) then
+            allowed = false
         end
 
-        for _, k in pairs(closeMe) do
-            tabs:CloseTab(k, true)
+        if IsValid(item.Tab) then
+            item.Tab:SetVisible(allowed)
         end
     end
+
+    tabs:InvalidateLayout(true)
 end
 
 function GM:SpawnMenuOpen()

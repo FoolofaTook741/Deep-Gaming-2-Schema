@@ -14,6 +14,9 @@ concommand.Add("impulse_setgroup", function(ply, cmd, args)
 
 	if IsValid(targ) then
 		targ:SetUserGroup(group)
+		net.Start("impulseRefreshGroupRank")
+		net.WriteString(targ:GetUserGroup())
+		net.Send(targ)
 	end
 
 	local query = mysql:Update("impulse_players")
