@@ -1499,8 +1499,17 @@ local gmTools = {
 	["npctool_relationships"] = true
 }
 
-function GM:CanTool(ply, tr, tool)
+function GM:CanTool(ply, tr, tool, toolObject, button)
 	if (not ply:IsAdmin() and not ply:IsGameMaster()) and tool == "spawner" then
+		return false
+	end
+
+	if tool == "weld" and button == 2 then
+		if toolObject and toolObject.ClearObjects then
+			toolObject:ClearObjects()
+		end
+
+		ply:Notify("Weld right-click is disabled. Use left-click to weld normally.")
 		return false
 	end
 	
