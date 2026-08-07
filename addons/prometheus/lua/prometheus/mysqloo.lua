@@ -11,8 +11,22 @@ function Module.Connect(Callback)
 	end
 
 	function Module.DB:onConnected()
-		Callback()
+		local CharsetQuery = Module.DB:query(
+			"SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
+		)
+
+		function CharsetQuery:onSuccess()
+			Callback()
+		end
+
+		function CharsetQuery:onError(Err)
+			Callback("Failed to set utf8mb4 charset: " .. tostring(Err))
+		end
+
+		CharsetQuery:start()
+
 		if timer.Exists("prometheus_mysqloo_dbtimeout") then return end
+
 		timer.Create("prometheus_mysqloo_dbtimeout", 180, 0, function()
 			if #player.GetAll() <= 0 then
 				Module.DB:status()
