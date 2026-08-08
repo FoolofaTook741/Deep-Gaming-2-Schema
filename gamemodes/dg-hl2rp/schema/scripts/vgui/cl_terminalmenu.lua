@@ -663,7 +663,7 @@ function PANEL:SetupUI()
     self.bolIndex:Dock(FILL)
     StyleCombinePanel(self.bolIndex, 0)
 
-    if ((LocalPlayer():GetTeamClass() == CLASS_GHOST and LocalPlayer():GetTeamRank() >= RANK_I2) or LocalPlayer():IsCPCommand()) then
+    if ((LocalPlayer():GetTeamClass() == CLASS_GHOST and LocalPlayer():GetTeamRank() >= RANK_I2) or LocalPlayer():GetTeamRank() >= RANK_I1) then
         self.bolPlayer = vgui.Create("DComboBox", self.bolIndex)
         self.bolPlayer:SetPos(8, 8)
         self.bolPlayer:SetSize(450, 20)
