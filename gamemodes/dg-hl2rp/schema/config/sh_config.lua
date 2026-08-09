@@ -74,6 +74,7 @@ impulse.Config.OOCLimitVIP = 300
 impulse.Config.PropLimit = 90
 impulse.Config.PropLimitDonator = 200
 impulse.Config.PropLimitCollaborator = 300
+impulse.Config.PropLimitGM = 1000
 
 impulse.Config.BuyableSpawnLimit = 12
 impulse.Config.DroppedItemsLimit = 30
