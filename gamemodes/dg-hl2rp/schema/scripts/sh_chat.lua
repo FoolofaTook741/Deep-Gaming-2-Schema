@@ -563,7 +563,7 @@ local swordWhitelistCommand = {
 
 			local teamName = "CP_SpecOps"
 
-			if not type(result) == "table" or #result == 0 then
+			if type(result) ~= "table" or #result == 0 then
 				ply:Notify("This Steam account has not joined the server yet or the SteamID is invalid.")
 			else
 				local inTable = impulse.Teams.GetWhitelist(steamid, teamName, function(exists)
@@ -576,6 +576,9 @@ local swordWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+							    QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the SWORD successfully.")
@@ -587,12 +590,13 @@ local swordWhitelistCommand = {
 						query:Insert("level", 1)
 						query:Insert("team", teamName)
 						query:Insert("steamid", steamid)
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
 						query:Execute()
 
 						ply:Notify(steamid.." has been added to the SWORD whitelist.")
 					end
-
-					QueueDiscordSync(steamid)
 
 					local targ = player.GetBySteamID(steamid)
 
@@ -662,6 +666,9 @@ local dispatchwhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from DISPATCH successfully.")
@@ -673,13 +680,15 @@ local dispatchwhitelistCommand = {
 						query:Insert("level", 1)
 						query:Insert("team", teamName)
 						query:Insert("steamid", steamid)
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
 						query:Execute()
 
 						ply:Notify(steamid.." has been added to the DISPATCH whitelist.")
 					end
 
 					local targ = player.GetBySteamID(steamid)
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -746,6 +755,9 @@ local ghostWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the GHOST successfully.")
@@ -757,13 +769,15 @@ local ghostWhitelistCommand = {
 						query:Insert("level", 1)
 						query:Insert("team", teamName)
 						query:Insert("steamid", steamid)
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
 						query:Execute()
 
 						ply:Notify(steamid.." has been added to the GHOST whitelist.")
 					end
 
 					local targ = player.GetBySteamID(steamid)
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -835,6 +849,9 @@ local paybackWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the PAYBACK whitelist successfully.")
@@ -846,13 +863,15 @@ local paybackWhitelistCommand = {
 						query:Insert("level", 1)
 						query:Insert("team", teamName)
 						query:Insert("steamid", steamid)
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
 						query:Execute()
 
 						ply:Notify(steamid.." has been added to the PAYBACK whitelist.")
 					end
 
 					local targ = player.GetBySteamID(steamid)
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -922,6 +941,9 @@ local apfWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the SWEEPER successfully.")
@@ -933,13 +955,15 @@ local apfWhitelistCommand = {
 						query:Insert("level", 1)
 						query:Insert("team", teamName)
 						query:Insert("steamid", steamid)
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
 						query:Execute()
 
 						ply:Notify(steamid.." has been added to the SWEEPER whitelist.")
 					end
 
 					local targ = player.GetBySteamID(steamid)
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1009,6 +1033,9 @@ local fistWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the FIST successfully.")
@@ -1020,13 +1047,15 @@ local fistWhitelistCommand = {
 						query:Insert("level", 1)
 						query:Insert("team", teamName)
 						query:Insert("steamid", steamid)
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
 						query:Execute()
 
 						ply:Notify(steamid.." has been added to the FIST whitelist.")
 					end
 
 					local targ = player.GetBySteamID(steamid)
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1096,6 +1125,9 @@ local scoutWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the NOMAD whitelist successfully.")
@@ -1107,13 +1139,15 @@ local scoutWhitelistCommand = {
 						query:Insert("level", 1)
 						query:Insert("team", teamName)
 						query:Insert("steamid", steamid)
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
 						query:Execute()
 
 						ply:Notify(steamid.." has been added to the NOMAD whitelist.")
 					end
 
 					local targ = player.GetBySteamID(steamid)
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1199,6 +1233,9 @@ local cwWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the MPF whitelist successfully.")
@@ -1207,6 +1244,9 @@ local cwWhitelistCommand = {
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
 							query:Update("level", level)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 							if level < 10 then
 								ply:Notify(steamid.." has been set to the " .. newrank .. " whitelist.")
@@ -1220,6 +1260,9 @@ local cwWhitelistCommand = {
 							query:Insert("level", level)
 							query:Insert("team", teamName)
 							query:Insert("steamid", steamid)
+							query:Callback(function()
+						   		QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							if level < 6 then
@@ -1231,7 +1274,6 @@ local cwWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1346,6 +1388,9 @@ local researchWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the Research whitelist successfully.")
@@ -1354,6 +1399,9 @@ local researchWhitelistCommand = {
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
 							query:Update("level", level)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 							--impulse.debugPrint("1")
 							ply:Notify(steamid.." has been given the Research Team whitelist.")
@@ -1364,6 +1412,9 @@ local researchWhitelistCommand = {
 							query:Insert("level", level)
 							query:Insert("team", teamName)
 							query:Insert("steamid", steamid)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 							--impulse.debugPrint("2")
 							ply:Notify(steamid.." has been given the Research whitelist.")
@@ -1371,7 +1422,6 @@ local researchWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -1483,6 +1533,9 @@ local cpWhitelistCommand = {
                         query:Where("steamid", steamid)
                         query:Where("team", teamName)
                         if level > 0 then query:Update("level", level) end
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
                         query:Execute()
                     else
                         if level > 0 then
@@ -1490,13 +1543,14 @@ local cpWhitelistCommand = {
                             query:Insert("level", level)
                             query:Insert("team", teamName)
                             query:Insert("steamid", steamid)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
                             query:Execute()
                         end
                     end
 					local rankName = getRankNameByWhitelistLevel(impulse.Teams.Data[TEAM_CP], level) or "Unknown"
                     local targ = player.GetBySteamID(steamid)
-
-					QueueDiscordSync(steamid)
 
                     if targ and IsValid(targ) then
                         targ:SetupWhitelists()
@@ -1575,6 +1629,9 @@ local otaWhitelistCommand = {
                         query:Where("steamid", steamid)
                         query:Where("team", teamName)
                         if level > 0 then query:Update("level", level) end
+						query:Callback(function()
+						    QueueDiscordSync(steamid)
+						end)
                         query:Execute()
                     else
                         if level > 0 then
@@ -1582,13 +1639,14 @@ local otaWhitelistCommand = {
                             query:Insert("level", level)
                             query:Insert("team", teamName)
                             query:Insert("steamid", steamid)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
                             query:Execute()
                         end
                     end
 					local rankName = getRankNameByWhitelistLevel(impulse.Teams.Data[TEAM_OTA], level)
                     local targ = player.GetBySteamID(steamid)
-
-					QueueDiscordSync(steamid)
 
                     if targ and IsValid(targ) then
                         targ:SetupWhitelists()
@@ -1684,6 +1742,9 @@ local caWhitelistCommand = {
 							local query = mysql:Delete("impulse_whitelists")
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							ply:Notify(steamid.." was removed from the OCA whitelist successfully.")
@@ -1692,6 +1753,9 @@ local caWhitelistCommand = {
 							query:Where("steamid", steamid)
 							query:Where("team", teamName)
 							query:Update("level", level)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 							local rank = impulse.Teams.Data[TEAM_CA].ranks[level + 1] and impulse.Teams.Data[TEAM_CA].ranks[level + 1].name or "Unknown"
 							ply:Notify(steamid.." has been set to the " .. rank .. " whitelist.")
@@ -1702,6 +1766,9 @@ local caWhitelistCommand = {
 							query:Insert("level", level)
 							query:Insert("team", teamName)
 							query:Insert("steamid", steamid)
+							query:Callback(function()
+						    	QueueDiscordSync(steamid)
+							end)
 							query:Execute()
 
 							local rank = impulse.Teams.Data[TEAM_CA].ranks[level + 1] and impulse.Teams.Data[TEAM_CA].ranks[level + 1].name or "Unknown"
@@ -1710,8 +1777,6 @@ local caWhitelistCommand = {
 					end
 
 					local targ = player.GetBySteamID(steamid)
-
-					QueueDiscordSync(steamid)
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
@@ -2971,11 +3036,12 @@ local cpMassDemoteCommand = {
                 updateQuery:Update("level", 2)
                 updateQuery:Where("steamid", steamid)
                 updateQuery:Where("team", "TEAM_CP")
+				updateQuery:Callback(function()
+					QueueDiscordSync(steamid)
+				end)
                 updateQuery:Execute()
 
                 local targ = player.GetBySteamID(steamid)
-
-				QueueDiscordSync(steamid)
 
                 if targ and IsValid(targ) then
                     targ:SetupWhitelists()
