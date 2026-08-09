@@ -1352,7 +1352,7 @@ function GM:PlayerSpawnProp(ply, model)
 	local limit
 	local price
 
-	if ply:ply:IsGameMaster() then
+	if ply:IsGameMaster() then
 		limit = impulse.Config.PropLimitGM
 		price = impulse.Config.PropPriceDonator
 	elseif ply:IsCollaborator() then
