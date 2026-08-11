@@ -61,15 +61,29 @@ local function LogPotatoExploit(ply, reason)
     ReqwestLog(embeds, DG_NME)
 end
 
+local function FakeSuccessNotify(ply, reps)
+    ply:Notify("You have reduced your sentence by " .. reps .. " seconds from peeling the potatoes.")
+    net.Start("DeepAdjustJailEndTime")
+    net.WriteUInt(reps, 20)
+    net.Send(ply)
+end
+
 net.Receive("potatoesPeeled", function(_, ply)
     if not IsValid(ply) or not ply:IsPlayer() then return end
 
     if (ply._potatoNext or 0) > CurTime() then return end
     ply._potatoNext = CurTime() + COOLDOWN
 
+    local reps = net.ReadInt(32)
+    if not isnumber(reps) then return end
+    reps = math.floor(reps)
+    if reps < 0 then return end
+    if reps > MAX_REDUCTION then reps = MAX_REDUCTION end
+
     local session = ply.PotatoSession
     if not session or not IsValid(session.ent) then
         LogPotatoExploit(ply, "potatoesPeeled received with no active session (never triggered ENT:Use).")
+        if reps > 0 then FakeSuccessNotify(ply, reps) end
         return
     end
 
@@ -85,16 +99,6 @@ net.Receive("potatoesPeeled", function(_, ply)
     if ply:GetPos():DistToSqr(session.ent:GetPos()) > MAX_DIST_SQR then
         impulse.debugPrint("Potato peeler: player too far from peeler. Player:"..ply:SteamID())
         return
-    end
-
-    local reps = net.ReadInt(32)
-    if not isnumber(reps) then return end
-    reps = math.floor(reps)
-
-    if reps < 0 then return end
-    if reps > MAX_REDUCTION then 
-        impulse.debugPrint("Potato peeler: High potato count. Count:"..reps, ply:SteamID())
-        reps = MAX_REDUCTION 
     end
 
     local elapsed = CurTime() - session.startTime
