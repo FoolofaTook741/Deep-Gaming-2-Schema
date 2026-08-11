@@ -216,11 +216,3 @@ function drawFrame()
         frame:Close()
     end
 end
-
-concommand.Add("dg_test_potato_exploit", function(ply, cmd, args)
-    if not IsValid(ply) or not ply:IsSuperAdmin() then return end
-    local reps = tonumber(args[1]) or 120
-    net.Start("potatoesPeeled")
-        net.WriteInt(reps, 32)
-    net.SendToServer()
-end)
