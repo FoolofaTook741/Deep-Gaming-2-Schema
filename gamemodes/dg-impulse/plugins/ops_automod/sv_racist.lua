@@ -1,5 +1,6 @@
 local slurs = {
     "nigger",
+    "niggers",
     "nigga",
     "faggot",
     "faggots",
