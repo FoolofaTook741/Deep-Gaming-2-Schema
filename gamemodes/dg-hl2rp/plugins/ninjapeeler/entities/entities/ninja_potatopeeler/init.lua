@@ -25,6 +25,11 @@ function ENT:Initialize()
 end
 
 function ENT:Use(ply, caller)
+    ply.PotatoSession = {
+        ent = self,
+        startTime = CurTime()
+    }
+
     net.Start("potatoSignal")
     net.WriteBool(true)
     net.Send(ply)
@@ -33,12 +38,42 @@ end
 local MAX_REDUCTION = 120
 local COOLDOWN = 2
 local MAX_DIST_SQR = (120 * 120)
+local MIN_TIME_PER_REP = 0.2 -- floor for how fast a single legit peel cycle can plausibly complete
+
+local function LogPotatoExploit(ply, reason)
+    local embeds = {{
+        title = "Net Message Exploit Attempted",
+        description = reason,
+        url = "https://discord.com/channels/1149540724648456252/1149544586876817468",
+        color = 5763719,
+        fields = {
+            {
+                name = "Name:",
+                value = ply:SteamName()
+            },
+            {
+                name = "SteamID:",
+                value = ply:SteamID()
+            }
+        }
+    }}
+    ServerLog("Net Message Exploit Logged: " .. ply:SteamName() .. " (" .. ply:SteamID() .. ") - " .. reason)
+    ReqwestLog(embeds, DG_NME)
+end
 
 net.Receive("potatoesPeeled", function(_, ply)
     if not IsValid(ply) or not ply:IsPlayer() then return end
 
     if (ply._potatoNext or 0) > CurTime() then return end
     ply._potatoNext = CurTime() + COOLDOWN
+
+    local session = ply.PotatoSession
+    if not session or not IsValid(session.ent) then
+        LogPotatoExploit(ply, "potatoesPeeled received with no active session (never triggered ENT:Use).")
+        return
+    end
+
+    ply.PotatoSession = nil
 
     local tname = ply:UserID() .. "impulsePrison"
     local timeLeft = timer.TimeLeft(tname)
@@ -47,17 +82,9 @@ net.Receive("potatoesPeeled", function(_, ply)
         return 
     end
 
-    local nearest
-    local ppos = ply:GetPos()
-    for _, ent in ipairs(ents.FindByClass("ninja_potatopeeler")) do
-        if IsValid(ent) and ppos:DistToSqr(ent:GetPos()) <= MAX_DIST_SQR then
-            nearest = ent
-            break
-        end
-    end
-    if not nearest then 
-        impulse.debugPrint("Potato peeler: no peeler found near player "..ply:SteamID())
-        return 
+    if ply:GetPos():DistToSqr(session.ent:GetPos()) > MAX_DIST_SQR then
+        impulse.debugPrint("Potato peeler: player too far from peeler. Player:"..ply:SteamID())
+        return
     end
 
     local reps = net.ReadInt(32)
@@ -69,7 +96,15 @@ net.Receive("potatoesPeeled", function(_, ply)
         impulse.debugPrint("Potato peeler: High potato count. Count:"..reps, ply:SteamID())
         reps = MAX_REDUCTION 
     end
-    if reps == 0 then return end
+
+    local elapsed = CurTime() - session.startTime
+    local maxRepsForTime = math.floor(elapsed / MIN_TIME_PER_REP)
+    if reps > maxRepsForTime then
+        LogPotatoExploit(ply, "Reported more potato reps than feasibly possible for their peeling session. Likely a net message exploiter, but not certain. Pay attention to this player.")
+        reps = maxRepsForTime
+    end
+
+    if reps <= 0 then return end
 
     local newTime = timeLeft - reps
     if newTime < 1 then newTime = 1 end
