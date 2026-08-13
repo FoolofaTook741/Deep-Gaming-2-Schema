@@ -19,7 +19,7 @@ local Vehicles = {
         spawnVec = impulse.Config.DropshipSpawn
     },
     ["lvs_helicopter_hl2_combine_hunter"] = {
-        Cost = 25000,
+        Cost = 8000,
         class = CLASS_NOMAD,
         faction = TEAM_OTA,
         spawnVec = impulse.Config.HCSpawn
