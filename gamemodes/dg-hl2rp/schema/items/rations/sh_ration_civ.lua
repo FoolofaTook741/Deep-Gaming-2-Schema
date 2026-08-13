@@ -4,9 +4,9 @@ ITEM.UniqueID = "ration_civ"
 ITEM.Name = "Minimal Ration"
 ITEM.Desc =  "A Citizen Ration."
 ITEM.Category = "Rations"
-ITEM.Model = Model("models/weapons/w_package.mdl")
-ITEM.FOV = 47.068767908309
-ITEM.CamPos = Vector(-12.836676597595, -7.3352437019348, 11.346704483032)
+ITEM.Model = Model("models/hls/alyxports/ration_package.mdl")
+ITEM.FOV = 10.56446991404
+ITEM.CamPos = Vector(0, 0.91690546274185, 144.87106323242)
 ITEM.NoCenter = false
 ITEM.Weight = 1
 
