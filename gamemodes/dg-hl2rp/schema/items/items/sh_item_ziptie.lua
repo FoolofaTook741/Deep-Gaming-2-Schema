@@ -25,15 +25,25 @@ ITEM.UseWorkBarName = "Restraining..."
 ITEM.UseWorkBarFreeze = true
 ITEM.UseWorkBarSound = "npc/vort/claw_swing2.wav"
 
+function ITEM:CanRestrain(ply, target)
+	if not IsValid(target) or not target:IsPlayer() then return false end
+	if not ply:CanArrest(target) then return false end
+	if target:GetSyncVar(SYNC_ARRESTED, false) then return false end
+	return true
+end
+
+function ITEM:DoRestrain(ply, target)
+	target:Arrest()
+
+	ply:Notify("You have detained "..target:Name()..".")
+	target:Notify("You have been detained.")
+
+	hook.Run("PlayerArrested", target, ply)
+end
+
 function ITEM:OnUse(ply, target)
-	if not target:GetSyncVar(SYNC_ARRESTED, false) then
-		target:Arrest()
-			
-		ply:Notify("You have detained "..target:Name()..".")
-		target:Notify("You have been detained by "..ply:Name()..".")
-
-		hook.Run("PlayerArrested", target, ply)
-
+	if self:CanRestrain(ply, target) then
+		self:DoRestrain(ply, target)
 		return true
 	else
 		ply:Notify("Target already detained.")
@@ -41,7 +51,7 @@ function ITEM:OnUse(ply, target)
 end
 
 function ITEM:ShouldTraceUse(ply, ent)
-	return ent:IsPlayer() and ply:CanArrest(ent) and ent:GetSyncVar(SYNC_ARRESTED, false) == false
+	return self:CanRestrain(ply, ent)
 end
 
 impulse.RegisterItem(ITEM)

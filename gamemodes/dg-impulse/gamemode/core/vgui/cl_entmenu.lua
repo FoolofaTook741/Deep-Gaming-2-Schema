@@ -289,23 +289,49 @@ function PANEL:SetDoor(door)
 end
 
 function PANEL:SetPlayer(ply)
-	if LocalPlayer():IsCP() and LocalPlayer():CanArrest(ply) and ply:GetSyncVar(SYNC_ARRESTED, false) then
-		self:AddAction("impulse/icons/search-3-256.png", "Search Inventory", function()
-			LocalPlayer():ConCommand("say /invsearch")
+	if LocalPlayer():IsCP() and LocalPlayer():CanArrest(ply) then
+		if ply:GetSyncVar(SYNC_ARRESTED, false) then
+			self:AddAction("impulse/icons/search-3-256.png", "Search Inventory", function()
+				LocalPlayer():ConCommand("say /invsearch")
 
-			self:Remove()
-		end)
+				self:Remove()
+			end)
 
-		self:AddAction("impulse/icons/padlock-2-256.png", "Unrestrain", function()
-			net.Start("impulseUnRestrain")
-			net.SendToServer()
+			self:AddAction("impulse/icons/padlock-2-256.png", "Unrestrain", function()
+			    net.Start("impulseUnRestrain")
+			        net.WriteEntity(ply)
+			    net.SendToServer()
+			    self:Remove()
+			end)			
+		else
+			self:AddAction("impulse/icons/padlock-256.png", "Restrain", function()
+			    local zipTie = impulse.Inventory.Items[impulse.Inventory.ItemsRef["item_ziptie"]]
 
-			self:Remove()
-		end)
+			    local function sendRestrain()
+			        net.Start("impulseRestrain")
+			            net.WriteEntity(ply)
+			        net.SendToServer()
+			    end
+
+			    if zipTie and zipTie.UseWorkBarTime then
+			        gui.EnableScreenClicker(false)
+			        if zipTie.UseWorkBarSound then
+			            surface.PlaySound(zipTie.UseWorkBarSound)
+			        end
+			        impulse.MakeWorkbar(zipTie.UseWorkBarTime, zipTie.UseWorkBarName or "Restraining...", sendRestrain, zipTie.UseWorkBarFreeze or false, function()
+			            if zipTie.UseWorkBarSound then
+			                surface.PlaySound("common/null.wav")
+			            end
+			        end)
+			    else
+			        sendRestrain()
+			    end
+
+			    self:Remove()
+			end)
+		end
 	end
-
 	--hook.Add("PlayerMenuAddOptions", self, ply) -- Not required? As no hooks are calling this
-
 	if not self.hasAction then return self:Remove() end
 end
 

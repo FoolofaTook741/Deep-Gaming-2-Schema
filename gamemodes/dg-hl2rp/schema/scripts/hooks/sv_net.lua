@@ -36,6 +36,7 @@ util.AddNetworkString("DeepSpawnSelectorOpen")
 util.AddNetworkString("DeepSpawnSelectorClose")
 util.AddNetworkString("DeepSpawnTeamChange")
 util.AddNetworkString("DeepSpawnSelectorRequest")
+util.AddNetworkString("impulseRestrain")
 
 local RankNPCs = {
     [TEAM_CP] = "impulse_hl2rp_cp_npc",
@@ -72,6 +73,26 @@ net.Receive("impulseHL2RPDisbandSquad", function()
 			b:Notify("Your squad has been disbanded by Dispatch.")
 		end
 	end
+end)
+
+net.Receive("impulseRestrain", function(len, ply)
+	local target = net.ReadEntity()
+	if not IsValid(ply) or not IsValid(target) then return end
+
+	local zipTie = impulse.Inventory.Items[impulse.Inventory.ItemsRef["item_ziptie"]]
+	if not zipTie then return end
+
+	if not ply:HasInventoryItem("item_ziptie") then
+		ply:Notify("You don't have a ziptie.")
+		return
+	end
+
+	if not zipTie:CanRestrain(ply, target) then
+		ply:Notify("Target already detained.")
+		return
+	end
+
+	zipTie:DoRestrain(ply, target)
 end)
 
 local dossierDir = "impulse_dossiers"
