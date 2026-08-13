@@ -80,6 +80,9 @@ function ITEM:OnUse(ply, target)
 end
 
 function ITEM:ShouldTraceUse(ply, ent)
+	if ent:GetClass() == "prop_ragdoll" and ent:GetNWBool("IsKnockoutRagdoll", false) then
+        return false
+    end
 	return (ent:GetClass() == "prop_ragdoll" and (ent:GetModel() or "") != "models/gibs/fast_zombie_legs.mdl") or ent:GetClass() == "npc_headcrab"
 end
 
