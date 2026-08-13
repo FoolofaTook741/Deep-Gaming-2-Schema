@@ -83,7 +83,7 @@ local function GetShotgunGridCoordinate(index, pelletCount, columns)
         y = y / length
     end
 
-    return x, y
+    return x * 0.5, y * 0.5
 end
 
 function LeyHitreg:TraceShotgun(wep, dir)
