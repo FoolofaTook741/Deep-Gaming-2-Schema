@@ -46,6 +46,7 @@ if SERVER then
     local MAX_PENDING     = 20
     local PENDING_TIMEOUT = 1200
     local MAX_E2_PER_PLAYER = 2
+    local MAX_E2_PER_COLLAB = 4
 
     if file.Exists(impulse.WireE2.memberBlacklistFile, "DATA") then
         impulse.WireE2.memberBlacklisted = util.JSONToTable(file.Read(impulse.WireE2.memberBlacklistFile, "DATA")) or {}
@@ -237,7 +238,19 @@ if SERVER then
             if IsValid(ply) then
                 local activeE2s = CountPlayerE2s(ply, self)
 
-                if activeE2s >= MAX_E2_PER_PLAYER then
+
+                if ply:IsCollaborator() then
+                    if activeE2s >= MAX_E2_PER_COLLAB then
+                        ply:SendChatClassMessage(231,"You already have the maximum allowed E2 chips placed. Limit: " .. MAX_E2_PER_COLLAB, ply)
+
+                        if IsValid(self) then
+                            self:Remove()
+                        end
+
+                        impulse.debugPrint("[WireE2] Blocked " .. plyName .. " (COLLABORATOR) from spawning more than " .. MAX_E2_PER_COLLAB .. " E2s")
+                        return
+                    end
+                elseif activeE2s >= MAX_E2_PER_PLAYER then
                     ply:SendChatClassMessage(231,"You already have the maximum allowed E2 chips placed. Limit: " .. MAX_E2_PER_PLAYER, ply)
 
                     if IsValid(self) then
