@@ -161,7 +161,7 @@ end
 function ENT:Initialize()
     self:SetModel("models/Combine_Scanner.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
-    self:SetSolid(SOLID_VPHYSICS)
+    self:SetSolid(SOLID_BBOX)
     self:AddSolidFlags(FSOLID_NOT_STANDABLE)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:GetPhysicsObject():EnableMotion(true)
