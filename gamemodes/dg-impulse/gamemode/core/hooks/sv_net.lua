@@ -104,6 +104,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 	ply.NextCreate = CurTime() + 10
 
 	local charName = net.ReadString()
+	local steamName = ply:SteamName() or "Unknown"
 	local charModel = net.ReadString()
 	local charSkin = net.ReadUInt(8)
 	local charHairColour = net.ReadColor()
@@ -182,6 +183,7 @@ net.Receive("impulseCharacterCreate", function(len, ply)
 
 		local insertQuery = mysql:Insert("impulse_players")
 		insertQuery:Insert("rpname", charName)
+		insertQuery:Insert("steam_name", steamName)
 		insertQuery:Insert("steamid", plyID)
 		insertQuery:Insert("group", "user")
 		insertQuery:Insert("xp", 0)

@@ -18,6 +18,7 @@ function GM:PlayerInitialSpawn(ply)
 	--print("[impulse] Starting database lookup for: " .. ply:Nick() .. " (" .. ply:SteamID() .. ")")
 	local query = mysql:Select("impulse_players")
 	query:Select("id")
+	query:Select("steam_name")
 	query:Select("rpname")
 	query:Select("group")
 	query:Select("rpgroup")
@@ -415,6 +416,16 @@ function impulse.SetupPlayer(ply, dbData)
 	query:Update("ammo", "{}")
 	query:Where("steamid", ply:SteamID())
 	query:Execute()
+
+	-- Update SteamName if changed
+	local steamName = ply:SteamName()
+
+	if steamName and steamName ~= "" and dbData.steam_name ~= steamName then
+		local query = mysql:Update("impulse_players")
+		query:Update("steam_name", steamName)
+		query:Where("steamid", ply:SteamID())
+		query:Execute()
+	end
 
 	if ammo then
 		local ammo = util.JSONToTable(dbData.ammo) or {}
