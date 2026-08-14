@@ -168,6 +168,28 @@ TEAM_CA = impulse.Teams.Define({
 				end
 			end
 		},
+		{
+			name = "Advisor",
+			description = "Alternatively named the Shu'ulathoi by the Vortigaunts, the Advisors are seemingly outerworldly members of the Combine, beyond the lesser occupational force inhabiting Earth.",
+			xp = 2000,
+			doorGroup = {1, 2, 3, 4, 5, 6, 7},
+			whitelistLevel = 4,
+				
+			customCheck = function(plr, t) 
+				local steamIDs = { -- Force: I am whitelisting advisors because there is a very select amount of people who can effectively play the class without minging
+					["STEAM_0:0:451126076"] = true -- jsqo
+				}
+
+				if (!steamIDs[plr:SteamID()]) then return false end 
+
+				return true 
+ 			end,
+				
+			onBecome = function(ply, rank)
+				ply:SetModel("models/echo/hla/advisor_pm.mdl")
+				ply:SetRPName("ADV:034" .. string.Right(ply:SteamID64(), 4))
+			end
+		},
 	}
 })
 
