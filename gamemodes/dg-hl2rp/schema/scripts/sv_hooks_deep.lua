@@ -1285,7 +1285,7 @@ net.Receive("DeepTerminalBlacklist", function(len, ply)
         local howLong = string.NiceTime(time)
 
         ply:Notify("You have combine banned "..targ:Nick().." for " .. length .. " minutes.")
-        targ:Notify("You have been banned from the combine faction for by a supervisor ("..ply:SteamName()..") for " .. length .. " minutes.")
+        targ:Notify("You have been banned from the combine faction by supervisor ("..ply:SteamName()..") for " .. length .. " minutes.")
 
         net.Start("opsGiveCombineBan")
         net.WriteUInt(year, 16)
