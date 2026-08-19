@@ -28,6 +28,8 @@ function self:Constructor ()
 	-- General error log
 	self.ErrorLog = {}
 	self.MaxErrorLog = 100
+
+	self.BulletEventStats = { primary = 0, secondary = 0 }
 	
 	-- Server start time
 	self.ServerStartTime = os.time ()
@@ -53,6 +55,16 @@ function self:MarkHookFired (hookName)
 		status.fired = true
 		status.count = status.count + 1
 		status.last_fired = os.time ()
+	end
+end
+
+function self:MarkBulletEvent (isSecondary)
+	self.BulletEventStats = self.BulletEventStats or { primary = 0, secondary = 0 }
+
+	if isSecondary then
+		self.BulletEventStats.secondary = self.BulletEventStats.secondary + 1
+	else
+		self.BulletEventStats.primary = self.BulletEventStats.primary + 1
 	end
 end
 
@@ -242,6 +254,48 @@ function self:PrintDiagnostics (ply)
 		end
 	end
 	
+	-- Bullet Events
+	PrintHeader ("Bullet Events")
+	PrintLine ("")
+
+	local bulletStats = self.BulletEventStats or { primary = 0, secondary = 0 }
+	local totalBulletEvents = bulletStats.primary + bulletStats.secondary
+
+	PrintLine ("Primary bullet events (fired from the shooter): " .. bulletStats.primary, Color (200, 200, 200))
+	PrintLine ("Secondary bullet events (re-fired/penetration): " .. bulletStats.secondary, Color (200, 200, 200))
+	PrintLine ("")
+
+	local constants = ChrononLabs ["ChrononLabs:Constants"]
+	local filterEnabled = constants and constants.Config and constants.Config.FilterSecondaryBullets
+
+	if totalBulletEvents == 0 then
+		PrintLine ("No bullet events recorded yet. This is normal if no combat has occurred.", Color (200, 200, 200))
+	elseif bulletStats.secondary == 0 then
+		PrintLine ("No re-fired bullets detected. Shot statistics are reliable on this server.", Color (100, 255, 100))
+	else
+		local secondaryRatio = bulletStats.secondary / totalBulletEvents
+
+		if filterEnabled then
+			PrintLine (string.format (
+				"Re-firing weapon base detected (%.0f%% of bullet events are secondary).",
+				secondaryRatio * 100), Color (200, 200, 200))
+			PrintLine ("FilterSecondaryBullets is ENABLED: shot statistics are protected.", Color (100, 255, 100))
+		elseif bulletStats.secondary >= 10 and secondaryRatio >= 0.2 then
+			PrintLine (string.format (
+				"WARNING: This server's weapon base re-fires bullets (%.0f%% of bullet events are secondary).",
+				secondaryRatio * 100), Color (255, 50, 50))
+			PrintLine ("Per-tick hit registration remains correct, but shot statistics", Color (255, 100, 100))
+			PrintLine ("(total_shots, misses, accuracy) are inflated by phantom bullet events.", Color (255, 100, 100))
+			PrintLine ("To fix: set FilterSecondaryBullets = true in the Config table of", Color (255, 200, 100))
+			PrintLine ("lua/chrononlabs/arch/constants.lua, then restart the server.", Color (255, 200, 100))
+		else
+			PrintLine (string.format (
+				"Some secondary bullet events observed (%.0f%%). Occasional penetration or",
+				secondaryRatio * 100), Color (255, 200, 100))
+			PrintLine ("ricochet is normal; no action needed unless this ratio grows.", Color (255, 200, 100))
+		end
+	end
+
 	-- Recent Errors
 	if #self.ErrorLog > 0 then
 		PrintHeader ("Recent Errors")

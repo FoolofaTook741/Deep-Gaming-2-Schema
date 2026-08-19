@@ -31,6 +31,7 @@ function self:Constructor()
         SessionGoal 		= 150,
 		SequencesPerBatch 	= 5,
         DebugMode 			= false,
+        FilterSecondaryBullets = false,
         Folder 				= "legit",
 		TargetTickRate 		= TARGET_TICKRATE,
 		TargetTickInterval 	= TARGET_TICK_INTERVAL,

@@ -18,6 +18,7 @@ function self:InitializeModules ()
     self.Operations = ChrononLabs ["ChrononLabs:Operations"]
     self.Plugin 	= ChrononLabs ["ChrononLabs:PluginLoader"]
     self.Management = ChrononLabs ["ChrononLabs:Management"]
+    self.Diagnostics = ChrononLabs ["ChrononLabs:Diagnostics"]
 
     self.Recoil 	= ChrononLabs ["ChrononLabs:RecoilDetector"]
     self.Constants 	= ChrononLabs ["ChrononLabs:Constants"]
@@ -156,9 +157,15 @@ function self:Constructor ()
 		end
 
 		local tickNow = sequence.tick_data [tickTime]
-		tickNow.shot_fired 		= tickNow.shot_fired 	 or 0
-		tickNow.shot_hit 		= tickNow.shot_hit 	 or 0
-		tickNow.shot_headshot 	= tickNow.shot_headshot or 0
+
+		tickNow.shot_fired = 0
+		tickNow.shot_hit = 0
+		tickNow.shot_headshot = 0
+		tickNow.ticks_between_hits = 0
+		tickNow.hit_group = nil
+		tickNow.hit_pos_x = nil
+		tickNow.hit_pos_y = nil
+		tickNow.hit_pos_z = nil
 
 		return tickNow
 	end
@@ -202,7 +209,21 @@ function self:Constructor ()
 		local stats = sequence.sequence_stats
 		local temp = sequence.temp_data
 
-        stats.total_shots = stats.total_shots + 1
+		local isSecondaryBullet = false
+		local bulletTrace = bullet and bullet.Trace
+		if bulletTrace and bulletTrace.StartPos then
+			isSecondaryBullet = bulletTrace.StartPos:DistToSqr (weaponOwner:GetShootPos ()) > 100 * 100
+		end
+
+		if self.Diagnostics then
+			self.Diagnostics:MarkBulletEvent (isSecondaryBullet)
+		end
+
+		local isPrimaryBullet = not (isSecondaryBullet and Constants.Config.FilterSecondaryBullets)
+
+		if isPrimaryBullet then
+			stats.total_shots = stats.total_shots + 1
+		end
         stats.snap_hit_count = stats.snap_hit_count or 0
 
         if isHit and IsValid (trace.Entity) and trace.Entity:IsPlayer () then
@@ -233,7 +254,7 @@ function self:Constructor ()
 
             local tickTime = math.max (0, GetCurrentSampleTick (weaponOwner) - (sequence.temp_data.tick_start or 0))
             local currentTick = EnsureTickData (sequence, weaponOwner, tickTime)
-            if currentTick and currentTick.is_flick then
+            if currentTick and (currentTick.is_flick == true or currentTick.is_flick == 1) then
                 stats.flick_hits = (stats.flick_hits or 0) + 1
             end
 
@@ -241,6 +262,9 @@ function self:Constructor ()
                 stats.snap_hit_count = stats.snap_hit_count + 1
             end
 
+            if not isPrimaryBullet then
+                stats.total_shots = stats.total_shots + 1
+            end
             stats.hits = stats.hits + 1
             if hitInfo.headshot then
                 stats.headshots = stats.headshots + 1
@@ -329,13 +353,13 @@ function self:Constructor ()
 			local targetEyeAngles = target:EyeAngles ()
             tickNow.shot_fired = 1
             tickNow.shot_hit = 1
-            tickNow.shot_headshot = hitInfo.headshot and 1 or 0
+            tickNow.shot_headshot = (tickNow.shot_headshot == 1 or hitInfo.headshot) and 1 or 0
             tickNow.is_target_in_sight = wasVisible
             tickNow.target_speed = GaussianNoise (Operations, targetVelocity:Length (), 0)
 			tickNow.target_distance = rawDistance
             tickNow.target_distance_class = distanceClass
-            tickNow.ticks_between_hits = weaponOwner.lastHitTick
-                and (tickTime - weaponOwner.lastHitTick)
+            tickNow.ticks_between_hits = (weaponOwner.lastHitSequence == sequence and weaponOwner.lastHitTick)
+                and math.max (0, tickTime - weaponOwner.lastHitTick)
                 or 0
 
             -- Playback reconstruction: hit event data
@@ -364,18 +388,21 @@ function self:Constructor ()
 			temp.target_last_hit_ticks [targetEntIndex] = tickTime
 
             weaponOwner.lastHitTick = tickTime
-        else
+            weaponOwner.lastHitSequence = sequence
+        elseif isPrimaryBullet then
             stats.misses = stats.misses + 1
 
             local tickTime = math.max (0, GetCurrentSampleTick (weaponOwner) - (sequence.temp_data.tick_start or 0))
             local tickNow = EnsureTickData (sequence, weaponOwner, tickTime)
             tickNow.shot_fired = 1
-            tickNow.shot_hit = 0
-            tickNow.shot_headshot = 0
+            if tickNow.shot_hit ~= 1 then
+                tickNow.shot_hit = 0
+                tickNow.shot_headshot = 0
+            end
         end
 
         stats.accuracy = GaussianNoise (Operations,
-            stats.hits / stats.total_shots, 2
+            math.min (1, stats.hits / math.max (1, stats.total_shots)), 2
         )
     end
 end
