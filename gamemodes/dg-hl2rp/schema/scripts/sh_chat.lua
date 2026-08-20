@@ -1757,7 +1757,7 @@ local caWhitelistCommand = {
 						    	QueueDiscordSync(steamid)
 							end)
 							query:Execute()
-							local rank = impulse.Teams.Data[TEAM_CA].ranks[level + 1] and impulse.Teams.Data[TEAM_CA].ranks[level + 1].name or "Unknown"
+							local rank = impulse.Teams.Data[TEAM_CA].ranks[level] and impulse.Teams.Data[TEAM_CA].ranks[level].name or "Unknown"
 							ply:Notify(steamid.." has been set to the " .. rank .. " whitelist.")
 						end
 					else
@@ -1771,7 +1771,7 @@ local caWhitelistCommand = {
 							end)
 							query:Execute()
 
-							local rank = impulse.Teams.Data[TEAM_CA].ranks[level + 1] and impulse.Teams.Data[TEAM_CA].ranks[level + 1].name or "Unknown"
+							local rank = impulse.Teams.Data[TEAM_CA].ranks[level] and impulse.Teams.Data[TEAM_CA].ranks[level].name or "Unknown"
 							ply:Notify(steamid.." has been set to the " .. rank .. " whitelist.")
 						end
 					end
@@ -1780,7 +1780,7 @@ local caWhitelistCommand = {
 
 					if targ and IsValid(targ) then
 						targ:SetupWhitelists()
-						local rank = impulse.Teams.Data[TEAM_CA].ranks[level + 1] and impulse.Teams.Data[TEAM_CA].ranks[level + 1].name or "Unknown"
+						local rank = impulse.Teams.Data[TEAM_CA].ranks[level] and impulse.Teams.Data[TEAM_CA].ranks[level].name or "Unknown"
 						if level < 10 and level != 0 then
 							targ:Notify("Your OCA faction rank has been edited to " .. rank .. " by supervisor "..ply:SteamName()..".")
 						elseif level == 0 then
@@ -1794,7 +1794,7 @@ local caWhitelistCommand = {
 		end)
 
 		query:Execute()
-		local rank = impulse.Teams.Data[TEAM_CA].ranks[level + 1] and impulse.Teams.Data[TEAM_CA].ranks[level + 1].name or "Unknown"
+		local rank = impulse.Teams.Data[TEAM_CA].ranks[level] and impulse.Teams.Data[TEAM_CA].ranks[level].name or "Unknown"
 		FetchSteamName(steamid, function(name, err)
 			local steamname = name or "Unknown"
 			local embeds = {{
