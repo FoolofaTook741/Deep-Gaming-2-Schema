@@ -84,5 +84,8 @@ Plutonic.Framework.FireBullets = function(self, bullet, SuppressHostEvents)
         end
     end
 
-    self:GetOwner():FireBullets(bullet, SuppressHostEvents)
+    local owner = self:GetOwner()
+    owner:LagCompensation(true)
+    owner:FireBullets(bullet, SuppressHostEvents)
+    owner:LagCompensation(false)
 end
