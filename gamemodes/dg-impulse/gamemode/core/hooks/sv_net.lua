@@ -274,13 +274,23 @@ net.Receive("impulseChatMessage", function(len, ply) -- should implement a check
 	end
 end)
 
+local function ClassMatches(class, terminalClass)
+    if istable(terminalClass) then
+        for _, c in ipairs(terminalClass) do
+            if class == c then return true end
+        end
+        return false
+    end
+    return class == terminalClass
+end
+
 local function IsPlayerCloseToTerminal(ply, terminalClass)
     if not IsValid(ply) or not ply:Alive() or ply:GetSyncVar(SYNC_ARRESTED, false) then return false end
 	if not terminalClass then
 		terminalClass = "civic_terminal"
 	end
     for _, ent in ipairs(ents.GetAll()) do
-        if ent:GetClass() == terminalClass and IsValid(ent) then
+        if IsValid(ent) and ClassMatches(ent:GetClass(), terminalClass) then
             local dist = (ply:GetPos() - ent:GetPos()):LengthSqr()
             if dist < 10000 then
                 return true
@@ -306,7 +316,7 @@ net.Receive("impulseATMWithdraw", function(len, ply)
         return
     end
     ply.nextATM = CurTime() + 1
-	if not IsPlayerCloseToTerminal(ply, "impulse_atm") then return end
+	if not IsPlayerCloseToTerminal(ply, {"impulse_atm", "civic_terminal"}) then return end
 
     local amount = net.ReadUInt(32)
 
@@ -330,7 +340,7 @@ net.Receive("impulseATMDeposit", function(len, ply)
         return
     end
     ply.nextATM = CurTime() + 1
-	if not IsPlayerCloseToTerminal(ply, "impulse_atm") then return end
+	if not IsPlayerCloseToTerminal(ply, {"impulse_atm", "civic_terminal"}) then return end
 
     local amount = net.ReadUInt(32)
 
@@ -356,7 +366,7 @@ net.Receive("impulseATMTransfer", function(len, ply)
         return
     end
     ply.nextATM = CurTime() + 1
-	if not IsPlayerCloseToTerminal(ply, "impulse_atm") then return end
+	if not IsPlayerCloseToTerminal(ply, {"impulse_atm", "civic_terminal"}) then return end
 
     local target = net.ReadEntity()
     local amount = net.ReadUInt(32)
