@@ -19,7 +19,7 @@ function plogs.OpenMenu(pl)
 	end
 end
 
-function plogs.OpenData(title, dat)
+function plogs.OpenData(pl, title, dat)
 	net.Start('plogs.LogData')
 		net.WriteString(title)
 		local data = plogs.Encode(dat)
@@ -31,12 +31,12 @@ end
 
 local commands = {
 	['playerevents'] = function(pl, args)
-		if not args[2] then return end
+		if not args[2] or not string.match(args[2], "^STEAM_%d:%d:%d+$") then return end
 		plogs.sql.LoadLogs(util.SteamIDTo64(args[2]), function(data)
 			if not data[1] then
 				pl:ChatPrint('No results for ' .. args[2])
 			else
-				plogs.OpenData('Player Events for ' ..  args[2], data)
+				plogs.OpenData(pl, 'Player Events for ' ..  args[2], data)
 			end
 		end)
 	end,
@@ -46,7 +46,7 @@ local commands = {
 			if not data[1] then
 				pl:ChatPrint('No results for ' .. args[2])
 			else	
-				plogs.OpenData('IP logs for ' ..  args[2], data)
+				plogs.OpenData(pl, 'IP logs for ' ..  args[2], data)
 			end
 		end)
 	end
@@ -54,6 +54,9 @@ local commands = {
 
 concommand.Add('plogs', function(pl, cmd, args)
 	if not args[1] then return end
+	if not plogs.HasPerms(pl) then return end
+	if (pl.nextPLogs or 0) > CurTime() then return end
+	pl.nextPLogs = CurTime() + 1
 
 	local cmd = commands[string.lower(args[1])]
 	if cmd then

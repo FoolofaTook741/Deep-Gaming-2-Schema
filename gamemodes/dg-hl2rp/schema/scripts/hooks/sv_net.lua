@@ -63,8 +63,11 @@ local function NearRankSet(ply)
     return false
 end
 
-net.Receive("impulseHL2RPDisbandSquad", function()
-	v = net.ReadUInt(8)
+net.Receive("impulseHL2RPDisbandSquad", function(len, ply)
+	if not ply:IsCPCommand() then return end
+	if (ply.nextSquadDo or 0) > CurTime() then return end
+	ply.nextSquadDo = CurTime() + 1
+	local v = net.ReadUInt(8)
 	for a,b in pairs(team.GetPlayers(TEAM_CP)) do
 		if b:GetSyncVar(SYNC_SQUAD_ID, -1) == v then
 			b:SetSyncVar(SYNC_SQUAD_ID, nil, true)
@@ -102,10 +105,12 @@ if not file.IsDir(dossierDir, "DATA") then
 end
 
 net.Receive("impulse_dispatch_dossier_save", function(len, ply)
+    if not ply:IsCPCommand() or (ply.nextDossierSave or 0) > CurTime() then return end
+    ply.nextDossierSave = CurTime() + 1
     local steamid = net.ReadString()
     local text = net.ReadString()
 
-    if not steamid or steamid == "" then return end
+    if not steamid or not string.match(steamid, "^STEAM_%d:%d:%d+$") or #text > 8192 or not IsValid(player.GetBySteamID(steamid)) then return end
 
     local safeSteamID = string.gsub(steamid, "[^%w]", "_")
     local path = dossierDir .. "/" .. safeSteamID .. ".txt"
@@ -114,8 +119,10 @@ net.Receive("impulse_dispatch_dossier_save", function(len, ply)
 end)
 
 net.Receive("impulse_dispatch_dossier_load", function(len, ply)
+    if not ply:IsCPCommand() or (ply.nextDossierLoad or 0) > CurTime() then return end
+    ply.nextDossierLoad = CurTime() + 1
     local steamid = net.ReadString()
-    if not steamid or steamid == "" then return end
+    if not steamid or not string.match(steamid, "^STEAM_%d:%d:%d+$") or not IsValid(player.GetBySteamID(steamid)) then return end
 
     local safeSteamID = string.gsub(steamid, "[^%w]", "_")
     local path = dossierDir .. "/" .. safeSteamID .. ".txt"
@@ -131,9 +138,12 @@ net.Receive("impulse_dispatch_dossier_load", function(len, ply)
     net.Send(ply)
 end)
 
-net.Receive("impulseHL2RPOVWDispatchRadio", function()
-	message = net.ReadString()
+net.Receive("impulseHL2RPOVWDispatchRadio", function(len, ply)
+	if not ply:IsCPCommand() or (ply.nextDispatchRadio or 0) > CurTime() then return end
+	ply.nextDispatchRadio = CurTime() + 1
+	local message = net.ReadString()
 	local selection = net.ReadUInt(8)
+	if #message > 512 or selection < 1 or selection > 3 then return end
 
 	if message and message ~= "" then
         timer.Simple(1, function()
@@ -152,19 +162,20 @@ net.Receive("impulseHL2RPOVWDispatchRadio", function()
 end)
 
 
-net.Receive("impulseSquadAssignment", function()
-	local ply = net.ReadPlayer()
+net.Receive("impulseSquadAssignment", function(len, ply)
+	if not ply:IsCPCommand() then return end
+	local target = net.ReadPlayer()
 
 	if (ply.nextSquadDo or 0) > CurTime() then return end
 	ply.nextSquadDo = CurTime() + 1
 
-	if not ply:Alive() then
+	if not IsValid(target) or not target:Alive() or target:Team() ~= TEAM_CP then
 		return
 	end
 
 	local squadId = net.ReadUInt(8)
 	
-	ply:SetSyncVar(SYNC_SQUAD_ID, squadId, true)
+	target:SetSyncVar(SYNC_SQUAD_ID, squadId, true)
 end)
 
 net.Receive("impulseSquadLeaderAssignment", function(len, ply)

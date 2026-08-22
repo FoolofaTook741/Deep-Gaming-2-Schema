@@ -306,6 +306,7 @@ net.Receive("impulseATMWithdraw", function(len, ply)
         return
     end
     ply.nextATM = CurTime() + 1
+	if not IsPlayerCloseToTerminal(ply, "impulse_atm") then return end
 
     local amount = net.ReadUInt(32)
 
@@ -329,6 +330,7 @@ net.Receive("impulseATMDeposit", function(len, ply)
         return
     end
     ply.nextATM = CurTime() + 1
+	if not IsPlayerCloseToTerminal(ply, "impulse_atm") then return end
 
     local amount = net.ReadUInt(32)
 
@@ -354,6 +356,7 @@ net.Receive("impulseATMTransfer", function(len, ply)
         return
     end
     ply.nextATM = CurTime() + 1
+	if not IsPlayerCloseToTerminal(ply, "impulse_atm") then return end
 
     local target = net.ReadEntity()
     local amount = net.ReadUInt(32)
@@ -1261,16 +1264,15 @@ net.Receive("impulseInvDoMoveMass", function(len, ply)
 
 	local runs = 0
 	for v,k in pairs(ply:GetInventory(from)) do
-		runs = runs + 1
-
 		if k.class == itemclass then -- id pls
+			runs = runs + 1
 			if k.restricted then -- get out
 				return ply:Notify("You cannot store a restricted item.")
 			end
-		end
 
-		if runs >= amount then -- youve passed :D
-			break
+			if runs >= amount then
+				break
+			end
 		end
 	end
 

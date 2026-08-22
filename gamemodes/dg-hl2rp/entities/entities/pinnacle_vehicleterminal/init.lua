@@ -27,6 +27,9 @@ local Vehicles = {
 }
 
 local ExploitAttempts = ExploitAttempts or {}
+local PurchasedVehicles = {}
+local VehicleOwners = {}
+local SELL_DIST_SQR = 300 * 300
 
 local function LogExploitAttempt(ply, reason, vehicleID)
     if not IsValid(ply) then return end
@@ -54,12 +57,21 @@ end
 
 net.Receive("PinnaclePurchaseVehicle", function(_, ply)
     local vehicleID = net.ReadString()
+    local terminal = net.ReadEntity()
     local data = Vehicles[vehicleID]
 
     if not data then
         LogExploitAttempt(ply, "Invalid vehicle ID", vehicleID)
         return
     end
+
+    if not IsValid(terminal) or terminal:GetClass() ~= "pinnacle_vehicleterminal" or terminal:GetPos():DistToSqr(ply:GetPos()) > 22500 then
+        LogExploitAttempt(ply, "Invalid terminal entity", vehicleID)
+        return
+    end
+
+    if (ply.nextVehiclePurchase or 0) > CurTime() or IsValid(ply.PinnacleVehicle) then return end
+    ply.nextVehiclePurchase = CurTime() + 3
 
     if ply:Team() ~= data.faction then
         LogExploitAttempt(ply, "Wrong faction", vehicleID)
@@ -78,17 +90,20 @@ net.Receive("PinnaclePurchaseVehicle", function(_, ply)
 
     ExploitAttempts[ply] = nil
 
-    OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS - data.Cost
-
-    net.Start("DeepAdjustFunds")
-        net.WriteInt(OCAAB_CUR_FUNDS, 16)
-    net.Broadcast()
-
     local ent = ents.Create(vehicleID)
     if not IsValid(ent) then return end
 
     ent:SetPos(data.spawnVec)
     ent:Spawn()
+
+    OCAAB_CUR_FUNDS = OCAAB_CUR_FUNDS - data.Cost
+    PurchasedVehicles[ent] = true
+    VehicleOwners[ent] = ply:SteamID64()
+    ply.PinnacleVehicle = ent
+
+    net.Start("DeepAdjustFunds")
+        net.WriteInt(OCAAB_CUR_FUNDS, 16)
+    net.Broadcast()
 
     ply:Notify("Vehicle requisition approved.")
 end)
@@ -99,7 +114,7 @@ net.Receive("PinnacleSellVehicle", function(_, ply)
 
     if not IsValid(ply) or not ply:IsPlayer() then return end
 
-    if not IsValid(terminal) or terminal:GetClass() ~= "pinnacle_vehicle_terminal" then
+    if not IsValid(terminal) or terminal:GetClass() ~= "pinnacle_vehicleterminal" or terminal:GetPos():DistToSqr(ply:GetPos()) > 22500 then
         LogExploitAttempt(ply, "Invalid terminal entity", "N/A")
         return
     end
@@ -150,6 +165,7 @@ net.Receive("PinnacleSellVehicle", function(_, ply)
 
     PurchasedVehicles[veh] = nil
     VehicleOwners[veh] = nil
+    ply.PinnacleVehicle = nil
 
     veh:Remove()
 

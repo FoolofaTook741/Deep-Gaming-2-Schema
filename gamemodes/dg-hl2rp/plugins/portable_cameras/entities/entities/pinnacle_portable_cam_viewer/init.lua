@@ -21,23 +21,22 @@ function ENT:Initialize()
 end
  
 function ENT:Use( activator, caller )
+	activator.PCamViewer = self
 	net.Start("pinnacle_portable_cam_viewer_open")
 	net.WriteTable(impulse.PCams[activator:SteamID()] or {})
 	net.Send(activator)
 end
 
-net.Receive("pinnacle_portable_cam_viewer_exit", function()
-	local ply = net.ReadPlayer() 
-
+net.Receive("pinnacle_portable_cam_viewer_exit", function(len, ply)
 	if IsValid(ply) then
 		ply:SetViewEntity(ply)
+		ply.PCamViewer = nil
 	end
 end)
 
-net.Receive("pinnacle_portable_cam_viewer_watch", function()
+net.Receive("pinnacle_portable_cam_viewer_watch", function(len, ply)
 	local cam = net.ReadEntity()
-	local ply = net.ReadPlayer() 
-	if IsValid(cam) then
+	if IsValid(cam) and IsValid(ply.PCamViewer) and ply.PCamViewer:GetPos():DistToSqr(ply:GetPos()) <= 22500 and table.HasValue(impulse.PCams[ply:SteamID()] or {}, cam) then
 		ply:SetViewEntity(cam)
 	end
 end)

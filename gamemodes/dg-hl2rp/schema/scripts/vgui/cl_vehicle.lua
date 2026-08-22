@@ -154,6 +154,7 @@ function PANEL:Init()
 
             net.Start("PinnaclePurchaseVehicle")
             net.WriteString(k)
+            net.WriteEntity(parent.Terminal)
             net.SendToServer()
 
             parent:Remove()

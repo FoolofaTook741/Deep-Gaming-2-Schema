@@ -96,19 +96,17 @@ util.AddNetworkString("impulseSquadDoMove")
 util.AddNetworkString("impulseSquadDoOrder")
 
 
-net.Receive("impulseDISPSquadMake", function()
-	local ply = net.ReadPlayer()
+net.Receive("impulseDISPSquadMake", function(len, ply)
+	if not ply:Alive() or not ply:IsCPCommand() then return end
+	local target = net.ReadPlayer()
+	if not IsValid(target) or not target:Alive() or target:Team() ~= TEAM_CP then return end
 	if (ply.nextSquadDo or 0) > CurTime() then return end
 	ply.nextSquadDo = CurTime() + 1
-
-	if not ply:Alive() or not ply:IsCPCommand() then
-		return
-	end
 	local lowestFree = 1
 	local squads = {}
 	local biggestSquad = 0
 
-	for v,k in pairs(team.GetPlayers(ply:Team())) do
+	for v,k in pairs(team.GetPlayers(target:Team())) do
 		local squad = k:GetSyncVar(SYNC_SQUAD_ID)
 
 		if not squad then
@@ -129,13 +127,13 @@ net.Receive("impulseDISPSquadMake", function()
 		end
 	end
 	
-	ply:SetSyncVar(SYNC_SQUAD_LEADER, true, true)
-	ply:SetSyncVar(SYNC_SQUAD_ID, lowestFree, true)
+	target:SetSyncVar(SYNC_SQUAD_LEADER, true, true)
+	target:SetSyncVar(SYNC_SQUAD_ID, lowestFree, true)
 
-	local n = ply:Team() == TEAM_CP and "P.T." or "S.T."
-	ply:Notify("You have been assigned by Dispatch to lead a new "..n..".")
-	if ply:Team() == TEAM_CP then
-		ply:SetBodygroup(7,2)
+	local n = target:Team() == TEAM_CP and "P.T." or "S.T."
+	target:Notify("You have been assigned by Dispatch to lead a new "..n..".")
+	if target:Team() == TEAM_CP then
+		target:SetBodygroup(7,2)
 	end
 end)
 

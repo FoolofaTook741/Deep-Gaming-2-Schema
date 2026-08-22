@@ -4,21 +4,16 @@ util.AddNetworkString("DeepSynchronizeSCCount")
 
 function meta:AdjustSC(amount, message)
     local ply = self
-    local SterilizedCredits = math.floor((ply.SC + amount) or amount)
+    amount = math.Clamp(tonumber(amount) or 0, -100000, 100000)
+    local SterilizedCredits = math.Clamp(math.floor((ply.SC or 0) + amount), 0, 100000)
     local col = Color(255,100,100)
     local action = "DEDUCTED"
     if amount > 0 then
         col = Color(100,255,100)
         action = "AWARDED"
     end
-    if amount > 100000 then
-        amount = 100000
-    end
     if message == true then
         ply:SendCombineMessage(math.abs(amount) .. " STERILIZED CREDITS HAVE BEEN " .. action .. ".", col)
-    end
-    if SterilizedCredits < 0 then
-        SterilizedCredits = 0
     end
     local steamid = self:SteamID()
     local query = mysql:Update("impulse_players")
@@ -156,7 +151,7 @@ net.Receive("DeepSterilizedCreditsPurchase", function(len, ply)
         end
     elseif purchasetype == "Armor" then
         local amount = tonumber(info)
-        if not amount then
+        if amount ~= 10 or cost ~= 15 then
             ply:Notify("Invalid armor purchase.")
             return
         end
@@ -174,12 +169,12 @@ net.Receive("DeepSterilizedCreditsPurchase", function(len, ply)
 end)
 
 net.Receive("DeepAwardSCs", function(len, ply)
-    if not ply:Team() == TEAM_CP and not ply:IsCPCommand() then
+    if not ply:IsCPCommand() then
         return
     end
 
     local targ = net.ReadEntity()
-    if targ:Team() != TEAM_CP then
+    if not IsValid(targ) or not targ:IsPlayer() or targ:Team() != TEAM_CP then
         return
     end
 

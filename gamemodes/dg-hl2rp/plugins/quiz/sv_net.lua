@@ -61,6 +61,11 @@ if SERVER then
 			questions = selectedQuiz,
 			handbook = teamData.quiz.handbook or ""
 		}
+		ply.quizTeam = team
+		ply.quizQuestions = {}
+		for _, question in ipairs(selectedQuiz) do
+			ply.quizQuestions[question.id] = true
+		end
 		net.Start("dgQuizData")
 		net.WriteUInt(team, 8)
 		net.WriteTable(sendData)
@@ -70,19 +75,27 @@ if SERVER then
 
     net.Receive("dgQuizRequest", function(len, ply)
         local team = net.ReadUInt(8)
+		if not ply.quizzing or ply.pendingSpawnTeam ~= team then return end
+		if (ply.nextQuizRequest or 0) > CurTime() then return end
+		ply.nextQuizRequest = CurTime() + 1
         SendQuizData(ply, team)
     end)
 
 	net.Receive("dgQuizSubmit", function(len, ply)
-		ply.quizzing = false
-
 		local teamID = net.ReadUInt(8)
 		local selections = net.ReadTable()
+		if not istable(selections) then return end
 
 		if selections.exit then
+			ply.quizzing = false
+			ply.quizTeam = nil
+			ply.quizQuestions = nil
 			ply:Notify("Quiz exited.")
 			return
 		end
+
+		if not ply.quizzing or ply.pendingSpawnTeam ~= teamID or ply.quizTeam ~= teamID or not ply.quizQuestions then return end
+		ply.quizzing = false
 
 		local teamData = impulse.Teams.Data[teamID]
 		if not teamData or not teamData.quiz then return end
@@ -93,6 +106,7 @@ if SERVER then
 		local correctAnswers = 0
 
 		for qid, selectedIndex in pairs(selections) do
+			if not ply.quizQuestions[qid] then return end
 			local question = quizLookup[qid]
 			if question then
 				totalQuestions = totalQuestions + 1
@@ -102,6 +116,10 @@ if SERVER then
 				end
 			end
 		end
+
+		if totalQuestions ~= table.Count(ply.quizQuestions) then return end
+		ply.quizTeam = nil
+		ply.quizQuestions = nil
 
 		local score = totalQuestions > 0 and (correctAnswers / totalQuestions) or 0
 		local passed = score >= 0.80
