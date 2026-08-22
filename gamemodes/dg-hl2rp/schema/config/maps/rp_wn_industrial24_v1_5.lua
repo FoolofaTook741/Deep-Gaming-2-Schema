@@ -15,8 +15,7 @@ impulse.Config.MBEntrance = Vector(3384.1794433594, -1252.8516845703, -167.96875
 
 impulse.Config.APCSpawn = Vector(-11258.426757813, 287.59600830078, 8192.03125)
 impulse.Config.HCSpawn = Vector(-10748.7265625, -303.71423339844, 8615.7607421875)
-impulse.Config.DropshipSpawn = Vector(-11258.426757813, 287.59600830078, 8192.03125)
-
+impulse.Config.DropshipSpawn = Vector(-11299.979492188, 138.37554931641, 8334.03515625)
 
 
 impulse.Config.NoCollideZones = {
