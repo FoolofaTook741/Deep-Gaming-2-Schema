@@ -19,7 +19,7 @@ local vehicles = {
         spawnVec = Vector(-906.78112792969, -9445.0107421875, -458.90270996094)
 	},
     ["lvs_helicopter_hl2_combine_hunter"] = {
-		Cost = 25000,
+		Cost = 8000,
         name = "Hunter Chopper",
         model = "",
         class = CLASS_NOMAD,
