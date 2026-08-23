@@ -164,7 +164,7 @@ function LeyHitreg:EntityFireBullets(plyorwep, bullet)
         return
     end
 
-    if (not LeyHitreg.ShotDirForceDisabled) then
+    if (not LeyHitreg.ShotDirForceDisabled and bullet.HullSize != LeyHitreg.RefireHullSize) then
         bullet.Dir = ply:GetAimVector()
     end
 
@@ -194,7 +194,7 @@ function LeyHitreg:EntityFireBullets(plyorwep, bullet)
 
     LeyHitreg:HitScanBullet(ply, target, bullet, shot, shot.targetBone, shot.targetHitGroup, newshootpos)
 
-    if shot.fraction then 
+    if shot.fraction and shot.fraction > 0 then
         bullet.Num = shot.fraction
     end 
         
