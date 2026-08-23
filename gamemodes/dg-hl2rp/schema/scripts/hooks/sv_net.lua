@@ -89,9 +89,9 @@ net.Receive("impulseRestrain", function(len, ply)
 		ply:Notify("You don't have a ziptie.")
 		return
 	end
-
-	if not zipTie:CanRestrain(ply, target) then
-		ply:Notify("Target already detained.")
+	local canRestrain, reason = zipTie:CanRestrain(ply, target)
+	if not canRestrain then
+		ply:Notify(reason or "You cannot restrain that target.")
 		return
 	end
 

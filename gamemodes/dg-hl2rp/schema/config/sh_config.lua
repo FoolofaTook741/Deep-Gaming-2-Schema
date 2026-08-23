@@ -61,6 +61,8 @@ impulse.Config.WalkSpeed = 100
 impulse.Config.JogSpeed = 200
 impulse.Config.SlowWalkRatio = 0.6
 
+impulse.Config.RestrainRange = 85 -- used with f2 
+
 impulse.Config.ScannerSpawnPos = Vector(714.04583740234, 139.04724121094, 1216.03125)
 
 impulse.Config.TalkDistance = 300

@@ -27,8 +27,9 @@ ITEM.UseWorkBarSound = "npc/vort/claw_swing2.wav"
 
 function ITEM:CanRestrain(ply, target)
 	if not IsValid(target) or not target:IsPlayer() then return false end
-	if not ply:CanArrest(target) then return false end
-	if target:GetSyncVar(SYNC_ARRESTED, false) then return false end
+	if not ply:CanArrest(target) then return false, "You cannot restrain that target." end
+	if target:GetSyncVar(SYNC_ARRESTED, false) then return false, "Target already detained." end
+	if ply:GetPos():DistToSqr(target:GetPos()) > (impulse.Config.RestrainRange ^ 2) then return false, "Target is too far away." end
 	return true
 end
 
@@ -42,11 +43,12 @@ function ITEM:DoRestrain(ply, target)
 end
 
 function ITEM:OnUse(ply, target)
-	if self:CanRestrain(ply, target) then
+	local canRestrain, reason = self:CanRestrain(ply, target)
+	if canRestrain then
 		self:DoRestrain(ply, target)
 		return true
 	else
-		ply:Notify("Target already detained.")
+		ply:Notify(reason or "Target already detained.")
 	end
 end
 
