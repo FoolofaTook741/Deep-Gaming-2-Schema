@@ -56,4 +56,10 @@ if SERVER then
 		if not IsValid(ply) or ply:Team() ~= TEAM_CP then return end
 		ply:SetRunSpeed(impulse.Config.JogSpeed)
 	end)
+	hook.Add("OnInventoryItemUnequipped", "MPF_StunstickSpeedBonus_Unequip", function(ply, item, itemclass, itemid)
+		if not IsValid(ply) or ply:Team() ~= TEAM_CP then return end
+		if itemclass.WeaponClass == "plutonic_stunstick" then
+			ply:SetRunSpeed(impulse.Config.JogSpeed)
+		end
+	end)
 end
