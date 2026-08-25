@@ -27,13 +27,15 @@ ITEM.UseWorkBarName = "Planting C4..."
 ITEM.UseWorkBarFreeze = true
 ITEM.UseWorkBarSound = "weapons/c4/c4_disarm.wav"
 
+local ctaREQ = 5
+
 function ITEM:OnUse(ply, ent)
 	local pc = GetPlayerCount()
 	local cc = GetCombineCount()
 	if GetPlayerCount() < 30 and ply:IsSuperAdmin() == false then
 		ply:Notify("There are not enough players online (30).")
 		return false
-	elseif GetOTACount() >= 5 then
+	elseif GetOTACount() >= ctaREQ then
 		ply:AchievementGive("ach_cache")
 		if timer.Exists(ent:GetCreationID() .. "DeepPWCBox") then
 			ply:Notify("This cache already being blown open...")
@@ -74,7 +76,7 @@ function ITEM:OnUse(ply, ent)
 		ply:Notify("You have started the C4 sequence.")
 		return true
 	else
-		ply:Notify("There must be at least 7 CTA personnel active.")
+		ply:Notify("There must be at least ".. ctaREQ .. " CTA personnel active.")
 	end
 end
 
