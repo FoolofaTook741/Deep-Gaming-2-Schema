@@ -1714,7 +1714,7 @@ hook.Add("PlayerInitialSpawn", "retardfix", function(ply)
     timer.Simple(2, function()
         if not IsValid(ply) then return end
         ply:SetRunSpeed(impulse.Config.JogSpeed)
-        ply:SetWalkSpeed(110)
+        ply:SetWalkSpeed(impulse.Config.WalkSpeed)
     end)
 end)
 

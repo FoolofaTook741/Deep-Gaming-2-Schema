@@ -110,7 +110,7 @@ TEAM_CP = impulse.Teams.Define({
     cp = true,
     doorGroup = {1, 2, 6, 7},
     blockNameChange = true,
-    runSpeed = 225,
+    runSpeed = 200,
 
 quiz = {
 		enabled = true,
