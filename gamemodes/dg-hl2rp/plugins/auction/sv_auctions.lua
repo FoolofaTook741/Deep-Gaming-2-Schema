@@ -1,5 +1,5 @@
-local DEPOSIT_RATE  = 0.02
-local SALE_FEE_RATE = 0.06
+local DEPOSIT_RATE  = 0.025
+local SALE_FEE_RATE = 0.08
 local MAX_CREDIT_VALUE = 1000000
 local USE_RANGE = 150
 impulse.Auctions = impulse.Auctions or {}
