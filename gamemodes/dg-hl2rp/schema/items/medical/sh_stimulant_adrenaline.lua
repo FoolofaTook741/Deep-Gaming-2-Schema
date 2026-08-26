@@ -70,7 +70,10 @@ function ITEM:OnUse(ply)
         timer.Create(ply:SteamID() .. "adrstimcd", 480, 1, function() 
             ply:Notify("You may now take stimulant pills again.")
         end)
-        ply:SetRunSpeed(math.Clamp(speed + 15, 200, 220))
+
+        if not ply.deep_IsEncumbered then -- fixes part of the encumberance problem, still slop
+            ply:SetRunSpeed(math.Clamp(speed + 15, 200, 220))
+        end
 	    return true
     else
         ply:Notify("You cannot apply this, you would overdose.")

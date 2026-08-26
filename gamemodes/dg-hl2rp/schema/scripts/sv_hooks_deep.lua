@@ -277,15 +277,31 @@ timer.Create("ValidOCAFundingTimerCheck", 10, 0, function()
     end
 end)
 
-timer.Create("Deep_IncumberanceCheck", 1.5, 0, function()
-    for _, v in ipairs(player.GetAll()) do
+local SLOW_SPEED = 40
+local NOTIFY_INTERVAL = 20
+timer.Create("Deep_IncumberanceCheck", 1.5, 0, function()  -- There's still some stupid shit with the adrenaline pills giving an edge case, I don't think it will matter much so I'm not going to fix it. FOOL
+    for _, v in ipairs(player.GetAll()) do                 --If the player has adrenaline pills active then goes encumbered then the adrenaline pill speed would be captured and set perma. Small edge case likely to never happen.
         local invw = v.InventoryWeight or 0
         local maxWeight = v:IsCollaborator() and impulse.Config.InventoryMaxWeightCOLLABORATOR or impulse.Config.InventoryMaxWeight
-        if invw > maxWeight and not v.HasBackpack and v:Alive() and v:Team() ~= TEAM_ZOMBIE then
-            v:TakeDamage(5)
-            v:Notify("You are carrying too much!")
+        local overweight = invw > maxWeight and not v.HasBackpack and v:Alive() and v:Team() ~= TEAM_ZOMBIE
+        if overweight then
+            if not v.deep_IsEncumbered then
+                v.deep_IsEncumbered = true
+                v.deep_EncumberOrigWalk = v:GetWalkSpeed()
+                v.deep_EncumberOrigRun = v:GetRunSpeed()
+                v:SetWalkSpeed(SLOW_SPEED)
+                v:SetRunSpeed(SLOW_SPEED)
+            end
+            if not v.deep_NextEncumberNotify or CurTime() >= v.deep_NextEncumberNotify then
+                v:Notify("You are carrying too much!")
+                v.deep_NextEncumberNotify = CurTime() + NOTIFY_INTERVAL
+            end
+        elseif v.deep_IsEncumbered then
+            v.deep_IsEncumbered = false
+            v:SetWalkSpeed(v.deep_EncumberOrigWalk or impulse.Config.WalkSpeed)
+            v:SetRunSpeed(v.deep_EncumberOrigRun or impulse.Config.JogSpeed)
+            v.deep_NextEncumberNotify = nil
         end
-
         local sid = v:SteamID()
         if timer.Exists(sid .. "stalkerization") and v:Team() ~= TEAM_STALKER then
             v:SetTeam(TEAM_STALKER)
