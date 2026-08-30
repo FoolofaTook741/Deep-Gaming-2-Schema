@@ -9,13 +9,17 @@ function PLUGIN:CheckMenuInput()
 end
 
 local updateWaiting = false
-local squadVars = {
-	[SYNC_SQUAD_ID] = true,
-	[SYNC_SQUAD_LEADER] = true
-}
+local squadVars
 local RebuildOutlineCache
 
 function PLUGIN:OnSyncUpdate(var, targ, val)
+	if not squadVars then
+		squadVars = {
+			[SYNC_SQUAD_ID] = true,
+			[SYNC_SQUAD_LEADER] = true
+		}
+	end
+
 	if not squadVars[var] then
 		return
 	end
