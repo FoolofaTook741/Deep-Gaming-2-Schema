@@ -44,8 +44,13 @@ end
 local checkDelay = 1
 local offlineTimes = 0
 local lastCheck = 0
-local lastUpdate = 0
+local lastHeartbeat = RealTime()
 local joinTime
+
+net.Receive("crashmenu_heartbeat", function()
+    lastHeartbeat = RealTime()
+end)
+
 hook.Add("Think", "crashmenu", function()
     if not IsValid(crashmenu.Panel) then return end
     if RealTime() < lastCheck then return end
@@ -61,11 +66,14 @@ hook.Add("Think", "crashmenu", function()
         end)
     end
 
-    local _, update = engine.ServerFrameTime()
+    local sinceHeartbeat = RealTime() - lastHeartbeat
+    local stalled = sinceHeartbeat > 2
 
-    if lastUpdate == update then
+    if stalled then
         offlineTimes = offlineTimes + 1
+        --print(("[crashmenu-debug] stall check #%d sinceHeartbeat=%.3f"):format(offlineTimes, sinceHeartbeat))
         if offlineTimes > 3 then
+            --print("[crashmenu-debug] SHOWING panel")
             checkDelay = 5
             crashmenu.Panel:Show()
             ping(function(code, res)
@@ -76,6 +84,9 @@ hook.Add("Think", "crashmenu", function()
             end)
         end
     else
+        if offlineTimes > 0 then
+            --print(("[crashmenu-debug] reset after %d stall check(s), sinceHeartbeat=%.3f"):format(offlineTimes, sinceHeartbeat))
+        end
         checkDelay = 1
         offlineTimes = 0
         crashmenu.Panel.Reconnecting = false
@@ -84,5 +95,4 @@ hook.Add("Think", "crashmenu", function()
     end
 
     lastCheck = RealTime() + checkDelay
-    lastUpdate = update
 end)

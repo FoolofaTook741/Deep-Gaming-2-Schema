@@ -1,3 +1,10 @@
+util.AddNetworkString("crashmenu_heartbeat")
+
+timer.Create("crashmenu_heartbeat_broadcast", 1, 0, function()
+    net.Start("crashmenu_heartbeat")
+    net.Broadcast()
+end)
+
 RunConsoleCommand("sv_hibernate_think", "1")
 
 local posting = false
